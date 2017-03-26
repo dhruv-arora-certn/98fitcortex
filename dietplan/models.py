@@ -16,6 +16,8 @@ class Food(mongoengine.Document):
 	m3 = mongoengine.IntField()
 	m4 = mongoengine.IntField()
 
+	squared_diff = 0
+
 	meta = {
 		'collection' : 'food_list',
 		'strict' : False
@@ -35,9 +37,23 @@ class Food(mongoengine.Document):
 		return self.calarie
 
 	@mongoengine.queryset.queryset_manager
+	def m1_objects(doc_cls , queryset):
+		return queryset.filter(m1 = 1)
+
+	@mongoengine.queryset.queryset_manager
+	def m2_objects(doc_cls , queryset):
+		return queryset.filter(m2 = 1)
+
+	@mongoengine.queryset.queryset_manager
 	def objects(doc_cls , queryset):
 		return queryset
 
 	@classmethod
 	def set_context(self, context):
 		self.context = context
+
+	def __lt__(self , other):
+		return self.squared_diff < other.squared_diff
+
+	def __str__(self):
+		return self.name + " " + str(self.squared_diff) 
