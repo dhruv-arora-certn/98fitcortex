@@ -20,6 +20,11 @@ class Calculations:
 		self.bmr = BasalMetabolicRate(weight , self.leanfactor.get_lean())
 		self.tdee = TDEE(self.bmr.bmr , self.activity)
 
-	def calorieCount(self):
+		self.countCalories()
+
+	def countCalories(self):
 		self.calories = self.tdee.tdee * (1 + self.goal._diff)
-		return self.calories
+		return self
+
+	def get_m1(self):
+		self.m1 = M1( self.calories , self.goal )

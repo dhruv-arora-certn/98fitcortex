@@ -1,5 +1,5 @@
 from .goals import Goals
-import itertools
+import itertools , heapq
 
 def mark_squared_diff(item , pi):
 	p = item.protein / (pi[0]*item.calorie/4)
@@ -7,6 +7,7 @@ def mark_squared_diff(item , pi):
 	f = item.fat / ( pi[2] * item.calorie / 9)
 	item.squared_diff = ((p+c+f) - 3)**2
 	return item
+
 def annotate_food(food_queryset , goal ):
 	print("Enter")
 	if goal == Goals.WeightLoss:

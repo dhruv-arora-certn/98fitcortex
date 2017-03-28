@@ -16,6 +16,10 @@ class Food(mongoengine.Document):
 	m3 = mongoengine.IntField()
 	m4 = mongoengine.IntField()
 
+	drink = mongoengine.IntField()
+	dairy = mongoengine.IntField()
+	snaks = mongoengine.IntField()
+
 	squared_diff = 0
 
 	meta = {
@@ -32,6 +36,11 @@ class Food(mongoengine.Document):
 			]
 		)
 
+	def amplify(self , factor):
+		self.weight = self.weight*2
+		self.calarie = self.calarie*2
+		return self
+
 	@property
 	def calorie(self):
 		return self.calarie
@@ -43,10 +52,6 @@ class Food(mongoengine.Document):
 	@mongoengine.queryset.queryset_manager
 	def m2_objects(doc_cls , queryset):
 		return queryset.filter(m2 = 1)
-
-	@mongoengine.queryset.queryset_manager
-	def objects(doc_cls , queryset):
-		return queryset
 
 	@classmethod
 	def set_context(self, context):

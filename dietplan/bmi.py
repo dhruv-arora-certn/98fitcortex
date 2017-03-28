@@ -11,22 +11,24 @@ class BMIClassificationBase:
 	def __str__(self):
 		return self.__name__
 
-class Underweight(BMIClassificationBase):
-	upper = 18.5
-
-class NormalWeight(BMIClassificationBase):
-	lower = 18.5
-	upper = 25
-
-class OverWeight(BMIClassificationBase):
-	lower = 25
-	upper = 30
-
-class Obese(BMIClassificationBase):
-	lower = 30
 
 class BMI:
-	classifications = [Underweight , NormalWeight , Underweight , Obese]
+	class UnderWeight(BMIClassificationBase):
+		upper = 18.5
+
+	class NormalWeight(BMIClassificationBase):
+		lower = 18.5
+		upper = 25
+
+	class OverWeight(BMIClassificationBase):
+		lower = 25
+		upper = 30
+
+	class Obese(BMIClassificationBase):
+		lower = 30
+	
+	classifications = [OverWeight , NormalWeight , UnderWeight , Obese]
+	
 	def __init__(self , weight, height):
 		self.weight = weight
 		self.height = height
