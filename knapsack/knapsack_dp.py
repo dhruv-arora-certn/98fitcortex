@@ -2,7 +2,7 @@
 
 import sys
 
-def knapsack(v, w, limit, n):
+def knapsack(food_list, limit):
     """straightforward DP solution
     
     Arguments:
@@ -11,14 +11,29 @@ def knapsack(v, w, limit, n):
     - `limit`: maximum limit
     - `n`: number of items
     """
-    F = [[0] * (limit + 1) for x in range(n + 1)] 
+    n = len(food_list)
+    limit = round(limit)
+    F = [[0] * (limit + 1) for x in range(n + 1)]
+    test = []
     for i in range(0, n):                # F[-1] is all 0.
         for j in range(limit + 1):
-            if j >= w[i]:
-                F[i][j] = max(F[i - 1][j], F[i - 1][j - w[i]] + v[i])
+            if j >= food_list[i].calorie:
+                l = max(F[i - 1][j], F[i - 1][j - food_list[i].calorie] + round(1/food_list[i].squared_diff))
+                test.append(l)
+                F[i][j] = l
             else:
                 F[i][j] = F[i - 1][j]
-    return F
+    return F , test
+
+def display(F , limit , food_list):
+    y  = round(limit)
+    n = len(F)
+    items = []
+    for i in range(n - 1, -1, -1):
+        if F[i][y] > F[i - 1][y]:
+            items.append(i)
+            y -= round(food_list[i].calorie)
+    return items
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

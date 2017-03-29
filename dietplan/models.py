@@ -16,10 +16,20 @@ class Food(mongoengine.Document):
 	m3 = mongoengine.IntField()
 	m4 = mongoengine.IntField()
 
+	m5_loss = mongoengine.IntField()
+	m5_gain = mongoengine.IntField()
+	m5_stable = mongoengine.IntField()
+	
 	drink = mongoengine.IntField()
 	dairy = mongoengine.IntField()
 	snaks = mongoengine.IntField()
-
+	vegetable = mongoengine.IntField()
+	cereal_grains = mongoengine.IntField()
+	salad = mongoengine.IntField()
+	yogurt = mongoengine.IntField()
+	dessert = mongoengine.IntField()
+	pulses = mongoengine.IntField()
+	for_loss = mongoengine.IntField()
 	squared_diff = 0
 
 	meta = {
@@ -43,7 +53,7 @@ class Food(mongoengine.Document):
 
 	@property
 	def calorie(self):
-		return self.calarie
+		return round(self.calarie)
 
 	@mongoengine.queryset.queryset_manager
 	def m1_objects(doc_cls , queryset):
@@ -51,7 +61,27 @@ class Food(mongoengine.Document):
 
 	@mongoengine.queryset.queryset_manager
 	def m2_objects(doc_cls , queryset):
-		return queryset.filter(m2 = 1)
+		return queryset.filter(m2 = 1)	
+
+	@mongoengine.queryset.queryset_manager
+	def m3_objects(doc_cls , queryset):
+		return queryset.filter(m3 = 1).filter( calarie__gt = 0)	
+
+	@mongoengine.queryset.queryset_manager
+	def m4_objects(doc_cls , queryset):
+		return queryset.filter(m4 = 1).filter( calarie__gt = 0)	
+
+	@mongoengine.queryset.queryset_manager
+	def m5loss_objects(doc_cls , queryset):
+		return queryset.filter(m5_loss = 1).filter(calarie__gt = 0)
+	
+	@mongoengine.queryset.queryset_manager
+	def m5gain_objects(doc_cls , queryset):
+		return queryset.filter(m5_gain = 1).filter(calarie__gt = 0)
+
+	@mongoengine.queryset.queryset_manager
+	def m5stable_objects(doc_cls , queryset):
+		return queryset.filter(m5_stable = 1)
 
 	@classmethod
 	def set_context(self, context):

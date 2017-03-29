@@ -4,14 +4,16 @@ from dietplan.models import Food
 from dietplan.calculations import Calculations
 from dietplan.bodyTypes import BodyTypes
 from dietplan.activity import ActivityLevel
-from dietplan.meals import M1
+from dietplan.meals import M1 , M5 , M3
+from knapsack.knapsack_dp import knapsack,display
 
 weight = 95
 height = 1.7
-goal = Goals.WeightLoss
+goal = Goals.WeightGain
 bodytype = BodyTypes.OverWeight
 activity = ActivityLevel.moderately_active
+exclude = "Paneer Masala"
+c = Calculations(weight , height , bodytype , activity , goal , exclude = exclude)
 
-c = Calculations(weight , height , bodytype , activity , goal)
-
-m = M1(c.calories , goal)
+# F,test = knapsack(m.marked , m.calories_remaining)
+# items = [m.marked[i] for i in display(F,m.calories_remaining , m.marked)]
