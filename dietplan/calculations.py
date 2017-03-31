@@ -5,6 +5,8 @@ from .bmr import BasalMetabolicRate
 from .tdee import TDEE
 from .goals import Goals
 from .meals import M1 , M2 , M3 , M4 , M5
+from .calorieNumber import CalorieNumber
+from .ibw import IBW
 from knapsack.knapsack_dp import knapsack
 import itertools
 
@@ -23,12 +25,14 @@ class Calculations:
 		self.leanfactor = LeanFactor(bodyType , self.bmi.category)
 		self.bmr = BasalMetabolicRate(weight , self.leanfactor.get_lean())
 		self.tdee = TDEE(self.bmr.bmr , self.activity)
-
+		self.ibw = IBW(self.height)
+		self.calorieNumber = CalorieNumber(self.bmi , self.activity)
 		self.countCalories()
 		self.makeMeals()
 
+
 	def countCalories(self):
-		self.calories = self.tdee.tdee * (1 + self.goal._diff)
+		self.calories = self.ibw.ibw * self.calorieNumber.number
 		return self
 
 	def makeMeals(self):

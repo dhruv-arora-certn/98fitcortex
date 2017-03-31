@@ -16,3 +16,9 @@ def annotate_food(food_queryset , goal ):
 		return map( mark_squared_diff , food_queryset , itertools.repeat([ Goals.WeightLoss.protein , Goals.WeightLoss.carbs , Goals.WeightLoss.fat ]) )
 	if goal == Goals.WeightGain:
 		return map( mark_squared_diff , food_queryset , itertools.repeat([ Goals.WeightGain.protein , Goals.WeightGain.carbs , Goals.WeightGain.fat ]) )
+	
+	if goal == Goals.MaintainWeight:
+		return map( mark_squared_diff , food_queryset , itertools.repeat([ Goals.MaintainWeight.protein , Goals.MaintainWeight.carbs , Goals.MaintainWeight.fat ]) )
+
+	if goal == Goals.MuscleGain:
+		return map( mark_squared_diff , food_queryset , itertools.repeat([ Goals.MuscleGain.protein , Goals.MuscleGain.carbs , Goals.MuscleGain.fat ]) )

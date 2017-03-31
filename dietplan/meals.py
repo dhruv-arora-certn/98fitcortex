@@ -25,7 +25,7 @@ class M1(Base):
 	def __init__(self , calories , goal , exclude=  ""):
 		self.calories_goal = calories*self.percent
 		self.goal = goal
-		self.queryset = Food.m1_objects.filter(name__ne = exclude)
+		self.queryset = Food.m1_objects.filter(name__nin = exclude)
 		if goal == Goals.WeightLoss : 
 			self.queryset.filter(for_loss = 1).all()
 		
@@ -75,7 +75,7 @@ class M3(Base):
 	def __init__(self , calories , goal , exclude = "" , yogurt = True):
 		self.calories_goal = calories*self.percent
 		self.goal = goal
-		self.queryset = Food.m3_objects.filter(salad = 0).filter(name__ne = exclude)
+		self.queryset = Food.m3_objects.filter(salad = 0).filter(name__nin = exclude)
 		self.yogurt = yogurt
 		self.marked = list(annotate_food(self.queryset , self.goal))
 		self.selected = []
@@ -88,8 +88,8 @@ class M3(Base):
 		items = display(F , calories , food_list)
 		# import ipdb
 		# ipdb.set_trace()
-		self.yogurt = [food_list[i] for i in items]
-		[self.select_item(i) for i in self.yogurt]
+		self.yogurt = min([food_list[i] for i in items])
+		self.select_item(self.yogurt)
 
 	def select_dessert(self):
 		calories = 0.12*self.calories_goal
@@ -112,8 +112,8 @@ class M3(Base):
 		items = display(F , calories , food_list)
 		# import ipdb
 		# ipdb.set_trace()
-		self.vegetable = [food_list[i] for i in items]
-		[self.select_item(i) for i in self.vegetable]
+		self.vegetable = min([food_list[i] for i in items])
+		self.select_item(self.vegetable)
 
 	def select_cereals(self):
 		percent = 0.37
@@ -123,8 +123,8 @@ class M3(Base):
 		items = display(F , calories , food_list)
 		# import ipdb
 		# ipdb.set_trace()
-		self.cereals = [food_list[i] for i in items]
-		[self.select_item(i) for i in self.cereals]
+		self.cereals = min([food_list[i] for i in items])
+		self.select_item(self.cereals)
 
 	def select_pulses(self):
 		if self.yogurt : 
@@ -156,11 +156,11 @@ class M4(Base):
 	def __init__(self , calories , goal , exclude = ""):
 		self.calories_goal = calories*self.percent
 		self.goal = goal
-		self.queryset = Food.m4_objects.filter(name__ne = exclude)
+		self.queryset = Food.m4_objects.filter(name__nin = exclude)
 		self.marked = list(annotate_food(self.queryset , self.goal))
 		self.selected = []
 		# heapq.heapify(self.marked)
-	
+
 	def select_drink(self):
 		calories = 0.15*self.calories_goal
 		food_list = list(filter(lambda x : bool(x.drink) , self.marked))
@@ -184,10 +184,13 @@ class M5(Base):
 		self.goal = goal
 		if goal == Goals.WeightLoss : 
 			self.queryset = Food.m5loss_objects
-		if goal == Goals.WeightGain:
+		if goal == Goals.WeightGain or goal == Goals.MuscleGain:
 			print("Goal is weight gain")
 			self.queryset = Food.m5gain_objects
-		self.queryset.filter(name__ne = exclude)
+		if goal == Goals.MaintainWeight:
+			self.queryset = Food.m5stable_objects
+
+		self.queryset.filter(name__nin = exclude)
 		self.marked = list(annotate_food(self.queryset , self.goal))
 		self.selected = []
 		# heapq.heapify(self.marked)
@@ -200,24 +203,24 @@ class M5(Base):
 		items = display(F , calories , food_list)
 		# import ipdb
 		# ipdb.set_trace()
-		self.vegetables = [food_list[i] for i in items]
-		[self.select_item(i) for i in self.vegetables]
+		self.vegetables = min([food_list[i] for i in items])
+		self.select_item(self.vegetables)
 
 	def select_cereals(self):
 		calories = 0.39*self.calories_goal
 		food_list = list(filter(lambda x : bool(x.cereal_grains) , self.marked))
 		F,test = knapsack(food_list , calories)
 		items = display(F , calories , food_list)
-		self.cereals = [food_list[i] for i in items]
-		[self.select_item(i) for i in self.cereals]
+		self.cereals = min([food_list[i] for i in items])
+		self.select_item(self.cereals)
 
 	def select_pulses(self):
 		calories = 0.39 * self.calories_goal
 		food_list = list(filter(lambda x : bool(x.pulses) , self.marked))
 		F,test = knapsack(food_list , calories)
 		items = display(F , calories , food_list)
-		self.pulses = [food_list[i] for i in items]
-		[self.select_item(i) for i in self.pulses]
+		self.pulses = min([food_list[i] for i in items])
+		self.select_item(self.pulses)
 
 	def build(self):
 		self.select_vegetables()

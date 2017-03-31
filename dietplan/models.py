@@ -30,6 +30,8 @@ class Food(mongoengine.Document):
 	dessert = mongoengine.IntField()
 	pulses = mongoengine.IntField()
 	for_loss = mongoengine.IntField()
+	cuisine = mongoengine.StringField()
+
 	squared_diff = 0
 
 	meta = {
@@ -69,19 +71,19 @@ class Food(mongoengine.Document):
 
 	@mongoengine.queryset.queryset_manager
 	def m4_objects(doc_cls , queryset):
-		return queryset.filter(m4 = 1).filter( calarie__gt = 0)	
+		return queryset.filter(m4 = 1).filter( calarie__gt = 0).filter(cuisine__ne='Combination')
 
 	@mongoengine.queryset.queryset_manager
 	def m5loss_objects(doc_cls , queryset):
-		return queryset.filter(m5_loss = 1).filter(calarie__gt = 0)
+		return queryset.filter(m5_loss = 1).filter(calarie__gt = 0).filter(cuisine__ne='Combination')
 	
 	@mongoengine.queryset.queryset_manager
 	def m5gain_objects(doc_cls , queryset):
-		return queryset.filter(m5_gain = 1).filter(calarie__gt = 0)
+		return queryset.filter(m5_gain = 1).filter(calarie__gt = 0).filter(cuisine__ne='Combination')
 
 	@mongoengine.queryset.queryset_manager
 	def m5stable_objects(doc_cls , queryset):
-		return queryset.filter(m5_stable = 1)
+		return queryset.filter(m5_stable = 1).filter(calarie__gt = 0)
 
 	@classmethod
 	def set_context(self, context):
