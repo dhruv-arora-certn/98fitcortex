@@ -6,6 +6,9 @@ class Goals:
 		fat = 0.25
 		carbs = 0.55
 
+		def __str__(self):
+			return "Weight Loss"
+
 	class WeightGain:
 		_diff = 0.10
 		protein = 0.15

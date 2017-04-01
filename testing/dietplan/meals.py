@@ -2,7 +2,7 @@ from .models import Food
 from .utils import annotate_food
 from .goals import Goals
 from knapsack.knapsack_dp import knapsack,display
-import heapq
+import heapq , mongoengine , re
 
 class Base:
 
@@ -19,10 +19,38 @@ class Base:
 	def calories_remaining(self):
 		return self.calories_goal - self.calories
 
+	@property
+	def protein_ideal(self):
+		return (self.goal.protein * self.calories_goal) / 4
+
+	@property
+	def carbs_ideal(self):
+		return (self.goal.carbs * self.calories_goal) / 4
+
+	@property
+	def fat_ideal(self):
+		return (self.goal.fat * self.calories_goal ) / 9
+
+	@property
+	def protein(self):
+		return sum([i.protein for i in self.selected])
+
+	@property
+	def fat(self):
+		return sum([i.fat for i in self.selected])
+
+	@property
+	def carbs(self):
+		return sum([i.carbohydrates for i in self.selected])
+
+	def __getitem__(self , key):
+		return self.selected[key]
+
 class M1(Base):
 	percent = .25
 
 	def __init__(self , calories , goal , exclude=  ""):
+		mongoengine.connect(db = "98fit")
 		self.calories_goal = calories*self.percent
 		self.goal = goal
 		self.queryset = Food.m1_objects.filter(name__nin = exclude)
@@ -51,9 +79,21 @@ class M1(Base):
 	def remove_drinks(self):
 		self.marked = list(set(self.marked) - set(self.drink_list))
 		return self
-	
+
+	def filter_parantha(self):
+		paranthas = [e for e in self.selected if re.search("Parantha" , e.name)]
+		if paranthas:
+			[self.selected.remove(p) for p in paranthas]
+			calories = sum([e.calorie for e in paranthas])
+			parantha = min(paranthas)
+			calories_req = calories - parantha.calorie
+			amount = round(calories_req/parantha.calorie)
+			parantha.quantity = amount
+			self.selected.append(parantha)
+		return self
 
 	def build(self):
+		print("Starting 1")
 		self.allocate_restrictions()
 		calories = self.calories_remaining
 		food_list = list(filter( lambda x : bool(x.snaks) , self.marked))
@@ -63,16 +103,40 @@ class M1(Base):
 		# ipdb.set_trace()
 		self.snacks = [food_list[i] for i in items]
 		[self.select_item(i) for i in self.snacks]
+		self.filter_parantha()
 		return self
 
 
-class M2:
+class M2(Base):
 	percent = 0.15
+
+	def __init__(self , calories , goal , exclude):
+		mongoengine.connect(db = "98fit")
+		self.calories_goal = calories*self.percent
+		self.goal = goal
+		self.queryset = Food.m2_objects.filter(salad = 0).filter(name__nin = exclude)
+		self.marked = list(annotate_food(self.queryset , self.goal))
+		self.selected = []
+
+	def select_fruit(self):
+		calories = self.calories_goal
+		fruit_items = self.marked
+		F,test = knapsack(fruit_items , self.calories_goal)
+		items = display(F , self.calories_goal , fruit_items)
+		self.fruits = min([fruit_items[i] for i in items])
+		self.fruits.update((calories/self.fruits.calarie))
+		self.select_item(self.fruits)
+
+	def build(self):
+		self.select_fruit()
+		return self
+
 
 class M3(Base):
 	percent = 0.25
 
 	def __init__(self , calories , goal , exclude = "" , yogurt = True):
+		mongoengine.connect(db = "98fit")
 		self.calories_goal = calories*self.percent
 		self.goal = goal
 		self.queryset = Food.m3_objects.filter(salad = 0).filter(name__nin = exclude)
@@ -112,8 +176,9 @@ class M3(Base):
 		items = display(F , calories , food_list)
 		# import ipdb
 		# ipdb.set_trace()
-		self.vegetable = min([food_list[i] for i in items])
-		self.select_item(self.vegetable)
+		self.vegetables = min([food_list[i] for i in items])
+		self.vegetables.update(calories/self.vegetables.calarie)
+		self.select_item(self.vegetables)
 
 	def select_cereals(self):
 		percent = 0.37
@@ -124,6 +189,7 @@ class M3(Base):
 		# import ipdb
 		# ipdb.set_trace()
 		self.cereals = min([food_list[i] for i in items])
+		self.cereals.update(calories/self.cereals.calarie)
 		self.select_item(self.cereals)
 
 	def select_pulses(self):
@@ -137,10 +203,12 @@ class M3(Base):
 		items = display(F , calories , food_list)
 		# import ipdb
 		# ipdb.set_trace()
-		self.pulses = [food_list[i] for i in items]
-		[self.select_item(i) for i in self.pulses]
+		self.pulses = min([food_list[i] for i in items])
+		self.pulses.update(calories/self.pulses.calarie)
+		self.select_item(self.pulses)
 
 	def build(self):
+		print("Starting 3")
 		if self.yogurt:
 			self.select_yogurt()
 		else:
@@ -154,6 +222,7 @@ class M4(Base):
 	percent = 0.15
 
 	def __init__(self , calories , goal , exclude = ""):
+		mongoengine.connect(db = "98fit")
 		self.calories_goal = calories*self.percent
 		self.goal = goal
 		self.queryset = Food.m4_objects.filter(name__nin = exclude)
@@ -169,23 +238,37 @@ class M4(Base):
 		items = display(F , calories , food_list)
 		# import ipdb
 		# ipdb.set_trace()
-		self.drink = [food_list[i] for i in items]
-		[self.select_item(i) for i in self.drink]
+		self.drink = min([food_list[i] for i in items])
+		self.drink.update(calories/self.drink.calarie)
+		self.select_item(self.drink)
+
+	def select_snack(self):
+		calories = 0.85*self.calories_goal
+		food_list = list(filter(lambda x : bool(x.snaks) , self.marked))
+		print(len(food_list) , calories)
+		F,test = knapsack(food_list , calories)
+		items = display(F , calories , food_list)
+		# import ipdb
+		# ipdb.set_trace()
+		self.snacks = min([food_list[i] for i in items])
+		self.snacks.update(calories/self.snacks.calarie)
+		self.select_item(self.snacks)		
 
 	def build(self):
 		self.select_drink()
+		self.select_snack()
 		return self
 
 class M5(Base):
 	percent = 0.20
 
 	def __init__(self , calories , goal , exclude = ""):
+		mongoengine.connect(db = "98fit")
 		self.calories_goal = calories*self.percent
 		self.goal = goal
 		if goal == Goals.WeightLoss : 
 			self.queryset = Food.m5loss_objects
-		if goal == Goals.WeightGain or goal == Goals.MuscleGain:
-			print("Goal is weight gain")
+		if goal == Goals.WeightGain:
 			self.queryset = Food.m5gain_objects
 		if goal == Goals.MaintainWeight:
 			self.queryset = Food.m5stable_objects
@@ -197,6 +280,7 @@ class M5(Base):
 
 	def select_vegetables(self):
 		calories = 0.22*self.calories_goal
+		self.vegetable_calories = calories
 		food_list = list(filter(lambda x : bool(x.vegetable) , self.marked))
 		print(len(food_list) , calories)
 		F,test = knapsack(food_list , calories)
@@ -204,6 +288,7 @@ class M5(Base):
 		# import ipdb
 		# ipdb.set_trace()
 		self.vegetables = min([food_list[i] for i in items])
+		self.vegetables.update(calories/self.vegetables.calarie)
 		self.select_item(self.vegetables)
 
 	def select_cereals(self):
@@ -212,6 +297,7 @@ class M5(Base):
 		F,test = knapsack(food_list , calories)
 		items = display(F , calories , food_list)
 		self.cereals = min([food_list[i] for i in items])
+		self.cereals.update(calories/self.cereals.calarie)
 		self.select_item(self.cereals)
 
 	def select_pulses(self):
@@ -220,6 +306,7 @@ class M5(Base):
 		F,test = knapsack(food_list , calories)
 		items = display(F , calories , food_list)
 		self.pulses = min([food_list[i] for i in items])
+		self.pulses.update(calories/self.pulses.calarie)
 		self.select_item(self.pulses)
 
 	def build(self):

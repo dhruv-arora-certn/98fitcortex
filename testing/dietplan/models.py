@@ -1,6 +1,6 @@
 import mongoengine
 
-mongoengine.connect(db = "98fit")
+# mongoengine.connect(db = "98fit")
 
 class Food(mongoengine.Document):
 	name = mongoengine.StringField()
@@ -20,6 +20,7 @@ class Food(mongoengine.Document):
 	m5_gain = mongoengine.IntField()
 	m5_stable = mongoengine.IntField()
 	
+	fruit = mongoengine.IntField()
 	drink = mongoengine.IntField()
 	dairy = mongoengine.IntField()
 	snaks = mongoengine.IntField()
@@ -59,11 +60,11 @@ class Food(mongoengine.Document):
 
 	@mongoengine.queryset.queryset_manager
 	def m1_objects(doc_cls , queryset):
-		return queryset.filter(m1 = 1)
+		return queryset.filter(m1 = 1).filter( calarie__gt = 0)	
 
 	@mongoengine.queryset.queryset_manager
 	def m2_objects(doc_cls , queryset):
-		return queryset.filter(m2 = 1)	
+		return queryset.filter(m2 = 1).filter( calarie__gt = 0)	
 
 	@mongoengine.queryset.queryset_manager
 	def m3_objects(doc_cls , queryset):
@@ -93,4 +94,12 @@ class Food(mongoengine.Document):
 		return self.squared_diff < other.squared_diff
 
 	def __str__(self):
-		return self.name + " " + str(self.squared_diff) 
+		return self.name + " " + str(self.squared_diff)
+
+	def update(self , factor):
+		self.weight = self.weight * factor
+		self.protein = self.protein * factor
+		self.fat = self.fat * factor
+		self.carbohydrates = self.carbohydrates * factor
+		self.calarie = self.calarie*factor
+		return self

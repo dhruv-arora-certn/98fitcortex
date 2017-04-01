@@ -10,11 +10,10 @@ from knapsack.knapsack_dp import knapsack,display
 weight = 95
 height = 1.75
 goal = Goals.WeightLoss
-bodytype = BodyTypes.Obese
 activity = ActivityLevel.moderately_active
-
+print(activity)
 exclude = ["Paneer Masala" , "Fruit Raita"]
-c = Calculations(weight , height , bodytype , activity , goal , exclude = exclude)
+c = Calculations(weight , height , activity , goal , exclude = exclude)
 
 # F,test = knapsack(m.marked , m.calories_remaining)
 # items = [m.marked[i] for i in display(F,m.calories_remaining , m.marked)]
