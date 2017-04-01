@@ -45,6 +45,7 @@ def get_analysis(request):
 			# ipdb.set_trace()
 			c.makeMeals()
 			return render(request , "results.html" , {
-				'c' : c
+				'c' : c,
+				'form' : AnalysisForm()
 			})
 

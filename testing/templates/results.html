@@ -1,47 +1,47 @@
 Calories Goal  : {{c.calories}} <br>
 Calories achieved : {{c.calories_achieved}} <br>
-Protein : {{c.protein}}/{{c.protein_ideal}} <br>
-Fat : {{c.fat}}/{{c.fat_ideal}} <br>
-Carbs : {{c.carbs}}/{{c.carbs_ideal}}<br>
+Protein : {{c.protein | floatformat:2}}/{{c.protein_ideal | floatformat:2}} <br>
+Fat : {{c.fat | floatformat:2}}/{{c.fat_ideal | floatformat:2}} <br>
+Carbs : {{c.carbs | floatformat:2 }}/{{c.carbs_ideal | floatformat:2}}<br>
 <br><br>
 M1 <br>
-Protein({{c.m1.protein}}/{{c.m1.protein_ideal}}) <br>
-Carbs({{c.m1.carbs}}/{{c.m1.carbs_ideal}}) <br>
-Fat( {{c.m1.fat}}/{{c.m1.fat_ideal}}) <br>
+Protein({{c.m1.protein | floatformat:2}}/{{c.m1.protein_ideal | floatformat:2}}) <br>
+Carbs({{c.m1.carbs | floatformat:2}}/{{c.m1.carbs_ideal | floatformat:2}}) <br>
+Fat( {{c.m1.fat | floatformat:2}}/{{c.m1.fat_ideal | floatformat:2}}) <br>
 Calories {{c.m1.calories}}
 {% for f in c.m1.selected%}
-	{{f.name}} / Weight : {{f.weight}} / Protein : {{f.protein}} /  Carbs : {{f.carbohydrates}} <br>
+	{{f.name}} / Weight : {{f.weight | floatformat:2}} / Protein : {{f.protein | floatformat:2}} /  Carbs : {{f.carbohydrates | floatformat:2}} <br>
 {% endfor %}
 <br><br>
 M2 <br>
-Protein({{c.m2.protein}}/{{c.m2.protein_ideal}}) <br>
-Carbs({{c.m2.carbs}}/{{c.m2.carbs_ideal}}) <br>
-Fat( {{c.m2.fat}}/{{c.m2.fat_ideal}}) <br>
+Protein({{c.m2.protein| floatformat:2}}/{{c.m2.protein_ideal| floatformat:2}}) <br>
+Carbs({{c.m2.carbs| floatformat:2}}/{{c.m2.carbs_ideal| floatformat:2}}) <br>
+Fat( {{c.m2.fat| floatformat:2}}/{{c.m2.fat_ideal| floatformat:2}}) <br>
 
 {% for f in c.m2.selected%}
-	{{f.name}} / Weight : {{f.weight}} / Protein : {{f.protein}} /  Carbs : {{f.carbohydrates}} <br>
+	{{f.name}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} <br>
 {% endfor %}<br><br>
 M3 <br>
-Protein({{c.m3.protein}}/{{c.m3.protein_ideal}}) <br>
-Carbs({{c.m3.carbs}}/{{c.m3.carbs_ideal}}) <br>
-Fat( {{c.m3.fat}}/{{c.m3.fat_ideal}}) <br>
+Protein({{c.m3.protein| floatformat:2}}/{{c.m3.protein_ideal| floatformat:2}}) <br>
+Carbs({{c.m3.carbs| floatformat:2}}/{{c.m3.carbs_ideal| floatformat:2}}) <br>
+Fat( {{c.m3.fat| floatformat:2}}/{{c.m3.fat_ideal| floatformat:2}}) <br>
 {% for f in c.m3.selected%}
-	{{f.name}} / Weight : {{f.weight}} / Protein : {{f.protein}} /  Carbs : {{f.carbohydrates}} <br>
+	{{f.name}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} <br>
 {% endfor %}
 <br><br>
 
 M4 <br>
-Protein({{c.m4.protein}}/{{c.m4.protein_ideal}}) <br>
-Carbs({{c.m4.carbs}}/{{c.m4.carbs_ideal}}) <br>
-Fat( {{c.m4.fat}}/{{c.m4.fat_ideal}}) <br>
+Protein({{c.m4.protein| floatformat:2}}/{{c.m4.protein_ideal| floatformat:2}}) <br>
+Carbs({{c.m4.carbs| floatformat:2}}/{{c.m4.carbs_ideal| floatformat:2}}) <br>
+Fat( {{c.m4.fat| floatformat:2}}/{{c.m4.fat_ideal| floatformat:2}}) <br>
 {% for f in c.m4.selected%}
-	{{f.name}} / Weight : {{f.weight}} / Protein : {{f.protein}} /  Carbs : {{f.carbohydrates}} <br>
+	{{f.name}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} <br>
 {% endfor %}
 <br><br>
 M5 <br>
-Protein({{c.m5.protein}}/{{c.m5.protein_ideal}}) <br>
-Carbs({{c.m5.carbs}}/{{c.m5.carbs_ideal}}) <br>
-Fat( {{c.m5.fat}}/{{c.m5.fat_ideal}}) <br>
+Protein({{c.m5.protein| floatformat:2}}/{{c.m5.protein_ideal| floatformat:2}}) <br>
+Carbs({{c.m5.carbs| floatformat:2}}/{{c.m5.carbs_ideal| floatformat:2}}) <br>
+Fat( {{c.m5.fat| floatformat:2}}/{{c.m5.fat_ideal| floatformat:2}}) <br>
 {% for f in c.m5.selected%}
-	{{f.name}} / Weight : {{f.weight}} / Protein : {{f.protein}} /  Carbs : {{f.carbohydrates}} <br>
+	{{f.name}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} <br>
 {% endfor %}

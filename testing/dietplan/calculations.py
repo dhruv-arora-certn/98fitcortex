@@ -31,7 +31,7 @@ class Calculations:
 
 
 	def countCalories(self):
-		self.calories = self.ibw.ibw * self.calorieNumber.number
+		self.calories = max( 1200 , self.ibw.ibw * self.calorieNumber.number)
 		return self
 
 	def makeMeals(self):
