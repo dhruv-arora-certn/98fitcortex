@@ -25,4 +25,4 @@ def mark_exp_diff(item , pi):
 	return item
 
 def annotate_food(food_queryset , goal ):
-	return map( mark_squared_diff , food_queryset , itertools.repeat(goal.get_attributes()))
+	return map( mark_exp_diff , food_queryset , itertools.repeat(goal.get_attributes()))
