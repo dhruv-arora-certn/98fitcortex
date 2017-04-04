@@ -1,11 +1,11 @@
 from .bmi import BMI
 from .bodyTypes import *
-print(BMI.UnderWeight)
-class LeanFactor:
+import lego
 
+class LeanFactor:
+	@lego.assemble
 	def __init__(self , bodyType , bmiType):
-		self.bodyType = bodyType
-		self.bmiType = bmiType
+		pass
 
 	def get_lean(self):
 		if self.bodyType == BodyTypes.Toned:

@@ -8,17 +8,11 @@ from .meals import M1 , M2 , M3 , M4 , M5
 from .calorieNumber import CalorieNumber
 from .ibw import IBW
 from knapsack.knapsack_dp import knapsack
-import itertools , threading
+import itertools , threading , lego
 
 class Calculations:
+	@lego.assemble
 	def __init__(self , weight , height , activity , goal , exclude):
-		#Assign Arguments
-		self.weight = weight
-		self.height = height
-		self.activity = activity
-		self.goal = goal
-		self.exclude = exclude
-		
 		#calculations
 		self.bmi = BMI(weight , height)
 		# self.leanfactor = LeanFactor(bodyType , self.bmi.category)
@@ -36,10 +30,10 @@ class Calculations:
 
 	def makeMeals(self):
 		self.m5 = M5(self.calories , self.goal , self.exclude).build()
-		self.m3 = M3(self.calories , self.goal , self.exclude).build()
-		self.m1 = M1(self.calories , self.goal , self.exclude).build()
-		self.m4 = M4(self.calories , self.goal , self.exclude).build()
-		self.m2 = M2(self.calories , self.goal , self.exclude).build()
+		self.m3 = M3(self.calories , self.goal , self.exclude , extra = self.m5.calories_goal - self.m5.calories , yogurt = False).build()
+		self.m1 = M1(self.calories , self.goal , self.exclude , extra = self.m3.calories_goal - self.m3.calories).build()
+		self.m4 = M4(self.calories , self.goal , self.exclude , extra = self.m1.calories_goal - self.m1.calories).build()
+		self.m2 = M2(self.calories , self.goal , self.exclude , extra = self.m4.calories_goal - self.m4.calories).build()
 
 	def get_m1(self):
 		self.m1 = M1( self.calories , self.goal )

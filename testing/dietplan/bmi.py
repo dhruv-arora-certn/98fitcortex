@@ -1,4 +1,5 @@
 from .activity import ActivityLevel
+import lego
 
 class BMIClassificationBase:
 	upper = 100
@@ -62,10 +63,8 @@ class BMI:
 		extra_active = 30
 	
 	classifications = [OverWeight , NormalWeight , UnderWeight , Obese]
-	
+	@lego.assemble
 	def __init__(self , weight, height):
-		self.weight = weight
-		self.height = height
 		self.bmi = self.weight/self.height**2
 	
 	@property

@@ -7,13 +7,13 @@ from dietplan.activity import ActivityLevel
 from dietplan.meals import M1 , M5 , M3
 from knapsack.knapsack_dp import knapsack,display
 
-weight = 95
+weight = 75
 height = 1.75
-goal = Goals.WeightLoss
-activity = ActivityLevel.moderately_active
+goal = Goals.MuscleGain
+activity = ActivityLevel.sedentary
 print(activity)
-exclude = ["Paneer Masala" , "Fruit Raita"]
+exclude = [ "Fruit Raita" , "Garlic Methi Khakra" , "Tea with Skimmed Milk, Without Sugar"]
 c = Calculations(weight , height , activity , goal , exclude = exclude)
-
+c.makeMeals()
 # F,test = knapsack(m.marked , m.calories_remaining)
 # items = [m.marked[i] for i in display(F,m.calories_remaining , m.marked)]

@@ -1,12 +1,11 @@
 from .models import Food
+import lego
 
 class M1:
+	@lego.assemble
 	def __init__(self , calories , protein , carbs, fat):
-		self.calories = calories
-		self.protein = protein
-		self.carbs = carbs
-		self.fat = fat
-
+		pass
+		
 	def generate(self):
 		return Food.set_context({
 			'fat' : self.fat

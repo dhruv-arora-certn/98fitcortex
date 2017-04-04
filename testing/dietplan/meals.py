@@ -1,5 +1,5 @@
 from .models import Food
-from .utils import annotate_food
+from .utils import annotate_food , mark_squared_diff
 from .goals import Goals
 from knapsack.knapsack_dp import knapsack,display
 import heapq , mongoengine , re
@@ -49,9 +49,9 @@ class Base:
 class M1(Base):
 	percent = .25
 
-	def __init__(self , calories , goal , exclude=  ""):
+	def __init__(self , calories , goal , exclude=  "" , extra = 0):
 		mongoengine.connect(db = "98fit")
-		self.calories_goal = calories*self.percent
+		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.queryset = Food.m1_objects.filter(name__nin = exclude)
 		if goal == Goals.WeightLoss : 
@@ -64,7 +64,7 @@ class M1(Base):
 	def allocate_restrictions(self):
 		self.select_item(self.drink)
 		self.remove_drinks()
-		self.select_item(Food.m1_objects.filter(name = "Boiled Egg White").first())
+		self.select_item(mark_squared_diff(Food.m1_objects.filter(name = "Boiled Egg White").first() , self.goal.get_attributes()))
 	def pop_snack(self):
 		self.snack_list = list(filter(lambda x : x.snaks , self.marked ))
 		heapq.heapify(self.snack_list)
@@ -110,9 +110,9 @@ class M1(Base):
 class M2(Base):
 	percent = 0.15
 
-	def __init__(self , calories , goal , exclude):
+	def __init__(self , calories , goal , exclude , extra = 0):
 		mongoengine.connect(db = "98fit")
-		self.calories_goal = calories*self.percent
+		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.queryset = Food.m2_objects.filter(salad = 0).filter(name__nin = exclude)
 		self.marked = list(annotate_food(self.queryset , self.goal))
@@ -135,23 +135,20 @@ class M2(Base):
 class M3(Base):
 	percent = 0.25
 
-	def __init__(self , calories , goal , exclude = "" , yogurt = True):
+	def __init__(self , calories , goal , exclude = "" , yogurt = True , extra = 0):
 		mongoengine.connect(db = "98fit")
-		self.calories_goal = calories*self.percent
+		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.queryset = Food.m3_objects.filter(salad = 0).filter(name__nin = exclude)
 		self.yogurt = yogurt
 		self.marked = list(annotate_food(self.queryset , self.goal))
 		self.selected = []
-		# heapq.heapify(self.marked)
 
 	def select_yogurt(self):
 		calories = 0.15*self.calories_goal
 		food_list = list(filter( lambda x : bool(x.yogurt) , self.marked))
 		F,test = knapsack(food_list , calories)
 		items = display(F , calories , food_list)
-		# import ipdb
-		# ipdb.set_trace()
 		self.yogurt = min([food_list[i] for i in items])
 		self.select_item(self.yogurt)
 
@@ -160,8 +157,6 @@ class M3(Base):
 		food_list = list(filter( lambda x : bool(x.dessert) , self.marked))
 		F,test = knapsack(food_list , calories)
 		items = display(F , calories , food_list)
-		# import ipdb
-		# ipdb.set_trace()
 		self.dessert = [food_list[i] for i in items]
 		[self.select_item(i) for i in self.dessert]
 
@@ -221,9 +216,9 @@ class M3(Base):
 class M4(Base):
 	percent = 0.15
 
-	def __init__(self , calories , goal , exclude = ""):
+	def __init__(self , calories , goal , exclude = "" , extra = 0):
 		mongoengine.connect(db = "98fit")
-		self.calories_goal = calories*self.percent
+		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.queryset = Food.m4_objects.filter(name__nin = exclude)
 		self.marked = list(annotate_food(self.queryset , self.goal))
@@ -262,13 +257,13 @@ class M4(Base):
 class M5(Base):
 	percent = 0.20
 
-	def __init__(self , calories , goal , exclude = ""):
+	def __init__(self , calories , goal , exclude = "" , extra = 0):
 		mongoengine.connect(db = "98fit")
-		self.calories_goal = calories*self.percent
+		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		if goal == Goals.WeightLoss : 
 			self.queryset = Food.m5loss_objects
-		if goal == Goals.WeightGain:
+		if goal == Goals.WeightGain or goal == Goals.MuscleGain:
 			self.queryset = Food.m5gain_objects
 		if goal == Goals.MaintainWeight:
 			self.queryset = Food.m5stable_objects
