@@ -30,7 +30,7 @@ class Calculations:
 
 	def makeMeals(self):
 		self.m5 = M5(self.calories , self.goal , self.exclude).build()
-		self.m3 = M3(self.calories , self.goal , self.exclude , extra = self.m5.calories_goal - self.m5.calories , yogurt = False).build()
+		self.m3 = M3(self.calories , self.goal , self.exclude + [e.name for e in self.m5.selected] , extra = self.m5.calories_goal - self.m5.calories , yogurt = False).build()
 		self.m1 = M1(self.calories , self.goal , self.exclude , extra = self.m3.calories_goal - self.m3.calories).build()
 		self.m4 = M4(self.calories , self.goal , self.exclude , extra = self.m1.calories_goal - self.m1.calories).build()
 		self.m2 = M2(self.calories , self.goal , self.exclude , extra = self.m4.calories_goal - self.m4.calories).build()

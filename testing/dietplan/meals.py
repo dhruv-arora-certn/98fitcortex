@@ -101,9 +101,9 @@ class M1(Base):
 		items = display(F , calories , food_list)
 		# import ipdb
 		# ipdb.set_trace()
-		self.snacks = [food_list[i] for i in items]
-		[self.select_item(i) for i in self.snacks]
-		self.filter_parantha()
+		self.snack = min([food_list[i] for i in items])
+		self.snack.update((calories/self.snack.calarie))
+		self.select_item(self.snack)
 		return self
 
 
@@ -157,8 +157,9 @@ class M3(Base):
 		food_list = list(filter( lambda x : bool(x.dessert) , self.marked))
 		F,test = knapsack(food_list , calories)
 		items = display(F , calories , food_list)
-		self.dessert = [food_list[i] for i in items]
-		[self.select_item(i) for i in self.dessert]
+		self.dessert = min([food_list[i] for i in items])
+		self.dessert.update(calories/self.dessert.calarie)
+		self.select_item(self.dessert)
 
 	def select_vegetables(self):
 		if self.yogurt : 
@@ -178,7 +179,7 @@ class M3(Base):
 	def select_cereals(self):
 		percent = 0.37
 		calories = percent * self.calories_goal
-		food_list = list(filter( lambda x : bool(x.cereal_grains) , self.marked))
+		food_list = list(filter( lambda x : bool(x.cereal_grains) and not bool(x.dessert) , self.marked))
 		F,test = knapsack(food_list , calories)
 		items = display(F , calories , food_list)
 		# import ipdb
