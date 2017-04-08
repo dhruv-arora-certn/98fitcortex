@@ -2,6 +2,8 @@ from django import forms
 from django.core import validators
 from dietplan.goals import Goals
 from dietplan.activity import ActivityLevel
+from dietplan.gender import Male , Female
+
 class AnalysisForm(forms.Form):
 	height = forms.FloatField(required = True , label = "Height in Meters")
 	weight = forms.FloatField(required = True , label = "Weight in Kgs")
@@ -23,3 +25,7 @@ class AnalysisForm(forms.Form):
 		]
 	)
 	exclude = forms.CharField(widget = forms.HiddenInput() , required = False)
+	gender = forms.ChoiceField([
+		(Male.number , 'Male'),
+		(Female.number , 'Female')
+	])

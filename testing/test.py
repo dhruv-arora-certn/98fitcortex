@@ -5,6 +5,7 @@ from dietplan.calculations import Calculations
 from dietplan.bodyTypes import BodyTypes
 from dietplan.activity import ActivityLevel
 from dietplan.meals import M1 , M5 , M3
+from dietplan.gender import Male,Female
 from knapsack.knapsack_dp import knapsack,display
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
@@ -13,9 +14,10 @@ weight = 75
 height = 1.75
 goal = Goals.MuscleGain
 activity = ActivityLevel.sedentary
+gender = Male.number
 print(activity)
 exclude = [ "Fruit Raita" , "Garlic Methi Khakra" , "Tea with Skimmed Milk, Without Sugar"]
-c = Calculations(weight , height , activity , goal , exclude = exclude)
+c = Calculations(weight , height , activity , goal , gender ,exclude = exclude)
 c.makeMeals()
 # fig = plt.figure()
 # ax = Axes3D(fig)

@@ -36,6 +36,7 @@ def get_analysis(request):
 				form.cleaned_data['height'],
 				float(form.cleaned_data['activity_level']),
 				goal,
+				float(form.cleaned_data["gender"]),
 				exclude = [e for e in form.cleaned_data["exclude"].split(";")]
 			)
 			# ipdb.set_trace()
@@ -47,7 +48,8 @@ def get_analysis(request):
 					'exclude' : ";".join(random.sample(exclude_c , min(20 , len(exclude_c)))),
 					'weight' : form.cleaned_data['weight'],
 					'height' : form.cleaned_data['height'],
-					'activity_level' : form.cleaned_data['activity_level'],
+					'activity_level' : form.cleaned_data['activity_level'],\
+					'gender' : form.cleaned_data["gender"],
 					'goals' : form.cleaned_data['goals']
 				})
 			})

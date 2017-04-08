@@ -12,10 +12,10 @@ import itertools , threading , lego
 
 class Calculations:
 	@lego.assemble
-	def __init__(self , weight , height , activity , goal , exclude):
+	def __init__(self , weight , height , activity , goal , gender,  exclude):
 		#calculations
 		self.bmi = BMI(weight , height)
-		self.ibw = IBW(self.height)
+		self.ibw = IBW(self.height, self.gender)
 		self.calorieNumber = CalorieNumber(self.bmi , self.activity)
 		self.countCalories()
 		# self.makeMeals()
