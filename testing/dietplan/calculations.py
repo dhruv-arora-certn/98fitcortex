@@ -15,9 +15,6 @@ class Calculations:
 	def __init__(self , weight , height , activity , goal , exclude):
 		#calculations
 		self.bmi = BMI(weight , height)
-		# self.leanfactor = LeanFactor(bodyType , self.bmi.category)
-		# self.bmr = BasalMetabolicRate(weight , self.leanfactor.get_lean())
-		# self.tdee = TDEE(self.bmr.bmr , self.activity)
 		self.ibw = IBW(self.height)
 		self.calorieNumber = CalorieNumber(self.bmi , self.activity)
 		self.countCalories()
@@ -31,9 +28,9 @@ class Calculations:
 	def makeMeals(self):
 		self.m5 = M5(self.calories , self.goal , self.exclude).build()
 		self.m3 = M3(self.calories , self.goal , self.exclude + [e.name for e in self.m5.selected] , extra = self.m5.calories_goal - self.m5.calories , yogurt = False).build()
-		self.m1 = M1(self.calories , self.goal , self.exclude , extra = self.m3.calories_goal - self.m3.calories).build()
-		self.m4 = M4(self.calories , self.goal , self.exclude , extra = self.m1.calories_goal - self.m1.calories).build()
-		self.m2 = M2(self.calories , self.goal , self.exclude , extra = self.m4.calories_goal - self.m4.calories).build()
+		self.m1 = M1(self.calories , self.goal , self.exclude , extra = self.m3.calories_remaining).build()
+		self.m4 = M4(self.calories , self.goal , self.exclude , extra = self.m1.calories_remaining).build()
+		self.m2 = M2(self.calories , self.goal , self.exclude , extra = self.m4.calories_remaining).build()
 
 	def get_m1(self):
 		self.m1 = M1( self.calories , self.goal )
@@ -69,3 +66,7 @@ class Calculations:
 	@property
 	def fat_ideal(self):
 		return (self.goal.fat * self.calories) /  9
+
+	@property
+	def random(self):
+		return [e.name for e in self.m1.random() +self.m2.random() +self.m3.random() +self.m4.random() +self.m5.random()] 

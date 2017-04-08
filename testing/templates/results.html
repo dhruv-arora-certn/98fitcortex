@@ -1,3 +1,4 @@
+{%include 'index.html' %}
 Calories Goal  : {{c.calories}} <br>
 Calories achieved : {{c.calories_achieved}} <br>
 Protein : {{c.protein | floatformat:2}}/{{c.protein_ideal | floatformat:2}} <br>
@@ -45,3 +46,6 @@ Fat( {{c.m5.fat| floatformat:2}}/{{c.m5.fat_ideal| floatformat:2}}) <br>
 {% for f in c.m5.selected%}
 	{{f.name}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} <br>
 {% endfor %}
+
+
+{{c.random}}

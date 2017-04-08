@@ -2,13 +2,14 @@ from .models import Food
 from .utils import annotate_food , mark_squared_diff
 from .goals import Goals
 from knapsack.knapsack_dp import knapsack,display
-import heapq , mongoengine , re
+import heapq , mongoengine , re , random
 
 class Base:
 
-	def select_item(self , item):
+	def select_item(self , item , remove = True):
 		self.selected.append(item)
-		self.marked.remove(item)
+		if remove:
+			self.marked.remove(item)
 		return self
 
 	@property
@@ -43,6 +44,17 @@ class Base:
 	def carbs(self):
 		return sum([i.carbohydrates for i in self.selected])
 
+	@property
+	def calories_remaining(self):
+		return self.calories_goal - self.calories
+
+	def random(self):
+		return random.sample(self.for_random , min(2,len(self.selected)))
+
+	@property
+	def for_random(self):
+		return self.selected
+
 	def __getitem__(self , key):
 		return self.selected[key]
 
@@ -64,7 +76,7 @@ class M1(Base):
 	def allocate_restrictions(self):
 		self.select_item(self.drink)
 		self.remove_drinks()
-		self.select_item(mark_squared_diff(Food.m1_objects.filter(name = "Boiled Egg White").first() , self.goal.get_attributes()))
+		self.select_item(mark_squared_diff(Food.m1_objects.filter(name = "Boiled Egg White").first() , self.goal.get_attributes()) , remove = False)
 	def pop_snack(self):
 		self.snack_list = list(filter(lambda x : x.snaks , self.marked ))
 		heapq.heapify(self.snack_list)
@@ -213,6 +225,10 @@ class M3(Base):
 		self.select_cereals()
 		self.select_pulses()
 		return self
+
+	@property
+	def for_random(self):
+		return list(filter( lambda x : not bool(x.dessert) , self.selected))
 
 class M4(Base):
 	percent = 0.15

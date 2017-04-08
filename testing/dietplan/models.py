@@ -1,6 +1,6 @@
 import mongoengine
 
-# mongoengine.connect(db = "98fit")
+mongoengine.connect(db = "98fit")
 
 class Food(mongoengine.Document):
 	name = mongoengine.StringField()
