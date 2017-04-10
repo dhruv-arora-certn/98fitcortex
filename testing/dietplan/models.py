@@ -32,8 +32,10 @@ class Food(mongoengine.Document):
 	pulses = mongoengine.IntField()
 	for_loss = mongoengine.IntField()
 	cuisine = mongoengine.StringField()
+	nuts = mongoengine.IntField()
 
 	squared_diff = 0
+	factor = 1
 
 	meta = {
 		'collection' : 'food_list',
@@ -96,10 +98,21 @@ class Food(mongoengine.Document):
 	def __str__(self):
 		return self.name + " " + str(self.squared_diff)
 
-	def update(self , factor):
-		self.weight = self.weight * factor
-		self.protein = self.protein * factor
-		self.fat = self.fat * factor
-		self.carbohydrates = self.carbohydrates * factor
-		self.calarie = self.calarie*factor
+	def update(self,factor):
+		self.protein *= factor
+		self.fat *= factor
+		self.carbohydrates *= factor
+		self.calarie *= factor
+
+	def update_weight(self, factor):
+		self.weight *= factor
+		self.update(factor)
 		return self
+			
+	def update_quantity(self ,factor):
+		self.quantity *= factor
+		self.update(factor)
+		return self
+
+	def goal_nutrition(self,goal):
+		return self.protein*goal.protein + self.fat*goal.fat + self.carbohydrates*goal.carbs
