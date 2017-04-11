@@ -342,7 +342,7 @@ class M4(Base):
 		try:
 			self.fruits = self.select_best_minimum(fruit_items , calories , "fruit")
 		except Exception as e:
-			self.fruits = random.choice(food_list)
+			self.fruits = random.choice(fruit_items)
 			self.select_item(self.fruits)
 		self.fruits.update_quantity(2)
 
