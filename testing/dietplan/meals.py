@@ -150,7 +150,7 @@ class M1(Base):
 		food_list = list(filter( lambda x : bool(x.snaks) , self.marked))
 		try:
 			self.snacks = sorted(self.get_best(food_list , calories , name = "snacks"))
-		except IndexError as e:
+		except Exception as e:
 			self.snacks = [random.choice(food_list)]
 		if len(self.snacks) >= 2:
 			self.select_items(*self.snacks[:1])
@@ -181,7 +181,7 @@ class M2(Base):
 		fruit_items = list(filter(lambda x : bool(x.fruit) , self.marked))
 		try:
 			self.fruits = self.select_best_minimum(fruit_items , calories , name = "fruit")
-		except IndexError as e:
+		except Exception as e:
 			self.fruits = random.choice(fruit_items)
 			self.select_item(self.fruits)
 
@@ -191,7 +191,7 @@ class M2(Base):
 		salad_items = list(filter(lambda x : bool(x.salad) , self.marked))
 		try:
 			self.salad = self.select_best_minimum(salad_items , calories , name = "salad")
-		except IndexError as e:
+		except Exception as e:
 			self.salad = random.choice(salad_items)
 			self.select_item(self.salad)
 
@@ -202,7 +202,7 @@ class M2(Base):
 		nuts_items = list(filter(lambda x : bool(x.nuts) , self.marked))
 		try:
 			self.nuts = self.select_best_minimum(nuts_items , calories , name = "nut")
-		except IndexError as e:
+		except Exception as e:
 			self.nuts = random.choice(nuts_items)
 			self.select_item(self.nuts)
 
@@ -212,7 +212,7 @@ class M2(Base):
 		snack_items = list(filter(lambda x : bool(x.snaks) , self.marked))
 		try:
 			self.snack = self.select_best_minimum(snack_items , calories , name = "snack")
-		except IndexError as e:
+		except Exception as e:
 			self.snack = random.choice(snack_items)
 			self.select_item(self.snack)
 
@@ -332,7 +332,7 @@ class M4(Base):
 		food_list = list(filter(lambda x : bool(x.drink) , self.marked))
 		try:
 			self.drink = self.select_best_minimum(food_list , calories , "drink")
-		except IndexError as e:
+		except Exception as e:
 			self.drink = random.choice(food_list)
 			self.select_item(self.drink)
 
@@ -341,7 +341,7 @@ class M4(Base):
 		fruit_items = list(filter(lambda x : bool(x.fruit) , self.marked))
 		try:
 			self.fruits = self.select_best_minimum(fruit_items , calories , "fruit")
-		except IndexError as e:
+		except Exception as e:
 			self.fruits = random.choice(food_list)
 			self.select_item(self.fruits)
 		self.fruits.update_quantity(2)
@@ -351,7 +351,7 @@ class M4(Base):
 		salad_items = list(filter(lambda x : bool(x.salad) , self.marked))
 		try:
 			self.salad = self.select_best_minimum(salad_items , calories , "salad")
-		except IndexError as e:
+		except Exception as e:
 			self.salad = random.choice(salad_items)
 			self.select_item(self.salad)
 		self.salad.update_weight(1.5)
@@ -368,7 +368,7 @@ class M4(Base):
 		snack_items = list(filter(lambda x : bool(x.snaks) , self.marked))
 		try:
 			self.snack = self.select_best_minimum(snack_items , calories , "snacks")
-		except IndexError as e:
+		except Exception as e:
 			self.snack = random.choice(snack_items)
 			self.select_item(self.snack)
 

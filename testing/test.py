@@ -10,9 +10,9 @@ from knapsack.knapsack_dp import knapsack,display
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-weight = 75
+weight = 78
 height = 1.75
-goal = Goals.WeightGain
+goal = Goals.WeightLoss
 activity = ActivityLevel.sedentary
 gender = Male.number
 print(activity)

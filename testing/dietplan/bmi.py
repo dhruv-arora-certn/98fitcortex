@@ -47,7 +47,7 @@ class BMI:
 
 	class OverWeight(BMIClassificationBase):
 		lower = 23
-		upper = 26.9
+		upper = 27
 		sedentary = 20
 		lightly_active = 22
 		moderately_active = 25
