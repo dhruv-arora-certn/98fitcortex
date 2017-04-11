@@ -12,13 +12,13 @@ from mpl_toolkits.mplot3d import Axes3D
 
 weight = 75
 height = 1.75
-goal = Goals.MuscleGain
+goal = Goals.WeightGain
 activity = ActivityLevel.sedentary
 gender = Male.number
 print(activity)
 exclude = [ "Fruit Raita" , "Garlic Methi Khakra" , "Tea with Skimmed Milk, Without Sugar"]
 c = Calculations(weight , height , activity , goal , gender ,exclude = exclude)
-c.makeMeals()
+# c.makeMeals()
 # fig = plt.figure()
 # ax = Axes3D(fig)
 # f = list(annotate_food(Food.objects.filter(calarie__gt= 0),goal))

@@ -41,11 +41,12 @@ def get_analysis(request):
 			)
 			# ipdb.set_trace()
 			c.makeMeals()
-			exclude_c = form.cleaned_data["exclude"].split(";") + c.random
+			exclude_c = form.cleaned_data["exclude"].split(";") + [e.name for e in c.selected]
+			exclude_c = exclude_c[-20:]
 			return render(request , "results.html" , {
 				'c' : c,
 				'form' : AnalysisForm({
-					'exclude' : ";".join(random.sample(exclude_c , min(20 , len(exclude_c)))),
+					'exclude' : ";".join([e.name for e in c.selected]),
 					'weight' : form.cleaned_data['weight'],
 					'height' : form.cleaned_data['height'],
 					'activity_level' : form.cleaned_data['activity_level'],\

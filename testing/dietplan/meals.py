@@ -76,6 +76,12 @@ class Base:
 			self.marked.remove(item)
 		return self
 
+	def unselect_item(self , item , append = True):
+		self.selected.remove(item)
+		if append:
+			self.selected.append(item)
+		return self
+
 	def select_items(self , *items):
 		[self.select_item(e) for e in items]
 		return self
@@ -83,9 +89,12 @@ class Base:
 	def rethink(self):
 		for item in self.selected:
 			if self.calories < self.calories_goal:
-				if "Parantha" in self.cereals or "Roti" in self.cereals:
-					item.update_quantity(2)
-				else:
+				if "Parantha" in item.name or "Roti" in item.name or "Cheela" in item.name:
+					print("Updating Quantity" , item)
+					if item.quantity < 2:
+						item.update_quantity(2)
+				elif "Tea" not in item.name or "Coffee" not in item.name:
+					print("Updating Weight" , item)
 					item.update_weight(1.5)	
 
 	def __getitem__(self , key):
@@ -128,20 +137,23 @@ class M1(Base):
 
 	def rethink(self):
 		for item in self.selected:
-			if self.calories < self.calories_goal:
-				if "Parantha" in item.name or "Roti" in item.name:
+			if self.calories < self.calories_goal and item != self.egg:
+				if "Parantha" in item.name or "Roti" in item.name or "Dosa" in item.name or "Cheela" in item.name:
 					item.update_quantity(2)
+				else:
+					item.update_weight(1.5)
 	
 	def build(self):
 		print("Starting 1")
 		self.allocate_restrictions()
 		calories = self.calories_remaining
 		food_list = list(filter( lambda x : bool(x.snaks) , self.marked))
-		F,test = knapsack(food_list , calories)
-		items = display(F , calories , food_list)
-		self.snacks = sorted([food_list[i] for i in items])
-		if len(self.snacks) > 2:
-			self.select_items(*self.snacks[:2])
+		try:
+			self.snacks = sorted(self.get_best(food_list , calories , name = "snacks"))
+		except IndexError as e:
+			self.snacks = [random.choice(food_list)]
+		if len(self.snacks) >= 2:
+			self.select_items(*self.snacks[:1])
 			# self.select_item(self.egg)
 			print(len(self.snacks))
 		else:
@@ -167,33 +179,49 @@ class M2(Base):
 		self.option = "fruit"
 		calories = self.calories_goal
 		fruit_items = list(filter(lambda x : bool(x.fruit) , self.marked))
-		self.fruits = self.select_best_minimum(fruit_items , calories , name = "fruit")
+		try:
+			self.fruits = self.select_best_minimum(fruit_items , calories , name = "fruit")
+		except IndexError as e:
+			self.fruits = random.choice(fruit_items)
+			self.select_item(self.fruits)
 
 	def select_salad(self):
 		self.option = "salad"
 		calories = self.calories_goal
 		salad_items = list(filter(lambda x : bool(x.salad) , self.marked))
-		self.salad = self.select_best_minimum(salad_items , calories , name = "salad")
+		try:
+			self.salad = self.select_best_minimum(salad_items , calories , name = "salad")
+		except IndexError as e:
+			self.salad = random.choice(salad_items)
+			self.select_item(self.salad)
 
 	def select_nut(self):
 		self.option = "nut"
 		calories = self.calories_goal
 		print("Nut calories" , calories)
 		nuts_items = list(filter(lambda x : bool(x.nuts) , self.marked))
-		self.nuts = self.select_best_minimum(nuts_items , calories , name = "nut")
+		try:
+			self.nuts = self.select_best_minimum(nuts_items , calories , name = "nut")
+		except IndexError as e:
+			self.nuts = random.choice(nuts_items)
+			self.select_item(self.nuts)
 
 	def select_snacks(self):
-		self.option = "snacks"
+		self.option = "snack"
 		calories = self.calories_goal
 		snack_items = list(filter(lambda x : bool(x.snaks) , self.marked))
-		self.snack = self.select_best_minimum(snack_items , calories , name = "snack")
+		try:
+			self.snack = self.select_best_minimum(snack_items , calories , name = "snack")
+		except IndexError as e:
+			self.snack = random.choice(snack_items)
+			self.select_item(self.snack)
 
 	def check(self):
-		choices = ["snacks" , "nut" , "salad" , "fruit"]
+		choices = ["snack" , "nut" , "salad" , "fruit"]
 		f = Food.m2_objects
 		choices.remove(self.option)
 		choice = random.choice(choices)
-		if choice == "snacks":
+		if choice == "snack":
 			f = f.filter(snaks = 1)
 		if choice == "nut":
 			f = f.filter(nuts = 1)
@@ -258,6 +286,9 @@ class M3(Base):
 		calories = percent * self.calories_goal
 		food_list = list(filter( lambda x : bool(x.cereal_grains) and not bool(x.dessert) , self.marked))
 		self.cereals = self.select_best_minimum(food_list , calories , "cereals")
+		if "Parantha" in self.cereals.name or "Roti" in self.cereals.name:
+			if self.cereals.quantity < 2:
+				self.cereals.update_quantity(2)
 
 	def select_pulses(self):
 		if self.yogurt : 
@@ -299,17 +330,30 @@ class M4(Base):
 	def select_drink(self):
 		calories = 0.15*self.calories_goal
 		food_list = list(filter(lambda x : bool(x.drink) , self.marked))
-		self.drink = self.select_best_minimum(food_list , calories , "drink")
+		try:
+			self.drink = self.select_best_minimum(food_list , calories , "drink")
+		except IndexError as e:
+			self.drink = random.choice(food_list)
+			self.select_item(self.drink)
 
 	def select_fruit(self):
 		calories = self.calories_goal
 		fruit_items = list(filter(lambda x : bool(x.fruit) , self.marked))
-		self.fruits = self.select_best_minimum(fruit_items , calories , "fruit")
+		try:
+			self.fruits = self.select_best_minimum(fruit_items , calories , "fruit")
+		except IndexError as e:
+			self.fruits = random.choice(food_list)
+			self.select_item(self.fruits)
 		self.fruits.update_quantity(2)
+
 	def select_salad(self):
 		calories = self.calories_goal
 		salad_items = list(filter(lambda x : bool(x.salad) , self.marked))
-		self.salad = self.select_best_minimum(salad_items , calories , "salad")
+		try:
+			self.salad = self.select_best_minimum(salad_items , calories , "salad")
+		except IndexError as e:
+			self.salad = random.choice(salad_items)
+			self.select_item(self.salad)
 		self.salad.update_weight(1.5)
 
 	def select_nut(self):
@@ -318,10 +362,15 @@ class M4(Base):
 		nuts_items = list(filter(lambda x : bool(x.nuts) , self.marked))
 		self.nuts = self.select_best_minimum(nuts_items , calories , "nut")
 		self.nuts.update_quantity(2)
+
 	def select_snacks(self):
 		calories = self.calories_goal
 		snack_items = list(filter(lambda x : bool(x.snaks) , self.marked))
-		self.snack = self.select_best_minimum(snack_items , calories , "snacks")
+		try:
+			self.snack = self.select_best_minimum(snack_items , calories , "snacks")
+		except IndexError as e:
+			self.snack = random.choice(snack_items)
+			self.select_item(self.snack)
 
 	def build(self):
 		self.select_drink()
@@ -345,8 +394,7 @@ class M5(Base):
 			self.queryset = Food.m5gain_objects
 		if goal == Goals.MaintainWeight:
 			self.queryset = Food.m5stable_objects
-
-		self.queryset.filter(name__nin = exclude)
+		self.queryset = self.queryset.filter(name__nin = exclude).filter(name__nin = ["Beetroot Parantha"])
 		self.marked = list(annotate_food(self.queryset , self.goal))
 		self.selected = []
 		# heapq.heapify(self.marked)
@@ -361,11 +409,6 @@ class M5(Base):
 		calories = 0.39*self.calories_goal
 		food_list = list(filter(lambda x : bool(x.cereal_grains) , self.marked))
 		self.cereals = self.select_best_minimum(food_list , calories , "cereals")
-
-		if "Parantha" in self.cereals or "Roti" in self.cereals:
-			self.cereals.update_quantity(2)
-		else:
-			self.cereals.update_weight(1.5)
 
 	def select_pulses(self):
 		calories = 0.39 * self.calories_goal

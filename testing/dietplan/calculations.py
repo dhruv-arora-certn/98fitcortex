@@ -26,7 +26,7 @@ class Calculations:
 		return self
 
 	def makeMeals(self):
-		self.m5 = M5(self.calories , self.goal , self.exclude)
+		self.m5 = M5(self.calories , self.goal , exclude = self.exclude)
 		self.m5.build()
 		self.m3 = M3(self.calories , self.goal , self.exclude + [e.name for e in self.m5.selected] , extra = self.m5.calories_remaining)
 		self.m3.build()
