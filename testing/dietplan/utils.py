@@ -1,4 +1,5 @@
 from .goals import Goals
+from multiprocessing import Pool
 import itertools , heapq
 import numpy as np
 
@@ -10,7 +11,9 @@ def mark_squared_diff(item , pi):
 	item.squared_diff = (item.pcf - 3)**2
 	return item
 
-def mark_exp_diff(item , pi):
+def mark_exp_diff(args):
+	item = args[0]
+	pi = args[1]
 	item._p = (item.protein / (pi[0]*item.calarie/4))
 	item.p = item._p*np.exp(np.sign(item._p)*(item._p-1))
 
@@ -22,7 +25,10 @@ def mark_exp_diff(item , pi):
 	
 	item.pcf = item.p+item.c+item.f
 	item.squared_diff = np.square(item.pcf - 3)
+	# print("SD", item.squared_diff)
 	return item
 
 def annotate_food(food_queryset , goal ):
-	return map( mark_exp_diff , food_queryset , itertools.repeat(goal.get_attributes()))
+
+	data = map( mark_exp_diff , zip(food_queryset , itertools.repeat(goal.get_attributes())))
+	return data

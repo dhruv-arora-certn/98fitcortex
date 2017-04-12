@@ -1,52 +1,375 @@
 {%include 'index.html' %}
-Calories Goal  : {{c.calories}} <br>
-Calories achieved : {{c.calories_achieved}} <br>
-Protein : {{c.protein | floatformat:2}}/{{c.protein_ideal | floatformat:2}} <br>
-Fat : {{c.fat | floatformat:2}}/{{c.fat_ideal | floatformat:2}} <br>
-Carbs : {{c.carbs | floatformat:2 }}/{{c.carbs_ideal | floatformat:2}}<br>
+<h1>Day 1</h1> <br><hr>
+Calories Goal  : {{p.day1.calculations.calories}} <br>
+Calories achieved : {{p.day1.calculations.calories_achieved}} <br>
+Protein : {{p.day1.calculations.protein | floatformat:2}}/{{p.day1.calculations.protein_ideal | floatformat:2}} <br>
+Fat : {{p.day1.calculations.fat | floatformat:2}}/{{p.day1.calculations.fat_ideal | floatformat:2}} <br>
+Carbs : {{p.day1.calculations.carbs | floatformat:2 }}/{{p.day1.calculations.carbs_ideal | floatformat:2}}<br>
 <br><br>
 M1 <br>
-Calories ({{c.m1.calories | floatformat:2}}/{{c.m1.calories_goal | floatformat:2}}) <br>
-Protein({{c.m1.protein | floatformat:2}}/{{c.m1.protein_ideal | floatformat:2}}) <br>
-Carbs({{c.m1.carbs | floatformat:2}}/{{c.m1.carbs_ideal | floatformat:2}}) <br>
-Fat( {{c.m1.fat | floatformat:2}}/{{c.m1.fat_ideal | floatformat:2}}) <br>
-{% for f in c.m1.selected%}
+Calories ({{p.day1.calculations.m1.calories | floatformat:2}}/{{p.day1.calculations.m1.calories_goal | floatformat:2}}) <br>
+Protein({{p.day1.calculations.m1.protein | floatformat:2}}/{{p.day1.calculations.m1.protein_ideal | floatformat:2}}) <br>
+Carbs({{p.day1.calculations.m1.carbs | floatformat:2}}/{{p.day1.calculations.m1.carbs_ideal | floatformat:2}}) <br>
+Fat( {{p.day1.calculations.m1.fat | floatformat:2}}/{{p.day1.calculations.m1.fat_ideal | floatformat:2}}) <br>
+{% for f in p.day1.calculations.m1.selected%}
 	{{f.name}} / Quantity : {{f.quantity | floatformat:2}} /Weight : {{f.weight | floatformat:2}} / Protein : {{f.protein | floatformat:2}} /  Carbs : {{f.carbohydrates | floatformat:2}} / Fats : {{f.fat | floatformat:2}}}}<br>
 {% endfor %}
 <br><br>
 M2 <br>
-Calories ({{c.m2.calories | floatformat:2}}/{{c.m2.calories_goal | floatformat:2}}) <br>
-Protein({{c.m2.protein| floatformat:2}}/{{c.m2.protein_ideal| floatformat:2}}) <br>
-Carbs({{c.m2.carbs| floatformat:2}}/{{c.m2.carbs_ideal| floatformat:2}}) <br>
-Fat( {{c.m2.fat| floatformat:2}}/{{c.m2.fat_ideal| floatformat:2}}) <br>
+Calories ({{p.day1.calculations.m2.calories | floatformat:2}}/{{p.day1.calculations.m2.calories_goal | floatformat:2}}) <br>
+Protein({{p.day1.calculations.m2.protein| floatformat:2}}/{{p.day1.calculations.m2.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day1.calculations.m2.carbs| floatformat:2}}/{{p.day1.calculations.m2.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day1.calculations.m2.fat| floatformat:2}}/{{p.day1.calculations.m2.fat_ideal| floatformat:2}}) <br>
 
-{% for f in c.m2.selected%}
+{% for f in p.day1.calculations.m2.selected%}
 	{{f.name}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
 {% endfor %}<br><br>
 M3 <br>
-Calories ({{c.m3.calories | floatformat:2}}/{{c.m3.calories_goal | floatformat:2}}) <br>
-Protein({{c.m3.protein| floatformat:2}}/{{c.m3.protein_ideal| floatformat:2}}) <br>
-Carbs({{c.m3.carbs| floatformat:2}}/{{c.m3.carbs_ideal| floatformat:2}}) <br>
-Fat( {{c.m3.fat| floatformat:2}}/{{c.m3.fat_ideal| floatformat:2}}) <br>
-{% for f in c.m3.selected%}
+Calories ({{p.day1.calculations.m3.calories | floatformat:2}}/{{p.day1.calculations.m3.calories_goal | floatformat:2}}) <br>
+Protein({{p.day1.calculations.m3.protein| floatformat:2}}/{{p.day1.calculations.m3.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day1.calculations.m3.carbs| floatformat:2}}/{{p.day1.calculations.m3.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day1.calculations.m3.fat| floatformat:2}}/{{p.day1.calculations.m3.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day1.calculations.m3.selected%}
 	{{f.name}} / Quantity : {{f.quantity}}/Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
 {% endfor %}
 <br><br>
 
 M4 <br>
-Calories ({{c.m4.calories | floatformat:2}}/{{c.m4.calories_goal | floatformat:2}}) <br>
-Protein({{c.m4.protein| floatformat:2}}/{{c.m4.protein_ideal| floatformat:2}}) <br>
-Carbs({{c.m4.carbs| floatformat:2}}/{{c.m4.carbs_ideal| floatformat:2}}) <br>
-Fat( {{c.m4.fat| floatformat:2}}/{{c.m4.fat_ideal| floatformat:2}}) <br>
-{% for f in c.m4.selected%}
+Calories ({{p.day1.calculations.m4.calories | floatformat:2}}/{{p.day1.calculations.m4.calories_goal | floatformat:2}}) <br>
+Protein({{p.day1.calculations.m4.protein| floatformat:2}}/{{p.day1.calculations.m4.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day1.calculations.m4.carbs| floatformat:2}}/{{p.day1.calculations.m4.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day1.calculations.m4.fat| floatformat:2}}/{{p.day1.calculations.m4.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day1.calculations.m4.selected%}
 	{{f.name}} / Quantiity : {{f.quantity | floatformat:2}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
 {% endfor %}
 <br><br>
 M5 <br>
-Calories ({{c.m5.calories | floatformat:2}}/{{c.m5.calories_goal | floatformat:2}}) <br>
-Protein({{c.m5.protein| floatformat:2}}/{{c.m5.protein_ideal| floatformat:2}}) <br>
-Carbs({{c.m5.carbs| floatformat:2}}/{{c.m5.carbs_ideal| floatformat:2}}) <br>
-Fat( {{c.m5.fat| floatformat:2}}/{{c.m5.fat_ideal| floatformat:2}}) <br>
-{% for f in c.m5.selected%}
+Calories ({{p.day1.calculations.m5.calories | floatformat:2}}/{{p.day1.calculations.m5.calories_goal | floatformat:2}}) <br>
+Protein({{p.day1.calculations.m5.protein| floatformat:2}}/{{p.day1.calculations.m5.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day1.calculations.m5.carbs| floatformat:2}}/{{p.day1.calculations.m5.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day1.calculations.m5.fat| floatformat:2}}/{{p.day1.calculations.m5.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day1.calculations.m5.selected%}
 	{{f.name}} / Quantity:{{f.quantity}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
 {% endfor %}
+<hr>
+
+<h1>Day 2</h1> <br><hr>
+Calories Goal  : {{p.day2.calculations.calories}} <br>
+Calories achieved : {{p.day2.calculations.calories_achieved}} <br>
+Protein : {{p.day2.calculations.protein | floatformat:2}}/{{p.day2.calculations.protein_ideal | floatformat:2}} <br>
+Fat : {{p.day2.calculations.fat | floatformat:2}}/{{p.day2.calculations.fat_ideal | floatformat:2}} <br>
+Carbs : {{p.day2.calculations.carbs | floatformat:2 }}/{{p.day2.calculations.carbs_ideal | floatformat:2}}<br>
+<br><br>
+M1 <br>
+Calories ({{p.day2.calculations.m1.calories | floatformat:2}}/{{p.day2.calculations.m1.calories_goal | floatformat:2}}) <br>
+Protein({{p.day2.calculations.m1.protein | floatformat:2}}/{{p.day2.calculations.m1.protein_ideal | floatformat:2}}) <br>
+Carbs({{p.day2.calculations.m1.carbs | floatformat:2}}/{{p.day2.calculations.m1.carbs_ideal | floatformat:2}}) <br>
+Fat( {{p.day2.calculations.m1.fat | floatformat:2}}/{{p.day2.calculations.m1.fat_ideal | floatformat:2}}) <br>
+{% for f in p.day2.calculations.m1.selected%}
+	{{f.name}} / Quantity : {{f.quantity | floatformat:2}} /Weight : {{f.weight | floatformat:2}} / Protein : {{f.protein | floatformat:2}} /  Carbs : {{f.carbohydrates | floatformat:2}} / Fats : {{f.fat | floatformat:2}}}}<br>
+{% endfor %}
+<br><br>
+M2 <br>
+Calories ({{p.day2.calculations.m2.calories | floatformat:2}}/{{p.day2.calculations.m2.calories_goal | floatformat:2}}) <br>
+Protein({{p.day2.calculations.m2.protein| floatformat:2}}/{{p.day2.calculations.m2.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day2.calculations.m2.carbs| floatformat:2}}/{{p.day2.calculations.m2.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day2.calculations.m2.fat| floatformat:2}}/{{p.day2.calculations.m2.fat_ideal| floatformat:2}}) <br>
+
+{% for f in p.day2.calculations.m2.selected%}
+	{{f.name}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}<br><br>
+M3 <br>
+Calories ({{p.day2.calculations.m3.calories | floatformat:2}}/{{p.day2.calculations.m3.calories_goal | floatformat:2}}) <br>
+Protein({{p.day2.calculations.m3.protein| floatformat:2}}/{{p.day2.calculations.m3.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day2.calculations.m3.carbs| floatformat:2}}/{{p.day2.calculations.m3.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day2.calculations.m3.fat| floatformat:2}}/{{p.day2.calculations.m3.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day2.calculations.m3.selected%}
+	{{f.name}} / Quantity : {{f.quantity}}/Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}
+<br><br>
+
+M4 <br>
+Calories ({{p.day2.calculations.m4.calories | floatformat:2}}/{{p.day2.calculations.m4.calories_goal | floatformat:2}}) <br>
+Protein({{p.day2.calculations.m4.protein| floatformat:2}}/{{p.day2.calculations.m4.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day2.calculations.m4.carbs| floatformat:2}}/{{p.day2.calculations.m4.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day2.calculations.m4.fat| floatformat:2}}/{{p.day2.calculations.m4.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day2.calculations.m4.selected%}
+	{{f.name}} / Quantiity : {{f.quantity | floatformat:2}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}
+<br><br>
+M5 <br>
+Calories ({{p.day2.calculations.m5.calories | floatformat:2}}/{{p.day2.calculations.m5.calories_goal | floatformat:2}}) <br>
+Protein({{p.day2.calculations.m5.protein| floatformat:2}}/{{p.day2.calculations.m5.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day2.calculations.m5.carbs| floatformat:2}}/{{p.day2.calculations.m5.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day2.calculations.m5.fat| floatformat:2}}/{{p.day2.calculations.m5.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day2.calculations.m5.selected%}
+	{{f.name}} / Quantity:{{f.quantity}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}
+<hr>
+<h1>Day 3</h1> <br><hr>
+Calories Goal  : {{p.day3.calculations.calories}} <br>
+Calories achieved : {{p.day3.calculations.calories_achieved}} <br>
+Protein : {{p.day3.calculations.protein | floatformat:2}}/{{p.day3.calculations.protein_ideal | floatformat:2}} <br>
+Fat : {{p.day3.calculations.fat | floatformat:2}}/{{p.day3.calculations.fat_ideal | floatformat:2}} <br>
+Carbs : {{p.day3.calculations.carbs | floatformat:2 }}/{{p.day3.calculations.carbs_ideal | floatformat:2}}<br>
+<br><br>
+M1 <br>
+Calories ({{p.day3.calculations.m1.calories | floatformat:2}}/{{p.day3.calculations.m1.calories_goal | floatformat:2}}) <br>
+Protein({{p.day3.calculations.m1.protein | floatformat:2}}/{{p.day3.calculations.m1.protein_ideal | floatformat:2}}) <br>
+Carbs({{p.day3.calculations.m1.carbs | floatformat:2}}/{{p.day3.calculations.m1.carbs_ideal | floatformat:2}}) <br>
+Fat( {{p.day3.calculations.m1.fat | floatformat:2}}/{{p.day3.calculations.m1.fat_ideal | floatformat:2}}) <br>
+{% for f in p.day3.calculations.m1.selected%}
+	{{f.name}} / Quantity : {{f.quantity | floatformat:2}} /Weight : {{f.weight | floatformat:2}} / Protein : {{f.protein | floatformat:2}} /  Carbs : {{f.carbohydrates | floatformat:2}} / Fats : {{f.fat | floatformat:2}}}}<br>
+{% endfor %}
+<br><br>
+M2 <br>
+Calories ({{p.day3.calculations.m2.calories | floatformat:2}}/{{p.day3.calculations.m2.calories_goal | floatformat:2}}) <br>
+Protein({{p.day3.calculations.m2.protein| floatformat:2}}/{{p.day3.calculations.m2.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day3.calculations.m2.carbs| floatformat:2}}/{{p.day3.calculations.m2.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day3.calculations.m2.fat| floatformat:2}}/{{p.day3.calculations.m2.fat_ideal| floatformat:2}}) <br>
+
+{% for f in p.day3.calculations.m2.selected%}
+	{{f.name}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}<br><br>
+M3 <br>
+Calories ({{p.day3.calculations.m3.calories | floatformat:2}}/{{p.day3.calculations.m3.calories_goal | floatformat:2}}) <br>
+Protein({{p.day3.calculations.m3.protein| floatformat:2}}/{{p.day3.calculations.m3.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day3.calculations.m3.carbs| floatformat:2}}/{{p.day3.calculations.m3.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day3.calculations.m3.fat| floatformat:2}}/{{p.day3.calculations.m3.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day3.calculations.m3.selected%}
+	{{f.name}} / Quantity : {{f.quantity}}/Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}
+<br><br>
+
+M4 <br>
+Calories ({{p.day3.calculations.m4.calories | floatformat:2}}/{{p.day3.calculations.m4.calories_goal | floatformat:2}}) <br>
+Protein({{p.day3.calculations.m4.protein| floatformat:2}}/{{p.day3.calculations.m4.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day3.calculations.m4.carbs| floatformat:2}}/{{p.day3.calculations.m4.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day3.calculations.m4.fat| floatformat:2}}/{{p.day3.calculations.m4.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day3.calculations.m4.selected%}
+	{{f.name}} / Quantiity : {{f.quantity | floatformat:2}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}
+<br><br>
+M5 <br>
+Calories ({{p.day3.calculations.m5.calories | floatformat:2}}/{{p.day3.calculations.m5.calories_goal | floatformat:2}}) <br>
+Protein({{p.day3.calculations.m5.protein| floatformat:2}}/{{p.day3.calculations.m5.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day3.calculations.m5.carbs| floatformat:2}}/{{p.day3.calculations.m5.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day3.calculations.m5.fat| floatformat:2}}/{{p.day3.calculations.m5.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day3.calculations.m5.selected%}
+	{{f.name}} / Quantity:{{f.quantity}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}
+<hr>
+
+<h1>Day 4</h1> <br><hr>
+Calories Goal  : {{p.day4.calculations.calories}} <br>
+Calories achieved : {{p.day4.calculations.calories_achieved}} <br>
+Protein : {{p.day4.calculations.protein | floatformat:2}}/{{p.day4.calculations.protein_ideal | floatformat:2}} <br>
+Fat : {{p.day4.calculations.fat | floatformat:2}}/{{p.day4.calculations.fat_ideal | floatformat:2}} <br>
+Carbs : {{p.day4.calculations.carbs | floatformat:2 }}/{{p.day4.calculations.carbs_ideal | floatformat:2}}<br>
+<br><br>
+M1 <br>
+Calories ({{p.day4.calculations.m1.calories | floatformat:2}}/{{p.day4.calculations.m1.calories_goal | floatformat:2}}) <br>
+Protein({{p.day4.calculations.m1.protein | floatformat:2}}/{{p.day4.calculations.m1.protein_ideal | floatformat:2}}) <br>
+Carbs({{p.day4.calculations.m1.carbs | floatformat:2}}/{{p.day4.calculations.m1.carbs_ideal | floatformat:2}}) <br>
+Fat( {{p.day4.calculations.m1.fat | floatformat:2}}/{{p.day4.calculations.m1.fat_ideal | floatformat:2}}) <br>
+{% for f in p.day4.calculations.m1.selected%}
+	{{f.name}} / Quantity : {{f.quantity | floatformat:2}} /Weight : {{f.weight | floatformat:2}} / Protein : {{f.protein | floatformat:2}} /  Carbs : {{f.carbohydrates | floatformat:2}} / Fats : {{f.fat | floatformat:2}}}}<br>
+{% endfor %}
+<br><br>
+M2 <br>
+Calories ({{p.day4.calculations.m2.calories | floatformat:2}}/{{p.day4.calculations.m2.calories_goal | floatformat:2}}) <br>
+Protein({{p.day4.calculations.m2.protein| floatformat:2}}/{{p.day4.calculations.m2.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day4.calculations.m2.carbs| floatformat:2}}/{{p.day4.calculations.m2.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day4.calculations.m2.fat| floatformat:2}}/{{p.day4.calculations.m2.fat_ideal| floatformat:2}}) <br>
+
+{% for f in p.day4.calculations.m2.selected%}
+	{{f.name}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}<br><br>
+M3 <br>
+Calories ({{p.day4.calculations.m3.calories | floatformat:2}}/{{p.day4.calculations.m3.calories_goal | floatformat:2}}) <br>
+Protein({{p.day4.calculations.m3.protein| floatformat:2}}/{{p.day4.calculations.m3.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day4.calculations.m3.carbs| floatformat:2}}/{{p.day4.calculations.m3.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day4.calculations.m3.fat| floatformat:2}}/{{p.day4.calculations.m3.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day4.calculations.m3.selected%}
+	{{f.name}} / Quantity : {{f.quantity}}/Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}
+<br><br>
+
+M4 <br>
+Calories ({{p.day4.calculations.m4.calories | floatformat:2}}/{{p.day4.calculations.m4.calories_goal | floatformat:2}}) <br>
+Protein({{p.day4.calculations.m4.protein| floatformat:2}}/{{p.day4.calculations.m4.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day4.calculations.m4.carbs| floatformat:2}}/{{p.day4.calculations.m4.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day4.calculations.m4.fat| floatformat:2}}/{{p.day4.calculations.m4.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day4.calculations.m4.selected%}
+	{{f.name}} / Quantiity : {{f.quantity | floatformat:2}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}
+<br><br>
+M5 <br>
+Calories ({{p.day4.calculations.m5.calories | floatformat:2}}/{{p.day4.calculations.m5.calories_goal | floatformat:2}}) <br>
+Protein({{p.day4.calculations.m5.protein| floatformat:2}}/{{p.day4.calculations.m5.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day4.calculations.m5.carbs| floatformat:2}}/{{p.day4.calculations.m5.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day4.calculations.m5.fat| floatformat:2}}/{{p.day4.calculations.m5.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day4.calculations.m5.selected%}
+	{{f.name}} / Quantity:{{f.quantity}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}
+<hr>
+<h1>Day 5</h1> <br><hr>
+Calories Goal  : {{p.day5.calculations.calories}} <br>
+Calories achieved : {{p.day5.calculations.calories_achieved}} <br>
+Protein : {{p.day5.calculations.protein | floatformat:2}}/{{p.day5.calculations.protein_ideal | floatformat:2}} <br>
+Fat : {{p.day5.calculations.fat | floatformat:2}}/{{p.day5.calculations.fat_ideal | floatformat:2}} <br>
+Carbs : {{p.day5.calculations.carbs | floatformat:2 }}/{{p.day5.calculations.carbs_ideal | floatformat:2}}<br>
+<br><br>
+M1 <br>
+Calories ({{p.day5.calculations.m1.calories | floatformat:2}}/{{p.day5.calculations.m1.calories_goal | floatformat:2}}) <br>
+Protein({{p.day5.calculations.m1.protein | floatformat:2}}/{{p.day5.calculations.m1.protein_ideal | floatformat:2}}) <br>
+Carbs({{p.day5.calculations.m1.carbs | floatformat:2}}/{{p.day5.calculations.m1.carbs_ideal | floatformat:2}}) <br>
+Fat( {{p.day5.calculations.m1.fat | floatformat:2}}/{{p.day5.calculations.m1.fat_ideal | floatformat:2}}) <br>
+{% for f in p.day5.calculations.m1.selected%}
+	{{f.name}} / Quantity : {{f.quantity | floatformat:2}} /Weight : {{f.weight | floatformat:2}} / Protein : {{f.protein | floatformat:2}} /  Carbs : {{f.carbohydrates | floatformat:2}} / Fats : {{f.fat | floatformat:2}}}}<br>
+{% endfor %}
+<br><br>
+M2 <br>
+Calories ({{p.day5.calculations.m2.calories | floatformat:2}}/{{p.day5.calculations.m2.calories_goal | floatformat:2}}) <br>
+Protein({{p.day5.calculations.m2.protein| floatformat:2}}/{{p.day5.calculations.m2.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day5.calculations.m2.carbs| floatformat:2}}/{{p.day5.calculations.m2.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day5.calculations.m2.fat| floatformat:2}}/{{p.day5.calculations.m2.fat_ideal| floatformat:2}}) <br>
+
+{% for f in p.day5.calculations.m2.selected%}
+	{{f.name}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}<br><br>
+M3 <br>
+Calories ({{p.day5.calculations.m3.calories | floatformat:2}}/{{p.day5.calculations.m3.calories_goal | floatformat:2}}) <br>
+Protein({{p.day5.calculations.m3.protein| floatformat:2}}/{{p.day5.calculations.m3.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day5.calculations.m3.carbs| floatformat:2}}/{{p.day5.calculations.m3.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day5.calculations.m3.fat| floatformat:2}}/{{p.day5.calculations.m3.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day5.calculations.m3.selected%}
+	{{f.name}} / Quantity : {{f.quantity}}/Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}
+<br><br>
+
+M4 <br>
+Calories ({{p.day5.calculations.m4.calories | floatformat:2}}/{{p.day5.calculations.m4.calories_goal | floatformat:2}}) <br>
+Protein({{p.day5.calculations.m4.protein| floatformat:2}}/{{p.day5.calculations.m4.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day5.calculations.m4.carbs| floatformat:2}}/{{p.day5.calculations.m4.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day5.calculations.m4.fat| floatformat:2}}/{{p.day5.calculations.m4.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day5.calculations.m4.selected%}
+	{{f.name}} / Quantiity : {{f.quantity | floatformat:2}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}
+<br><br>
+M5 <br>
+Calories ({{p.day5.calculations.m5.calories | floatformat:2}}/{{p.day5.calculations.m5.calories_goal | floatformat:2}}) <br>
+Protein({{p.day5.calculations.m5.protein| floatformat:2}}/{{p.day5.calculations.m5.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day5.calculations.m5.carbs| floatformat:2}}/{{p.day5.calculations.m5.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day5.calculations.m5.fat| floatformat:2}}/{{p.day5.calculations.m5.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day5.calculations.m5.selected%}
+	{{f.name}} / Quantity:{{f.quantity}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}
+<hr>
+<h1>Day 6</h1> <br><hr>
+Calories Goal  : {{p.day6.calculations.calories}} <br>
+Calories achieved : {{p.day6.calculations.calories_achieved}} <br>
+Protein : {{p.day6.calculations.protein | floatformat:2}}/{{p.day6.calculations.protein_ideal | floatformat:2}} <br>
+Fat : {{p.day6.calculations.fat | floatformat:2}}/{{p.day6.calculations.fat_ideal | floatformat:2}} <br>
+Carbs : {{p.day6.calculations.carbs | floatformat:2 }}/{{p.day6.calculations.carbs_ideal | floatformat:2}}<br>
+<br><br>
+M1 <br>
+Calories ({{p.day6.calculations.m1.calories | floatformat:2}}/{{p.day6.calculations.m1.calories_goal | floatformat:2}}) <br>
+Protein({{p.day6.calculations.m1.protein | floatformat:2}}/{{p.day6.calculations.m1.protein_ideal | floatformat:2}}) <br>
+Carbs({{p.day6.calculations.m1.carbs | floatformat:2}}/{{p.day6.calculations.m1.carbs_ideal | floatformat:2}}) <br>
+Fat( {{p.day6.calculations.m1.fat | floatformat:2}}/{{p.day6.calculations.m1.fat_ideal | floatformat:2}}) <br>
+{% for f in p.day6.calculations.m1.selected%}
+	{{f.name}} / Quantity : {{f.quantity | floatformat:2}} /Weight : {{f.weight | floatformat:2}} / Protein : {{f.protein | floatformat:2}} /  Carbs : {{f.carbohydrates | floatformat:2}} / Fats : {{f.fat | floatformat:2}}}}<br>
+{% endfor %}
+<br><br>
+M2 <br>
+Calories ({{p.day6.calculations.m2.calories | floatformat:2}}/{{p.day6.calculations.m2.calories_goal | floatformat:2}}) <br>
+Protein({{p.day6.calculations.m2.protein| floatformat:2}}/{{p.day6.calculations.m2.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day6.calculations.m2.carbs| floatformat:2}}/{{p.day6.calculations.m2.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day6.calculations.m2.fat| floatformat:2}}/{{p.day6.calculations.m2.fat_ideal| floatformat:2}}) <br>
+
+{% for f in p.day6.calculations.m2.selected%}
+	{{f.name}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}<br><br>
+M3 <br>
+Calories ({{p.day6.calculations.m3.calories | floatformat:2}}/{{p.day6.calculations.m3.calories_goal | floatformat:2}}) <br>
+Protein({{p.day6.calculations.m3.protein| floatformat:2}}/{{p.day6.calculations.m3.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day6.calculations.m3.carbs| floatformat:2}}/{{p.day6.calculations.m3.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day6.calculations.m3.fat| floatformat:2}}/{{p.day6.calculations.m3.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day6.calculations.m3.selected%}
+	{{f.name}} / Quantity : {{f.quantity}}/Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}
+<br><br>
+
+M4 <br>
+Calories ({{p.day6.calculations.m4.calories | floatformat:2}}/{{p.day6.calculations.m4.calories_goal | floatformat:2}}) <br>
+Protein({{p.day6.calculations.m4.protein| floatformat:2}}/{{p.day6.calculations.m4.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day6.calculations.m4.carbs| floatformat:2}}/{{p.day6.calculations.m4.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day6.calculations.m4.fat| floatformat:2}}/{{p.day6.calculations.m4.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day6.calculations.m4.selected%}
+	{{f.name}} / Quantiity : {{f.quantity | floatformat:2}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}
+<br><br>
+M5 <br>
+Calories ({{p.day6.calculations.m5.calories | floatformat:2}}/{{p.day6.calculations.m5.calories_goal | floatformat:2}}) <br>
+Protein({{p.day6.calculations.m5.protein| floatformat:2}}/{{p.day6.calculations.m5.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day6.calculations.m5.carbs| floatformat:2}}/{{p.day6.calculations.m5.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day6.calculations.m5.fat| floatformat:2}}/{{p.day6.calculations.m5.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day6.calculations.m5.selected%}
+	{{f.name}} / Quantity:{{f.quantity}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}
+<hr>
+
+<h1>Day 7</h1> <br><hr>
+Calories Goal  : {{p.day7.calculations.calories}} <br>
+Calories achieved : {{p.day7.calculations.calories_achieved}} <br>
+Protein : {{p.day7.calculations.protein | floatformat:2}}/{{p.day7.calculations.protein_ideal | floatformat:2}} <br>
+Fat : {{p.day7.calculations.fat | floatformat:2}}/{{p.day7.calculations.fat_ideal | floatformat:2}} <br>
+Carbs : {{p.day7.calculations.carbs | floatformat:2 }}/{{p.day7.calculations.carbs_ideal | floatformat:2}}<br>
+<br><br>
+M1 <br>
+Calories ({{p.day7.calculations.m1.calories | floatformat:2}}/{{p.day7.calculations.m1.calories_goal | floatformat:2}}) <br>
+Protein({{p.day7.calculations.m1.protein | floatformat:2}}/{{p.day7.calculations.m1.protein_ideal | floatformat:2}}) <br>
+Carbs({{p.day7.calculations.m1.carbs | floatformat:2}}/{{p.day7.calculations.m1.carbs_ideal | floatformat:2}}) <br>
+Fat( {{p.day7.calculations.m1.fat | floatformat:2}}/{{p.day7.calculations.m1.fat_ideal | floatformat:2}}) <br>
+{% for f in p.day7.calculations.m1.selected%}
+	{{f.name}} / Quantity : {{f.quantity | floatformat:2}} /Weight : {{f.weight | floatformat:2}} / Protein : {{f.protein | floatformat:2}} /  Carbs : {{f.carbohydrates | floatformat:2}} / Fats : {{f.fat | floatformat:2}}}}<br>
+{% endfor %}
+<br><br>
+M2 <br>
+Calories ({{p.day7.calculations.m2.calories | floatformat:2}}/{{p.day7.calculations.m2.calories_goal | floatformat:2}}) <br>
+Protein({{p.day7.calculations.m2.protein| floatformat:2}}/{{p.day7.calculations.m2.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day7.calculations.m2.carbs| floatformat:2}}/{{p.day7.calculations.m2.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day7.calculations.m2.fat| floatformat:2}}/{{p.day7.calculations.m2.fat_ideal| floatformat:2}}) <br>
+
+{% for f in p.day7.calculations.m2.selected%}
+	{{f.name}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}<br><br>
+M3 <br>
+Calories ({{p.day7.calculations.m3.calories | floatformat:2}}/{{p.day7.calculations.m3.calories_goal | floatformat:2}}) <br>
+Protein({{p.day7.calculations.m3.protein| floatformat:2}}/{{p.day7.calculations.m3.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day7.calculations.m3.carbs| floatformat:2}}/{{p.day7.calculations.m3.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day7.calculations.m3.fat| floatformat:2}}/{{p.day7.calculations.m3.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day7.calculations.m3.selected%}
+	{{f.name}} / Quantity : {{f.quantity}}/Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}
+<br><br>
+
+M4 <br>
+Calories ({{p.day7.calculations.m4.calories | floatformat:2}}/{{p.day7.calculations.m4.calories_goal | floatformat:2}}) <br>
+Protein({{p.day7.calculations.m4.protein| floatformat:2}}/{{p.day7.calculations.m4.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day7.calculations.m4.carbs| floatformat:2}}/{{p.day7.calculations.m4.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day7.calculations.m4.fat| floatformat:2}}/{{p.day7.calculations.m4.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day7.calculations.m4.selected%}
+	{{f.name}} / Quantiity : {{f.quantity | floatformat:2}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}
+<br><br>
+M5 <br>
+Calories ({{p.day7.calculations.m5.calories | floatformat:2}}/{{p.day7.calculations.m5.calories_goal | floatformat:2}}) <br>
+Protein({{p.day7.calculations.m5.protein| floatformat:2}}/{{p.day7.calculations.m5.protein_ideal| floatformat:2}}) <br>
+Carbs({{p.day7.calculations.m5.carbs| floatformat:2}}/{{p.day7.calculations.m5.carbs_ideal| floatformat:2}}) <br>
+Fat( {{p.day7.calculations.m5.fat| floatformat:2}}/{{p.day7.calculations.m5.fat_ideal| floatformat:2}}) <br>
+{% for f in p.day7.calculations.m5.selected%}
+	{{f.name}} / Quantity:{{f.quantity}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+{% endfor %}
+<hr>

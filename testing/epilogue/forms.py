@@ -24,7 +24,6 @@ class AnalysisForm(forms.Form):
 			( 3 , 'Muscle Gain' )
 		]
 	)
-	exclude = forms.CharField(widget = forms.HiddenInput() , required = False)
 	gender = forms.ChoiceField([
 		(Male.number , 'Male'),
 		(Female.number , 'Female')

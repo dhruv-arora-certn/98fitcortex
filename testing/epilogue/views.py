@@ -9,6 +9,7 @@ from dietplan.bodyTypes import BodyTypes
 from dietplan.activity import ActivityLevel
 from dietplan.meals import M1 , M5 , M3
 from knapsack.knapsack_dp import knapsack,display
+from dietplan.generator import Pipeline
 # Create your views here.
 import ipdb , random
 
@@ -31,27 +32,17 @@ def get_analysis(request):
 				goal = Goals.MaintainWeight
 			if form_goal == '3':
 				goal = Goals.MuscleGain
-			c = Calculations(
+			p = Pipeline(
 				form.cleaned_data['weight'],
 				form.cleaned_data['height'],
 				float(form.cleaned_data['activity_level']),
 				goal,
 				float(form.cleaned_data["gender"]),
-				exclude = [e for e in form.cleaned_data["exclude"].split(";")]
 			)
 			# ipdb.set_trace()
-			c.makeMeals()
-			exclude_c = form.cleaned_data["exclude"].split(";") + [e.name for e in c.selected]
-			exclude_c = exclude_c[-20:]
+			p.generate()
 			return render(request , "results.html" , {
-				'c' : c,
-				'form' : AnalysisForm({
-					'exclude' : ";".join([e.name for e in c.selected]),
-					'weight' : form.cleaned_data['weight'],
-					'height' : form.cleaned_data['height'],
-					'activity_level' : form.cleaned_data['activity_level'],\
-					'gender' : form.cleaned_data["gender"],
-					'goals' : form.cleaned_data['goals']
-				})
+				'p' : p,
+				'form' : AnalysisForm()
 			})
 		return HttpResponse('0')

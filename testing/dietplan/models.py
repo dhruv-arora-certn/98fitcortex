@@ -34,7 +34,7 @@ class Food(mongoengine.Document):
 	cuisine = mongoengine.StringField()
 	nuts = mongoengine.IntField()
 
-	squared_diff = 0
+	squared_diff = mongoengine.FloatField(default = 0)
 	factor = 1
 
 	meta = {
