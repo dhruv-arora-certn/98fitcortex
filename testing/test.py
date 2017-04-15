@@ -16,4 +16,5 @@ activity = ActivityLevel.sedentary
 gender = Male.number
 print(activity)
 exclude = []
-p = Pipeline(weight , height , activity , goal , gender)
+# p = Pipeline(weight , height , activity , goal , gender)
+c = Calculations(weight , height , activity , goal , gender , exclude)

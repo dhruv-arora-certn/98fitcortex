@@ -65,7 +65,10 @@ class Base:
 		return min(self.get_best(select_from , calories , name))
 
 	def select_best_minimum(self , select_from , calories , name):
-		i = self.get_best_minimum(select_from , calories , name)
+		try:
+			i = self.get_best_minimum(select_from , calories , name)
+		except Exception as e:
+			i = min(select_from , key = lambda x : abs(calories - x.calarie))
 		self.select_item(i)
 		return i
 
@@ -91,7 +94,7 @@ class Base:
 				if "Parantha" in item.name or "Roti" in item.name or "Cheela" in item.name:
 					if item.quantity < 2:
 						item.update_quantity(2)
-				elif "Tea" not in item.name or "Coffee" not in item.name:
+				elif "Tea" not in item.name or "Coffee" not in item.name and not bool(item.yogurt):
 					item.update_weight(1.5)	
 
 	def __getitem__(self , key):
@@ -299,7 +302,7 @@ class M3(Base):
 		try:
 			self.pulses = self.select_best_minimum(food_list , calories , "pulses")
 		except Exception as e:
-			self.pulses = min(food_list)
+			self.pulses = min(food_list , key = lambda x : abs(calories - x.calarie))
 			self.select_item(self.pulses)
 			
 	def build(self):

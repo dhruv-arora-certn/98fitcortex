@@ -35,6 +35,7 @@ class Food(mongoengine.Document):
 	nuts = mongoengine.IntField()
 
 	squared_diff = mongoengine.FloatField(default = 0)
+	squared_diff_weight_loss = mongoengine.FloatField(default = 0)
 	factor = 1
 
 	meta = {

@@ -343,7 +343,7 @@ Carbs({{p.day7.calculations.m2.carbs| floatformat:2}}/{{p.day7.calculations.m2.c
 Fat( {{p.day7.calculations.m2.fat| floatformat:2}}/{{p.day7.calculations.m2.fat_ideal| floatformat:2}}) <br>
 
 {% for f in p.day7.calculations.m2.selected%}
-	{{f.name}} / Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
+	{{f.name}} / Quantity : {{f.quantity}} /Weight : {{f.weight| floatformat:2}} / Protein : {{f.protein| floatformat:2}} /  Carbs : {{f.carbohydrates| floatformat:2}} / Fats : {{f.fat | floatformat:2}}<br>
 {% endfor %}<br><br>
 M3 <br>
 Calories ({{p.day7.calculations.m3.calories | floatformat:2}}/{{p.day7.calculations.m3.calories_goal | floatformat:2}}) <br>
