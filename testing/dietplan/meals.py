@@ -176,7 +176,7 @@ class M2(Base):
 	def select_fruit(self):
 		self.option = "fruit"
 		calories = self.calories_goal
-		fruit_items = list(filter(lambda x : bool(x.fruit) , self.marked))
+		fruit_items = list(filter(lambda x : bool(x.fruit) and x.name.startswith("Handful") , self.marked))
 		try:
 			self.fruits = self.select_best_minimum(fruit_items , calories , name = "fruit")
 		except Exception as e:
@@ -196,7 +196,7 @@ class M2(Base):
 	def select_nut(self):
 		self.option = "nut"
 		calories = self.calories_goal
-		nuts_items = list(filter(lambda x : bool(x.nuts) , self.marked))
+		nuts_items = list(filter(lambda x : bool(x.nuts) and x.name.startswith("Handful"), self.marked))
 		try:
 			self.nuts = self.select_best_minimum(nuts_items , calories , name = "nut")
 		except Exception as e:
@@ -230,50 +230,51 @@ class M2(Base):
 		if f:
 			val = min(f)
 			setattr(self, choice , val)
-			self.select_item(val , remove = False)		
+			self.select_item(val , remove = False)
+
+	def rethink(self):
+		steps = round(self.calories_remaining * self.selected[0].weight/(self.selected[0].calarie*10))
+		new_weight = self.selected[0].weight + steps * 10
+		self.selected[0].update_weight(new_weight/self.selected[0].weight)
+
 	def build(self):
 		probability = [
-			0.4 , 0.2 ,0.2, 0.2
+			0.5 , 0.5
 		]
 		self.choice = choice([
-			self.select_fruit , self.select_nut , self.select_snacks , self.select_salad
+			self.select_fruit , self.select_nut
 		], 1 , probability)[0]
 		self.choice()
-		self.check()
-		
-		if self.calories_goal > self.calories_remaining:
-			for e in self.selected:
-				if e.weight > 200:
-					e.update_weight(1/1.5)
-
+		self.rethink()
 		return self
 
 
 class M3(Base):
 	percent = 0.25
 
-	def __init__(self , calories , goal , exclude = "" , yogurt = True , extra = 0):
+	def __init__(self , calories , goal , exclude = "" , extra = 0):
 		mongoengine.connect(db = "98fit")
 		self.calories_goal = calories*self.percent + extra
 		self.extra = extra
 		self.goal = goal
 		self.queryset = Food.m3_objects.filter(name__nin = exclude)
-		self.yogurt = yogurt
 		self.marked = list(annotate_food(self.queryset , self.goal))
 		self.selected = []
 
 	def select_yogurt(self):
+		self.isYogurt = True
 		calories = 0.15*self.calories_goal
 		food_list = Food.m3_objects.filter(yogurt = 1).all()
 		self.yogurt = self.select_item(random.choice(food_list) , remove = False)
 
 	def select_dessert(self):
+		self.isYogurt = False
 		calories = 0.12*self.calories_goal
 		food_list = list(filter( lambda x : bool(x.dessert) , self.marked))
 		self.dessert = self.select_best_minimum(food_list , calories , name = "dessert")
 
 	def select_vegetables(self , calories = None):
-		if self.yogurt : 
+		if self.isYogurt : 
 			percent = 0.25
 		else:
 			percent = 0.18
@@ -293,7 +294,7 @@ class M3(Base):
 				self.cereals.update_quantity(2)
 
 	def select_pulses(self):
-		if self.yogurt : 
+		if self.isYogurt : 
 			percent = 0.23
 		else:
 			percent = 0.18
@@ -304,15 +305,34 @@ class M3(Base):
 		except Exception as e:
 			self.pulses = min(food_list , key = lambda x : abs(calories - x.calarie))
 			self.select_item(self.pulses)
-			
-	def build(self):
-		if self.yogurt:
-			self.select_yogurt()
-		else:
-			self.select_dessert()
+
+	def makeGeneric(self):
 		self.select_vegetables()
 		self.select_cereals()
 		self.select_pulses()
+
+	def makeCombinations(self):
+		if self.isYogurt:
+			calories = (0.25 + 0.37 + 0.23)*self.calories_goal
+		else:
+			calories = (0.18 + 0.37 + 0.25)*self.calories_goal
+		food_list = list(filter(lambda x : x.cuisine == "Combination" , self.marked) )
+		self.select_best_minimum(food_list , calories , name = "combination")
+
+			
+	def build(self):
+		prob_yogurt_dessert = [2/7 , 5/7]
+		func1 = choice([
+			self.select_yogurt, self.select_dessert
+		],
+		1 ,  prob_yogurt_dessert)[0]
+		func1()
+		prob_generic_combination = [2/7,5/7]
+		func2 = choice([
+			self.makeCombinations, self.makeGeneric
+		],
+		1 , prob_generic_combination)[0]
+		func2()
 		self.rethink()
 		return self
 
@@ -328,7 +348,7 @@ class M4(Base):
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.queryset = Food.m4_objects.filter(name__nin = exclude)
-		self.marked = list(annotate_food(self.queryset , self.goal))
+		self.marked = list(filter(lambda x : not x.name.startswith("Handful"),annotate_food(self.queryset , self.goal)))
 		self.selected = []
 		# heapq.heapify(self.marked)
 
@@ -342,27 +362,42 @@ class M4(Base):
 			self.select_item(self.drink)
 
 	def select_fruit(self):
+		self.option = "fruits"
 		calories = self.calories_goal
 		fruit_items = list(filter(lambda x : bool(x.fruit) , self.marked))
 		self.fruits = self.select_best_minimum(fruit_items , calories , "fruit")
 		self.fruits.update_quantity(2)
 
 	def select_salad(self):
+		self.option = "salad"
 		calories = self.calories_goal
-		salad_items = list(filter(lambda x : bool(x.salad), self.marked))
+		salad_items = list(filter(lambda x : bool(x.salad) and not x.name.startswith("Handful"), self.marked))
 		self.salad = self.select_best_minimum(salad_items , calories , "salad")
 		self.salad.update_weight(1.5)
 
 	def select_nut(self):
+		self.option = "nuts"
 		calories = self.calories_goal
 		nuts_items = list(filter(lambda x : bool(x.nuts) and x.calarie < self.calories_remaining, self.marked))
-		self.nuts = self.select_best_minimum(nuts_items , calories , "nut")
+		self.nuts = self.select_best_minimum(nuts_items , calories , "nuts")
 		self.nuts.update_quantity(2)
 
 	def select_snacks(self):
+		self.option = "snacks"
 		calories = self.calories_goal
 		snack_items = list(filter(lambda x : bool(x.snaks) and x.calarie < self.calories_remaining, self.marked))
-		self.snack = self.select_best_minimum(snack_items , calories , "snacks")
+		self.snacks = self.select_best_minimum(snack_items , calories , "snacks")
+
+	def rethink(self):
+		selected = getattr(self , self.option)
+		if self.option == "fruits" or self.option == "nuts":
+			steps = round(self.calories_remaining * selected.quantity/(selected.calarie))
+			new_quantity = steps + selected.quantity
+			selected.update_quantity(new_quantity/selected.quantity)
+		else:
+			steps = round(self.calories_remaining * selected.weight/(selected.calarie*10))
+			new_weight = selected.weight + steps * 10
+			selected.update_weight(new_weight/selected.weight)
 
 	def build(self):
 		self.select_drink()
@@ -371,6 +406,7 @@ class M4(Base):
 			self.select_fruit , self.select_nut , self.select_snacks , self.select_salad
 		], 1 , probability)[0]
 		func()
+		self.rethink()
 		return self
 
 class M5(Base):
