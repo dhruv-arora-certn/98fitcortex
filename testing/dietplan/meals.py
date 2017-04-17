@@ -71,7 +71,8 @@ class Base:
 			try:
 				i = min(select_from , key = lambda x : abs(calories - x.calarie))
 			except Exception as e:
-				ipdb.set_trace()
+				# ipdb.set_trace()
+				pass
 		self.select_item(i)
 		return i
 
