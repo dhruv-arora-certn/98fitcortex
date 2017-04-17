@@ -9,11 +9,11 @@ from dietplan.gender import Male,Female
 from dietplan.generator import Pipeline
 from knapsack.knapsack_dp import knapsack,display
 
-weight = 78
-height = 1.75
-goal = Goals.WeightLoss
+weight = 50
+height = 1.6
+goal = Goals.MaintainWeight
 activity = ActivityLevel.sedentary
-gender = Male.number
+gender = Female.number
 print(activity)
 exclude = []
 # p = Pipeline(weight , height , activity , goal , gender)

@@ -2,7 +2,7 @@ from .models import Food
 from .utils import annotate_food , mark_squared_diff
 from .goals import Goals
 from knapsack.knapsack_dp import knapsack,display
-import heapq , mongoengine , re , random , ipdb
+import heapq , mongoengine , re , random , ipdb , math
 from numpy.random import choice
 
 
@@ -68,7 +68,10 @@ class Base:
 		try:
 			i = self.get_best_minimum(select_from , calories , name)
 		except Exception as e:
-			i = min(select_from , key = lambda x : abs(calories - x.calarie))
+			try:
+				i = min(select_from , key = lambda x : abs(calories - x.calarie))
+			except Exception as e:
+				ipdb.set_trace()
 		self.select_item(i)
 		return i
 
@@ -143,19 +146,23 @@ class M1(Base):
 					item.update_quantity(2)
 				else:
 					item.update_weight(1.5)
+	def rethink(self):
+		selected = self.snacks
+		if self.calories_remaining > 0:	
+			if "Parantha" in selected.name or "Roti" in selected.name or "Dosa" in selected.name or "Cheela" in selected.name:
+				steps = math.floor(self.calories_remaining * selected.quantity/(selected.calarie))
+				new_quantity = steps + selected.quantity
+				selected.update_quantity(new_quantity/selected.quantity)
+			else:
+				steps = math.floor(self.calories_remaining * selected.weight/(selected.calarie*10))
+				new_weight = min(200 , selected.weight + steps * 10)
+				selected.update_weight(new_weight/selected.weight)
 	
 	def build(self):
 		self.allocate_restrictions()
 		calories = self.calories_remaining
 		food_list = list(filter( lambda x : bool(x.snaks) , self.marked))
-		try:
-			self.snacks = sorted(self.get_best(food_list , calories , name = "snacks"))
-		except Exception as e:
-			self.snacks = [random.choice(food_list)]
-		if len(self.snacks) >= 2:
-			self.select_items(*self.snacks[:1])
-		else:
-			self.select_items(*self.snacks)
+		self.snacks = self.select_best_minimum(food_list , calories , name = "snacks")
 		if self.protein_ideal - self.protein > 8:
 			self.select_item(self.egg , remove = False)
 		self.rethink()
@@ -396,7 +403,7 @@ class M4(Base):
 			selected.update_quantity(new_quantity/selected.quantity)
 		else:
 			steps = round(self.calories_remaining * selected.weight/(selected.calarie*10))
-			new_weight = selected.weight + steps * 10
+			new_weight = min(250,selected.weight + steps * 10)
 			selected.update_weight(new_weight/selected.weight)
 
 	def build(self):
