@@ -183,7 +183,7 @@ class M2(Base):
 	def select_fruit(self):
 		self.option = "fruit"
 		calories = self.calories_goal
-		fruit_items = list(filter(lambda x : bool(x.fruit) and x.name.startswith("Handful") , self.marked))
+		fruit_items = list(Food.m2_objects.filter(fruit= 1).filter(nuts = 1).all())
 		try:
 			self.fruits = self.select_best_minimum(fruit_items , calories , name = "fruit")
 		except Exception as e:
@@ -205,7 +205,7 @@ class M2(Base):
 		calories = self.calories_goal
 		nuts_items = list(filter(lambda x : bool(x.nuts) and x.name.startswith("Handful"), self.marked))
 		try:
-			self.nuts = self.select_best_minimum(nuts_items , calories , name = "nut")
+			self.nuts = self.select_best_minimum(nuts_items , calories , name = "nuts")
 		except Exception as e:
 			self.nuts = random.choice(nuts_items)
 			self.select_item(self.nuts)
