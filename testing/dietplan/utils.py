@@ -24,7 +24,7 @@ def mark_exp_diff(args):
 	item.f = item._f*np.exp(np.sign(item._f)*(item._f-1))
 	
 	item.pcf = item.p+item.c+item.f
-	item.squared_diff = np.square(item.pcf - 3)
+	item.squared_diff_weight_loss = np.square(item.pcf - 3)
 	return item
 
 def annotate_food(food_queryset , goal ):

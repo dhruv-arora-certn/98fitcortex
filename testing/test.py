@@ -1,6 +1,6 @@
 from dietplan.goals import Goals
 from dietplan.utils import annotate_food
-from dietplan.models import Food
+from epilogue.models import Food
 from dietplan.calculations import Calculations
 from dietplan.bodyTypes import BodyTypes
 from dietplan.activity import ActivityLevel
@@ -11,7 +11,7 @@ from knapsack.knapsack_dp import knapsack,display
 
 weight = 50
 height = 1.6
-goal = Goals.MaintainWeight
+goal = Goals.WeightLoss
 activity = ActivityLevel.sedentary
 gender = Female.number
 print(activity)

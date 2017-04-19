@@ -1,13 +1,16 @@
-from .models import Food
+from epilogue.models import Food
 from .utils import annotate_food , mark_squared_diff
 from .goals import Goals
 from knapsack.knapsack_dp import knapsack,display
 import heapq , mongoengine , re , random , ipdb , math
+from django.db.models import Q
 from numpy.random import choice
 
 
 class Base:
-	
+	fieldMapper = {
+		Goals.WeightLoss : "squared_diff_weight_loss"
+	}
 	def get_max(self , item):
 		goal = self.goal
 		return item.goal_nutrition(goal)
@@ -56,7 +59,7 @@ class Base:
 		return self.selected
 
 	def get_best(self, select_from , calories , name):
-		F,test = knapsack(select_from, calories)
+		F,test = knapsack(select_from, calories , self.fieldMapper.get(self.goal) )
 		a = [select_from[i] for i in display(F , calories , select_from)]
 		setattr(self , name + "_options" , a)
 		return a
@@ -68,18 +71,18 @@ class Base:
 		try:
 			i = self.get_best_minimum(select_from , calories , name)
 		except Exception as e:
+			print("FUCKKKK 11111111111" , e)
 			try:
 				i = min(select_from , key = lambda x : abs(calories - x.calarie))
 			except Exception as e:
-				# ipdb.set_trace()
-				pass
+				print("FUCKKKK 22222222222", e)
 		self.select_item(i)
 		return i
 
 	def select_item(self , item , remove = True):
 		self.selected.append(item)
 		if remove:
-			self.marked.remove(item)
+			self.marked.exclude(id = item.id)
 		return self
 
 	def unselect_item(self , item , append = True):
@@ -108,36 +111,37 @@ class M1(Base):
 	percent = .25
 
 	def __init__(self , calories , goal , exclude=  "" , extra = 0):
-		mongoengine.connect(db = "98fit")
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.exclude = exclude
-		self.queryset = Food.m1_objects.filter(name__nin = exclude)
+		self.queryset = Food.m1_objects.exclude(name__in = exclude)
 		if goal == Goals.WeightLoss : 
-			self.queryset = self.queryset.filter(for_loss = 1).all()
+			self.queryset = self.queryset.filter(for_loss = '1').all()
 		
-		self.marked = list(annotate_food(self.queryset , self.goal))
+		self.marked = self.queryset
 		self.selected = []
 		# heapq.heapify(self.marked)
 
 	def allocate_restrictions(self):
 		self.select_item(self.drink)
 		self.remove_drinks()
-		self.egg = mark_squared_diff(Food.m1_objects.filter(name = "Boiled Egg White").first() , self.goal.get_attributes())
+		self.egg = Food.m1_objects.filter(name = "Boiled Egg White").first()
 		self.select_item(self.egg , remove = False)
 
 	def pop_snack(self):
-		self.snack_list = list(filter(lambda x : x.snaks , self.marked ))
+		# self.snack_list = list(filter(lambda x : x.snaks , self.marked ))
+		self.snack_list = self.marked.filter(snaks = '1')
 		heapq.heapify(self.snack_list)
 		return heapq.heappop(self.snack_list)	
 
 	@property
 	def drink(self):
-		self.drink_list = list(filter( lambda x : x.drink & x.dairy , self.marked))
+		self.drink_list = self.marked.filter(drink = '1').filter(dairy = '1')
 		return min(self.drink_list , key = lambda x : (self.calories_goal * 0.15 - x.calorie)**2)
 
 	def remove_drinks(self):
-		self.marked = list(set(self.marked) - set(self.drink_list))
+		# self.marked = list(set(self.marked) - set(self.drink_list))
+		self.marked = self.marked.exclude(name__in = [e.name for e in self.drink_list])
 		return self
 
 	def rethink(self):
@@ -162,7 +166,8 @@ class M1(Base):
 	def build(self):
 		self.allocate_restrictions()
 		calories = self.calories_remaining
-		food_list = list(filter( lambda x : bool(x.snaks) , self.marked))
+		# food_list = list(filter( lambda x : bool(x.snaks) , self.marked))
+		food_list = self.marked.filter(snaks = '1')
 		self.snacks = self.select_best_minimum(food_list , calories , name = "snacks")
 		if self.protein_ideal - self.protein > 8:
 			self.select_item(self.egg , remove = False)
@@ -174,27 +179,27 @@ class M2(Base):
 	percent = 0.15
 
 	def __init__(self , calories , goal , exclude , extra = 0):
-		mongoengine.connect(db = "98fit")
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
-		self.queryset = Food.m2_objects.filter(name__nin = exclude)
-		self.marked = list(annotate_food(self.queryset , self.goal))
+		self.queryset = Food.m2_objects.exclude(name__in = exclude)
+		self.marked = self.queryset
 		self.selected = []
 
 	def select_fruit(self):
 		self.option = "fruit"
 		calories = self.calories_goal
-		fruit_items = list(Food.m2_objects.filter(fruit= 1).filter(nuts = 1).all())
+		fruit_items = Food.m2_objects.filter(fruit= 1).filter(nuts = 1).all()
 		try:
 			self.fruits = self.select_best_minimum(fruit_items , calories , name = "fruit")
 		except Exception as e:
+			print("From M2 Fruit " , e)
 			self.fruits = random.choice(fruit_items)
 			self.select_item(self.fruits)
 
 	def select_salad(self):
 		self.option = "salad"
 		calories = self.calories_goal
-		salad_items = list(filter(lambda x : bool(x.salad) , self.marked))
+		salad_items = self.marked.filter(salad = 1)
 		try:
 			self.salad = self.select_best_minimum(salad_items , calories , name = "salad")
 		except Exception as e:
@@ -204,17 +209,17 @@ class M2(Base):
 	def select_nut(self):
 		self.option = "nut"
 		calories = self.calories_goal
-		nuts_items = list(filter(lambda x : bool(x.nuts) and x.name.startswith("Handful"), self.marked))
+		nuts_items = self.marked.filter(nuts = 1).filter(name__startswith = "Handful").all()
 		try:
 			self.nuts = self.select_best_minimum(nuts_items , calories , name = "nuts")
 		except Exception as e:
-			self.nuts = random.choice(nuts_items)
+			self.nuts = nuts_items[random.randrange(len(nuts_items))]
 			self.select_item(self.nuts)
 
 	def select_snacks(self):
 		self.option = "snack"
 		calories = self.calories_goal
-		snack_items = list(filter(lambda x : bool(x.snaks) , self.marked))
+		snack_items = self.marked.filter(snaks = 1)
 		try:
 			self.snack = self.select_best_minimum(snack_items , calories , name = "snack")
 		except Exception as e:
@@ -261,12 +266,11 @@ class M3(Base):
 	percent = 0.25
 
 	def __init__(self , calories , goal , exclude = "" , extra = 0):
-		mongoengine.connect(db = "98fit")
 		self.calories_goal = calories*self.percent + extra
 		self.extra = extra
 		self.goal = goal
-		self.queryset = Food.m3_objects.filter(name__nin = exclude)
-		self.marked = list(annotate_food(self.queryset , self.goal))
+		self.queryset = Food.m3_objects.exclude(name__in = exclude)
+		self.marked = self.queryset
 		self.selected = []
 
 	def select_yogurt(self):
@@ -278,7 +282,7 @@ class M3(Base):
 	def select_dessert(self):
 		self.isYogurt = False
 		calories = 0.12*self.calories_goal
-		food_list = list(filter( lambda x : bool(x.dessert) , self.marked))
+		food_list = self.marked.filter(dessert = 1)
 		self.dessert = self.select_best_minimum(food_list , calories , name = "dessert")
 
 	def select_vegetables(self , calories = None):
@@ -289,13 +293,12 @@ class M3(Base):
 		
 		if not calories:
 			calories = percent * self.calories_goal
-		
-		food_list = list(filter( lambda x : bool(x.vegetable) , self.marked))
+		food_list = self.marked.filter(vegetable = 1)
 		self.vegetables = self.select_best_minimum(food_list , calories , "vegetables")
 
 	def select_cereals(self , percent = 0.37):		
 		calories = percent * self.calories_goal
-		food_list = list(filter( lambda x : bool(x.cereal_grains) and not bool(x.dessert) , self.marked))
+		food_list = self.marked.filter(cereal_grains = 1).filter(dessert = 1)
 		self.cereals = self.select_best_minimum(food_list , calories , "cereals")
 		if "Parantha" in self.cereals.name or "Roti" in self.cereals.name:
 			if self.cereals.quantity < 2:
@@ -307,7 +310,7 @@ class M3(Base):
 		else:
 			percent = 0.18
 		calories = percent * self.calories_goal
-		food_list = list(filter( lambda x : bool(x.pulses) , self.marked))
+		food_list = self.marked.filter(pulses = 1)
 		try:
 			self.pulses = self.select_best_minimum(food_list , calories , "pulses")
 		except Exception as e:
@@ -324,7 +327,7 @@ class M3(Base):
 			calories = (0.25 + 0.37 + 0.23)*self.calories_goal
 		else:
 			calories = (0.18 + 0.37 + 0.25)*self.calories_goal
-		food_list = list(filter(lambda x : x.cuisine == "Combination" , self.marked) )
+		food_list = self.marked.filter(cuisine = "Combination")
 		self.select_best_minimum(food_list , calories , name = "combination")
 
 			
@@ -352,17 +355,15 @@ class M4(Base):
 	percent = 0.15
 
 	def __init__(self , calories , goal , exclude = "" , extra = 0):
-		mongoengine.connect(db = "98fit")
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
-		self.queryset = Food.m4_objects.filter(name__nin = exclude)
-		self.marked = list(filter(lambda x : not x.name.startswith("Handful"),annotate_food(self.queryset , self.goal)))
+		self.queryset = Food.m4_objects.exclude(name__in = exclude)
+		self.marked = self.queryset
 		self.selected = []
-		# heapq.heapify(self.marked)
 
 	def select_drink(self):
 		calories = 0.15*self.calories_goal
-		food_list = list(filter(lambda x : bool(x.drink) , self.marked))
+		food_list = self.marked.filter(drink = 1)
 		try:
 			self.drink = self.select_best_minimum(food_list , calories , "drink")
 		except Exception as e:
@@ -372,28 +373,28 @@ class M4(Base):
 	def select_fruit(self):
 		self.option = "fruits"
 		calories = self.calories_goal
-		fruit_items = list(filter(lambda x : bool(x.fruit) , self.marked))
+		fruit_items = self.marked.filter(fruit = 1)
 		self.fruits = self.select_best_minimum(fruit_items , calories , "fruit")
 		self.fruits.update_quantity(2)
 
 	def select_salad(self):
 		self.option = "salad"
 		calories = self.calories_goal
-		salad_items = list(filter(lambda x : bool(x.salad) and not x.name.startswith("Handful"), self.marked))
+		salad_items = self.marked.filter(salad = 1 ).filter(~Q(name__startswith = "Handful")).all()
 		self.salad = self.select_best_minimum(salad_items , calories , "salad")
 		self.salad.update_weight(1.5)
 
 	def select_nut(self):
 		self.option = "nuts"
 		calories = self.calories_goal
-		nuts_items = list(filter(lambda x : bool(x.nuts) and x.calarie < self.calories_remaining, self.marked))
+		nuts_items = self.marked.filter(nuts = 1).filter(calarie__lt = self.calories_remaining)
 		self.nuts = self.select_best_minimum(nuts_items , calories , "nuts")
 		self.nuts.update_quantity(2)
 
 	def select_snacks(self):
 		self.option = "snacks"
 		calories = self.calories_goal
-		snack_items = list(filter(lambda x : bool(x.snaks) and x.calarie < self.calories_remaining, self.marked))
+		snack_items = self.marked.filter(snaks = 1).filter(calarie__lt = self.calories_remaining)
 		self.snacks = self.select_best_minimum(snack_items , calories , "snacks")
 
 	def rethink(self):
@@ -421,7 +422,6 @@ class M5(Base):
 	percent = 0.20
 
 	def __init__(self , calories , goal , exclude = "" , extra = 0):
-		mongoengine.connect(db = "98fit")
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		if goal == Goals.WeightLoss : 
@@ -430,25 +430,24 @@ class M5(Base):
 			self.queryset = Food.m5gain_objects
 		if goal == Goals.MaintainWeight:
 			self.queryset = Food.m5stable_objects
-		self.queryset = self.queryset.filter(name__nin = exclude).filter(name__nin = ["Beetroot Parantha"])
-		self.marked = list(annotate_food(self.queryset , self.goal))
+		self.queryset = self.queryset.exclude(name__in = exclude)
+		self.marked = self.queryset
 		self.selected = []
-		# heapq.heapify(self.marked)
 
 	def select_vegetables(self):
 		calories = 0.22*self.calories_goal
 		self.vegetable_calories = calories
-		food_list = list(filter(lambda x : bool(x.vegetable) , self.marked))
+		food_list = self.marked.filter(vegetable = 1)
 		self.vegetables = self.select_best_minimum(food_list , calories , "vegetables")
 
 	def select_cereals(self):
 		calories = 0.39*self.calories_goal
-		food_list = list(filter(lambda x : bool(x.cereal_grains) , self.marked))
+		food_list = self.marked.filter(cereal_grains = 1)
 		self.cereals = self.select_best_minimum(food_list , calories , "cereals")
 
 	def select_pulses(self):
 		calories = 0.39 * self.calories_goal
-		food_list = list(filter(lambda x : bool(x.pulses) , self.marked))
+		food_list = self.marked.filter(pulses = 1)
 		self.pulses = self.select_best_minimum(food_list , calories , "pulses")
 
 	def build(self):

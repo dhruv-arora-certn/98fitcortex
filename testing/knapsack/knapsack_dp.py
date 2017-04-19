@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-import sys
+import sys , time   
 
-def knapsack(food_list, limit):
+def knapsack(food_list, limit , field):
     """straightforward DP solution
     
     Arguments:
@@ -13,16 +13,19 @@ def knapsack(food_list, limit):
     """
     n = len(food_list)
     limit = round(limit)
+    print("From knapsack " , field , n , limit)
     F = [[0] * (limit + 1) for x in range(n + 1)]
     test = []
+    t0 = time.time()
     for i in range(0, n):                # F[-1] is all 0.
         for j in range(limit + 1):
             if j >= food_list[i].calorie:
-                l = max(F[i - 1][j], F[i - 1][j - food_list[i].calorie] + round(1/food_list[i].squared_diff))
+                l = max(F[i - 1][j], F[i - 1][j - food_list[i].calorie] + round(1/getattr(food_list[i] , field)))
                 test.append(l)
                 F[i][j] = l
             else:
                 F[i][j] = F[i - 1][j]
+    print("Time " , time.time() - t0)
     return F , test
 
 def display(F , limit , food_list):
