@@ -9,7 +9,9 @@ from numpy.random import choice
 
 class Base:
 	fieldMapper = {
-		Goals.WeightLoss : "squared_diff_weight_loss"
+		Goals.WeightLoss : "squared_diff_weight_loss",
+		Goals.MaintainWeight : "squared_diff_weight_maintain",
+		Goals.WeightGain : "squared_diff_weight_gain"
 	}
 	def get_max(self , item):
 		goal = self.goal
@@ -65,18 +67,16 @@ class Base:
 		return a
 	
 	def get_best_minimum(self , select_from , calories , name):
-		return min(self.get_best(select_from , calories , name))
+		return min(self.get_best(select_from , calories , name) , key = lambda x : getattr(x , self.fieldMapper.get(self.goal)))
 
 	def select_best_minimum(self , select_from , calories , name):
 		try:
 			i = self.get_best_minimum(select_from , calories , name)
 		except Exception as e:
-			print("FUCKKKK 11111111111" , e)
-			try:
-				i = min(select_from , key = lambda x : abs(calories - x.calarie))
-			except Exception as e:
-				print("FUCKKKK 22222222222", e)
-		self.select_item(i)
+			print("Error selecting best " , name , e , select_from)
+		else:
+			i = min(select_from , key = lambda x : abs(calories - x.calarie))
+			self.select_item(i)
 		return i
 
 	def select_item(self , item , remove = True):
@@ -209,11 +209,11 @@ class M2(Base):
 	def select_nut(self):
 		self.option = "nut"
 		calories = self.calories_goal
-		nuts_items = self.marked.filter(nuts = 1).filter(name__startswith = "Handful").all()
+		nuts_items = self.marked.filter(nuts = 1).filter(Q(name__startswith = "Handful")).all()
 		try:
 			self.nuts = self.select_best_minimum(nuts_items , calories , name = "nuts")
 		except Exception as e:
-			self.nuts = nuts_items[random.randrange(len(nuts_items))]
+			self.nuts = random.choice(nuts_items)
 			self.select_item(self.nuts)
 
 	def select_snacks(self):
@@ -387,14 +387,15 @@ class M4(Base):
 	def select_nut(self):
 		self.option = "nuts"
 		calories = self.calories_goal
-		nuts_items = self.marked.filter(nuts = 1).filter(calarie__lt = self.calories_remaining)
+		nuts_items = self.marked.filter(nuts = 1)
+		# ipdb.set_trace()
 		self.nuts = self.select_best_minimum(nuts_items , calories , "nuts")
 		self.nuts.update_quantity(2)
 
 	def select_snacks(self):
 		self.option = "snacks"
 		calories = self.calories_goal
-		snack_items = self.marked.filter(snaks = 1).filter(calarie__lt = self.calories_remaining)
+		snack_items = self.marked.filter(snaks = 1)
 		self.snacks = self.select_best_minimum(snack_items , calories , "snacks")
 
 	def rethink(self):
@@ -430,7 +431,7 @@ class M5(Base):
 			self.queryset = Food.m5gain_objects
 		if goal == Goals.MaintainWeight:
 			self.queryset = Food.m5stable_objects
-		self.queryset = self.queryset.exclude(name__in = exclude)
+		self.queryset = self.queryset.exclude(name__in = exclude).filter(calarie__gt = 0)
 		self.marked = self.queryset
 		self.selected = []
 

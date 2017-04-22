@@ -4,6 +4,4 @@ from .models import Food
 from import_export import resources
 
 
-class FoodResource(resources.ModelResource):
-	class Meta:
-		model = Food
+admin.site.register(Food)

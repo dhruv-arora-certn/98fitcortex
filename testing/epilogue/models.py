@@ -5,37 +5,38 @@ import mongoengine
 
 mongoengine.connect(db = "98fit")
 
+#Model Managers for Food Model
 class Default(models.Manager):
 	def get_queryset(self):
 		return super().get_queryset().filter(calarie__gt = 0)
 
 class M1(models.Manager):
 	def get_queryset(self):
-		return super().get_queryset().filter(m1 = '1')
+		return super().get_queryset().filter(m1 = '1').filter(calarie__gt = 0)
 
 class M2(models.Manager):
 	def get_queryset(self):
-		return super().get_queryset().filter(m2 = '1')
+		return super().get_queryset().filter(m2 = '1').filter(calarie__gt = 0)
 
 class M3(models.Manager):
 	def get_queryset(self):
-		return super().get_queryset().filter(m3 = '1')
+		return super().get_queryset().filter(m3 = '1').filter(calarie__gt = 0)
 
 class M4(models.Manager):
 	def get_queryset(self):
-		return super().get_queryset().filter(m4 = '1')
+		return super().get_queryset().filter(m4 = '1').filter(calarie__gt = 0)
 
 class M5_Gain(models.Manager):
 	def get_queryset(self):
-		return super().get_queryset().filter(m5_gain = '1')
+		return super().get_queryset().filter(m5_gain = '1').filter(calarie__gt = 0)
 
 class M5_Loss(models.Manager):
 	def get_queryset(self):
-		return super().get_queryset().filter(m5_loss = '1')
+		return super().get_queryset().filter(m5_loss = '1').filter(calarie__gt = 0)
 
 class M5_Stable(models.Manager):
 	def get_queryset(self):
-		return super().get_queryset().filter(m5_stable = '1')
+		return super().get_queryset().filter(m5_stable = '1').filter(calarie__gt = 0)
 
 
 class Food(models.Model):
@@ -46,7 +47,7 @@ class Food(models.Model):
 	weight = models.FloatField()
 	fat = models.FloatField()
 	protein = models.FloatField()
-	carbohydrates = models.TextField()
+	carbohydrates = models.FloatField()
 	m1 = models.IntegerField()
 	m2 = models.IntegerField()
 	m3 = models.IntegerField()
@@ -70,7 +71,13 @@ class Food(models.Model):
 	cuisine = models.TextField()
 	nuts = models.IntegerField()
 
-	squared_diff_weight_loss = models.FloatField()
+	squared_diff_weight_loss = models.FloatField(default = 0)
+	squared_diff_weight_maintain = models.FloatField(default = 0)
+	squared_diff_weight_gain = models.FloatField(default = 0)
+
+	def __init__(self , *args , **kwargs):
+		super().__init__(*args , **kwargs)
+		self.squared_diff_muscle_gain = self.squared_diff_weight_gain
 
 	factor = 1
 
@@ -131,3 +138,14 @@ class Food(models.Model):
 
 	def goal_nutrition(self,goal):
 		return self.protein*goal.protein + self.fat*goal.fat + self.carbohydrates*goal.carbs
+
+	class Meta:
+		db_table = "business_diet_list"
+
+
+class Customer(models.Model):
+	first_name = models.CharField(max_length = 50)
+	age = models.IntegerField()
+	weight = models.CharField( max_length = 11)
+	height = models.CharField( max_length = 20)
+	lifestyle = models.CharField( max_length = 50)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import sys , time   
+import sys , time  , ipdb
 
 def knapsack(food_list, limit , field):
     """straightforward DP solution
@@ -20,7 +20,11 @@ def knapsack(food_list, limit , field):
     for i in range(0, n):                # F[-1] is all 0.
         for j in range(limit + 1):
             if j >= food_list[i].calorie:
-                l = max(F[i - 1][j], F[i - 1][j - food_list[i].calorie] + round(1/getattr(food_list[i] , field)))
+                try:
+                    l = max(F[i - 1][j], F[i - 1][j - food_list[i].calorie] + round(1/getattr(food_list[i] , field)))
+                except Exception as e:
+                    # ipdb.set_trace()
+                    print("From knapsack " , food_list[i].id , field , getattr(food_list[i] , field))
                 test.append(l)
                 F[i][j] = l
             else:
