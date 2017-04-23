@@ -70,6 +70,7 @@ class Food(models.Model):
 	for_loss = models.IntegerField()
 	cuisine = models.TextField()
 	nuts = models.IntegerField()
+	calcium = models.FloatField()
 
 	squared_diff_weight_loss = models.FloatField(default = 0)
 	squared_diff_weight_maintain = models.FloatField(default = 0)
@@ -125,10 +126,11 @@ class Food(models.Model):
 		self.fat *= factor
 		self.carbohydrates *= factor
 		self.calarie *= factor
-
+		self.calcium *= factor
 	def update_weight(self, factor):
-		self.weight *= factor
-		self.update(factor)
+		new_weight = self.weight * factor
+		new_weight = int( 5 * round(new_weight/5))
+		self.update(new_weight/self.weight)
 		return self
 			
 	def update_quantity(self ,factor):

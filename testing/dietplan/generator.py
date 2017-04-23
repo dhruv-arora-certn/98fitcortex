@@ -9,7 +9,8 @@ from .calorieNumber import CalorieNumber
 from .ibw import IBW
 from .calculations import Calculations
 from knapsack.knapsack_dp import knapsack
-import itertools , threading , lego , numpy as np
+from epilogue.models import Food
+import itertools , threading , lego , numpy as np , click
 
 class Day:
 	@lego.assemble
@@ -21,48 +22,48 @@ class Day:
 
 class Pipeline:
 	@lego.assemble
-	def __init__(self , weight , height , activity , goal , gender):
+	def __init__(self , weight , height , activity , goal , gender , disease = None):
 		self.excluded = []
 
 	def Day1(self):
 		print("Day 1 Exclude ," , self.exclude)
-		self.day1 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude))
+		self.day1 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease ))
 		self.day1.makeMeals()
 		self.push_to_exclude(self.day1)
 
 	def Day2(self):
 		print("Day 2 Exclude ," , self.exclude)
-		self.day2 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude))
+		self.day2 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease))
 		self.day2.makeMeals()
 		self.push_to_exclude(self.day2)
 	
 	def Day3(self):
 		print("Day 3 Exclude ," , self.exclude)
-		self.day3 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude))
+		self.day3 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease))
 		self.day3.makeMeals()
 		self.push_to_exclude(self.day3)
 	
 	def Day4(self):
 		print("Day 4 Exclude ," , self.exclude)
-		self.day4 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude))
+		self.day4 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease))
 		self.day4.makeMeals()
 		self.push_to_exclude(self.day4)
 	
 	def Day5(self):
 		print("Day 5 Exclude ," , self.exclude)
-		self.day5 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude ))
+		self.day5 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease ))
 		self.day5.makeMeals()
 		self.push_to_exclude(self.day5)
 	
 	def Day6(self):
 		print("Day 6 Exclude ," , self.exclude)
-		self.day6 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude))
+		self.day6 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease))
 		self.day6.makeMeals()
 		self.push_to_exclude(self.day6)
 	
 	def Day7(self):
 		print("Day 7 Exclude ," , self.exclude)
-		self.day7 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude))
+		self.day7 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease))
 		self.day7.makeMeals()
 		self.push_to_exclude(self.day7)
 
@@ -85,3 +86,11 @@ class Pipeline:
 	def exclude(self):
 		return list(itertools.chain(*self.excluded))
 
+	def show_calcium(self):
+		click.secho( "Day 1: %s mg" % self.day1.calculations.calcium  , fg = "green" if self.day1.calculations.calcium > 800 and self.day1.calculations.calcium < 1050 else "red" )
+		click.secho( "Day 2: %s mg" % self.day2.calculations.calcium  , fg = "green" if self.day2.calculations.calcium > 800 and self.day2.calculations.calcium < 1050 else "red" )
+		click.secho( "Day 3: %s mg" % self.day3.calculations.calcium  , fg = "green" if self.day3.calculations.calcium > 800 and self.day3.calculations.calcium < 1050 else "red" )
+		click.secho( "Day 4: %s mg" % self.day4.calculations.calcium  , fg = "green" if self.day4.calculations.calcium > 800 and self.day4.calculations.calcium < 1050 else "red" )
+		click.secho( "Day 5: %s mg" % self.day5.calculations.calcium  , fg = "green" if self.day5.calculations.calcium > 800 and self.day5.calculations.calcium < 1050 else "red" )
+		click.secho( "Day 6: %s mg" % self.day6.calculations.calcium  , fg = "green" if self.day6.calculations.calcium > 800 and self.day6.calculations.calcium < 1050 else "red" )
+		click.secho( "Day 7: %s mg" % self.day7.calculations.calcium  , fg = "green" if self.day7.calculations.calcium > 800 and self.day7.calculations.calcium < 1050 else "red" )

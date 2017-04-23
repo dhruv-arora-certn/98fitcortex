@@ -12,7 +12,7 @@ import itertools , threading , lego
 
 class Calculations:
 	@lego.assemble
-	def __init__(self , weight , height , activity , goal , gender,  exclude):
+	def __init__(self , weight , height , activity , goal , gender,  exclude , disease = None):
 		#calculations
 		self.bmi = BMI(weight , height)
 		self.ibw = IBW(self.height, self.gender)
@@ -25,15 +25,15 @@ class Calculations:
 		return self
 
 	def makeMeals(self):
-		self.m5 = M5(self.calories , self.goal , exclude = self.exclude)
+		self.m5 = M5(self.calories , self.goal , exclude = self.exclude , disease = self.disease)
 		self.m5.build()
-		self.m3 = M3(self.calories , self.goal , exclude = self.exclude + [e.name for e in self.m5.selected] , extra = self.m5.calories_remaining)
+		self.m3 = M3(self.calories , self.goal , exclude = self.exclude + [e.name for e in self.m5.selected] , extra = self.m5.calories_remaining , disease = self.disease)
 		self.m3.build()
-		self.m1 = M1(self.calories , self.goal , exclude = self.exclude + [e.name for e in self.m3.selected+self.m5.selected], extra = self.m3.calories_remaining)
+		self.m1 = M1(self.calories , self.goal , exclude = self.exclude + [e.name for e in self.m3.selected+self.m5.selected], extra = self.m3.calories_remaining , disease = self.disease)
 		self.m1.build()
-		self.m4 = M4(self.calories , self.goal , exclude = self.exclude + [e.name for e in self.m3.selected+self.m5.selected+self.m1.selected], extra = self.m1.calories_remaining)
+		self.m4 = M4(self.calories , self.goal , exclude = self.exclude + [e.name for e in self.m3.selected+self.m5.selected+self.m1.selected], extra = self.m1.calories_remaining , disease = self.disease)
 		self.m4.build()
-		self.m2 = M2(self.calories , self.goal , exclude = self.exclude + [e.name for e in self.m3.selected+self.m5.selected+self.m1.selected+self.m4.selected], extra = self.m4.calories_remaining)
+		self.m2 = M2(self.calories , self.goal , exclude = self.exclude + [e.name for e in self.m3.selected+self.m5.selected+self.m1.selected+self.m4.selected], extra = self.m4.calories_remaining , disease = self.disease)
 		self.m2.build()
 
 	def get_m1(self):
@@ -74,3 +74,10 @@ class Calculations:
 	@property
 	def random(self):
 		return [e.name for e in self.m1.random() +self.m2.random() +self.m3.random() +self.m4.random() +self.m5.random()] 
+
+	@property
+	def calcium(self):
+		cal =  sum([e.calcium for e in self.selected])
+		if self.disease:
+			return cal + 125
+		return cal

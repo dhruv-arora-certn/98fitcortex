@@ -1,6 +1,7 @@
 from epilogue.models import Food
 from .utils import annotate_food , mark_squared_diff
 from .goals import Goals
+from .medical_conditions import Osteoporosis
 from knapsack.knapsack_dp import knapsack,display
 import heapq , mongoengine , re , random , ipdb , math
 from django.db.models import Q
@@ -70,20 +71,26 @@ class Base:
 		return min(self.get_best(select_from , calories , name) , key = lambda x : getattr(x , self.fieldMapper.get(self.goal)))
 
 	def select_best_minimum(self , select_from , calories , name):
+		print("Select Best Minimum ===========")
+		print("Selecting From " , select_from)
 		try:
 			i = self.get_best_minimum(select_from , calories , name)
 		except Exception as e:
 			print("Error selecting best " , name , e , select_from)
+			i = min(select_from , key = lambda x : abs(calories - x.calarie) )
 		else:
+			print("Executing else " , select_from)
 			i = min(select_from , key = lambda x : abs(calories - x.calarie))
+			print("Selected ", i)
+		finally:
 			self.select_item(i)
-		return i
+			return i
 
 	def select_item(self , item , remove = True):
 		self.selected.append(item)
 		if remove:
 			self.marked.exclude(id = item.id)
-		return self
+		return item
 
 	def unselect_item(self , item , append = True):
 		self.selected.remove(item)
@@ -102,7 +109,10 @@ class Base:
 					if item.quantity < 2:
 						item.update_quantity(2)
 				elif "Tea" not in item.name or "Coffee" not in item.name and not bool(item.yogurt):
-					item.update_weight(1.5)	
+					item.update_weight(1.5)
+	def build(self):
+		if self.disease is not None:
+			pass
 
 	def __getitem__(self , key):
 		return self.selected[key]
@@ -110,14 +120,14 @@ class Base:
 class M1(Base):
 	percent = .25
 
-	def __init__(self , calories , goal , exclude=  "" , extra = 0):
+	def __init__(self , calories , goal , exclude=  "" , extra = 0 , disease = None):
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.exclude = exclude
 		self.queryset = Food.m1_objects.exclude(name__in = exclude)
 		if goal == Goals.WeightLoss : 
 			self.queryset = self.queryset.filter(for_loss = '1').all()
-		
+		self.queryset = Osteoporosis.get_queryset(self.queryset)		
 		self.marked = self.queryset
 		self.selected = []
 		# heapq.heapify(self.marked)
@@ -137,20 +147,13 @@ class M1(Base):
 	@property
 	def drink(self):
 		self.drink_list = self.marked.filter(drink = '1').filter(dairy = '1')
-		return min(self.drink_list , key = lambda x : (self.calories_goal * 0.15 - x.calorie)**2)
+		return min(self.drink_list , key = lambda x : abs(self.calories_goal * 0.15 - x.calorie))
 
 	def remove_drinks(self):
 		# self.marked = list(set(self.marked) - set(self.drink_list))
 		self.marked = self.marked.exclude(name__in = [e.name for e in self.drink_list])
 		return self
 
-	def rethink(self):
-		for item in self.selected:
-			if self.calories < self.calories_goal and item != self.egg:
-				if "Parantha" in item.name or "Roti" in item.name or "Dosa" in item.name or "Cheela" in item.name:
-					item.update_quantity(2)
-				else:
-					item.update_weight(1.5)
 	def rethink(self):
 		selected = self.snacks
 		if self.calories_remaining > 0:	
@@ -166,7 +169,6 @@ class M1(Base):
 	def build(self):
 		self.allocate_restrictions()
 		calories = self.calories_remaining
-		# food_list = list(filter( lambda x : bool(x.snaks) , self.marked))
 		food_list = self.marked.filter(snaks = '1')
 		self.snacks = self.select_best_minimum(food_list , calories , name = "snacks")
 		if self.protein_ideal - self.protein > 8:
@@ -178,7 +180,7 @@ class M1(Base):
 class M2(Base):
 	percent = 0.15
 
-	def __init__(self , calories , goal , exclude , extra = 0):
+	def __init__(self , calories , goal , exclude , extra = 0 , disease = None):
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.queryset = Food.m2_objects.exclude(name__in = exclude)
@@ -265,7 +267,7 @@ class M2(Base):
 class M3(Base):
 	percent = 0.25
 
-	def __init__(self , calories , goal , exclude = "" , extra = 0):
+	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None):
 		self.calories_goal = calories*self.percent + extra
 		self.extra = extra
 		self.goal = goal
@@ -277,7 +279,11 @@ class M3(Base):
 		self.isYogurt = True
 		calories = 0.15*self.calories_goal
 		food_list = Food.m3_objects.filter(yogurt = 1).all()
-		self.yogurt = self.select_item(random.choice(food_list) , remove = False)
+		self.yogurts = self.select_item(random.choice(food_list) , remove = False)
+		steps = round( (calories - self.yogurts.calarie) * self.yogurts.weight/(self.yogurts.calarie*10))
+		new_weight = min(250,self.yogurts.weight + steps * 10)
+		self.yogurts.update_weight(new_weight/self.yogurts.weight)
+
 
 	def select_dessert(self):
 		self.isYogurt = False
@@ -295,15 +301,19 @@ class M3(Base):
 			calories = percent * self.calories_goal
 		food_list = self.marked.filter(vegetable = 1)
 		self.vegetables = self.select_best_minimum(food_list , calories , "vegetables")
+		steps = round((calories - self.vegetables.calarie ) * self.vegetables.weight/(self.vegetables.calarie*10))
+		new_weight = min(250,self.vegetables.weight + steps * 10)
+		self.vegetables.update_weight(new_weight/self.vegetables.weight)
+
 
 	def select_cereals(self , percent = 0.37):		
 		calories = percent * self.calories_goal
 		food_list = self.marked.filter(cereal_grains = 1).filter(dessert = 1)
 		self.cereals = self.select_best_minimum(food_list , calories , "cereals")
 		if "Parantha" in self.cereals.name or "Roti" in self.cereals.name:
-			if self.cereals.quantity < 2:
-				self.cereals.update_quantity(2)
-
+			steps = round((calories - self.cereals.calarie) * self.cereals.quantity/(self.cereals.calarie))
+			new_quantity = steps + self.cereals.quantity
+			self.cereals.update_quantity(new_quantity/self.cereals.quantity)
 	def select_pulses(self):
 		if self.isYogurt : 
 			percent = 0.23
@@ -328,7 +338,10 @@ class M3(Base):
 		else:
 			calories = (0.18 + 0.37 + 0.25)*self.calories_goal
 		food_list = self.marked.filter(cuisine = "Combination")
-		self.select_best_minimum(food_list , calories , name = "combination")
+		self.combination = self.select_best_minimum(food_list , calories , name = "combination")
+		steps = round( (calories-self.combination.calarie) * self.combination.weight/(self.combination.calarie*10))
+		new_weight = min(250,self.combination.weight + steps * 10)
+		self.combination.update_weight(new_weight/self.combination.weight)
 
 			
 	def build(self):
@@ -344,7 +357,7 @@ class M3(Base):
 		],
 		1 , prob_generic_combination)[0]
 		func2()
-		self.rethink()
+		# self.rethink()
 		return self
 
 	@property
@@ -354,16 +367,22 @@ class M3(Base):
 class M4(Base):
 	percent = 0.15
 
-	def __init__(self , calories , goal , exclude = "" , extra = 0):
+	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = Osteoporosis):
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.queryset = Food.m4_objects.exclude(name__in = exclude)
+		self.exclude = exclude
+		self.disease = disease
 		self.marked = self.queryset
+		if disease :
+			self.marked = disease.get_queryset(self.queryset)
 		self.selected = []
 
 	def select_drink(self):
 		calories = 0.15*self.calories_goal
 		food_list = self.marked.filter(drink = 1)
+		if self.disease == Osteoporosis:
+			food_list.filter(Q(name__contains = "Lassi"))
 		try:
 			self.drink = self.select_best_minimum(food_list , calories , "drink")
 		except Exception as e:
@@ -410,19 +429,23 @@ class M4(Base):
 			selected.update_weight(new_weight/selected.weight)
 
 	def build(self):
-		self.select_drink()
-		probability = [0.25 , 0.25 , 0.25 , 0.25]
-		func = choice([
-			self.select_fruit , self.select_nut , self.select_snacks , self.select_salad
-		], 1 , probability)[0]
-		func()
-		self.rethink()
+		if not self.disease:
+			self.select_drink()
+			print("Not Disease --------------")
+			probability = [0.25 , 0.25 , 0.25 , 0.25]
+			func = choice([
+				self.select_fruit , self.select_nut , self.select_snacks , self.select_salad
+			], 1 , probability)[0]
+			func()
+			self.rethink()
+		else:
+			getattr(self.disease , "m4_build")(self)
 		return self
 
 class M5(Base):
 	percent = 0.20
 
-	def __init__(self , calories , goal , exclude = "" , extra = 0):
+	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None):
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		if goal == Goals.WeightLoss : 

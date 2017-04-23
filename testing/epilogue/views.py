@@ -10,6 +10,7 @@ from dietplan.activity import ActivityLevel
 from dietplan.meals import M1 , M5 , M3
 from knapsack.knapsack_dp import knapsack,display
 from dietplan.generator import Pipeline
+from dietplan.medical_conditions import Osteoporosis
 # Create your views here.
 import ipdb , random
 
@@ -38,6 +39,7 @@ def get_analysis(request):
 				float(form.cleaned_data['activity_level']),
 				goal,
 				float(form.cleaned_data["gender"]),
+				disease = Osteoporosis
 			)
 			# ipdb.set_trace()
 			p.generate()
