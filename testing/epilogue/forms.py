@@ -30,7 +30,7 @@ class AnalysisForm(forms.Form):
 		(Female.number , 'Female')
 	])
 	disease = forms.ChoiceField([
-		(Anemia , 'Anemia'),
-		(Osteoporosis , 'Osteoporosis'),
+		("Anemia" , 'Anemia'),
+		("Osteoporosis" , 'Osteoporosis'),
 		("None" , 'Bhala Changa Manush')
 	])

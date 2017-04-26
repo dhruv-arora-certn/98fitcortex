@@ -301,7 +301,7 @@ class M3(Base):
 		if not calories:
 			calories = percent * self.calories_goal
 		food_list = self.marked.filter(vegetable = 1)
-		if self.disease:
+		if self.disease and hasattr(self.disease , "vegetable_filter"):
 			food_list = food_list.filter(self.disease.vegetable_filter)
 		self.vegetables = self.select_best_minimum(food_list , calories , "vegetables")
 		steps = round((calories - self.vegetables.calarie ) * self.vegetables.weight/(self.vegetables.calarie*10))
