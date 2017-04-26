@@ -10,7 +10,7 @@ from dietplan.activity import ActivityLevel
 from dietplan.meals import M1 , M5 , M3
 from knapsack.knapsack_dp import knapsack,display
 from dietplan.generator import Pipeline
-from dietplan.medical_conditions import Osteoporosis
+from dietplan.medical_conditions import Osteoporosis , Anemia
 # Create your views here.
 import ipdb , random
 
@@ -33,13 +33,21 @@ def get_analysis(request):
 				goal = Goals.MaintainWeight
 			if form_goal == '3':
 				goal = Goals.MuscleGain
+			form_disease = form.cleaned_data["disease"]
+			print("Form Disease " , form_disease)
+			disease = None
+			if form_disease == 'Anemia':
+				disease = Anemia
+			if form_disease == "Osteoporosis":
+				disease = Osteoporosis
+			print("Final disease is " , disease)	
 			p = Pipeline(
 				form.cleaned_data['weight'],
 				form.cleaned_data['height'],
 				float(form.cleaned_data['activity_level']),
 				goal,
 				float(form.cleaned_data["gender"]),
-				disease = Osteoporosis
+				disease = disease
 			)
 			# ipdb.set_trace()
 			p.generate()

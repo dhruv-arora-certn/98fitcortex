@@ -71,7 +71,8 @@ class Food(models.Model):
 	cuisine = models.TextField()
 	nuts = models.IntegerField()
 	calcium = models.FloatField()
-
+	vitaminc = models.FloatField()
+	iron = models.FloatField()
 	squared_diff_weight_loss = models.FloatField(default = 0)
 	squared_diff_weight_maintain = models.FloatField(default = 0)
 	squared_diff_weight_gain = models.FloatField(default = 0)

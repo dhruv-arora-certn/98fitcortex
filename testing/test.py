@@ -7,7 +7,7 @@ from dietplan.activity import ActivityLevel
 from dietplan.meals import M1 , M5 , M3
 from dietplan.gender import Male,Female
 from dietplan.generator import Pipeline
-from dietplan.medical_conditions import Osteoporosis
+from dietplan.medical_conditions import Osteoporosis , Anemia
 from knapsack.knapsack_dp import knapsack,display
 
 
@@ -17,5 +17,5 @@ goal = Goals.WeightGain
 activity = ActivityLevel.sedentary
 gender = Female.number
 exclude = []
-p = Pipeline(weight , height , activity , goal , gender , disease = Osteoporosis)
+p = Pipeline(weight , height , activity , goal , gender , disease = Anemia)
 c = Calculations(weight , height , activity , goal , gender , exclude)

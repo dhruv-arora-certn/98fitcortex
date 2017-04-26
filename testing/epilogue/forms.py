@@ -3,6 +3,7 @@ from django.core import validators
 from dietplan.goals import Goals
 from dietplan.activity import ActivityLevel
 from dietplan.gender import Male , Female
+from dietplan.medical_conditions import Anemia,Osteoporosis
 
 class AnalysisForm(forms.Form):
 	height = forms.FloatField(required = True , label = "Height in Meters")
@@ -27,4 +28,9 @@ class AnalysisForm(forms.Form):
 	gender = forms.ChoiceField([
 		(Male.number , 'Male'),
 		(Female.number , 'Female')
+	])
+	disease = forms.ChoiceField([
+		(Anemia , 'Anemia'),
+		(Osteoporosis , 'Osteoporosis'),
+		("None" , 'Bhala Changa Manush')
 	])

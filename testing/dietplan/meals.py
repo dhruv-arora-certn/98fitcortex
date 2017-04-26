@@ -1,7 +1,7 @@
 from epilogue.models import Food
 from .utils import annotate_food , mark_squared_diff
 from .goals import Goals
-from .medical_conditions import Osteoporosis
+from .medical_conditions import Osteoporosis , Anemia
 from knapsack.knapsack_dp import knapsack,display
 import heapq , mongoengine , re , random , ipdb , math
 from django.db.models import Q
@@ -12,7 +12,8 @@ class Base:
 	fieldMapper = {
 		Goals.WeightLoss : "squared_diff_weight_loss",
 		Goals.MaintainWeight : "squared_diff_weight_maintain",
-		Goals.WeightGain : "squared_diff_weight_gain"
+		Goals.WeightGain : "squared_diff_weight_gain",
+		Goals.MuscleGain : "squared_diff_muscle_gain"
 	}
 	def get_max(self , item):
 		goal = self.goal
@@ -71,17 +72,12 @@ class Base:
 		return min(self.get_best(select_from , calories , name) , key = lambda x : getattr(x , self.fieldMapper.get(self.goal)))
 
 	def select_best_minimum(self , select_from , calories , name):
-		print("Select Best Minimum ===========")
-		print("Selecting From " , select_from)
 		try:
 			i = self.get_best_minimum(select_from , calories , name)
 		except Exception as e:
-			print("Error selecting best " , name , e , select_from)
 			i = min(select_from , key = lambda x : abs(calories - x.calarie) )
 		else:
-			print("Executing else " , select_from)
 			i = min(select_from , key = lambda x : abs(calories - x.calarie))
-			print("Selected ", i)
 		finally:
 			self.select_item(i)
 			return i
@@ -124,10 +120,12 @@ class M1(Base):
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.exclude = exclude
+		self.disease = disease
 		self.queryset = Food.m1_objects.exclude(name__in = exclude)
 		if goal == Goals.WeightLoss : 
 			self.queryset = self.queryset.filter(for_loss = '1').all()
-		self.queryset = Osteoporosis.get_queryset(self.queryset)		
+		if self.disease and hasattr(self.disease , "queryset_filter"): 
+			self.queryset = self.queryset.filter(self.disease.queryset_filter)		
 		self.marked = self.queryset
 		self.selected = []
 		# heapq.heapify(self.marked)
@@ -271,7 +269,10 @@ class M3(Base):
 		self.calories_goal = calories*self.percent + extra
 		self.extra = extra
 		self.goal = goal
+		self.disease = disease
 		self.queryset = Food.m3_objects.exclude(name__in = exclude)
+		if self.disease:
+			self.queryset = self.queryset.filter(self.disease.queryset_filter)
 		self.marked = self.queryset
 		self.selected = []
 
@@ -300,6 +301,8 @@ class M3(Base):
 		if not calories:
 			calories = percent * self.calories_goal
 		food_list = self.marked.filter(vegetable = 1)
+		if self.disease:
+			food_list = food_list.filter(self.disease.vegetable_filter)
 		self.vegetables = self.select_best_minimum(food_list , calories , "vegetables")
 		steps = round((calories - self.vegetables.calarie ) * self.vegetables.weight/(self.vegetables.calarie*10))
 		new_weight = min(250,self.vegetables.weight + steps * 10)
@@ -308,7 +311,7 @@ class M3(Base):
 
 	def select_cereals(self , percent = 0.37):		
 		calories = percent * self.calories_goal
-		food_list = self.marked.filter(cereal_grains = 1).filter(dessert = 1)
+		food_list = self.marked.filter(cereal_grains = 1)
 		self.cereals = self.select_best_minimum(food_list , calories , "cereals")
 		if "Parantha" in self.cereals.name or "Roti" in self.cereals.name:
 			steps = round((calories - self.cereals.calarie) * self.cereals.quantity/(self.cereals.calarie))
@@ -347,16 +350,19 @@ class M3(Base):
 	def build(self):
 		prob_yogurt_dessert = [2/7 , 5/7]
 		func1 = choice([
-			self.select_yogurt, self.select_dessert
-		],
-		1 ,  prob_yogurt_dessert)[0]
+				self.select_yogurt, self.select_dessert
+			],
+			1 ,  prob_yogurt_dessert)[0]
 		func1()
-		prob_generic_combination = [2/7,5/7]
-		func2 = choice([
-			self.makeCombinations, self.makeGeneric
-		],
-		1 , prob_generic_combination)[0]
-		func2()
+		if not self.disease:
+			prob_generic_combination = [2/7,5/7]
+			func2 = choice([
+				self.makeCombinations, self.makeGeneric
+			],
+			1 , prob_generic_combination)[0]
+			func2()
+		else:
+			self.makeGeneric()
 		# self.rethink()
 		return self
 
@@ -367,7 +373,7 @@ class M3(Base):
 class M4(Base):
 	percent = 0.15
 
-	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = Osteoporosis):
+	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None):
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.queryset = Food.m4_objects.exclude(name__in = exclude)
@@ -393,6 +399,7 @@ class M4(Base):
 		self.option = "fruits"
 		calories = self.calories_goal
 		fruit_items = self.marked.filter(fruit = 1)
+		# if self.disease == 
 		self.fruits = self.select_best_minimum(fruit_items , calories , "fruit")
 		self.fruits.update_quantity(2)
 
@@ -429,17 +436,19 @@ class M4(Base):
 			selected.update_weight(new_weight/selected.weight)
 
 	def build(self):
-		if not self.disease:
+		if self.disease and hasattr( self.disease , "m4_build"):
+			getattr(self.disease , "m4_build")(self)
+		else:
 			self.select_drink()
 			print("Not Disease --------------")
 			probability = [0.25 , 0.25 , 0.25 , 0.25]
+			if self.disease and hasattr(self.disease , "nuts_probability"):
+				probability = self.disease.nuts_probability
 			func = choice([
 				self.select_fruit , self.select_nut , self.select_snacks , self.select_salad
 			], 1 , probability)[0]
 			func()
 			self.rethink()
-		else:
-			getattr(self.disease , "m4_build")(self)
 		return self
 
 class M5(Base):
@@ -448,6 +457,7 @@ class M5(Base):
 	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None):
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
+		self.disease = disease
 		if goal == Goals.WeightLoss : 
 			self.queryset = Food.m5loss_objects
 		if goal == Goals.WeightGain or goal == Goals.MuscleGain:
@@ -455,6 +465,8 @@ class M5(Base):
 		if goal == Goals.MaintainWeight:
 			self.queryset = Food.m5stable_objects
 		self.queryset = self.queryset.exclude(name__in = exclude).filter(calarie__gt = 0)
+		if self.disease:
+			self.queryset = self.queryset.filter(self.disease.queryset_filter)
 		self.marked = self.queryset
 		self.selected = []
 
@@ -462,7 +474,10 @@ class M5(Base):
 		calories = 0.22*self.calories_goal
 		self.vegetable_calories = calories
 		food_list = self.marked.filter(vegetable = 1)
+		if self.disease and hasattr(self.disease , "m5_vegetable_filter"):
+			food_list = food_list.filter(self.disease.m5_vegetable_filter)
 		self.vegetables = self.select_best_minimum(food_list , calories , "vegetables")
+
 
 	def select_cereals(self):
 		calories = 0.39*self.calories_goal

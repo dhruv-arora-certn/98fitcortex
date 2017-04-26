@@ -13,7 +13,6 @@ def knapsack(food_list, limit , field):
     """
     n = len(food_list)
     limit = round(limit)
-    print("From knapsack " , field , n , limit)
     F = [[0] * (limit + 1) for x in range(n + 1)]
     test = []
     t0 = time.time()
@@ -24,12 +23,11 @@ def knapsack(food_list, limit , field):
                     l = max(F[i - 1][j], F[i - 1][j - food_list[i].calorie] + round(1/getattr(food_list[i] , field)))
                 except Exception as e:
                     # ipdb.set_trace()
-                    print("From knapsack " , food_list[i].id , field , getattr(food_list[i] , field))
+                    pass
                 test.append(l)
                 F[i][j] = l
             else:
                 F[i][j] = F[i - 1][j]
-    print("Time " , time.time() - t0)
     return F , test
 
 def display(F , limit , food_list):

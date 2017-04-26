@@ -7,6 +7,7 @@ from .goals import Goals
 from .meals import M1 , M2 , M3 , M4 , M5
 from .calorieNumber import CalorieNumber
 from .ibw import IBW
+from .medical_conditions import Osteoporosis , Anemia
 from knapsack.knapsack_dp import knapsack
 import itertools , threading , lego
 
@@ -45,15 +46,15 @@ class Calculations:
 
 	@property
 	def protein(self):
-		return sum([i.protein for i in self.selected])
+		return self.sum_property("protein")
 
 	@property
 	def carbs(self):
-		return sum([i.carbohydrates for i in self.selected])
+		return self.sum_property("carbohydrates")
 
 	@property
 	def fat(self):
-		return sum([i.fat for i in self.selected])
+		return self.sum_property("fat")
 
 	@property
 	def calories_achieved(self):
@@ -77,7 +78,20 @@ class Calculations:
 
 	@property
 	def calcium(self):
-		cal =  sum([e.calcium for e in self.selected])
-		if self.disease:
+		cal =  self.sum_property("calcium")
+		if self.disease == Osteoporosis:
 			return cal + 125
 		return cal
+
+	def sum_property(self , property):
+		return sum([
+			getattr(e , property) for e in self.selected
+		])
+
+	@property
+	def iron(self):
+		return self.sum_property("iron")
+
+	@property
+	def vitaminc(self):
+		return self.sum_property("vitaminc")
