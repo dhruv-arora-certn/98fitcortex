@@ -84,7 +84,7 @@ class DietPlanView(GenericAPIView):
 
 		#Extract Days
 		qs = qs.filter(week_id = int(self.kwargs['week_id'])).last()
-		g = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = qs.id).filter(day = int(self.kwargs['day']))
+		g = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = qs.id).filter(calorie__gt = 0).filter(day = int(self.kwargs['day']))
 		return g
 
 	def get(self , request , *args , **kwargs):
