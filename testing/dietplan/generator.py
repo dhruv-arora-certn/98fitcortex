@@ -9,61 +9,86 @@ from .calorieNumber import CalorieNumber
 from .ibw import IBW
 from .calculations import Calculations
 from knapsack.knapsack_dp import knapsack
-from epilogue.models import Food
+from epilogue.models import Food , GeneratedDietPlan , GeneratedDietPlanFoodDetails
+from epilogue.utils import get_day , get_week
 import itertools , threading , lego , numpy as np , click
-
+from datetime import datetime
 class Day:
 	@lego.assemble
-	def __init__(self , calculations):
+	def __init__(self , calculations , day = None , persist = False , dietplan = None):
 		pass
 
 	def makeMeals(self):
 		self.calculations.makeMeals()
+		self.persist_db()
+
+	def persist_db(self):
+		print("&&&&&& "  ,self.persist , self.day , self.dietplan)
+		if self.persist and self.day and self.dietplan:
+			self.generated = []
+			for m in self.calculations.meals:	
+				for e in m.selected:
+					print("Pushing Day to DB")
+					obj = GeneratedDietPlanFoodDetails.objects.create(dietplan = self.dietplan , food_item = e , food_name = e.name , day = self.day , meal_type = m.__class__.__name__.lower() , calorie = str(e.calarie)  , weight = e.weight , quantity = e.quantity)
+					self.generated.append(obj)
 
 class Pipeline:
 	@lego.assemble
-	def __init__(self , weight , height , activity , goal , gender , disease = None):
+	def __init__(self , weight , height , activity , goal , gender , user = None ,disease = None , persist = False , week = None):
 		self.excluded = []
+		self.dietplan = None
+		if self.week is None:
+			week = get_week(datetime.today())
+		user_week = week - get_week(user.create_on) + 1
+		if self.persist and self.user:
+			self.dietplan = GeneratedDietPlan.objects.create(customer = user , week_id = week , user_week_id = week)
+		self.excluded = self.get_initial_exclude()
+
+	def get_initial_exclude(self):
+		'''
+		Initialize the list of excluded items from the past 3 days and user's food preferences
+		'''
+		return []
 
 	def Day1(self):
 		print("Day 1 Exclude ," , self.exclude)
-		self.day1 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease ))
+		self.day1 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease ), persist = self.persist, dietplan = self.dietplan , day = "1")
 		self.day1.makeMeals()
 		self.push_to_exclude(self.day1)
 
 	def Day2(self):
 		print("Day 2 Exclude ," , self.exclude)
-		self.day2 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease))
+		self.day2 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease ), persist = self.persist, dietplan = self.dietplan , day = "2")
 		self.day2.makeMeals()
 		self.push_to_exclude(self.day2)
 	
 	def Day3(self):
 		print("Day 3 Exclude ," , self.exclude)
-		self.day3 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease))
+		self.day3 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease ), persist = self.persist, dietplan = self.dietplan , day = "3")
 		self.day3.makeMeals()
 		self.push_to_exclude(self.day3)
 	
 	def Day4(self):
 		print("Day 4 Exclude ," , self.exclude)
-		self.day4 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease))
+		self.day4 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease ), persist = self.persist, dietplan = self.dietplan , day = "4")
 		self.day4.makeMeals()
 		self.push_to_exclude(self.day4)
 	
 	def Day5(self):
 		print("Day 5 Exclude ," , self.exclude)
-		self.day5 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease ))
+		self.day5 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease ), persist = self.persist, dietplan = self.dietplan , day = "5")
 		self.day5.makeMeals()
 		self.push_to_exclude(self.day5)
 	
 	def Day6(self):
 		print("Day 6 Exclude ," , self.exclude)
-		self.day6 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease))
+		self.day6 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease ), persist = self.persist, dietplan = self.dietplan , day = "6")
 		self.day6.makeMeals()
 		self.push_to_exclude(self.day6)
 	
 	def Day7(self):
 		print("Day 7 Exclude ," , self.exclude)
-		self.day7 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease))
+		self.day7 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease ), persist = self.persist, dietplan = self.dietplan , day = "7")
 		self.day7.makeMeals()
 		self.push_to_exclude(self.day7)
 
@@ -74,13 +99,9 @@ class Pipeline:
 			self.excluded += list(np.random.choice(self.excluded[4:] , 15  , replace = True))
 
 	def generate(self):
-		self.Day1()
-		self.Day2()
-		self.Day3()
-		self.Day4()
-		self.Day5()
-		self.Day6()
-		self.Day7()
+		days = range(get_day(datetime.today()) , 8)
+		for e in days:
+			getattr(self , "Day"+str(e))()
 
 	@property
 	def exclude(self):

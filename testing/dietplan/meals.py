@@ -3,7 +3,7 @@ from .utils import annotate_food , mark_squared_diff
 from .goals import Goals
 from .medical_conditions import Osteoporosis , Anemia
 from knapsack.knapsack_dp import knapsack,display
-import heapq , mongoengine , re , random , ipdb , math
+import heapq ,  re , random , ipdb , math
 from django.db.models import Q
 from numpy.random import choice
 

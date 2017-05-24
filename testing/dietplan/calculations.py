@@ -36,6 +36,9 @@ class Calculations:
 		self.m4.build()
 		self.m2 = M2(self.calories , self.goal , exclude = self.exclude + [e.name for e in self.m3.selected+self.m5.selected+self.m1.selected+self.m4.selected], extra = self.m4.calories_remaining , disease = self.disease)
 		self.m2.build()
+		self.meals = [
+			self.m1 , self.m2 , self.m3 , self.m4 , self.m5
+		]
 
 	def get_m1(self):
 		self.m1 = M1( self.calories , self.goal )

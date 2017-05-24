@@ -48,6 +48,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'business_diet_list',
+                'managed' : False
             },
         ),
     ]

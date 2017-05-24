@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from dotenv import load_dotenv
 
+dotenv_path = os.path.join(os.path.dirname(__file__) , ".env")
+load_dotenv(dotenv_path)
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,7 +28,7 @@ SECRET_KEY = '$txw&#8w3o6hua4fvmg&k+s8$*liu0afply$g0jnmey))is4ec'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["35.161.255.37" , "localhost"]
+ALLOWED_HOSTS = [str(e) for e in os.environ.get("allowed_hosts")]
 
 
 # Application definition
@@ -38,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'epilogue',
-    'import_export'
+    'rest_framework',
+    'rest_framework.authtoken'   
 ]
 
 MIDDLEWARE = [
@@ -78,11 +82,11 @@ WSGI_APPLICATION = 'testing.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': '98fit_new',
-        'USER' : 'root',
-        'PASSWORD' : 'fk37shikhar',
-        'HOST' : 'localhost',
-        'PORT' : 3306
+        'NAME': os.environ.get('dbname'),
+        'USER' : os.environ.get('dbuser'),
+        'PASSWORD' : os.environ.get('dbpassword'),
+        'HOST' : os.environ.get('dbhost'),
+        'PORT' : os.environ.get('dbport')
     }
 }
 
@@ -128,3 +132,17 @@ STATIC_URL = '/static/'
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
  ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES' : [
+        'epilogue.authentication.CustomerAuthentication'
+    ]
+}
+
+REST_AUTH_SERIALIZERS = {
+    'LOGIN_SERIALIZER' : 'epilogue.serializers.LoginSerializer',
+    'USER_DETAILS_SERIALIZER' : 'epilogue.serializers.CustomerSerializer'
+}
+
+REST_AUTH_TOKEN_MODEL = 'epilogue.models.Token'
+REST_SESSION_LOGIN = False

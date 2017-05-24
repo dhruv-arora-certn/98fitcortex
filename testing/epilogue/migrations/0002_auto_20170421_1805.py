@@ -12,19 +12,4 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='food',
-            name='squared_diff_weight_gain',
-            field=models.FloatField(default=0),
-        ),
-        migrations.AddField(
-            model_name='food',
-            name='squared_diff_weight_loss',
-            field=models.FloatField(default=0),
-        ),
-        migrations.AddField(
-            model_name='food',
-            name='squared_diff_weight_maintain',
-            field=models.FloatField(default=0),
-        ),
     ]
