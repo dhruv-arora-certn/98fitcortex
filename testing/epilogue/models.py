@@ -50,6 +50,7 @@ class Food(models.Model):
 	squared_diff_weight_loss = models.FloatField(default = 0)
 	squared_diff_weight_maintain = models.FloatField(default = 0)
 	squared_diff_weight_gain = models.FloatField(default = 0)
+	image_name = models.CharField(max_length = 100)
 
 	def __init__(self , *args , **kwargs):
 		super().__init__(*args , **kwargs)
@@ -116,7 +117,7 @@ class Food(models.Model):
 	@property
 	def image(self):
 		return "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/%s"%(self.image_name)
-
+	
 	class Meta:
 		db_table = "business_diet_list"
 		managed = False

@@ -86,10 +86,7 @@ class DietPlanView(GenericAPIView):
 		qs = self.get_queryset()
 		user = self.request.user
 		week_id = int(self.kwargs.get("week_id"))
-		#Extract Days
 		qs = qs.filter(week_id = int(self.kwargs['week_id'])).last()
-		import ipdb
-		# ipdb.set_trace()
 		if qs is None:
 			print("Generating")
 			p = Pipeline(user.weight , user.height , float(user.lifestyle) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id))

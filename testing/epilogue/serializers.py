@@ -15,15 +15,13 @@ class CustomerSerializer(serializers.ModelSerializer):
 	objective = ObjectiveSerializer()
 	gender = serializers.CharField(source = "gen")
 	lifestyle = serializers.CharField(source = "ls")
-		
+
 	class Meta:
 		model = Customer
 		fields = ["email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender"]
 
 	def update(self , instance , validated_data):
 		objective = validated_data.pop('objective' , {})
-		# import ipdb
-		# ipdb.set_trace()
 		a = super().update(instance , validated_data )
 		if objective : 
 			o = Objective.objects.get(name = objective['name'])
@@ -36,13 +34,16 @@ class CustomerSerializer(serializers.ModelSerializer):
 class FoodSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Food
-		fields = ["name" , "protein" , "fat" , "carbohydrates"]
+		fields = ["name" , "protein" , "fat" , "carbohydrates" , "image"]
 
 class DietPlanSerializer(serializers.ModelSerializer):
 	# food_item = FoodSerializer(read_only = True)
 	protein = serializers.SerializerMethodField()
 	fat = serializers.SerializerMethodField()
 	carbohydrates = serializers.SerializerMethodField()
+	image = serializers.CharField(source = "food_item.image")
+	quantity = serializers.SerializerMethodField()
+	weight = serializers.SerializerMethodField()
 
 	class Meta:
 		model = GeneratedDietPlanFoodDetails
@@ -61,13 +62,21 @@ class DietPlanSerializer(serializers.ModelSerializer):
 	def get_carbohydrates(self , obj):
 		return self.get_factored_attr("carbohydrates", obj)
 
+	def get_quantity(self , obj):
+		if obj.quantity == 0:
+			return obj.food_item.quantity
+		return obj.quantity
+
+	def get_weight(self , obj):
+		if obj.weight == 0:
+			return obj.food_item.weight
+		return obj.weight
 
 class LoginSerializer(serializers.Serializer):
 	email = serializers.EmailField(required = True)
 	password = serializers.CharField(style ={'input_type' : 'password'})
 
 	def validate(self , attrs):
-		print("Calling Validate")
 		email = attrs.get('email')
 		password = attrs.get('password')
 
