@@ -145,15 +145,15 @@ class Customer(models.Model):
 		managed = False
 
 	email = models.CharField(max_length = 255)
-	first_name = models.CharField(max_length = 25)
-	last_name = models.CharField(max_length = 25)
+	first_name = models.CharField(max_length = 25, blank = True)
+	last_name = models.CharField(max_length = 25 , blank = True , null = True)
 	create_on = models.DateTimeField(auto_now_add = True)
-	mobile = models.CharField(max_length = 11)
+	mobile = models.CharField(max_length = 11 , blank = True , null = True)
 	age = models.IntegerField()
 	w = models.CharField(db_column = "weight", max_length = 11)
 	h = models.CharField(db_column = "height", max_length = 20)
 	ls = models.CharField( max_length = 50 , db_column = "lifestyle")
-	obj = models.ForeignKey(Objective , db_column = "objective")
+	objective = models.ForeignKey(Objective , db_column = "objective")
 	gen = models.CharField(max_length = 20 , db_column = "gender")
 
 	is_authenticated = True
@@ -173,7 +173,7 @@ class Customer(models.Model):
 
 	@property
 	def goal(self):
-		return self.obj.goal
+		return self.objective.goal
 
 	@property
 	def gender(self):
@@ -184,7 +184,7 @@ class Customer(models.Model):
 
 	@property
 	def lifestyle(self):
-		return float(self.ls)
+		return float(self.ls) if self.ls else None
 
 	@property
 	def is_active(self):
@@ -244,7 +244,7 @@ class GeneratedDietPlanFoodDetails(models.Model):
 
 	dietplan = models.ForeignKey(GeneratedDietPlan , db_column = "erp_diet_plan_id") 
 	food_item = models.ForeignKey(Food , db_column = "business_diet_list_id")
-	food_name = models.CharField(max_length = 100)
+	food_name = models.CharField(max_length = 255)
 	meal_type = models.CharField(max_length = 20)
 	day = models.IntegerField()
 	calorie = models.CharField(max_length = 50)

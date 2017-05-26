@@ -99,7 +99,9 @@ class Pipeline:
 			self.excluded += list(np.random.choice(self.excluded[4:] , 15  , replace = True))
 
 	def generate(self):
-		days = range(get_day(datetime.today()) , 8)
+		#If it is the present week
+		days = range(1,8)
+
 		for e in days:
 			getattr(self , "Day"+str(e))()
 

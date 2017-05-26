@@ -1,12 +1,37 @@
 from rest_framework import serializers , exceptions
-from epilogue.models import Customer , LoginCustomer ,GeneratedDietPlan , GeneratedDietPlanFoodDetails , Food
+from epilogue.models import Customer , LoginCustomer ,GeneratedDietPlan , GeneratedDietPlanFoodDetails , Food , Objective
 from django.core.exceptions import ObjectDoesNotExist
 from passlib.hash import bcrypt
 
+
+class ObjectiveSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Objective
+		fields = ["id" , "name"]
+
 class CustomerSerializer(serializers.ModelSerializer):
+	height = serializers.FloatField(source = "h")
+	weight = serializers.FloatField(source = "w")
+	objective = ObjectiveSerializer()
+	gender = serializers.CharField(source = "gen")
+	lifestyle = serializers.CharField(source = "ls")
+		
 	class Meta:
 		model = Customer
-		fields = ["email" , "first_name" , "last_name" , "mobile" , "age"]
+		fields = ["email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender"]
+
+	def update(self , instance , validated_data):
+		objective = validated_data.pop('objective' , {})
+		# import ipdb
+		# ipdb.set_trace()
+		a = super().update(instance , validated_data )
+		if objective : 
+			o = Objective.objects.get(name = objective['name'])
+			a.objective = o
+			a.save()
+		return a 
+
+
 
 class FoodSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -14,6 +39,7 @@ class FoodSerializer(serializers.ModelSerializer):
 		fields = ["name" , "protein" , "fat" , "carbohydrates"]
 
 class DietPlanSerializer(serializers.ModelSerializer):
+	# food_item = FoodSerializer(read_only = True)
 	protein = serializers.SerializerMethodField()
 	fat = serializers.SerializerMethodField()
 	carbohydrates = serializers.SerializerMethodField()

@@ -209,10 +209,11 @@ class M2(Base):
 	def select_nut(self):
 		self.option = "nut"
 		calories = self.calories_goal
-		nuts_items = self.marked.filter(nuts = 1).filter(Q(name__startswith = "Handful")).all()
+		nuts_items = self.marked.filter(Q(name__startswith = "Handful")).all()
 		try:
 			self.nuts = self.select_best_minimum(nuts_items , calories , name = "nuts")
 		except Exception as e:
+			# ipdb.set_trace()
 			self.nuts = random.choice(nuts_items)
 			self.select_item(self.nuts)
 

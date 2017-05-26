@@ -11,7 +11,7 @@ from dietplan.meals import M1 , M5 , M3
 from knapsack.knapsack_dp import knapsack,display
 from dietplan.generator import Pipeline
 from dietplan.medical_conditions import Osteoporosis , Anemia
-from rest_framework.generics import RetrieveAPIView , GenericAPIView
+from rest_framework.generics import RetrieveUpdateAPIView ,RetrieveAPIView , GenericAPIView
 from rest_framework.views import APIView
 from epilogue.models import *
 from epilogue.serializers import *
@@ -66,7 +66,7 @@ def get_analysis(request):
 		return HttpResponse('0')
 
 
-class UserView(RetrieveAPIView):
+class UserView(RetrieveUpdateAPIView):
 	queryset = Customer.objects
 	serializer_class = CustomerSerializer
 
@@ -79,15 +79,27 @@ class DietPlanView(GenericAPIView):
 	def get_queryset(self):
 		return GeneratedDietPlan.objects.filter(customer = self.request.user)
 
+	def get_diet_plan_details(self , dietplan ):
+		return GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(calorie__gt = 0).filter(day = int(self.kwargs['day'])) 
+	
 	def get_object(self):
 		qs = self.get_queryset()
-
+		user = self.request.user
+		week_id = int(self.kwargs.get("week_id"))
 		#Extract Days
 		qs = qs.filter(week_id = int(self.kwargs['week_id'])).last()
-		g = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = qs.id).filter(calorie__gt = 0).filter(day = int(self.kwargs['day']))
+		import ipdb
+		# ipdb.set_trace()
+		if qs is None:
+			print("Generating")
+			p = Pipeline(user.weight , user.height , float(user.lifestyle) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id))
+			p.generate() 
+			qs = p.dietplan
+		g = self.get_diet_plan_details(qs)
 		return g
 
 	def get(self , request , *args , **kwargs):
 		objs = self.get_object()
+		# ipdb.set_trace()
 		data = DietPlanSerializer(objs , many = True).data
 		return Response(data)

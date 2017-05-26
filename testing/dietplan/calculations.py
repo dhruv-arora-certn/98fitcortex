@@ -22,6 +22,8 @@ class Calculations:
 
 
 	def countCalories(self):
+		# import ipdb
+		# ipdb.set_trace()
 		self.calories = max( 1200 , self.ibw.ibw * self.calorieNumber.number)
 		return self
 
