@@ -100,3 +100,16 @@ class DietPlanView(GenericAPIView):
 		# ipdb.set_trace()
 		data = DietPlanSerializer(objs , many = True).data
 		return Response(data)
+
+class DishReplaceView(RetrieveAPIView):
+	serializer_class = DietPlanSerializer
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [IsAuthenticated]
+	queryset = GeneratedDietPlanFoodDetails.objects
+
+	def get(self , request , *args , **kwargs):
+		print("Calling Dish Replace")
+		obj = self.get_object()
+		a = obj.find_closest(save = True)
+		data = self.serializer_class(a).data
+		return Response(data)

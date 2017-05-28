@@ -4,7 +4,13 @@ from dietplan.gender import Male , Female
 from epilogue.managers import *
 from django.db.models.expressions import RawSQL
 #Model Managers for Food Model
-
+QUANTITY_MANIPULATE = [
+	"Parantha",
+	"Roti",
+	"Dosa",
+	"Cheela",
+	"Uttapam"
+]
 fieldMapper = {
 		Goals.WeightLoss : "squared_diff_weight_loss",
 		Goals.MaintainWeight : "squared_diff_weight_maintain",
@@ -17,6 +23,7 @@ class Food(models.Model):
 	quantity = models.IntegerField()
 	calarie = models.FloatField()
 	serving = models.TextField()
+	size = models.CharField(max_length = 100)
 	weight = models.FloatField()
 	fat = models.FloatField()
 	protein = models.FloatField()
@@ -116,8 +123,10 @@ class Food(models.Model):
 
 	@property
 	def image(self):
+		if not self.image_name:
+			return "http://98fit.com//webroot/dietlist_images/images.jpg"
 		return "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/%s"%(self.image_name)
-	
+
 	class Meta:
 		db_table = "business_diet_list"
 		managed = False
@@ -190,6 +199,7 @@ class Customer(models.Model):
 	@property
 	def is_active(self):
 		return True
+
 	def __str__(self):
 		return self.first_name + " : " + self.email
 
@@ -251,7 +261,7 @@ class GeneratedDietPlanFoodDetails(models.Model):
 	calorie = models.CharField(max_length = 50)
 	weight = models.FloatField(default = 0)
 	quantity = models.FloatField(default = 0)
-
+	size = models.CharField(max_length = 50)
 	day1 = Day1()
 	day2 = Day2()
 	day3 = Day3()
@@ -265,7 +275,7 @@ class GeneratedDietPlanFoodDetails(models.Model):
 	def factor(self):
 		return float(self.calorie)/self.food_item.calarie
 
-	def find_closest(self, *args):
+	def find_closest(self, save = False):
 		'''
 		*args represent the additional arguments that might be required in futurej
 		'''
@@ -282,7 +292,27 @@ class GeneratedDietPlanFoodDetails(models.Model):
 			if goal == Goals.MaintainWeight:
 				f = getattr(Food , "m5stable_objects")
 		f = f.filter(fruit = item.fruit).filter(drink = item.drink).filter(dairy = item.dairy).filter(snaks = item.snaks).filter(vegetable = item.vegetable).filter(cereal_grains = item.cereal_grains).filter()
-		f = f.annotate(d = RawSQL("Abs(%s - %s)" , [field , getattr(self,field)])).order_by("d").filter()[:5]
+		f = f.annotate(d = RawSQL("Abs(%s - %s)" , [field , getattr(self.food_item,field)])).exclude(id = self.food_item_id).order_by("d").order_by(field).first()
+		print("Old item" , self.food_item)
+		self.food_item = f
+		print("New item" , self.food_item)
+		if any(x in f.name for x in QUANTITY_MANIPULATE ):
+			f.update_quantity(self.factor)
+		else:
+			f.update_weight(self.factor)
+		self.update_attrs(f)
+		if save:
+			print("Saving Changed Dish")
+			self.save()
+		return self
+
+	def update_attrs(self , item):
+		self.calorie = str(item.calarie)
+		self.weight = item.weight
+		self.quantity = item.quantity
+		self.size = item.size
+		self.food_name = item.name
+		return self	
 
 
 class GeneratedExercisePlan(models.Model):
