@@ -13,6 +13,8 @@ from epilogue.models import Food , GeneratedDietPlan , GeneratedDietPlanFoodDeta
 from epilogue.utils import get_day , get_week
 import itertools , threading , lego , numpy as np , click
 from datetime import datetime
+
+
 class Day:
 	@lego.assemble
 	def __init__(self , calculations , day = None , persist = False , dietplan = None):
@@ -21,6 +23,10 @@ class Day:
 	def makeMeals(self):
 		self.calculations.makeMeals()
 		self.persist_db()
+
+	def makeMeal(self , meal = None):
+		assert meal
+		newMeal = self.calculations.makeMeal(meal)
 
 	def persist_db(self):
 		print("&&&&&& "  ,self.persist , self.day , self.dietplan)
@@ -122,4 +128,4 @@ class Pipeline:
 		l = [
 			self.day1.calculations , self.day2.calculations , self.day3.calculations, self.day4.calculations , self.day5.calculations , self.day6.calculations , self.day7.calculations
 		]
-		return sum( getattr(i , property) for i in l)
+		return sum( getattr(i , property) for i in l)	

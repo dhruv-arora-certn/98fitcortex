@@ -113,3 +113,26 @@ class DishReplaceView(RetrieveAPIView):
 		a = obj.find_closest(save = True)
 		data = self.serializer_class(a).data
 		return Response(data)
+
+class MealReplaceView(GenericAPIView):
+	serializer_class = DietPlanSerializer
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [IsAuthenticated]
+	queryset = GeneratedDietPlan.objects
+
+	def get_queryset(self):
+		return GeneratedDietPlan.objects.filter(customer = self.request.user).filter(week_id = self.kwargs.get('week_id'))
+	
+	def get_diet_plan_details(self , dietplan):
+		# ipdb.set_trace()
+		return GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = int(self.kwargs.get('day'))).filter(meal_type = self.kwargs.get('meal'))
+	
+	def get_object(self):
+		qs = self.get_queryset().last()
+		objs = qs.changeMeal(day = self.kwargs.get('day') , meal = self.kwargs.get('meal'))
+		return objs
+
+	def get(self, request , *args , **kwargs):
+		objs = self.get_object()
+		data = self.serializer_class(objs , many = True).data
+		return Response(data)

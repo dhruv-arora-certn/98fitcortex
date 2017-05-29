@@ -243,7 +243,13 @@ class GeneratedDietPlan(models.Model):
 			e : GeneratedDietPlanFoodDetails.objects.filter(models.Q(dietplan = self) & models.Q(day = e)).all() for e in range(1,8)
 		}
 
-
+	def changeMeal(self , day = None , meal = None):
+		assert day , meal
+		assert meal in ["m1" , "m2" , "m3" , "m4" , "m5"]
+		items = self.generateddietplanfooddetails_set.filter(day = day).filter(meal_type = meal)
+		for e in items:
+			e.find_closest(save = True)
+		return items
 
 class GeneratedDietPlanFoodDetails(models.Model):
 	'''
@@ -291,7 +297,7 @@ class GeneratedDietPlanFoodDetails(models.Model):
 				f = getattr(Food , "m5gain_objects")
 			if goal == Goals.MaintainWeight:
 				f = getattr(Food , "m5stable_objects")
-		f = f.filter(fruit = item.fruit).filter(drink = item.drink).filter(dairy = item.dairy).filter(snaks = item.snaks).filter(vegetable = item.vegetable).filter(cereal_grains = item.cereal_grains).filter()
+		f = f.filter(fruit = item.fruit).filter(drink = item.drink).filter(dairy = item.dairy).filter(snaks = item.snaks).filter(vegetable = item.vegetable).filter(cereal_grains = item.cereal_grains).filter(salad = item.salad).filter(yogurt = item.yogurt).filter(dessert=  item.dessert).filter(pulses = item.pulses).filter(cuisine = item.cuisine).filter(nuts = item.nuts)
 		f = f.annotate(d = RawSQL("Abs(%s - %s)" , [field , getattr(self.food_item,field)])).exclude(id = self.food_item_id).order_by("d").order_by(field).first()
 		print("Old item" , self.food_item)
 		self.food_item = f
