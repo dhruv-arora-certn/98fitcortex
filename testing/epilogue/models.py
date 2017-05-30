@@ -265,7 +265,7 @@ class GeneratedDietPlan(models.Model):
 
 	@property
 	def items(self):
-		return self.generateddietplanfooddetails_set.values_list("food_name" , flat = True)
+		return list(self.generateddietplanfooddetails_set.values_list("food_name" , flat = True))
 
 class GeneratedDietPlanFoodDetails(models.Model):
 	'''
@@ -340,7 +340,7 @@ class GeneratedDietPlanFoodDetails(models.Model):
 
 	@property
 	def old_suggestions(self):
-		return self.dishreplacementsuggestions_set.values_list('food__name' , flat = True)
+		return list(self.dishreplacementsuggestions_set.values_list('food__name' , flat = True))
 
 	def update_attrs(self , item):
 		self.calorie = str(item.calarie)
