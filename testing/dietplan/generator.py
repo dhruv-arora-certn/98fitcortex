@@ -45,16 +45,20 @@ class Pipeline:
 		self.dietplan = None
 		if self.week is None:
 			week = get_week(datetime.today())
-		user_week = week - get_week(user.create_on) + 1
+		user_week = 1
+		if self.user:
+			user_week = week - get_week(user.create_on) + 1
+			self.excluded = self.get_initial_exclude()
 		if self.persist and self.user:
-			self.dietplan = GeneratedDietPlan.objects.create(customer = user , week_id = week , user_week_id = week)
-		self.excluded = self.get_initial_exclude()
+			self.dietplan = GeneratedDietPlan.objects.create(customer = user , week_id = week , user_week_id = user_week)
 
 	def get_initial_exclude(self):
 		'''
 		Initialize the list of excluded items from the past 3 days and user's food preferences
 		'''
-		return []
+		last_plan = GeneratedDietPlan.objects.filter( customer = self.user ).last()
+		items = last_plan.get_last_days(3)	
+		return items or []
 
 	def Day1(self):
 		print("Day 1 Exclude ," , self.exclude)

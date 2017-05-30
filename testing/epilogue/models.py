@@ -3,6 +3,7 @@ from dietplan.goals import Goals
 from dietplan.gender import Male , Female
 from epilogue.managers import *
 from django.db.models.expressions import RawSQL
+from django.db.models import Max
 #Model Managers for Food Model
 QUANTITY_MANIPULATE = [
 	"Parantha",
@@ -251,6 +252,16 @@ class GeneratedDietPlan(models.Model):
 			e.find_closest(save = True)
 		return items
 
+	def get_last_days(self , days):
+		assert days > 0 and days <= 7
+		baseQ = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.id)
+		max_day = baseQ.aggregate(Max('day')).get("day__max" , 7)
+		print("Max Day " , max_day)
+		items = []
+		for day in range(max_day , max_day - days , -1):
+			items.extend(baseQ.filter(day = day).values_list('food_name' , flat = True ))
+		return items
+
 class GeneratedDietPlanFoodDetails(models.Model):
 	'''
 	Store the generated diet plan of a day here
@@ -259,7 +270,7 @@ class GeneratedDietPlanFoodDetails(models.Model):
 		managed = False
 		db_table = "erp_diet_plan_food_details"
 
-	dietplan = models.ForeignKey(GeneratedDietPlan , db_column = "erp_diet_plan_id") 
+	dietplan = models.ForeignKey(GeneratedDietPlan , db_column = "erp_diet_plan_id" ) 
 	food_item = models.ForeignKey(Food , db_column = "business_diet_list_id")
 	food_name = models.CharField(max_length = 255)
 	meal_type = models.CharField(max_length = 20)
