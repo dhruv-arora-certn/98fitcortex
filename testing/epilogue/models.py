@@ -116,6 +116,7 @@ class Food(models.Model):
 			
 	def update_quantity(self ,factor):
 		self.quantity *= factor
+		self.quantity = round(self.quantity , 2)
 		self.update(factor)
 		return self
 
