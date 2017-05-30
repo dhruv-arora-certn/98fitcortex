@@ -247,7 +247,7 @@ class GeneratedDietPlan(models.Model):
 	def changeMeal(self , day = None , meal = None):
 		assert day , meal
 		assert meal in ["m1" , "m2" , "m3" , "m4" , "m5"]
-		items = self.generateddietplanfooddetails_set.filter(day = day).filter(meal_type = meal)
+		items = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.id).filter(day = day).filter(meal_type = meal)
 		for e in items:
 			e.find_closest(save = True)
 		return items
