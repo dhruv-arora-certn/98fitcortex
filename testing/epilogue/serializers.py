@@ -45,6 +45,7 @@ class DietPlanSerializer(serializers.ModelSerializer):
 	quantity = serializers.SerializerMethodField()
 	weight = serializers.SerializerMethodField()
 	dietplan_id = serializers.SerializerMethodField()
+	unit = serializers.SerializerMethodField()
 
 	class Meta:
 		model = GeneratedDietPlanFoodDetails
@@ -75,7 +76,12 @@ class DietPlanSerializer(serializers.ModelSerializer):
 
 	def get_dietplan_id(self , obj):
 		return obj.dietplan.id
-		
+
+	def get_unit(self,  obj):
+		if obj.food_item.drink == 1:
+			return 'ml'
+		return 'gms'
+
 class LoginSerializer(serializers.Serializer):
 	email = serializers.EmailField(required = True)
 	password = serializers.CharField(style ={'input_type' : 'password'})
