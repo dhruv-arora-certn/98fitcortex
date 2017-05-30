@@ -116,7 +116,7 @@ class Food(models.Model):
 			
 	def update_quantity(self ,factor):
 		self.quantity *= factor
-		self.quantity = round(self.quantity)
+		self.quantity = round(self.quantity 	)
 		self.update(factor)
 		return self
 
@@ -302,6 +302,7 @@ class GeneratedDietPlanFoodDetails(models.Model):
 		*args represent the additional arguments that might be required in futurej
 		'''
 		goal = self.dietplan.customer.goal
+		old_food = self.food_item
 		field = fieldMapper.get(goal)
 		item = self.food_item
 		if self.meal_type.endswith(("1" , "2" , "3" , "4")):
@@ -313,7 +314,12 @@ class GeneratedDietPlanFoodDetails(models.Model):
 				f = getattr(Food , "m5gain_objects")
 			if goal == Goals.MaintainWeight:
 				f = getattr(Food , "m5stable_objects")
+
+		#Gather objects to exclude
 		to_exclude = self.dietplan.items
+		to_exclude.append(self.old_suggestions)
+		
+		#Generating query 
 		f = f.exclude(name__in = to_exclude)
 		f = f.filter(fruit = item.fruit).filter(drink = item.drink).filter(dairy = item.dairy).filter(snaks = item.snaks).filter(vegetable = item.vegetable).filter(cereal_grains = item.cereal_grains).filter(salad = item.salad).filter(yogurt = item.yogurt).filter(dessert=  item.dessert).filter(pulses = item.pulses).filter(cuisine = item.cuisine).filter(nuts = item.nuts)
 		f = f.annotate(d = RawSQL("Abs(%s - %s)" , [field , getattr(self.food_item,field)])).exclude(id = self.food_item_id).order_by("d").order_by(field).first()
@@ -327,8 +333,14 @@ class GeneratedDietPlanFoodDetails(models.Model):
 		self.update_attrs(f)
 		if save:
 			print("Saving Changed Dish")
+			new_suggestion = DishReplacementSuggestions.objects.create(food = old_food , dietplan_food_details = self)
 			self.save()
+
 		return self
+
+	@property
+	def old_suggestions(self):
+		return self.dishreplacementsuggestions_set.values_list('food__name' , flat = True)
 
 	def update_attrs(self , item):
 		self.calorie = str(item.calarie)
@@ -398,5 +410,7 @@ class LoginCustomer(models.Model):
 	first_name = models.CharField(max_length = 100)
 	password = models.CharField(max_length = 255)
 
-# class DishReplacementSuggestions(models.Model):
-	
+class DishReplacementSuggestions(models.Model):
+	dietplan_food_details = models.ForeignKey(GeneratedDietPlanFoodDetails)
+	food = models.ForeignKey(Food)
+#	created_on = models.DateTimeField(auto_now = True)
