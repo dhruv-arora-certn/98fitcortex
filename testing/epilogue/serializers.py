@@ -44,6 +44,7 @@ class DietPlanSerializer(serializers.ModelSerializer):
 	image = serializers.CharField(source = "food_item.image")
 	quantity = serializers.SerializerMethodField()
 	weight = serializers.SerializerMethodField()
+	dietplan_id = serializers.SerializerMethodField()
 
 	class Meta:
 		model = GeneratedDietPlanFoodDetails
@@ -72,6 +73,9 @@ class DietPlanSerializer(serializers.ModelSerializer):
 			return obj.food_item.weight
 		return obj.weight
 
+	def get_dietplan_id(self , obj):
+		return obj.dietplan.id
+		
 class LoginSerializer(serializers.Serializer):
 	email = serializers.EmailField(required = True)
 	password = serializers.CharField(style ={'input_type' : 'password'})

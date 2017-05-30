@@ -262,6 +262,10 @@ class GeneratedDietPlan(models.Model):
 			items.extend(baseQ.filter(day = day).values_list('food_name' , flat = True ))
 		return items
 
+	@property
+	def items(self):
+		return self.generateddietplanfooddetails_set.values_list("food_name" , flat = True)
+
 class GeneratedDietPlanFoodDetails(models.Model):
 	'''
 	Store the generated diet plan of a day here
@@ -308,6 +312,8 @@ class GeneratedDietPlanFoodDetails(models.Model):
 				f = getattr(Food , "m5gain_objects")
 			if goal == Goals.MaintainWeight:
 				f = getattr(Food , "m5stable_objects")
+		to_exclude = self.dietplan.items
+		f = f.exclude(name__in = to_exclude)
 		f = f.filter(fruit = item.fruit).filter(drink = item.drink).filter(dairy = item.dairy).filter(snaks = item.snaks).filter(vegetable = item.vegetable).filter(cereal_grains = item.cereal_grains).filter(salad = item.salad).filter(yogurt = item.yogurt).filter(dessert=  item.dessert).filter(pulses = item.pulses).filter(cuisine = item.cuisine).filter(nuts = item.nuts)
 		f = f.annotate(d = RawSQL("Abs(%s - %s)" , [field , getattr(self.food_item,field)])).exclude(id = self.food_item_id).order_by("d").order_by(field).first()
 		print("Old item" , self.food_item)
@@ -390,3 +396,6 @@ class LoginCustomer(models.Model):
 	email = models.EmailField()
 	first_name = models.CharField(max_length = 100)
 	password = models.CharField(max_length = 255)
+
+# class DishReplacementSuggestions(models.Model):
+	
