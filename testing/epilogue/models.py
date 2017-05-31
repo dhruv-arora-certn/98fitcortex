@@ -317,15 +317,16 @@ class GeneratedDietPlanFoodDetails(models.Model):
 
 		#Gather objects to exclude
 		to_exclude = self.dietplan.items
-		to_exclude.append(self.old_suggestions)
+		to_exclude.extend(self.old_suggestions)
 		
 		#Generating query 
 		f = f.exclude(name__in = to_exclude)
 		f = f.filter(fruit = item.fruit).filter(drink = item.drink).filter(dairy = item.dairy).filter(snaks = item.snaks).filter(vegetable = item.vegetable).filter(cereal_grains = item.cereal_grains).filter(salad = item.salad).filter(yogurt = item.yogurt).filter(dessert=  item.dessert).filter(pulses = item.pulses).filter(cuisine = item.cuisine).filter(nuts = item.nuts)
+
 		f = f.annotate(d = RawSQL("Abs(%s - %s)" , [field , getattr(self.food_item,field)])).exclude(id = self.food_item_id).order_by("d").order_by(field).first()
 		print("Old item" , self.food_item)
+		print("New item" , f)
 		self.food_item = f
-		print("New item" , self.food_item)
 		if any(x in f.name for x in QUANTITY_MANIPULATE ):
 			f.update_quantity(self.factor)
 		else:
