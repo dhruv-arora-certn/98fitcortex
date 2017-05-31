@@ -12,6 +12,10 @@ QUANTITY_MANIPULATE = [
 	"Cheela",
 	"Uttapam"
 ]
+UNCHANGABLE_ITEMS = [
+	'Boiled Egg White',
+	'Salad'
+]
 fieldMapper = {
 		Goals.WeightLoss : "squared_diff_weight_loss",
 		Goals.MaintainWeight : "squared_diff_weight_maintain",
@@ -250,7 +254,8 @@ class GeneratedDietPlan(models.Model):
 		assert meal in ["m1" , "m2" , "m3" , "m4" , "m5"]
 		items = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.id).filter(day = day).filter(meal_type = meal)
 		for e in items:
-			e.find_closest(save = True)
+			if e.food_name not in UNCHANGABLE_ITEMS:
+				e.find_closest(save = True)
 		return items
 
 	def get_last_days(self , days):
