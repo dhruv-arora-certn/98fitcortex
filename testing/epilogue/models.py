@@ -306,6 +306,9 @@ class GeneratedDietPlanFoodDetails(models.Model):
 		'''
 		*args represent the additional arguments that might be required in futurej
 		'''
+		if self.food_name in UNCHANGABLE_ITEMS:
+			return self
+
 		goal = self.dietplan.customer.goal
 		old_food = self.food_item
 		field = fieldMapper.get(goal)
