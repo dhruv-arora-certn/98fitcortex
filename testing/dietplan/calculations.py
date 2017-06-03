@@ -13,7 +13,7 @@ import itertools , threading , lego
 
 class Calculations:
 	@lego.assemble
-	def __init__(self , weight , height , activity , goal , gender,  exclude , disease = None):
+	def __init__(self , weight , height , activity , goal , gender,  exclude , disease = None , exclusion_conditions = None):
 		#calculations
 		self.bmi = BMI(weight , height)
 		self.ibw = IBW(self.height, self.gender)
@@ -32,7 +32,7 @@ class Calculations:
 		self.m5.build()
 		self.m3 = meals.M3(self.calories , self.goal , exclude = self.exclude + [e.name for e in self.m5.selected] , extra = self.m5.calories_remaining , disease = self.disease)
 		self.m3.build()
-		self.m1 = meals.M1(self.calories , self.goal , exclude = self.exclude + [e.name for e in self.m3.selected+self.m5.selected], extra = self.m3.calories_remaining , disease = self.disease)
+		self.m1 = meals.M1(self.calories , self.goal , exclude = self.exclude + [e.name for e in self.m3.selected+self.m5.selected], extra = self.m3.calories_remaining , disease = self.disease , exclusion_conditions = self.exclusion_conditions)
 		self.m1.build()
 		self.m4 = meals.M4(self.calories , self.goal , exclude = self.exclude + [e.name for e in self.m3.selected+self.m5.selected+self.m1.selected], extra = self.m1.calories_remaining , disease = self.disease)
 		self.m4.build()

@@ -116,11 +116,12 @@ class Base:
 class M1(Base):
 	percent = .25
 
-	def __init__(self , calories , goal , exclude=  "" , extra = 0 , disease = None):
+	def __init__(self , calories , goal , exclude=  "" , extra = 0 , disease = None , exclusion_conditions = None):
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.exclude = exclude
 		self.disease = disease
+		self.exclusion_conditions = exclusion_conditions
 		self.queryset = Food.m1_objects.exclude(name__in = exclude)
 		if goal == Goals.WeightLoss : 
 			self.queryset = self.queryset.filter(for_loss = '1').all()
@@ -133,15 +134,16 @@ class M1(Base):
 	def allocate_restrictions(self):
 		self.select_item(self.drink)
 		self.remove_drinks()
-		self.egg = Food.m1_objects.filter(name = "Boiled Egg White").first()
-		self.select_item(self.egg , remove = False)
+
+		if not ('egg' , 0) in self.exclusion_conditions.children:
+			self.egg = Food.m1_objects.filter(name = "Boiled Egg White").first()
+			self.select_item(self.egg , remove = False)
 
 	def pop_snack(self):
 		# self.snack_list = list(filter(lambda x : x.snaks , self.marked ))
 		self.snack_list = self.marked.filter(snaks = '1')
 		heapq.heapify(self.snack_list)
 		return heapq.heappop(self.snack_list)	
-
 	@property
 	def drink(self):
 		self.drink_list = self.marked.filter(drink = '1').filter(dairy = '1')

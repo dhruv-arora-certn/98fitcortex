@@ -5,6 +5,7 @@ from epilogue.managers import *
 from django.db.models.expressions import RawSQL
 from django.db.models import Max
 #Model Managers for Food Model
+
 QUANTITY_MANIPULATE = [
 	"Parantha",
 	"Roti",
@@ -23,6 +24,18 @@ fieldMapper = {
 		Goals.MuscleGain : "squared_diff_muscle_gain"
 }
 
+exclusionMapper = {
+	'wheat' : models.Q(wheat = 0),
+	'nuts' : models.Q(nuts = 0),
+	'dairy' : models.Q(dairy = 0),
+	'lamb_mutton' : models.Q(lamb_mutton = 0),
+	'beef' : models.Q(dairy = 0),
+	'seafood' : models.Q(seafood = 0),
+	'poultary' : models.Q(poultary = 0),
+	'meat' : models.Q(meat = 0),
+	'egg' : models.Q(egg = 0)
+}
+	
 class Food(models.Model):
 	name = models.TextField()
 	quantity = models.IntegerField()
@@ -53,6 +66,14 @@ class Food(models.Model):
 	dessert = models.IntegerField()
 	pulses = models.IntegerField()
 	for_loss = models.IntegerField()
+	wheat = models.IntegerField()
+	lamb_mutton = models.IntegerField()
+	beef = models.IntegerField()
+	seafood = models.IntegerField()
+	poultary = models.IntegerField()
+	meat = models.IntegerField()
+	egg = models.IntegerField()
+
 	cuisine = models.TextField()
 	nuts = models.IntegerField()
 	calcium = models.FloatField()
@@ -133,6 +154,13 @@ class Food(models.Model):
 			return "http://98fit.com//webroot/dietlist_images/images.jpg"
 		return "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/%s"%(self.image_name)
 
+	@classmethod
+	def find(self , *args):
+		q = models.Q()
+		for e in args:
+			q &= models.Q(name__contains = e)
+		return self.objects.filter(q)
+
 	class Meta:
 		db_table = "business_diet_list"
 		managed = False
@@ -206,6 +234,11 @@ class Customer(models.Model):
 	def is_active(self):
 		return True
 
+	def get_exclusions(self):
+		q = models.Q()
+		for e in self.customerfoodexclusions_set.all():
+			q &= exclusionMapper.get(e.food_type) 
+		return q	
 	def __str__(self):
 		return self.first_name + " : " + self.email
 
@@ -423,3 +456,11 @@ class DishReplacementSuggestions(models.Model):
 	dietplan_food_details = models.ForeignKey(GeneratedDietPlanFoodDetails)
 	food = models.ForeignKey(Food)
 #	created_on = models.DateTimeField(auto_now = True)
+
+class CustomerFoodExclusions(models.Model):
+	customer = models.ForeignKey(Customer , db_column = 'erp_customer_id')
+	food_type = models.CharField(max_length = 100)
+
+	class Meta:
+		managed = False
+		db_table = "erp_customer_food_exclusion"

@@ -46,9 +46,12 @@ class Pipeline:
 		if self.week is None:
 			week = get_week(datetime.today())
 		user_week = 1
+		
 		if self.user:
 			user_week = week - get_week(user.create_on) + 1
 			self.excluded = self.get_initial_exclude()
+			self.exclusion_conditions = self.user.get_exclusions()
+
 		if self.persist and self.user:
 			self.dietplan = GeneratedDietPlan.objects.create(customer = user , week_id = week , user_week_id = user_week)
 
@@ -56,49 +59,52 @@ class Pipeline:
 		'''
 		Initialize the list of excluded items from the past 3 days and user's food preferences
 		'''
+		items = []
 		last_plan = GeneratedDietPlan.objects.filter( customer = self.user ).last()
-		items = last_plan.get_last_days(3)	
-		return items or []
+		if last_plan:
+			items = last_plan.get_last_days(3)
 
+		return items 
+	
 	def Day1(self):
 		print("Day 1 Exclude ," , self.exclude)
-		self.day1 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease ), persist = self.persist, dietplan = self.dietplan , day = "1")
+		self.day1 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease , exclusion_conditions = self.exclusion_conditions ), persist = self.persist, dietplan = self.dietplan , day = "1")
 		self.day1.makeMeals()
 		self.push_to_exclude(self.day1)
 
 	def Day2(self):
 		print("Day 2 Exclude ," , self.exclude)
-		self.day2 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease ), persist = self.persist, dietplan = self.dietplan , day = "2")
+		self.day2 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease , exclusion_conditions = self.exclusion_conditions ), persist = self.persist, dietplan = self.dietplan , day = "2")
 		self.day2.makeMeals()
 		self.push_to_exclude(self.day2)
 	
 	def Day3(self):
 		print("Day 3 Exclude ," , self.exclude)
-		self.day3 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease ), persist = self.persist, dietplan = self.dietplan , day = "3")
+		self.day3 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease , exclusion_conditions = self.exclusion_conditions ), persist = self.persist, dietplan = self.dietplan , day = "3")
 		self.day3.makeMeals()
 		self.push_to_exclude(self.day3)
 	
 	def Day4(self):
 		print("Day 4 Exclude ," , self.exclude)
-		self.day4 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease ), persist = self.persist, dietplan = self.dietplan , day = "4")
+		self.day4 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease , exclusion_conditions = self.exclusion_conditions ), persist = self.persist, dietplan = self.dietplan , day = "4")
 		self.day4.makeMeals()
 		self.push_to_exclude(self.day4)
 	
 	def Day5(self):
 		print("Day 5 Exclude ," , self.exclude)
-		self.day5 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease ), persist = self.persist, dietplan = self.dietplan , day = "5")
+		self.day5 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease , exclusion_conditions = self.exclusion_conditions ), persist = self.persist, dietplan = self.dietplan , day = "5")
 		self.day5.makeMeals()
 		self.push_to_exclude(self.day5)
 	
 	def Day6(self):
 		print("Day 6 Exclude ," , self.exclude)
-		self.day6 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease ), persist = self.persist, dietplan = self.dietplan , day = "6")
+		self.day6 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease , exclusion_conditions = self.exclusion_conditions ), persist = self.persist, dietplan = self.dietplan , day = "6")
 		self.day6.makeMeals()
 		self.push_to_exclude(self.day6)
 	
 	def Day7(self):
 		print("Day 7 Exclude ," , self.exclude)
-		self.day7 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease ), persist = self.persist, dietplan = self.dietplan , day = "7")
+		self.day7 = Day(Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease , exclusion_conditions = self.exclusion_conditions ), persist = self.persist, dietplan = self.dietplan , day = "7")
 		self.day7.makeMeals()
 		self.push_to_exclude(self.day7)
 
