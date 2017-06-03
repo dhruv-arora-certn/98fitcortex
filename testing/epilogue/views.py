@@ -11,7 +11,7 @@ from dietplan.meals import M1 , M5 , M3
 from knapsack.knapsack_dp import knapsack,display
 from dietplan.generator import Pipeline
 from dietplan.medical_conditions import Osteoporosis , Anemia
-from rest_framework.generics import RetrieveUpdateAPIView ,RetrieveAPIView , GenericAPIView
+from rest_framework.generics import RetrieveUpdateAPIView ,RetrieveAPIView , GenericAPIView , CreateAPIView
 from rest_framework.views import APIView
 from epilogue.models import *
 from epilogue.serializers import *
@@ -136,3 +136,21 @@ class MealReplaceView(GenericAPIView):
 		objs = self.get_object()
 		data = self.serializer_class(objs , many = True).data
 		return Response(data)
+
+class CustomerFoodExclusionView(CreateAPIView):
+	serializer_class = CustomerFoodExclusionSerializer
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [IsAuthenticated]
+	queryset = CustomerFoodExclusions.objects
+
+class CustomerMedicalConditionsView(CreateAPIView):
+	serializer_class = CustomerMedicalConditionsSerializer
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [IsAuthenticated]
+	queryset = CustomerMedicalConditions.objects
+
+class CreateCustomerView(CreateAPIView):
+	serializer_class = CreateCustomerSerializer
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [IsAuthenticated]
+	queryset = Customer.objects	

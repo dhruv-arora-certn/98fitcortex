@@ -188,17 +188,27 @@ class Customer(models.Model):
 		db_table = "erp_customer"
 		managed = False
 
-	email = models.CharField(max_length = 255)
+	VEG = 'veg'
+	NONVEG = 'nonveg'
+	EGG = 'egg'
+	food_cat_choices = (
+		(VEG , 'veg'),
+		(NONVEG , 'nonveg'),
+		(EGG , 'egg')
+	)		
+	email = models.CharField(max_length = 255 , blank = True)
 	first_name = models.CharField(max_length = 25, blank = True)
 	last_name = models.CharField(max_length = 25 , blank = True , null = True)
 	create_on = models.DateTimeField(auto_now_add = True)
 	mobile = models.CharField(max_length = 11 , blank = True , null = True)
-	age = models.IntegerField()
-	w = models.CharField(db_column = "weight", max_length = 11)
-	h = models.CharField(db_column = "height", max_length = 20)
-	ls = models.CharField( max_length = 50 , db_column = "lifestyle")
-	objective = models.ForeignKey(Objective , db_column = "objective")
-	gen = models.CharField(max_length = 20 , db_column = "gender")
+	age = models.IntegerField( blank = True)
+	w = models.CharField(db_column = "weight", max_length = 11 , blank = True)
+	h = models.CharField(db_column = "height", max_length = 20, blank = True )
+	ls = models.CharField( max_length = 50 , db_column = "lifestyle" , blank = True)
+	objective = models.ForeignKey(Objective , db_column = "objective", blank = True)
+	gen = models.CharField(max_length = 20 , db_column = "gender", blank = True)
+	body_type = models.CharField(max_length = 50, blank = True)
+	food_cat = models.CharField(max_length = 50 , choices=  food_cat_choices, blank = True)
 
 	is_authenticated = True
 	@property
@@ -458,9 +468,44 @@ class DishReplacementSuggestions(models.Model):
 #	created_on = models.DateTimeField(auto_now = True)
 
 class CustomerFoodExclusions(models.Model):
+	LAMB = 'lamb_mutton'
+	SEAFOOD = 'seafood'
+	NUTS = 'nuts'
+	WHEAT = 'wheat'
+	DAIRY = 'dairy'
+	POULTARY = 'POULTARY'
+	EGG = 'egg'
+	food_type_choices = (
+		(LAMB , "Lamb"),
+		(SEAFOOD , "Seafood"),
+		(NUTS , "nuts"),
+		(WHEAT , "wheat"),
+		(DAIRY , "dairy"),
+		(POULTARY , "poultary"),
+		(EGG , "egg")
+	)
 	customer = models.ForeignKey(Customer , db_column = 'erp_customer_id')
-	food_type = models.CharField(max_length = 100)
+	food_type = models.CharField(max_length = 100 , choices = food_type_choices)
 
 	class Meta:
 		managed = False
 		db_table = "erp_customer_food_exclusion"
+
+class CustomerMedicalConditions(models.Model):
+	customer = models.ForeignKey(Customer , db_column = "erp_customer_id")
+	condition_name = models.CharField(max_length = 50)
+
+	class Meta:
+		managed = False
+		db_table = "erp_customer_medicalcondition"
+
+
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
+@receiver(post_save , sender = Customer)
+def create_auth_token(sender , instance = None , created = False , **kwargs):
+	if created:
+		Token.objects.create( user = instance )

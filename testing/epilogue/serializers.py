@@ -1,5 +1,5 @@
 from rest_framework import serializers , exceptions
-from epilogue.models import Customer , LoginCustomer ,GeneratedDietPlan , GeneratedDietPlanFoodDetails , Food , Objective
+from epilogue.models import Customer , LoginCustomer ,GeneratedDietPlan , GeneratedDietPlanFoodDetails , Food , Objective , CustomerFoodExclusions , CustomerMedicalConditions
 from django.core.exceptions import ObjectDoesNotExist
 from passlib.hash import bcrypt
 
@@ -18,7 +18,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Customer
-		fields = ["email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender"]
+		fields = ["email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender" , "body_type" , "food_cat"]
 
 	def update(self , instance , validated_data):
 		objective = validated_data.pop('objective' , {})
@@ -103,3 +103,23 @@ class LoginSerializer(serializers.Serializer):
 	def authenticate(self , user , password):
 		print("inside authenticate")
 		return bcrypt.verify(password , user.password)
+
+class CustomerFoodExclusionSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = CustomerFoodExclusions
+		fields = "__all__"
+
+class CustomerMedicalConditionsSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = CustomerMedicalConditions
+		fields = "__all__"
+
+class CreateCustomerSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Customer
+		fields = "__all__"
+		
+	auth_token = serializers.SerializerMethodField()
+
+	def get_auth_token(self , obj):
+		return obj.auth_token.key	
