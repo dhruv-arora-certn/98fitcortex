@@ -153,4 +153,4 @@ class CreateCustomerView(CreateAPIView):
 	serializer_class = CreateCustomerSerializer
 	authentication_classes = [CustomerAuthentication]
 	permission_classes = [IsAuthenticated]
-	queryset = Customer.objects	
+	queryset = Customer.objects

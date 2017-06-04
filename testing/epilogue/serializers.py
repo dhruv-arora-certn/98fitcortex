@@ -114,12 +114,21 @@ class CustomerMedicalConditionsSerializer(serializers.ModelSerializer):
 		model = CustomerMedicalConditions
 		fields = "__all__"
 
-class CreateCustomerSerializer(serializers.ModelSerializer):
+class CustomerObjectiveSerializer(serializers.ModelSerializer):
 	class Meta:
-		model = Customer
+		model = Objective
 		fields = "__all__"
 		
+class CreateCustomerSerializer(serializers.ModelSerializer):
+	
+	class Meta:
+		model = Customer
+		fields = [ "email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender" , "body_type" , "food_cat" , "auth_token"]
+
+
+	weight = serializers.CharField(source = "w")		
+	height = serializers.CharField(source = "h")		
 	auth_token = serializers.SerializerMethodField()
 
 	def get_auth_token(self , obj):
-		return obj.auth_token.key	
+		return obj.auth_token.key
