@@ -473,7 +473,7 @@ class CustomerFoodExclusions(models.Model):
 	NUTS = 'nuts'
 	WHEAT = 'wheat'
 	DAIRY = 'dairy'
-	POULTARY = 'POULTARY'
+	POULTARY = 'poultary'
 	EGG = 'egg'
 	food_type_choices = (
 		(LAMB , "Lamb"),

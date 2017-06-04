@@ -129,6 +129,9 @@ class CreateCustomerSerializer(serializers.ModelSerializer):
 	weight = serializers.CharField(source = "w")		
 	height = serializers.CharField(source = "h")		
 	auth_token = serializers.SerializerMethodField()
+#	objective = ObjectiveSerializer()
+	gender = serializers.CharField(source = "gen")
+	lifestyle = serializers.CharField(source = "ls")
 
 	def get_auth_token(self , obj):
 		return obj.auth_token.key
