@@ -21,6 +21,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import ObjectDoesNotExist
 from epilogue.mixins import *
+from django.conf import settings
+from easy_pdf.views import PDFTemplateView
 
 
 def get_analysis(request):
@@ -151,6 +153,20 @@ class CustomerMedicalConditionsView(CreateAPIView):
 
 class CreateCustomerView(CreateAPIView):
 	serializer_class = CreateCustomerSerializer
-	authentication_classes = [CustomerAuthentication]
-	permission_classes = [IsAuthenticated]
+	# authentication_classes = [CustomerAuthentication]
+	# permission_classes = [IsAuthenticated]
 	queryset = Customer.objects
+
+
+class HelloPDF(PDFTemplateView):
+	template_name = "guest-diet.html"
+
+	download_filename = "hello.pdf"
+
+	def get_context_data(self,  **kwargs):
+		return super().get_context_data(
+			pagesize = 'A4',
+			title = "Hi",
+			logo = "http://www.98fit.com/img/Frontend/logo_home.png",
+			**kwargs
+		)
