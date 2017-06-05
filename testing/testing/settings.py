@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',   
     'rest_framework_docs',
     'corsheaders',
-    'easy_pdf'
+    # 'easy_pdf'
 ]
 
 MIDDLEWARE = [
@@ -64,7 +64,7 @@ ROOT_URLCONF = 'testing.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates') , 'easy_pdf/templates'],
+        'DIRS': [os.path.join(BASE_DIR,'templates') , ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

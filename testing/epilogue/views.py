@@ -22,7 +22,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import ObjectDoesNotExist
 from epilogue.mixins import *
 from django.conf import settings
-from easy_pdf.views import PDFTemplateView
+# from easy_pdf.views import PDFTemplateView
 
 
 def get_analysis(request):
@@ -158,15 +158,15 @@ class CreateCustomerView(CreateAPIView):
 	queryset = Customer.objects
 
 
-class HelloPDF(PDFTemplateView):
-	template_name = "guest-diet.html"
+# class HelloPDF(PDFTemplateView):
+# 	template_name = "guest-diet.html"
 
-	download_filename = "hello.pdf"
+# 	download_filename = "hello.pdf"
 
-	def get_context_data(self,  **kwargs):
-		return super().get_context_data(
-			pagesize = 'A4',
-			title = "Hi",
-			logo = "http://www.98fit.com/img/Frontend/logo_home.png",
-			**kwargs
-		)
+# 	def get_context_data(self,  **kwargs):
+# 		return super().get_context_data(
+# 			pagesize = 'A4',
+# 			title = "Hi",
+# 			logo = "http://www.98fit.com/img/Frontend/logo_home.png",
+# 			**kwargs
+# 		)
