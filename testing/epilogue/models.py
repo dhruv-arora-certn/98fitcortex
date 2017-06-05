@@ -475,6 +475,8 @@ class CustomerFoodExclusions(models.Model):
 	DAIRY = 'dairy'
 	POULTARY = 'poultary'
 	EGG = 'egg'
+	BEEF = 'beef'
+	MEAT = 'meat'
 	food_type_choices = (
 		(LAMB , "Lamb"),
 		(SEAFOOD , "Seafood"),
@@ -482,7 +484,9 @@ class CustomerFoodExclusions(models.Model):
 		(WHEAT , "wheat"),
 		(DAIRY , "dairy"),
 		(POULTARY , "poultary"),
-		(EGG , "egg")
+		(EGG , "egg"),
+		(BEEF , "beef"),
+		(MEAT , "meat")
 	)
 	customer = models.ForeignKey(Customer , db_column = 'erp_customer_id')
 	food_type = models.CharField(max_length = 100 , choices = food_type_choices)
