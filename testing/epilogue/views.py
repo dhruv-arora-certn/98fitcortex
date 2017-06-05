@@ -22,6 +22,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import ObjectDoesNotExist
 from epilogue.mixins import *
 from django.conf import settings
+from rest_framework_bulk import ListBulkCreateAPIView
 # from easy_pdf.views import PDFTemplateView
 
 
@@ -139,13 +140,13 @@ class MealReplaceView(GenericAPIView):
 		data = self.serializer_class(objs , many = True).data
 		return Response(data)
 
-class CustomerFoodExclusionView(CreateAPIView):
+class CustomerFoodExclusionView(ListBulkCreateAPIView):
 	serializer_class = CustomerFoodExclusionSerializer
 	authentication_classes = [CustomerAuthentication]
 	permission_classes = [IsAuthenticated]
 	queryset = CustomerFoodExclusions.objects
 
-class CustomerMedicalConditionsView(CreateAPIView):
+class CustomerMedicalConditionsView(ListBulkCreateAPIView):
 	serializer_class = CustomerMedicalConditionsSerializer
 	authentication_classes = [CustomerAuthentication]
 	permission_classes = [IsAuthenticated]

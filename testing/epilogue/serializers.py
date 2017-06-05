@@ -105,11 +105,14 @@ class LoginSerializer(serializers.Serializer):
 		return bcrypt.verify(password , user.password)
 
 class CustomerFoodExclusionSerializer(serializers.ModelSerializer):
+
+	
 	class Meta:
 		model = CustomerFoodExclusions
 		fields = "__all__"
 
 class CustomerMedicalConditionsSerializer(serializers.ModelSerializer):
+	
 	class Meta:
 		model = CustomerMedicalConditions
 		fields = "__all__"
