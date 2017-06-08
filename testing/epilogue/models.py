@@ -249,6 +249,15 @@ class Customer(models.Model):
 		for e in self.customerfoodexclusions_set.all():
 			q &= exclusionMapper.get(e.food_type) 
 		return q	
+
+	@property
+	def medical_conditions_string(self):
+		return ', '.join(e.condition_name.title() for e in self.customermedicalconditions_set.all())
+
+	@property
+	def food_exclusions_string(self):
+		return ', '.join(e.get_food_type_display().title() for e in self.customerfoodexclusions_set.all())
+
 	def __str__(self):
 		return self.first_name + " : " + self.email
 

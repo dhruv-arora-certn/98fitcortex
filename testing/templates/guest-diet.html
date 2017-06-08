@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style type="text/css">
+    body{
+        table-layout: fixed;
+    }
+    html,body {
+      font-family: 'Helvetica';
+      font-size: 16px;
+    }
+    .gradient {
+      border:0.1mm solid #220044; 
+      background-color: #f0f2ff;
+      background-gradient: linear #c7cdde #f0f2ff 0 1 0 0.5;
+      box-shadow: 0.3em 0.3em #888888;
+    }
+    h4 {
+      font-weight: bold;
+      margin-top: 1em;
+      margin-bottom: 0.3em;
+      margin-top: 0;
+    }
+    div.text {
+      padding:0.8em; 
+      margin-bottom: 0.7em;
+    }
+    p { margin: 0.25em 0; }
+    p.code {
+      background-color: #e5e5e5; 
+      margin: 1em 1cm;
+      padding: 0 0.3cm;
+      border:0.2mm solid #000088; 
+      box-shadow: 0.3em 0.3em #888888;
+    }
+    p.example, div.example {
+      background-color: #eeeeee; 
+      margin: 0.3em 1em 1em 1em;
+      padding: 0 0.3cm;
+      border:0.2mm solid #444444; 
+    }
+    .code {
+      /*font-family: monospace;*/
+      font-size: 9pt;
+    }
+    .shadowtitle { 
+      height: 8mm; 
+      background-color: #EEDDFF; 
+      background-gradient: linear #c7cdde #f0f2ff 0 1 0 0.5;  
+      padding: 0.8em; 
+      padding-left: 3em;
+      font-family:sans;
+      font-size: 26pt; 
+      font-weight: bold;
+      border: 0.2mm solid white;
+      border-radius: 0.2em;
+      box-shadow: 0 0 1em 0.5em rgba(0,0,255,0.5);
+      color: #AAAACC;
+      text-shadow: 0.03em 0.03em #666, 0.05em 0.05em rgba(127,127,127,0.5), -0.015em -0.015em white;
+    }
+    h3 { 
+      margin: 3em 0 2em -15mm; 
+      background-color: #EEDDFF; 
+      background-gradient: linear #c7cdde #f0f2ff 0 1 0 0.5;  
+      padding: 0.5em; 
+      padding-left: 3em;
+      width: 50%;
+      font-family:sans;
+      font-size: 16pt; 
+      font-weight: bold;
+      border-left: none;
+      border-radius: 0 2em 2em 0;
+      box-shadow: 0 0 2em 0.5em rgba(255,0,0,1);
+      text-shadow: 0.05em 0.04em rgba(127,127,127,0.5);
+    }
+    .css {
+      font-family: arial;
+      font-style: italic;
+      color: #000088;
+    }
+    img.smooth {
+      image-rendering:auto;
+      image-rendering:optimizeQuality;
+      -ms-interpolation-mode:bicubic;
+    }
+    img.crisp {
+      image-rendering: -moz-crisp-edges;    /* Firefox */
+      image-rendering: -o-crisp-edges;    /* Opera */
+      image-rendering: -webkit-optimize-contrast;/* Webkit (non-standard naming) */
+      image-rendering: crisp-edges;
+      -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
+    }
+    .dotborder{
+      border-bottom: solid 0.5px #0f80e5;
+      padding-bottom: 6px;
+      margin-bottom: 6px;
+    }
+    .alignleft{
+      text-align: left;
+    }
+    .aligncenter{
+      text-align: center;
+    }
+    .list {
+            list-style-type: circle !important;
+            list-style:circle !important;
+            
+        }
+    .watermark {
+      position: fixed;
+      top: 45%;
+      left: 20%;
+      right: 0;
+      margin: 0 auto;
+      opacity: 0.1;
+      font-size: 200px;
+      transform: rotate(-45deg);
+      font-weight: 700;
+    }
+  </style>
+</head>
+
+<body>
+    <div style="text-align: center; position: fixed; margin: 0 auto 0 auto; left: 0;right: 0;"><img src="http://www.98fit.com/img/Frontend/logo_home.png"></div>
+    <div class="watermark"> 98fit </div>
+    <table width="100%" cellpadding="3" cellspacing="3" style="margin: -50px 0 80px 0;">
+        <tr> 
+            <td colspan="9" style="line-height: 2;"><br><br>
+                Hi Guest,
+            </td>
+        </tr>
+        <tr>
+            <td colspan="9">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="9"><b>Diet Plan</b> : {{date}} </td>
+        </tr>
+        <tr> 
+            <td colspan="9"> </td>
+        </tr>
+        <tr>
+            <td colspan="9" width="100%" class="dotborder"> </td>
+        </tr>
+        <tr> 
+            <td colspan="9"> </td>
+        </tr>
+        <tr> 
+            <td colspan="9" style="font-size: 15px;"><b>Parameters selected : </b></td>
+        </tr>
+        <tr style="font-size: 15px;">
+            <td width="13%"><b>Age</b></td>
+            <td width="1%"><b>:</b></td>
+            <td width="12%" style="text-align: left;">{{user.age}}</td>
+            <td width="12%"><b>Gender</b></td>
+            <td width="1%"><b>:</b></td>
+            <td style="text-align: left !important;">{{user.gender}}</td>
+            <td width="10%"><b>Height</b></td>
+            <td width="1%"><b>:</b></td>
+            <td width="40%">'.ucfirst($height).'</td>
+        </tr>
+        <tr style="font-size: 15px;">
+            <td width="12%"><b>Weight</b></td>
+            <td width="1%"><b>:</b></td>
+            <td width="12%">{{user.weight}}</td>
+            <td width="10%"><b>Objective</b></td>
+            <td width="1%"><b>:</b></td>
+            <td width="13%">{{user.objective.name}}</td>
+            <td width="10%"><b>Lifestyle</b></td>
+            <td width="1%"><b>:</b></td>
+            <td width="40%">'.ucfirst($lifestyle).'</td>
+        </tr>
+        <tr style="font-size: 15px;">
+            <td width="12%"><b>Diet Type</b></td>
+            <td width="1%"><b>:</b></td>
+            <td width="20%">{{user.food_cat}}</td>
+            <td width="13%"><b>Body Type</b></td>
+            <td width="1%"><b>:</b></td>
+            <td width="15%">{{user.body_type}}</td>
+            <td ></td>
+            <td ></td>
+            <td ></td>
+        </tr>
+        <tr style="font-size: 15px;">
+            <td width="23%"><b>Medical Conditions</b></td>
+            <td width="1%"><b>:</b></td>
+            <td width="60%" colspan="5">{{user.medical_conditions_string}}</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr style="font-size: 15px;">
+            <td width="23%" colspan=""><b>Food Exclusions</b></td>
+            <td width="1%"><b>:<b></td>
+            <td width="60%" colspan="5">{{user.food_exclusions_string}}</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr> 
+            <td width="100%" colspan="9" class="dotborder"> </td>
+        </tr>
+
+        <tr>
+            <td width="100%" class="aligncenter" colspan="9"><div style="font-size:19px; font-weight: 700;margin: 15px 0;">No fitness regime is complete without adapting healthy<br>lifestyle.</div></td>
+        </tr>
+        <tr> 
+            <td  width="100%"  colspan="9" class="dotborder"></td>
+        </tr>
+        <tr> 
+            <td  width="100%"  colspan="9" class="alignleft" style="font-size:14px ! important;">
+            <br>While we will take care of your Diet and Workout, just keep these points in mind:</td>
+        </tr>
+        <tr> 
+            <td  width="100%"  colspan="9" class="alignleft">
+                <ul style="font-size: 14px;">
+                  
+                <li>  The diet plan has five meals spread across the day so that you never complain of being hungry.
+                <br><br>
+                <li>  Make sure there is a gap of 2-3 hours in between two meals.<br><br>
+                <li>  Drink 10 to 12 glasses of water every day.<br><br>
+                <li>  Always use less amount of salt while cooking.<br><br>
+                <li>  Try to prepare all these dishes with minimum oil.<br><br>
+                <li>  Give yourself enough sleep to be rejuvenated the next day.<br><br>
+                <li>  Don’t stress too much about your fitness goal.<br><br>
+                <li>  Don’t expect results to start happening from day one.<br><br>
+                <li>  While working, get up after every 1-hour and walk around and stretch if possible.<br><br>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"></td>
+            <td colspan="1" style="border-right: 0.5px solid black;padding:0 5px 0 0;"><b style="font-size:16px;font-weight:700;text-align:center;">Special Focus</b></td>
+            <td colspan="5" style="font-size:16px;text-align: left;padding: 0 0 0 5px;">Remember, right food in the right quantity, taken at the right time, promotes good health.</td>
+        </tr>
+    </table>
+    <table class="aligncenter" width="100%">
+        <tr>
+            <td colspan="9" style="font-weight:bold; font-size: 14px; position: fixed; bottom: -10px; left: 0; right: 0; margin: 0 auto;">
+        <b>Disclaimer: You must agree to review this meal plan with your physician before using it and agree to use this meal plan for your personal use only.</b>
+            </td>
+        </tr>
+    </table>
+     <table>
+        <tr><td><br><br><br></td></tr>
+    </table>
+    Total Calorie Intake : <span>{{intake}}</span><br>';
+    <table border="0" cellspacing="5" style="font-size: 8pt;background-color: #f7f7f7; width: 100%;padding:5px;">
+        <tbody>
+            <tr>
+                <td align="left"><b>First meal of the day '.$m1kal.' Kcal </b></td>
+                <td align="left"></td>
+                <td align="left"> </td>
+                <td align="center"> &nbsp;</td>
+                <td align="center">&nbsp; </td>
+            </tr>
+        </tbody>
+    </table>
+    <table style="font-size: 12px;padding:20px;">
+        <tbody>
+            <tr>
+                {% for item in m1 %}
+                    <td style="padding: 0 14px; vertical-align: top;">
+                        <img src="{{item.food_item.image}}" alt=""  style="height: 100px !important;width:auto;" >
+                        <p style="text-align: center; width: 120px; margin: 5px auto 0 auto;">{{item.food_name}}
+                        <br>
+                        {{item.quantity}}({{item.weight}})
+                        </p>
+                    </td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+       <table border="0" width="100%" bgcolor="#f7f7f7" cellpadding="5" cellspacing="5" style="font-size: 8pt">
+        <tbody>
+            <tr>
+                <td align="left"><b>Mid Day Snack '.$m2kal.' Kcal</b></td>
+                <td align="left" > </td>
+                <td align="center"></td>
+                <td align="center"> &nbsp;</td>
+                <td align="center">&nbsp; </td>
+            </tr>
+        </tbody>
+    </table>
+    <table border="0"  cellpadding="10" cellspacing="10" style="font-size: 8pt">
+        <tbody>
+            <tr>
+                {% for item in m2 %}
+                    <td align="center" valign="top" bgcolor="" width="100" height="100">
+                        <img src="{{item.food_item.image}}" alt=""  style="height: 100px !important;width:auto;"><br><br>
+                        {{item.food_name}}
+                        {{item.quantity}}({{item.weight}})
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+    <table border="0"  width="100%" bgcolor="#f7f7f7" cellpadding="5" cellspacing="5" style="font-size: 8pt">
+        <tbody>
+            <tr>
+                <td align="left"><b>Lunch '.$m3kal.' Kcal</b></td>
+                <td align="left" > </td>
+                <td align="center"></td>
+                <td align="center"> &nbsp;</td>
+                <td align="center">&nbsp; </td>
+            </tr>
+        </tbody>
+    </table>
+    <table border="0"  cellpadding="10" cellspacing="10" style="font-size: 8pt">
+        <tbody>
+            <tr>
+                {% for item in m3 %}
+                    <td align="center" valign="top" bgcolor="" width="100" height="100">
+                        <img src="{{item.food_item.image}}" alt=""  style="height: 100px !important;width:auto;"><br><br>
+                        {{item.food_name}}
+                        {{item.quantity}}({{item.weight}})
+                {% endfor %}
+             </tr>
+        </tbody>
+    </table>
+    <table border="0"  width="100%" bgcolor="#f7f7f7" cellpadding="5" cellspacing="5" style="font-size: 8pt">
+        <tbody>
+            <tr>
+                <td align="left"><b>Evening Snack '.$m4kal.' Kcal</b> </td>
+                <td align="left" > </td>
+                <td align="center"> </td>
+                <td align="center"> &nbsp;</td>
+                <td align="center">&nbsp; </td>
+            </tr>
+        </tbody>
+    </table>
+    <table border="0"  cellpadding="10" cellspacing="10" style="font-size: 8pt">
+        <tbody>
+            <tr>
+            <table border="0"  width="100%" bgcolor="#f7f7f7" cellpadding="5" cellspacing="5" style="font-size: 8pt">
+        </tbody>
+    </table>';
+
+    <table border="0"  cellpadding="10" cellspacing="10" style="font-size: 8pt">
+        <tbody>
+            <tr>
+                {% for item in m4 %}
+                    <td align="center" valign="top" bgcolor="" width="100" height="100">
+                        <img src="{{item.food_item.image}}" alt=""  style="height: 100px !important;width:auto;"><br><br>
+                        {{item.food_name}}
+                        {{item.quantity}}({{item.weight}})
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+    <table border="0" width="100%" bgcolor="#f7f7f7" cellpadding="5" cellspacing="5" style="font-size: 8pt">
+        <tbody>
+            <tr>
+                <td align="left"><b>Dinner '.$m5kal.' Kcal</b> </td>
+                <td align="left" > </td>
+                <td align="center"></td>
+                <td align="center"> &nbsp;</td>
+                <td align="center">&nbsp; </td>
+            </tr>
+        </tbody>
+    </table>
+    <table border="0" cellpadding="10" cellspacing="10" style="font-size: 8pt">
+        <tbody>
+            <tr>
+                {% for item in m5 %}
+                    <td align="center" valign="top" bgcolor="" width="100" height="100">
+                        <img src="{{item.food_item.image}}" alt=""  style="height: 100px !important;width:auto;"><br><br>
+                        {{item.food_name}}
+                        {{item.quantity}}({{item.weight}})
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

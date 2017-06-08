@@ -22,8 +22,14 @@ from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import ObjectDoesNotExist
 from epilogue.mixins import *
 from django.conf import settings
-from easy_pdf.views import PDFTemplateView
+from rest_framework_bulk import ListBulkCreateAPIView
+from django.template.loader import render_to_string
+from weasyprint import HTML , CSS
+from django.views import View
+from datetime import datetime as dt
+import tempfile
 
+DATE_FORMAT = '%B {S} - %Y, %A'
 
 def get_analysis(request):
 	if request.method == "GET":
@@ -153,20 +159,45 @@ class CustomerMedicalConditionsView(CreateAPIView):
 
 class CreateCustomerView(CreateAPIView):
 	serializer_class = CreateCustomerSerializer
-	# authentication_classes = [CustomerAuthentication]
-	# permission_classes = [IsAuthenticated]
 	queryset = Customer.objects
 
+def suffix(d):
+    return 'th' if 11<=d<=13 else {1:'st',2:'nd',3:'rd'}.get(d%10, 'th')
 
-class HelloPDF(PDFTemplateView):
-	template_name = "guest-diet.html"
+def custom_strftime( t  , format = DATE_FORMAT):
+    return t.strftime(format).replace('{S}', str(t.day) + suffix(t.day))
 
-	download_filename = "hello.pdf"
+from .utils import get_day
 
-	def get_context_data(self,  **kwargs):
-		return super().get_context_data(
-			pagesize = 'A4',
-			title = "Hi",
-			logo = "http://www.98fit.com/img/Frontend/logo_home.png",
-			**kwargs
-		)
+class GuestPDFView(GenericAPIView):
+	def get_context(self):
+		date = custom_strftime(dt.today())
+		day = get_day(dt.today())
+		user = self.request.user
+		dietplan = GeneratedDietPlan.objects.filter( customer = user ).last()
+		m1 = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = day).filter(meal_type = 'm1')
+		m2 = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = day).filter(meal_type = 'm2')
+		m3 = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = day).filter(meal_type = 'm3')
+		m4 = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = day).filter(meal_type = 'm4')
+		m5 = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = day).filter(meal_type = 'm5')
+		return {
+			'date' : date,
+			'user' : user,
+			'm1' : m1,
+			'm2' : m2,
+			'm3' : m3,
+			'm4' : m4,
+			'm5' : m5
+		}
+
+	def get(self , request):
+		self.request = request
+		html_string = render_to_string("guest-diet.html" , self.get_context())
+		from .css import pdf_style
+		# doc_css = CSS(string = pdf_style )
+		html = HTML(string = html_string)
+		result = html.write_pdf()
+		response = HttpResponse(result , content_type = 'application/pdf;')
+		response['Content-Disposition']	= "inline; filename = "
+		response['Content-Transfer-Encoding'] = "binary"
+		return response
