@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse , JsonResponse
 from .forms import AnalysisForm
 from dietplan.goals import Goals
 from dietplan.utils import annotate_food
@@ -23,8 +23,14 @@ from django.core.exceptions import ObjectDoesNotExist
 from epilogue.mixins import *
 from django.conf import settings
 from rest_framework_bulk import ListBulkCreateAPIView
-# from easy_pdf.views import PDFTemplateView
+from django.template.loader import render_to_string
+from weasyprint import HTML , CSS
+from django.views import View
+from datetime import datetime as dt
+import boto3 , datetime
+import tempfile
 
+DATE_FORMAT = '%B {S} - %Y, %A'
 
 def get_analysis(request):
 	if request.method == "GET":
@@ -91,7 +97,6 @@ class DietPlanView(GenericAPIView):
 		week_id = int(self.kwargs.get("week_id"))
 		qs = qs.filter(week_id = int(self.kwargs['week_id'])).last()
 		if qs is None:
-			print("Generating")
 			p = Pipeline(user.weight , user.height , float(user.lifestyle) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id))
 			p.generate() 
 			qs = p.dietplan
@@ -100,7 +105,6 @@ class DietPlanView(GenericAPIView):
 
 	def get(self , request , *args , **kwargs):
 		objs = self.get_object()
-		# ipdb.set_trace()
 		data = DietPlanSerializer(objs , many = True).data
 		return Response(data)
 
@@ -127,7 +131,6 @@ class MealReplaceView(GenericAPIView):
 		return GeneratedDietPlan.objects.filter(customer = self.request.user).filter(week_id = self.kwargs.get('week_id'))
 	
 	def get_diet_plan_details(self , dietplan):
-		# ipdb.set_trace()
 		return GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = int(self.kwargs.get('day'))).filter(meal_type = self.kwargs.get('meal'))
 	
 	def get_object(self):
@@ -154,20 +157,67 @@ class CustomerMedicalConditionsView(ListBulkCreateAPIView):
 
 class CreateCustomerView(CreateAPIView):
 	serializer_class = CreateCustomerSerializer
-	# authentication_classes = [CustomerAuthentication]
-	# permission_classes = [IsAuthenticated]
 	queryset = Customer.objects
 
+def suffix(d):
+    return 'th' if 11<=d<=13 else {1:'st',2:'nd',3:'rd'}.get(d%10, 'th')
 
-# class HelloPDF(PDFTemplateView):
-# 	template_name = "guest-diet.html"
+def custom_strftime( t  , format = DATE_FORMAT):
+    return t.strftime(format).replace('{S}', str(t.day) + suffix(t.day))
 
-# 	download_filename = "hello.pdf"
+from .utils import get_day
 
-# 	def get_context_data(self,  **kwargs):
-# 		return super().get_context_data(
-# 			pagesize = 'A4',
-# 			title = "Hi",
-# 			logo = "http://www.98fit.com/img/Frontend/logo_home.png",
-# 			**kwargs
-# 		)
+class GuestPDFView(GenericAPIView):
+
+	def upload_to_s3(self , data):
+		import uuid
+		session = boto3.Session(
+			aws_access_key_id = os.environ.get("S3_ACCESS_KEY"),
+			aws_secret_access_key = os.environ.get("S3_ACCESS_SECRET"),
+			region_name="ap-south-1"
+		)
+		s3 = session.resource("s3")
+		filename = '/'.join([
+			str(uuid.uuid4()),
+			"98fit_Diet_Plan_%s.pdf" % (dt.today().strftime("%Y-%m-%d")),
+		])
+		a = s3.Bucket("98fit-guest-diet-pdfs").put_object(
+			Key=filename ,
+			Body = data ,
+			ACL = "public-read" , 
+			Expires = dt.now() + datetime.timedelta(seconds = 60),
+		)
+		if a:
+			return "https://s3-ap-southeast-1.amazonaws.com/98fitasset/%s"%filename
+		return None
+
+	def get_context(self):
+		date = custom_strftime(dt.today())
+		day = get_day(dt.today())
+		user = self.request.user
+		dietplan = GeneratedDietPlan.objects.filter( customer = user ).last()
+		m1 = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = day).filter(meal_type = 'm1')
+		m2 = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = day).filter(meal_type = 'm2')
+		m3 = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = day).filter(meal_type = 'm3')
+		m4 = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = day).filter(meal_type = 'm4')
+		m5 = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = day).filter(meal_type = 'm5')
+		return {
+			'date' : date,
+			'user' : user,
+			'm1' : m1,
+			'm2' : m2,
+			'm3' : m3,
+			'm4' : m4,
+			'm5' : m5
+		}
+
+	def get(self , request):
+		self.request = request
+		html_string = render_to_string("guest-diet.html" , self.get_context())
+		from .css import pdf_style
+		html = HTML(string = html_string)
+		result = html.write_pdf()
+		url = self.upload_to_s3(result)
+		return JsonResponse({
+			"url" : url
+		})
