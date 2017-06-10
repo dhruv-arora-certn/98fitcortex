@@ -117,6 +117,16 @@
       transform: rotate(-45deg);
       font-weight: 700;
     }
+    .food-item {
+      padding: 0 14px;
+      vertical-align: top;
+    }
+    .food-item:first-child {
+      padding-left: 0;
+    }
+    .food-item:last-child {
+      padding-left: 0;
+    }
   </style>
 </head>
 
@@ -241,7 +251,7 @@
      <table>
         <tr><td><br><br><br></td></tr>
     </table>
-    Total Calorie Intake : <span>{{intake}}</span><br>';
+    Total Calorie Intake : <span>{{intake}}</span><br>
     <table border="0" cellspacing="5" style="font-size: 8pt;background-color: #f7f7f7; width: 100%;padding:5px;">
         <tbody>
             <tr>
@@ -257,7 +267,7 @@
         <tbody>
             <tr>
                 {% for item in m1 %}
-                    <td style="padding: 0 14px; vertical-align: top;">
+                    <td class="food-item">
                         <img src="{{item.food_item.image}}" alt=""  style="height: 100px !important;width:auto;" >
                         <p style="text-align: center; width: 120px; margin: 5px auto 0 auto;">{{item.food_name}}
                         <br>
@@ -268,7 +278,111 @@
             </tr>
         </tbody>
     </table>
-       <table border="0" width="100%" bgcolor="#f7f7f7" cellpadding="5" cellspacing="5" style="font-size: 8pt">
+    <table border="0" cellspacing="5" style="font-size: 8pt;background-color: #f7f7f7; width: 100%;padding:5px;">
+        <tbody>
+            <tr>
+                <td align="left"><b>Mid Day Snack '.$m2kal.' Kcal </b></td>
+                <td align="left"></td>
+                <td align="left"> </td>
+                <td align="center"> &nbsp;</td>
+                <td align="center">&nbsp; </td>
+            </tr>
+        </tbody>
+    </table>
+    <table style="font-size: 12px;padding:20px;">
+        <tbody>
+            <tr>
+                {% for item in m2 %}
+                    <td class="food-item">
+                        <img src="{{item.food_item.image}}" alt=""  style="height: 100px !important;width:auto;" >
+                        <p style="text-align: center; width: 120px; margin: 5px auto 0 auto;">{{item.food_name}}
+                        <br>
+                        {{item.quantity}}({{item.weight}})
+                        </p>
+                    </td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+    <table border="0" cellspacing="5" style="font-size: 8pt;background-color: #f7f7f7; width: 100%;padding:5px;">
+        <tbody>
+            <tr>
+                <td align="left"><b>Lunch '.$m3kal.' Kcal </b></td>
+                <td align="left"></td>
+                <td align="left"> </td>
+                <td align="center"> &nbsp;</td>
+                <td align="center">&nbsp; </td>
+            </tr>
+        </tbody>
+    </table>
+    <table style="font-size: 12px;padding:20px;">
+        <tbody>
+            <tr>
+                {% for item in m3 %}
+                    <td class="food-item">
+                        <img src="{{item.food_item.image}}" alt=""  style="height: 100px !important;width:auto;" >
+                        <p style="text-align: center; width: 120px; margin: 5px auto 0 auto;">{{item.food_name}}
+                        <br>
+                        {{item.quantity}}({{item.weight}})
+                        </p>
+                    </td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+    <table border="0" cellspacing="5" style="font-size: 8pt;background-color: #f7f7f7; width: 100%;padding:5px;">
+        <tbody>
+            <tr>
+                <td align="left"><b>Evening Snack '.$m4kal.' Kcal </b></td>
+                <td align="left"></td>
+                <td align="left"> </td>
+                <td align="center"> &nbsp;</td>
+                <td align="center">&nbsp; </td>
+            </tr>
+        </tbody>
+    </table>
+    <table style="font-size: 12px;padding:20px;">
+        <tbody>
+            <tr>
+                {% for item in m4 %}
+                    <td class="food-item">
+                        <img src="{{item.food_item.image}}" alt=""  style="height: 100px !important;width:auto;" >
+                        <p style="text-align: center; width: 120px; margin: 5px auto 0 auto;">{{item.food_name}}
+                        <br>
+                        {{item.quantity}}({{item.weight}})
+                        </p>
+                    </td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+    <table border="0" cellspacing="5" style="font-size: 8pt;background-color: #f7f7f7; width: 100%;padding:5px;">
+        <tbody>
+            <tr>
+                <td align="left"><b>Dinner '.$m5kal.' Kcal </b></td>
+                <td align="left"></td>
+                <td align="left"> </td>
+                <td align="center"> &nbsp;</td>
+                <td align="center">&nbsp; </td>
+            </tr>
+        </tbody>
+    </table>
+    <table style="font-size: 12px;padding:20px;">
+        <tbody>
+            <tr>
+                {% for item in m5 %}
+                    <td class="food-item">
+                        <img src="{{item.food_item.image}}" alt=""  style="height: 100px !important;width:auto;" >
+                        <p style="text-align: center; width: 120px; margin: 5px auto 0 auto;">{{item.food_name}}
+                        <br>
+                        {{item.quantity}}({{item.weight}})
+                        </p>
+                    </td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+        <!--   <table border="0" width="100%" bgcolor="#f7f7f7" cellpadding="5" cellspacing="5" style="font-size: 8pt">
         <tbody>
             <tr>
                 <td align="left"><b>Mid Day Snack '.$m2kal.' Kcal</b></td>
@@ -366,6 +480,6 @@
                 {% endfor %}
             </tr>
         </tbody>
-    </table>
+    </table> -->
 </body>
 </html>
