@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from .views import get_analysis , UserView , DietPlanView , DishReplaceView , MealReplaceView , CustomerFoodExclusionView , CustomerMedicalConditionsView , CreateCustomerView , GuestPDFView , test
+from .views import get_analysis , UserView , DietPlanView , DishReplaceView , MealReplaceView , CustomerFoodExclusionView , CustomerMedicalConditionsView , CreateCustomerView , GuestPDFView 
 
 
 urlpatterns = [
