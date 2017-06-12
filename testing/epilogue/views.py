@@ -188,7 +188,7 @@ class GuestPDFView(GenericAPIView):
 			Expires = dt.now() + datetime.timedelta(seconds = 60),
 		)
 		if a:
-			return "https://s3-ap-southeast-1.amazonaws.com/98fitasset/%s"%filename
+			return "https://s3-ap-southeast-1.amazonaws.com/98fit-guest-diet-pdfs/%s"%filename
 		return None
 
 	def get_context(self):
