@@ -181,6 +181,7 @@
     
     .grid {
         width: 100%;
+        position: relative;
     }
     
     .grid .info-section {
@@ -198,7 +199,8 @@
         width: 20%;
     }
     
-    .purple {
+
+    /*.purple {
         background-color: rgba(74, 41, 86, 1);
     }
     
@@ -241,7 +243,7 @@
     .yellow-txt {
         color: #ffb636;
         border-bottom: 2px solid #ffb636;
-    }
+    }*/
     
     .row {
         width: 100%;
@@ -337,7 +339,9 @@
         padding-left: 0.4rem;
         font-family: HelveticaNeueLTStd-Bd;
         text-transform: uppercase;
-        text-align: center;
+        /*text-align: center;*/
+        border-bottom: 0.5px solid rgba(0,0,0,0.87);
+        position: relative;
     }
     
     .column-names {
@@ -368,8 +372,27 @@
         margin-top: 0;
     }
     
-    table {
+    .grid,
+    .grid table {
         table-layout: fixed !important;
+    }
+    .mark-as-done {
+        position: absolute;
+        right: 0;
+        bottom: 0.65rem;
+        font-size: 0.7rem;
+        color: rgba(0,0,0,0.6);
+        text-transform: none;
+    }
+    .mark-as-done .checkbox {
+        display: inline-block;
+        width: 21px;
+        height: 21px;
+        border: 0.5px solid rgba(0,0,0,0.6);
+        position: relative;
+        top: 7px;
+        margin-right: 0.2rem;
+        border-radius: 50%;
     }
     </style>
 </head>
@@ -483,7 +506,7 @@
         <tr>
             <td colspan="2"></td>
             <td colspan="1" style="border-right: 0.5px solid black;padding:0 5px 0 0;"><b style="font-size:16px;font-weight:700;text-align:center;">Special Focus</b></td>
-            <td colspan="5" style="font-size:16px;text-align: left;padding: 0 0 0 5px;">Remember, right food in the right quantity, taken at the right time, promotes good health.</td>
+            <td colspan="5" style="font-size:16px;text-align: left;padding: 0 0 0 5px;">Remember, right food in the right <b>quantity</b>, taken at the right time, promotes good health.</td>
         </tr>
     </table>
     <table class="aligncenter" width="100%">
@@ -497,9 +520,6 @@
         <tr>
             <td>
                 <br>
-                <br>
-                <br>
-                 <br>
     <br>
             </td>
         </tr>
@@ -510,21 +530,20 @@
         <tr>
         <td>
         <br>
-        <br>
         </td>
         </tr>
     </table>
     <table class="grid">
         <tr>
             <td class="info-section">
-                <div class="category red-bg">
+                <div class="category">
                     <div class='content'>
-                        <p class="red-txt category-name">Breakfast</p>
+                        <p class="category-name">Breakfast <span class="mark-as-done"><span class="checkbox"></span>Mark as Done</span></p>
                         <table>
                             <tr class="header row">
-                                <td class="col-7"> Item Name </td>
-                                <td class="col-3"> Portion </td>
-                                <td class="col-2"> Quantity </td>
+                                <td class="col-7"> <b>Item Name</b> </td>
+                                <td class="col-3"> <b>Portion</b> </td>
+                                <td class="col-2"> <b>Quantity</b> </td>
                             </tr>
                         </table>
                         {% for item in m1 %}
@@ -538,14 +557,14 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div class="category blue-bg">
+                <div class="category">
                     <div class='content'>
-                        <p class="blue-txt category-name">Mid Day Snack</p>
+                        <p class="category-name">Mid Day Snack<span class="mark-as-done"><span class="checkbox"></span>Mark as Done</span></p>
                         <table>
                             <tr class="header row">
-                                <td class="col-7"> Item Name </td>
-                                <td class="col-3"> Portion </td>
-                                <td class="col-2"> Quantity </td>
+                                <td class="col-7"> <b>Item Name</b> </td>
+                                <td class="col-3"> <b>Portion</b> </td>
+                                <td class="col-2"> <b>Quantity</b> </td>
                             </tr>
                         </table>
                         {% for item in m2 %}
@@ -559,14 +578,14 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div class="category yellow-bg">
+                <div class="category">
                     <div class='content'>
-                        <p class="yellow-txt category-name">Lunch</p>
+                        <p class="category-name">Lunch<span class="mark-as-done"><span class="checkbox"></span>Mark as Done</span></p>
                         <table>
                             <tr class="header row">
-                                <td class="col-7"> Item Name </td>
-                                <td class="col-3"> Portion </td>
-                                <td class="col-2"> Quantity </td>
+                                <td class="col-7"> <b>Item Name</b> </td>
+                                <td class="col-3"> <b>Portion</b> </td>
+                                <td class="col-2"> <b>Quantity</b> </td>
                             </tr>
                         </table>
                         {% for item in m3 %}
@@ -580,14 +599,14 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div class="category green-bg">
+                <div class="category">
                     <div class='content'>
-                        <p class="green-txt category-name">Evening Snack</p>
+                        <p class="category-name">Evening Snack<span class="mark-as-done"><span class="checkbox"></span>Mark as Done</span></p>
                         <table>
                             <tr class="header row">
-                                <td class="col-7"> Item Name </td>
-                                <td class="col-3"> Portion </td>
-                                <td class="col-2"> Quantity </td>
+                                <td class="col-7"> <b>Item Name</b> </td>
+                                <td class="col-3"> <b>Portion</b> </td>
+                                <td class="col-2"> <b>Quantity</b> </td>
                             </tr>
                         </table>
                         {% for item in m4 %}
@@ -601,14 +620,14 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div class="category purple-bg">
+                <div class="category">
                     <div class='content'>
-                        <p class="purple-txt category-name"> Dinner </p>
+                        <p class="category-name"> Dinner <span class="mark-as-done"><span class="checkbox"></span>Mark as Done</span></p>
                         <table>
                             <tr class="header row">
-                                <td class="col-7"> Item Name </td>
-                                <td class="col-3"> Portion </td>
-                                <td class="col-2"> Quantity </td>
+                                <td class="col-7"> <b>Item Name</b> </td>
+                                <td class="col-3"> <b>Portion</b> </td>
+                                <td class="col-2"> <b>Quantity</b> </td>
                             </tr>
                         </table>
                         {% for item in m5 %}
@@ -626,7 +645,7 @@
             <td class="data-section">
                 <div class="statistics">
                     <div class="stat">
-                        <div class='circle'><div class="amount">1009</div><div class="unit">kCal</div></div>
+                        <div class='circle'><div class="amount">{{cals}}</div><div class="unit">kCal</div></div>
                         <!-- <div class="c100 p100 medium">
                             <span><div class="amount">1009</div><div class="unit">kCal</div></span>
                             <div class="slice">
@@ -637,7 +656,7 @@
                         <div class='label'> Calories </div>
                     </div>
                     <div class="stat">
-                        <div class="circle"><div class="amount">50</div><div class="unit">gms</div></div>
+                        <div class="circle"><div class="amount">{{protein}}</div><div class="unit">gms</div></div>
                         <!-- <div class="c100 p50 medium">
                             <span><div class="amount">50%</div></span>
                             <div class="slice">
@@ -648,7 +667,7 @@
                         <div class='label'> Protein </div>
                     </div>
                     <div class="stat">
-                        <div class='circle'><div class="amount">37</div><div class="unit">gms</div></div>
+                        <div class='circle'><div class="amount">{{fat}}</div><div class="unit">gms</div></div>
                         <!-- <div class="c100 p37 medium">
                             <div class="slice">
                                 <div class="bar" style="transform: rotate(3.6deg);"></div>
@@ -658,7 +677,7 @@
                         <div class='label'> Fat </div>
                     </div>
                     <div class="stat">
-                        <div class='circle'><div class="amount">23</div><div class="unit">gms</div></div>
+                        <div class='circle'><div class="amount">{{carbs}}</div><div class="unit">gms</div></div>
                        <!--  <div class="c100 p23 medium">
                             <span><div class="amount">23%</div></span>
                             <div class="slice">
@@ -672,30 +691,5 @@
             </td>
         </tr>
     </table>
-    <!-- <table border="0" cellspacing="5" style="font-size: 8pt;background-color: #f7f7f7; width: 100%;padding:5px;">
-        <tbody>
-            <tr>
-                <td align="left"><b>First meal of the day '.$m1kal.' Kcal </b></td>
-                <td align="left"></td>
-                <td align="left"> </td>
-                <td align="center"> &nbsp;</td>
-                <td align="center">&nbsp; </td>
-            </tr>
-        </tbody>
-    </table>
-    <table style="font-size: 12px;padding:20px;">
-        <tbody>
-            <tr>
-                {% for item in m1 %}
-                <td class="food-item">
-                    <img src="{{item.food_item.image}}" alt="" style="height: 100px !important;width:auto;">
-                    <p style="text-align: center; width: 120px; margin: 5px auto 0 auto;">{{item.food_name}}
-                        <br> {{item.quantity}}({{item.weight}})
-                    </p>
-                </td>
-                {% endfor %}
-            </tr>
-        </tbody>
-    </table> -->
 </body>
 </html>

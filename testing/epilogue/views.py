@@ -195,7 +195,7 @@ class GuestPDFView(GenericAPIView):
 			ContentType="application/pdf"
 		)
 		if a:
-			return "https://s3-ap-southeast-1.amazonaws.com/98fitasset/%s"%filename
+			return "https://s3.ap-south-1.amazonaws.com/98fit-guest-diet-pdfs/%s"%filename
 		return None
 
 	def get_context(self):
@@ -208,6 +208,11 @@ class GuestPDFView(GenericAPIView):
 		m3 = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = day).filter(meal_type = 'm3')
 		m4 = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = day).filter(meal_type = 'm4')
 		m5 = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = day).filter(meal_type = 'm5')
+		arr = [m1 , m2 , m3 , m4 , m5]
+		cals = sum(float(item.calorie) for e in arr for item in e)
+		protein = sum(float(item.food_item.protein*item.factor) for e in arr for item in e)
+		fat = sum(float(item.food_item.fat*item.factor) for e in arr for item in e)
+		carbs = sum(float(item.food_item.carbohydrates*item.factor) for e in arr for item in e)
 		return {
 			'date' : date,
 			'user' : user,
@@ -215,7 +220,11 @@ class GuestPDFView(GenericAPIView):
 			'm2' : m2,
 			'm3' : m3,
 			'm4' : m4,
-			'm5' : m5
+			'm5' : m5,
+			'cals' : int(cals),
+			'protein' : int(protein),
+			'carbs' : int(carbs),
+			'fat' : int(fat)
 		}
 
 	def get(self , request):
