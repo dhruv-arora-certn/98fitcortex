@@ -203,7 +203,9 @@ class Customer(models.Model):
 	mobile = models.CharField(max_length = 11 , blank = True , null = True)
 	age = models.IntegerField( blank = True)
 	w = models.CharField(db_column = "weight", max_length = 11 , blank = True)
+	w_type = models.IntegerField( db_column="weight_type" )
 	h = models.CharField(db_column = "height", max_length = 20, blank = True )
+	h_type = models.IntegerField(db_column = "height_type")
 	ls = models.CharField( max_length = 50 , db_column = "lifestyle" , blank = True)
 	objective = models.ForeignKey(Objective , db_column = "objective", blank = True)
 	gen = models.CharField(max_length = 20 , db_column = "gender", blank = True)
@@ -219,11 +221,22 @@ class Customer(models.Model):
 
 	@property
 	def height(self):
-		return float(self.h)*0.3048
+		'''
+		Convert the persisted height to meters
+		'''
+		if self.h_type == 1: #Feets and inches
+			val =  float(self.h)*0.3048
+		if self.h_type == 2: #Centimeters
+			val =  self.h/100
+		return round(val , 2)
 
 	@property
 	def weight(self):
-		return float(self.w)
+		if int(self.w_type) == 1:
+			val = float(self.w)
+		if int(self.w_type) == 2:
+			val = float(self.w * 0.4536)
+		return round(val , 2)
 
 	@property
 	def goal(self):
@@ -258,6 +271,13 @@ class Customer(models.Model):
 	def food_exclusions_string(self):
 		return ', '.join(e.get_food_type_display().title() for e in self.customerfoodexclusions_set.all())
 
+	@property
+	def latest_weight(self):
+		last_weight = CustomerWeightRecord.latest_record(customer = self)
+		if last_weight:
+			return last_weight.weight
+		return self.weight 
+		
 	def __str__(self):
 		return self.first_name + " : " + self.email
 
@@ -313,12 +333,29 @@ class GeneratedDietPlan(models.Model):
 	def get_last_days(self , days):
 		assert days > 0 and days <= 7
 		baseQ = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.id)
-		max_day = baseQ.aggregate(Max('day')).get("day__max" , 7)
+		max_day = baseQ.aggregate(Max('day')).get("day__max") or 7
 		print("Max Day " , max_day)
 		items = []
 		for day in range(max_day , max_day - days , -1):
 			items.extend(baseQ.filter(day = day).values_list('food_name' , flat = True ))
 		return items
+
+	def regenerate(self):
+		
+		#Avoiding circular import
+		from dietplan.generator import Pipeline
+		
+		self.pipeline = Pipeline(
+			self.customer.latest_weight,
+			self.customer.height, 
+			float(self.customer.lifestyle),
+			self.customer.goal,
+			self.customer.gender.number,
+			user = self.customer,
+			dietplan = self,
+			persist = True
+		)
+		self.pipeline.regenerate()
 
 	@property
 	def items(self):
@@ -409,7 +446,7 @@ class GeneratedDietPlanFoodDetails(models.Model):
 		self.quantity = item.quantity
 		self.size = item.size
 		self.food_name = item.name
-		return self	
+		return self
 
 
 class GeneratedExercisePlan(models.Model):
@@ -511,6 +548,25 @@ class CustomerMedicalConditions(models.Model):
 	class Meta:
 		managed = False
 		db_table = "erp_customer_medicalcondition"
+
+
+class CustomerWeightRecord(models.Model):
+	class Meta:
+		managed = False
+		db_table = "erp_customer_weight_timeline"
+
+	customer = models.ForeignKey(Customer , db_column = "erp_customer_id")
+	date = models.DateTimeField(auto_now_add = True)
+	weight = models.FloatField()
+	weight_type = models.IntegerField()
+
+	@classmethod
+	def latest_record(self , customer = None):
+		'''
+		Return the last weight update record of a customer
+		'''
+		if customer :
+			return self.objects.filter(customer = customer).last()
 
 
 from django.conf import settings

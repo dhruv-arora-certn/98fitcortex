@@ -15,10 +15,12 @@ class CustomerSerializer(serializers.ModelSerializer):
 	objective = ObjectiveSerializer()
 	gender = serializers.CharField(source = "gen")
 	lifestyle = serializers.CharField(source = "ls")
+	height_type = serializers.IntegerField(source = "h_type")
+	weight_type = serializers.IntegerField(source = "w_type")
 
 	class Meta:
 		model = Customer
-		fields = ["email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender" , "body_type" , "food_cat"]
+		fields = ["email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender" , "body_type" , "food_cat" ,"weight_type" , "height_type"]
 
 	def update(self , instance , validated_data):
 		objective = validated_data.pop('objective' , {})
@@ -37,7 +39,6 @@ class FoodSerializer(serializers.ModelSerializer):
 		fields = ["name" , "protein" , "fat" , "carbohydrates" , "image"]
 
 class DietPlanSerializer(serializers.ModelSerializer):
-	# food_item = FoodSerializer(read_only = True)
 	protein = serializers.SerializerMethodField()
 	fat = serializers.SerializerMethodField()
 	carbohydrates = serializers.SerializerMethodField()

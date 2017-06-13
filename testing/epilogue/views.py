@@ -19,14 +19,16 @@ import ipdb , random
 from epilogue.authentication import CustomerAuthentication
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import exceptions
 from django.core.exceptions import ObjectDoesNotExist
-from epilogue.mixins import *
+from epilogue.mixins import* 
 from django.conf import settings
 from rest_framework_bulk import ListBulkCreateAPIView
 from django.template.loader import render_to_string
 from weasyprint import HTML , CSS
 from django.views import View
 from datetime import datetime as dt
+from .utils import get_day , get_week
 import boto3 , datetime
 import tempfile
 
@@ -95,13 +97,26 @@ class DietPlanView(GenericAPIView):
 		qs = self.get_queryset()
 		user = self.request.user
 		week_id = int(self.kwargs.get("week_id"))
+		current_week = get_week(dt.today())
+
+		#If the requested week is farther away than 2 weeks, deny the request
+		print("Truth" , abs(abs(week_id) - abs(current_week)))
+		if abs(abs(week_id) - abs(current_week)) != 2:
+			raise exceptions.PermissionDenied({
+				"message" : "You cannot access this week's diet plan"
+			})
+		
 		qs = qs.filter(week_id = int(self.kwargs['week_id'])).last()
 		if qs is None:
 			p = Pipeline(user.weight , user.height , float(user.lifestyle) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id))
-			p.generate() 
-			qs = p.dietplan
-		g = self.get_diet_plan_details(qs)
-		return g
+			try:
+				p.generate()
+			except Exception as e:
+				p.dietplan.delete()
+			else: 
+				qs = p.dietplan
+				g = self.get_diet_plan_details(qs)
+				return g
 
 	def get(self , request , *args , **kwargs):
 		objs = self.get_object()
@@ -165,7 +180,6 @@ def suffix(d):
 def custom_strftime( t  , format = DATE_FORMAT):
     return t.strftime(format).replace('{S}', str(t.day) + suffix(t.day))
 
-from .utils import get_day
 
 class GuestPDFView(GenericAPIView):
 
@@ -188,7 +202,7 @@ class GuestPDFView(GenericAPIView):
 			Expires = dt.now() + datetime.timedelta(seconds = 60),
 		)
 		if a:
-			return "https://s3-ap-southeast-1.amazonaws.com/98fit-guest-diet-pdfs/%s"%filename
+			return "https://s3.ap-south-1.amazonaws.com/98fit-guest-diet-pdfs/%s"%filename
 		return None
 
 	def get_context(self):
@@ -214,7 +228,6 @@ class GuestPDFView(GenericAPIView):
 	def get(self , request):
 		self.request = request
 		html_string = render_to_string("guest-diet.html" , self.get_context())
-		from .css import pdf_style
 		html = HTML(string = html_string)
 		result = html.write_pdf()
 		url = self.upload_to_s3(result)

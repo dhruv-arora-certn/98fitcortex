@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',   
     'rest_framework_docs',
     'corsheaders',
-    # 'easy_pdf'
 ]
 
 MIDDLEWARE = [

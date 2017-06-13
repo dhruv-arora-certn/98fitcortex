@@ -40,9 +40,8 @@ class Day:
 
 class Pipeline:
 	@lego.assemble
-	def __init__(self , weight , height , activity , goal , gender , user = None ,disease = None , persist = False , week = None):
+	def __init__(self , weight , height , activity , goal , gender , user = None ,disease = None , persist = False , week = None , dietplan = None):
 		self.excluded = []
-		self.dietplan = None
 		if self.week is None:
 			week = get_week(datetime.today())
 		user_week = 1
@@ -52,7 +51,9 @@ class Pipeline:
 			self.excluded = self.get_initial_exclude()
 			self.exclusion_conditions = self.user.get_exclusions()
 
-		if self.persist and self.user:
+		if self.dietplan:
+			self._is_dietplan_set = True
+		if self.persist and self.user and not self.dietplan:
 			self.dietplan = GeneratedDietPlan.objects.create(customer = user , week_id = week , user_week_id = user_week)
 
 	def get_initial_exclude(self):
@@ -138,4 +139,18 @@ class Pipeline:
 		l = [
 			self.day1.calculations , self.day2.calculations , self.day3.calculations, self.day4.calculations , self.day5.calculations , self.day6.calculations , self.day7.calculations
 		]
-		return sum( getattr(i , property) for i in l)	
+		return sum( getattr(i , property) for i in l)
+
+	def regenerate(self):
+		#Saving the old food details. These will be deleted on successful generation of diet plan
+		self._old = list(GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.dietplan.id).all())
+		# generate() automatically uses the class attributes to pass to each day
+		self.generate()
+
+		self._new = list(GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.dietplan.id).exclude(id__in = [e.id for e in self._old]))
+
+		#Deleting old assigned meals
+		if self._new:
+			[e.delete() for e in self._old]
+
+
