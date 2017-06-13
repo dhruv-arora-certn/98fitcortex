@@ -98,8 +98,14 @@ class DietPlanView(GenericAPIView):
 		qs = qs.filter(week_id = int(self.kwargs['week_id'])).last()
 		if qs is None:
 			p = Pipeline(user.weight , user.height , float(user.lifestyle) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id))
-			p.generate() 
-			qs = p.dietplan
+			try:
+				print("Trying to generate")
+				p.generate()
+			except Exception as e:
+				print("There has been a MF exception")
+				p.dietplan.delete()
+			else:
+				qs = p.dietplan
 		g = self.get_diet_plan_details(qs)
 		return g
 
@@ -186,6 +192,7 @@ class GuestPDFView(GenericAPIView):
 			Body = data ,
 			ACL = "public-read" , 
 			Expires = dt.now() + datetime.timedelta(seconds = 60),
+			ContentType="application/pdf"
 		)
 		if a:
 			return "https://s3-ap-southeast-1.amazonaws.com/98fitasset/%s"%filename
