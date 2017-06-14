@@ -19,7 +19,7 @@ import ipdb , random
 from epilogue.authentication import CustomerAuthentication
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import exceptions
+from rest_framework import exceptions , status
 from django.core.exceptions import ObjectDoesNotExist
 from epilogue.mixins import* 
 from django.conf import settings
@@ -247,3 +247,30 @@ class GuestPDFView(GenericAPIView):
 		return JsonResponse({
 			"url" : url
 		})
+
+class DietPlanRegenerationView(GenericAPIView):
+	serializer_class = DietPlanSerializer
+	authentication_classes = (CustomerAuthentication,) 
+	permission_classes = (IsAuthenticated,) #Add a class to authenticate the owner of the dietplan
+
+	def get_queryset(self):
+		return GeneratedDietPlan.objects.get(pk = self.kwargs.get("id"))
+
+	def get(self , request , *args , **kwargs):
+		obj = self.get_queryset()
+		try:
+			obj.regenerate()
+		except Exception as e:
+			raise exceptions.APIException({
+				"message" : "Something Went Wrong"
+			})
+		else:
+			return Response(
+				status = status.HTTP_200_OK, 
+				data = {
+					"message" : "Successfully Regenrated Dietplan",
+					"data"	: {
+						"dietplan" : obj.id
+					}
+				}
+			)
