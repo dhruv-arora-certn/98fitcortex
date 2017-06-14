@@ -110,13 +110,15 @@ class DietPlanView(GenericAPIView):
 		if qs is None:
 			p = Pipeline(user.weight , user.height , float(user.lifestyle) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id))
 			try:
+				print("Trying to generate")
 				p.generate()
 			except Exception as e:
+				print("There has been a MF exception")
 				p.dietplan.delete()
-			else: 
+			else:
 				qs = p.dietplan
-				g = self.get_diet_plan_details(qs)
-				return g
+		g = self.get_diet_plan_details(qs)
+		return g
 
 	def get(self , request , *args , **kwargs):
 		objs = self.get_object()
@@ -200,6 +202,8 @@ class GuestPDFView(GenericAPIView):
 			Body = data ,
 			ACL = "public-read" , 
 			Expires = dt.now() + datetime.timedelta(seconds = 60),
+			ContentType="application/pdf",
+			ContentDisposition = "inline"
 		)
 		if a:
 			return "https://s3.ap-south-1.amazonaws.com/98fit-guest-diet-pdfs/%s"%filename
@@ -215,6 +219,11 @@ class GuestPDFView(GenericAPIView):
 		m3 = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = day).filter(meal_type = 'm3')
 		m4 = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = day).filter(meal_type = 'm4')
 		m5 = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = day).filter(meal_type = 'm5')
+		arr = [m1 , m2 , m3 , m4 , m5]
+		cals = sum(float(item.calorie) for e in arr for item in e)
+		protein = sum(float(item.food_item.protein*item.factor) for e in arr for item in e)
+		fat = sum(float(item.food_item.fat*item.factor) for e in arr for item in e)
+		carbs = sum(float(item.food_item.carbohydrates*item.factor) for e in arr for item in e)
 		return {
 			'date' : date,
 			'user' : user,
@@ -222,7 +231,11 @@ class GuestPDFView(GenericAPIView):
 			'm2' : m2,
 			'm3' : m3,
 			'm4' : m4,
-			'm5' : m5
+			'm5' : m5,
+			'cals' : int(cals),
+			'protein' : int(protein),
+			'carbs' : int(carbs),
+			'fat' : int(fat)
 		}
 
 	def get(self , request):

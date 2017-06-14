@@ -161,6 +161,12 @@ class Food(models.Model):
 			q &= models.Q(name__contains = e)
 		return self.objects.filter(q)
 
+	@property
+	def unit(self):
+		if self.drink == 1:
+			return 'ml'
+		return 'gms'
+
 	class Meta:
 		db_table = "business_diet_list"
 		managed = False
@@ -203,7 +209,7 @@ class Customer(models.Model):
 	mobile = models.CharField(max_length = 11 , blank = True , null = True)
 	age = models.IntegerField( blank = True)
 	w = models.CharField(db_column = "weight", max_length = 11 , blank = True)
-	w_type = models.IntegerField( db_column="weight_type" )
+	w_type = models.IntegerField(db_column = "weight_type")
 	h = models.CharField(db_column = "height", max_length = 20, blank = True )
 	h_type = models.IntegerField(db_column = "height_type")
 	ls = models.CharField( max_length = 50 , db_column = "lifestyle" , blank = True)
@@ -213,6 +219,7 @@ class Customer(models.Model):
 	food_cat = models.CharField(max_length = 50 , choices=  food_cat_choices, blank = True)
 
 	is_authenticated = True
+
 	@property
 	def plans(self):
 		return {
@@ -254,6 +261,19 @@ class Customer(models.Model):
 		return float(self.ls) if self.ls else None
 
 	@property
+	def lifestyle_string(self):
+		if self.lifestyle == 1.2:
+			return "Sedentary"
+		if self.lifestyle == 1.37:
+			return "Lightly Active"
+		if self.lifestyle == 1.55:
+			return "Moderately Active"
+		if self.lifestyle == 1.70:
+			return "Very Active"
+		if self.lifestyle == 1.9:
+			return "Extra Active"
+			
+	@property
 	def is_active(self):
 		return True
 
@@ -265,19 +285,33 @@ class Customer(models.Model):
 
 	@property
 	def medical_conditions_string(self):
-		return ', '.join(e.condition_name.title() for e in self.customermedicalconditions_set.all())
+		return ', '.join(e.condition_name.title() for e in self.customermedicalconditions_set.all()) or "None"
 
 	@property
 	def food_exclusions_string(self):
-		return ', '.join(e.get_food_type_display().title() for e in self.customerfoodexclusions_set.all())
+		return ', '.join(e.get_food_type_display().title() for e in self.customerfoodexclusions_set.all()) or "None"
 
 	@property
 	def latest_weight(self):
 		last_weight = CustomerWeightRecord.latest_record(customer = self)
 		if last_weight:
 			return last_weight.weight
-		return self.weight 
-		
+		return self.weight
+
+	@property
+	def weight_type(self):
+		if self.w_type == 1:
+			return "Kgs"
+		if self.w_type == 2:
+			return "Lbs"
+
+	@property
+	def height_type(self):
+		if self.h_type == 1:
+			return "Ft"
+		if self.h_type == 2:
+			return "Cms"
+
 	def __str__(self):
 		return self.first_name + " : " + self.email
 
@@ -402,6 +436,7 @@ class GeneratedDietPlanFoodDetails(models.Model):
 		old_food = self.food_item
 		field = fieldMapper.get(goal)
 		item = self.food_item
+		
 		if self.meal_type.endswith(("1" , "2" , "3" , "4")):
 			f = getattr(Food , self.meal_type + "_objects")
 		elif self.meal_type.endswith("5"):
