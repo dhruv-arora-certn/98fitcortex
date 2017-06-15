@@ -135,7 +135,11 @@ class DishReplaceView(RetrieveAPIView):
 		print("Calling Dish Replace")
 		obj = self.get_object()
 		a = obj.find_closest(save = True)
-		data = self.serializer_class(a).data
+		if not a:
+			return Response(
+				status = status.HTTP_404_NOT_FOUND
+			)
+		data = self.serializer_class(obj).data
 		return Response(data)
 
 class MealReplaceView(GenericAPIView):
