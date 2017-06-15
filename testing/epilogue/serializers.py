@@ -127,15 +127,16 @@ class CreateCustomerSerializer(serializers.ModelSerializer):
 	
 	class Meta:
 		model = Customer
-		fields = [ "email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender" , "body_type" , "food_cat" , "auth_token"]
+		fields = [ "email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender" , "body_type" , "food_cat" , "auth_token",  "weight_type" , "height_type"]
 
 
 	weight = serializers.CharField(source = "w")		
 	height = serializers.CharField(source = "h")		
 	auth_token = serializers.SerializerMethodField()
-#	objective = ObjectiveSerializer()
 	gender = serializers.CharField(source = "gen")
 	lifestyle = serializers.CharField(source = "ls")
+	weight_type = serializers.IntegerField(source = "w_type")
+	height_type = serializers.IntegerField(source = "h_type")
 
 	def get_auth_token(self , obj):
 		return obj.auth_token.key
