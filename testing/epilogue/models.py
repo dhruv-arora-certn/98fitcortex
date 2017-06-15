@@ -4,6 +4,7 @@ from dietplan.gender import Male , Female
 from epilogue.managers import *
 from django.db.models.expressions import RawSQL
 from django.db.models import Max
+from rest_framework import exceptions
 #Model Managers for Food Model
 
 QUANTITY_MANIPULATE = [
@@ -453,11 +454,14 @@ class GeneratedDietPlanFoodDetails(models.Model):
 		
 		#Generating query 
 		f = f.exclude(name__in = to_exclude)
-		f = f.filter(fruit = item.fruit).filter(drink = item.drink).filter(dairy = item.dairy).filter(snaks = item.snaks).filter(vegetable = item.vegetable).filter(cereal_grains = item.cereal_grains).filter(salad = item.salad).filter(yogurt = item.yogurt).filter(dessert=  item.dessert).filter(pulses = item.pulses).filter(cuisine = item.cuisine).filter(nuts = item.nuts)
+		f = f.filter(fruit = item.fruit).filter(drink = item.drink).filter(dairy = item.dairy).filter(snaks = item.snaks).filter(vegetable = item.vegetable).filter(cereal_grains = item.cereal_grains).filter(salad = item.salad).filter(yogurt = item.yogurt).filter(dessert=  item.dessert).filter(pulses = item.pulses).filter(cuisine = item.cuisine).filter(nuts = item.nuts) or item
 
-		f = f.annotate(d = RawSQL("Abs(%s - %s)" , [field , getattr(self.food_item,field)])).exclude(id = self.food_item_id).order_by("d").order_by(field).first()
+		f = f.annotate(d = RawSQL("Abs(%s - %s)" , [field , getattr(self.food_item,field)])).exclude(id = self.food_item_id).order_by("d").order_by(field)
 		print("Old item" , self.food_item)
 		print("New item" , f)
+		if not f:
+			raise exceptions.NotFound()
+
 		self.food_item = f
 		if any(x in f.name for x in QUANTITY_MANIPULATE ):
 			f.update_quantity(self.factor)
