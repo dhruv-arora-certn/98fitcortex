@@ -243,7 +243,7 @@ class Customer(models.Model):
 		if int(self.w_type) == 1:
 			val = float(self.w)
 		if int(self.w_type) == 2:
-			val = float(self.w) * 0.4536)
+			val = float(self.w) * 0.4536
 		return round(val , 2)
 
 	@property
