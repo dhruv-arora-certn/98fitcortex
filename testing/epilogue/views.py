@@ -253,8 +253,7 @@ class GuestPDFView(GenericAPIView):
 			Body = data ,
 			ACL = "public-read" , 
 			Expires = dt.now() + datetime.timedelta(seconds = 60),
-			ContentType="application/pdf",
-			ContentDisposition = "inline"
+			ContentType="application/pdf"
 		)
 		if a:
 			return "https://s3.ap-south-1.amazonaws.com/98fit-guest-diet-pdfs/%s"%filename
