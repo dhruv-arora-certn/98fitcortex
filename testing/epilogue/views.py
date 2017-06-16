@@ -28,9 +28,10 @@ from django.template.loader import render_to_string
 from weasyprint import HTML , CSS
 from django.views import View
 from datetime import datetime as dt
-from .utils import get_day , get_week
+from .utils import get_day , get_week , BulkDifferential
 import boto3 , datetime
 import tempfile
+
 
 DATE_FORMAT = '%B {S} - %Y, %A'
 
@@ -164,17 +165,63 @@ class MealReplaceView(GenericAPIView):
 		data = self.serializer_class(objs , many = True).data
 		return Response(data)
 
-class CustomerFoodExclusionView(ListBulkCreateAPIView):
+class CustomerFoodExclusionView(ListBulkCreateAPIView , BulkDifferential):
 	serializer_class = CustomerFoodExclusionSerializer
 	authentication_classes = [CustomerAuthentication]
 	permission_classes = [IsAuthenticated]
 	queryset = CustomerFoodExclusions.objects
 
-class CustomerMedicalConditionsView(ListBulkCreateAPIView):
+	class BulkMeta:
+		attr_name = "food_type"
+
+	def getPartition(self , request):
+		old = list(request.user.customerfoodexclusions_set.all())
+		new = [CustomerFoodExclusions(customer = request.user , food_type = e.get("food_type")) for e in request.data ]
+		return self.getToDelete( old , new) , self.getToAdd( old , new )
+
+	def post(self , request , *args , **kwargs):
+		bulk = isinstance(request.data , list)
+		if bulk:
+			toDelete , toAdd = self.getPartition(request)
+
+			for e in toDelete:
+				e.delete()
+			for e in toAdd:
+				e.save()
+		objs = request.user.customerfoodexclusions_set.all()
+		data = self.serializer_class(objs , many = True)
+		return Response(
+			data.data , 
+			status = status.HTTP_201_CREATED
+		)
+
+class CustomerMedicalConditionsView(ListBulkCreateAPIView , BulkDifferential):
 	serializer_class = CustomerMedicalConditionsSerializer
 	authentication_classes = [CustomerAuthentication]
 	permission_classes = [IsAuthenticated]
 	queryset = CustomerMedicalConditions.objects
+
+	class BulkMeta:
+		attr_name = "condition_name"
+
+	def getPartition(self , request):
+		old = list(request.user.customermedicalconditions_set.all())
+		new = [CustomerMedicalConditions(customer = request.user , condition_name = e.get('condition_name')) for e in request.data]
+		return self.getToDelete( old , new ) , self.getToAdd( old , new )
+		
+	def post(self, request , *args , **kwargs):
+		bulk = isinstance(request.data , list)
+		if bulk:
+			toDelete , toAdd = self.getPartition(request)
+			
+			for e in toDelete:
+				e.delete()
+			
+			for e in toAdd:
+				e.save()
+		objs = request.user.customermedicalconditions_set.all()
+		data = self.serializer_class(objs , many = True)
+		return Response( data.data , status = status.HTTP_201_CREATED )
 
 class CreateCustomerView(CreateAPIView):
 	serializer_class = CreateCustomerSerializer
@@ -266,7 +313,8 @@ class DietPlanRegenerationView(GenericAPIView):
 			obj.regenerate()
 		except Exception as e:
 			raise exceptions.APIException({
-				"message" : "Something Went Wrong"
+				"message" : "Something Went Wrong",
+				"exception" : str(e)
 			})
 		else:
 			return Response(

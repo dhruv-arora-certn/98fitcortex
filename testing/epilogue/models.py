@@ -589,6 +589,8 @@ class CustomerMedicalConditions(models.Model):
 		managed = False
 		db_table = "erp_customer_medicalcondition"
 
+	def __str__(self):
+		return self.condition_name
 
 class CustomerWeightRecord(models.Model):
 	class Meta:
