@@ -12,7 +12,7 @@ class ObjectiveSerializer(serializers.ModelSerializer):
 class CustomerSerializer(serializers.ModelSerializer):
 	height = serializers.FloatField(source = "h")
 	weight = serializers.FloatField(source = "w")
-	objective = ObjectiveSerializer()
+	# objective = ObjectiveSerializer()
 	gender = serializers.CharField(source = "gen")
 	lifestyle = serializers.CharField(source = "ls")
 	height_type = serializers.IntegerField(source = "h_type")
@@ -21,16 +21,6 @@ class CustomerSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Customer
 		fields = ["email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender" , "body_type" , "food_cat" ,"weight_type" , "height_type"]
-
-	def update(self , instance , validated_data):
-		objective = validated_data.pop('objective' , {})
-		a = super().update(instance , validated_data )
-		if objective : 
-			o = Objective.objects.get(name = objective['name'])
-			a.objective = o
-			a.save()
-		return a 
-
 
 
 class FoodSerializer(serializers.ModelSerializer):
