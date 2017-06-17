@@ -344,9 +344,10 @@ class UserDietPlanRegenerationView(GenericAPIView):
 		try:
 			for e in possibleDietPlans:
 				e.regenerate()
-		except Exception as e:
+		except Exception as error:
+			print("Error is" , error)
 			return Response({
-				"message" : str(e)
+				"message" : str(error)
 			} , status = status.HTTP_500_INTERNAL_SERVER_ERROR)
 		else:
 			return Response({
