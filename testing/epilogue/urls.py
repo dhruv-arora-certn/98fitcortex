@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from .views import get_analysis , UserView , DietPlanView , DishReplaceView , MealReplaceView , CustomerFoodExclusionView ,\
- 					CustomerMedicalConditionsView , CreateCustomerView , GuestPDFView , DietPlanRegenerationView 
+ 					CustomerMedicalConditionsView , CreateCustomerView , GuestPDFView , DietPlanRegenerationView , UserDietPlanRegenerationView 
 
 
 urlpatterns = [
@@ -13,5 +13,7 @@ urlpatterns = [
 	url(r'^food-exclusion/' , CustomerFoodExclusionView.as_view()),
 	url(r'^user/medical-condition/$' , CustomerMedicalConditionsView.as_view()),
 	url(r'^guest-diet-pdf/$' , GuestPDFView.as_view()),
-	url(r'^dietplans/(?P<id>[0-9]+)/regenerate/$' , DietPlanRegenerationView.as_view())
+	url(r'^dietplans/(?P<id>[0-9]+)/regenerate/$' , DietPlanRegenerationView.as_view()),
+	url(r'^user/regenerate' , UserDietPlanRegenerationView.as_view())
+
 ]

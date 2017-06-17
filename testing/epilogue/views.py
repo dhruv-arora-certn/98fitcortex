@@ -325,3 +325,31 @@ class DietPlanRegenerationView(GenericAPIView):
 					}
 				}
 			)
+
+class UserDietPlanRegenerationView(GenericAPIView):
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [IsAuthenticated]
+
+	def get(self , request , *args , **kwargs):
+		user = request.user
+		current_week = get_week(dt.today())
+		possibleWeeks = [
+			current_week,
+			current_week + 1,
+			current_week + 2
+		]
+		possibleDietPlans = list(
+			GeneratedDietPlan.objects.filter(customer = user).filter(week_id__in = possibleWeeks).all()
+		)
+		try:
+			for e in possibleDietPlans:
+				e.regenerate()
+		except Exception as e:
+			return Response({
+				"message" : str(e)
+			} , status = status.HTTP_500_INTERNAL_SERVER_ERROR)
+		else:
+			return Response({
+				"weeks" : [e.week_id for e in possibleDietPlans],
+				"message" : "Successfully Regenrated"
+			}, status = status.HTTP_200_OK)
