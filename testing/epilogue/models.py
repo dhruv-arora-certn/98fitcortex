@@ -28,6 +28,7 @@ fieldMapper = {
 exclusionMapper = {
 	'wheat' : models.Q(wheat = 0),
 	'nuts' : models.Q(nuts = 0),
+	'nut' : models.Q(),
 	'dairy' : models.Q(dairy = 0),
 	'lamb_mutton' : models.Q(lamb_mutton = 0),
 	'beef' : models.Q(dairy = 0),
