@@ -484,7 +484,7 @@ class M5(Base):
 
 	def select_cereals(self):
 		calories = 0.39*self.calories_goal
-		food_list = self.marked.filter(cereal_grains = 1)
+		food_list = self.marked.filter(cereal_grains = 1).filter(models.Q(name__contains = "Roti") | models.Q(name__contains = "Paratha"))
 		self.cereals = self.select_best_minimum(food_list , calories , "cereals")
 
 	def select_pulses(self):
