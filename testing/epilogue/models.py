@@ -75,7 +75,7 @@ class Food(models.Model):
 	poultary = models.IntegerField()
 	meat = models.IntegerField()
 	egg = models.IntegerField()
-
+	yogurt = models.IntegerField()
 	cuisine = models.TextField()
 	nuts = models.IntegerField()
 	calcium = models.FloatField()
