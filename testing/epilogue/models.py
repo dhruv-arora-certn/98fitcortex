@@ -102,11 +102,6 @@ class Food(models.Model):
 			]
 		)
 
-	def amplify(self , factor):
-		self.weight = self.weight*2
-		self.calarie = self.calarie*2
-		return self
-
 	@property
 	def calorie(self):
 		return round(self.calarie)
@@ -241,9 +236,9 @@ class Customer(models.Model):
 
 	@property
 	def weight(self):
-		if int(self.w_type) == 1:
-			val = float(self.w)
 		if int(self.w_type) == 2:
+			val = float(self.w)
+		if int(self.w_type) == 1:
 			val = float(self.w) * 0.4536
 		return round(val , 2)
 
