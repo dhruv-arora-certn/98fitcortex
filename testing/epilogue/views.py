@@ -114,7 +114,7 @@ class DietPlanView(GenericAPIView):
 				print("Trying to generate")
 				p.generate()
 			except Exception as e:
-				print("There has been a MF exception")
+				print("There has been a MF exception " , e )
 				p.dietplan.delete()
 			else:
 				qs = p.dietplan
