@@ -44,7 +44,7 @@ class DietPlanSerializer(serializers.ModelSerializer):
 
 	def get_factored_attr(self , attr , obj):
 		factor = float(obj.calorie)/float(obj.food_item.calarie)
-		return getattr(obj.food_item , attr) *factor
+		return round(getattr(obj.food_item , attr) *factor , 2)
 
 	def get_protein(self , obj):
 		return self.get_factored_attr("protein", obj)

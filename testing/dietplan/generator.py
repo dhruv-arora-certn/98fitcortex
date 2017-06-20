@@ -13,6 +13,7 @@ from epilogue.models import Food , GeneratedDietPlan , GeneratedDietPlanFoodDeta
 from epilogue.utils import get_day , get_week
 import itertools , threading , lego , numpy as np , click
 from datetime import datetime
+from django.db.models import Q
 
 
 class Day:
@@ -35,7 +36,7 @@ class Day:
 			for m in self.calculations.meals:	
 				for e in m.selected:
 					print("Pushing Day to DB")
-					obj = GeneratedDietPlanFoodDetails.objects.create(dietplan = self.dietplan , food_item = e , food_name = e.name , day = self.day , meal_type = m.__class__.__name__.lower() , calorie = str(e.calarie)  , weight = e.weight , quantity = e.quantity , size = e.size)
+					obj = GeneratedDietPlanFoodDetails.objects.create(dietplan = self.dietplan , food_item = e , food_name = e.name , day = self.day , meal_type = m.__class__.__name__.lower() , calorie = str(round(e.calarie,2))  , weight = e.weight , quantity = e.quantity , size = e.size)
 					self.generated.append(obj)
 
 class Pipeline:
