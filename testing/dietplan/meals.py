@@ -314,7 +314,7 @@ class M3(Base):
 
 	def select_cereals(self , percent = 0.37):		
 		calories = percent * self.calories_goal
-		food_list = self.marked.filter(cereal_grains = 1)
+		food_list = self.marked.filter(grains_cereals = 1)
 		self.cereals = self.select_best_minimum(food_list , calories , "cereals")
 		if "Parantha" in self.cereals.name or "Roti" in self.cereals.name:
 			steps = round((calories - self.cereals.calarie) * self.cereals.quantity/(self.cereals.calarie))
@@ -484,7 +484,7 @@ class M5(Base):
 
 	def select_cereals(self):
 		calories = 0.39*self.calories_goal
-		food_list = self.marked.filter(cereal_grains = 1).filter(models.Q(name__contains = "Roti") | models.Q(name__contains = "Paratha"))
+		food_list = self.marked.filter(grains_cereals = 1)
 		self.cereals = self.select_best_minimum(food_list , calories , "cereals")
 
 	def select_pulses(self):
