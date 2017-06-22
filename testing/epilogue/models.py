@@ -229,7 +229,9 @@ class Customer(models.Model):
 		Convert the persisted height to meters
 		'''
 		if self.h_type == 1: #Feets and inches
-			val =  float(self.h)*0.3048
+			feet , inches = self.h.split('.')
+			inches = 12 * float(feet) + float(inches)
+			val =  inches * 0.0254
 		if self.h_type == 2: #Centimeters
 			val =  self.h/100
 		return round(val , 2)
