@@ -10,7 +10,7 @@ class ObjectiveSerializer(serializers.ModelSerializer):
 		fields = ["id" , "name"]
 
 class CustomerSerializer(serializers.ModelSerializer):
-	height = serializers.FloatField(source = "h")
+	height = serializers.CharField(source = "h")
 	weight = serializers.FloatField(source = "w")
 	# objective = ObjectiveSerializer()
 	gender = serializers.CharField(source = "gen")
