@@ -56,7 +56,7 @@ class Pipeline:
 		if self.dietplan:
 			self._is_dietplan_set = True
 		if self.persist and self.user and not self.dietplan:
-			self.dietplan = GeneratedDietPlan.objects.create(customer = user , week_id = week , user_week_id = user_week)
+			self.dietplan = GeneratedDietPlan.objects.get_or_create(customer = user , week_id = week , user_week_id = user_week)
 
 	def get_initial_exclude(self):
 		'''
@@ -117,9 +117,12 @@ class Pipeline:
 		if len(self.excluded) > 3:
 			self.excluded += list(np.random.choice(self.excluded[4:] , 15  , replace = True))
 
-	def generate(self):
+	def generate(self , day = None):
 		#If it is the present week
-		days = range(1,8)
+		if not day:
+			days = range(1,8)
+		else :
+			days = [day]
 
 		for e in days:
 			getattr(self , "Day"+str(e))()
