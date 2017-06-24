@@ -133,6 +133,7 @@ class Food(models.Model):
 	def update_weight(self, factor):
 		new_weight = self.weight * factor
 		new_weight = int( 5 * round(new_weight/5))
+		self.weight = new_weight
 		self.update(new_weight/self.weight)
 		return self
 			

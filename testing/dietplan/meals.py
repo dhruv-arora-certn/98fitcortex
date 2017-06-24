@@ -123,10 +123,13 @@ class M1(Base):
 		self.disease = disease
 		self.exclusion_conditions = exclusion_conditions
 		self.queryset = Food.m1_objects.exclude(name__in = exclude)
+
 		if goal == Goals.WeightLoss : 
 			self.queryset = self.queryset.filter(for_loss = '1').all()
+		
 		if self.disease and hasattr(self.disease , "queryset_filter"): 
 			self.queryset = self.queryset.filter(self.disease.queryset_filter)		
+		
 		self.marked = self.queryset
 		self.selected = []
 		# heapq.heapify(self.marked)
@@ -144,6 +147,7 @@ class M1(Base):
 		self.snack_list = self.marked.filter(snaks = '1')
 		heapq.heapify(self.snack_list)
 		return heapq.heappop(self.snack_list)	
+	
 	@property
 	def drink(self):
 		self.drink_list = self.marked.filter(drink = '1').filter(dairy = '1')
@@ -171,7 +175,7 @@ class M1(Base):
 		calories = self.calories_remaining
 		food_list = self.marked.filter(snaks = '1')
 		self.snacks = self.select_best_minimum(food_list , calories , name = "snacks")
-		if self.protein_ideal - self.protein > 8:
+		if self.protein_ideal - self.protein > 8 and hasattr(self , "egg"):
 			self.select_item(self.egg , remove = False)
 		self.rethink()
 		return self
