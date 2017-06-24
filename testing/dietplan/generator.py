@@ -56,7 +56,7 @@ class Pipeline:
 		if self.dietplan:
 			self._is_dietplan_set = True
 		if self.persist and self.user and not self.dietplan:
-			self.dietplan = GeneratedDietPlan.objects.get_or_create(customer = user , week_id = week , user_week_id = user_week)
+			self.dietplan = GeneratedDietPlan.objects.create(customer = user , week_id = week , user_week_id = user_week)
 
 	def get_initial_exclude(self):
 		'''
@@ -123,7 +123,7 @@ class Pipeline:
 			days = range(1,8)
 		else :
 			days = [day]
-
+			
 		for e in days:
 			getattr(self , "Day"+str(e))()
 

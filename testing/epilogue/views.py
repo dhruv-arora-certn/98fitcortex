@@ -112,7 +112,7 @@ class DietPlanView(GenericAPIView):
 			p = Pipeline(user.weight , user.height , float(user.lifestyle) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id))
 			try:
 				print("Trying to generate")
-				p.generate( day = self.kwargs.get("day"))
+				p.generate()
 			except Exception as e:
 				print("There has been a MF exception " , e )
 				p.dietplan.delete()
