@@ -50,7 +50,7 @@ class Pipeline:
 		self.exclusion_conditions =Q()	
 		if self.user:
 			user_week = week - get_week(user.create_on) + 1
-			self.excluded = self.get_initial_exclude()
+			self.excluded = [self.get_initial_exclude()]
 			self.exclusion_conditions = self.user.get_exclusions()
 
 		if self.dietplan:
@@ -65,7 +65,7 @@ class Pipeline:
 		items = []
 		last_plan = GeneratedDietPlan.objects.filter( customer = self.user ).last()
 		if last_plan:
-			items = last_plan.get_last_days(3)
+			items = last_plan.get_last_days(7)
 
 		return items 
 	

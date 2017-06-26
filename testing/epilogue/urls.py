@@ -15,5 +15,4 @@ urlpatterns = [
 	url(r'^guest-diet-pdf/$' , GuestPDFView.as_view()),
 	url(r'^dietplans/(?P<id>[0-9]+)/regenerate/$' , DietPlanRegenerationView.as_view()),
 	url(r'^user/regenerate' , UserDietPlanRegenerationView.as_view())
-
 ]

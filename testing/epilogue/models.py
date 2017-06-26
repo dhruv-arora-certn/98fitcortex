@@ -4,39 +4,10 @@ from dietplan.gender import Male , Female
 from epilogue.managers import *
 from django.db.models.expressions import RawSQL
 from django.db.models import Max
+from .mappers import *
 from rest_framework import exceptions
 #Model Managers for Food Model
 
-QUANTITY_MANIPULATE = [
-	"Parantha",
-	"Roti",
-	"Dosa",
-	"Cheela",
-	"Uttapam"
-]
-UNCHANGABLE_ITEMS = [
-	'Boiled Egg White',
-	'Salad'
-]
-fieldMapper = {
-		Goals.WeightLoss : "squared_diff_weight_loss",
-		Goals.MaintainWeight : "squared_diff_weight_maintain",
-		Goals.WeightGain : "squared_diff_weight_gain",
-		Goals.MuscleGain : "squared_diff_muscle_gain"
-}
-
-exclusionMapper = {
-	'wheat' : models.Q(wheat = 0),
-	'nuts' : models.Q(nuts = 0),
-	'nut' : models.Q(),
-	'dairy' : models.Q(dairy = 0),
-	'lamb_mutton' : models.Q(lamb_mutton = 0),
-	'beef' : models.Q(dairy = 0),
-	'seafood' : models.Q(seafood = 0),
-	'poultary' : models.Q(poultary = 0),
-	'meat' : models.Q(meat = 0),
-	'egg' : models.Q(egg = 0)
-}
 	
 class Food(models.Model):
 	name = models.TextField()
@@ -76,8 +47,12 @@ class Food(models.Model):
 	meat = models.IntegerField()
 	egg = models.IntegerField()
 	yogurt = models.IntegerField()
-	cuisine = models.TextField()
+	pork = models.IntegerField()
+	other_meat = models.IntegerField()
+	nut = models.IntegerField()
 	nuts = models.IntegerField()
+	
+	cuisine = models.TextField()
 	calcium = models.FloatField()
 	vitaminc = models.FloatField()
 	iron = models.FloatField()
@@ -280,8 +255,10 @@ class Customer(models.Model):
 	def get_exclusions(self):
 		q = models.Q()
 		for e in self.customerfoodexclusions_set.all():
-			q &= exclusionMapper.get(e.food_type) 
-		return q	
+			q &= exclusionMapper.get(e.food_type)
+		q &= food_category_exclusion_mapper.get(self.food_cat)
+		return q
+
 
 	@property
 	def medical_conditions_string(self):

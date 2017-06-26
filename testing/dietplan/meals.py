@@ -83,6 +83,8 @@ class Base:
 			return i
 
 	def select_item(self , item , remove = True):
+		if item is None:
+			return
 		self.selected.append(item)
 		if remove:
 			self.marked.exclude(id = item.id)
@@ -123,6 +125,9 @@ class M1(Base):
 		self.disease = disease
 		self.exclusion_conditions = exclusion_conditions
 		self.queryset = Food.m1_objects.exclude(name__in = exclude)
+		
+		if self.exclusion_conditions : 
+			self.queryset = self.queryset.filter(self.exclusion_conditions)
 
 		if goal == Goals.WeightLoss : 
 			self.queryset = self.queryset.filter(for_loss = '1').all()
@@ -138,9 +143,11 @@ class M1(Base):
 		self.select_item(self.drink)
 		self.remove_drinks()
 
-		if not ('egg' , 0) in self.exclusion_conditions.children:
+		if not ('egg' , 0) in self.exclusion_conditions.children and hasattr(self,"egg"):
 			self.egg = Food.m1_objects.filter(name = "Boiled Egg White").first()
 			self.select_item(self.egg , remove = False)
+		elif hasattr(self , "egg"):
+			self.egg.update_quantity(1.5)
 
 	def pop_snack(self):
 		# self.snack_list = list(filter(lambda x : x.snaks , self.marked ))
@@ -150,7 +157,11 @@ class M1(Base):
 	
 	@property
 	def drink(self):
-		self.drink_list = self.marked.filter(drink = '1').filter(dairy = '1')
+		self.drink_list = self.marked.filter(drink = '1')
+		if ('dairy',0) not in self.exclusion_conditions.children:
+			self.drink_list = self.drink_list.filter(dairy = '1')
+		if not self.drink_list.count():
+			return 
 		return min(self.drink_list , key = lambda x : abs(self.calories_goal * 0.15 - x.calorie))
 
 	def remove_drinks(self):
@@ -184,17 +195,21 @@ class M1(Base):
 class M2(Base):
 	percent = 0.15
 
-	def __init__(self , calories , goal , exclude , extra = 0 , disease = None):
+	def __init__(self , calories , goal , exclude , extra = 0 , disease = None , exclusion_conditions = None):
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.queryset = Food.m2_objects.exclude(name__in = exclude)
 		self.marked = self.queryset
 		self.selected = []
+		self.exclusion_conditions = exclusion_conditions
+
+		if self.exclusion_conditions : 
+			self.queryset = self.queryset.filter(self.exclusion_conditions)
 
 	def select_fruit(self):
 		self.option = "fruit"
 		calories = self.calories_goal
-		fruit_items = Food.m2_objects.filter(fruit= 1).filter(nuts = 1).all()
+		fruit_items = Food.m2_objects.filter(fruit= 1)
 		try:
 			self.fruits = self.select_best_minimum(fruit_items , calories , name = "fruit")
 		except Exception as e:
@@ -257,14 +272,22 @@ class M2(Base):
 		new_weight = self.selected[0].weight + steps * 10
 		self.selected[0].update_weight(new_weight/self.selected[0].weight)
 
+	def get_probability(self):
+		print("Calling get Probability")
+		if ('nuts' , 0) in self.exclusion_conditions.children:
+			print("No nuts")
+			return [1,0]
+		return [0.5,0.5]
+
 	def build(self):
-		probability = [
-			0.5 , 0.5
-		]
-		self.choice = choice([
-			self.select_fruit , self.select_nut
-		], 1 , probability)[0]
-		self.choice()
+		if ('nuts' , 0) in self.exclusion_conditions.children:
+			self.select_fruit()
+		else:
+			self.choice = choice([self.select_fruit , self.select_nut],
+				size = 1,
+				p = [0.5 , 0.5]
+			)[0]
+			self.choice()
 		self.rethink()
 		return self
 
@@ -272,7 +295,7 @@ class M2(Base):
 class M3(Base):
 	percent = 0.25
 
-	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None):
+	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None , exclusion_conditions = None , make_combination = True):
 		self.calories_goal = calories*self.percent + extra
 		self.extra = extra
 		self.goal = goal
@@ -280,8 +303,12 @@ class M3(Base):
 		self.queryset = Food.m3_objects.exclude(name__in = exclude)
 		if self.disease:
 			self.queryset = self.queryset.filter(self.disease.queryset_filter)
+
+		self.exclusion_conditions = exclusion_conditions
+		self.queryset = self.queryset.filter(exclusion_conditions)
 		self.marked = self.queryset
 		self.selected = []
+		self.make_combination = make_combination
 
 	def select_yogurt(self):
 		self.isYogurt = True
@@ -353,7 +380,17 @@ class M3(Base):
 		new_weight = min(250,self.combination.weight + steps * 10)
 		self.combination.update_weight(new_weight/self.combination.weight)
 
-			
+	def get_combination_generic_probability(self):
+		if self.make_combination:
+			return [
+				2/7,
+				5/7
+			]
+		return [
+			1/6 ,
+			5/6
+		]
+
 	def build(self):
 		prob_yogurt_dessert = [2/7 , 5/7]
 		func1 = choice([
@@ -362,7 +399,7 @@ class M3(Base):
 			1 ,  prob_yogurt_dessert)[0]
 		func1()
 		if not self.disease:
-			prob_generic_combination = [2/7,5/7]
+			prob_generic_combination = self.get_combination_generic_probability()
 			func2 = choice([
 				self.makeCombinations, self.makeGeneric
 			],
@@ -370,7 +407,7 @@ class M3(Base):
 			func2()
 		else:
 			self.makeGeneric()
-		# self.rethink()
+		self.rethink()
 		return self
 
 	@property
@@ -380,10 +417,15 @@ class M3(Base):
 class M4(Base):
 	percent = 0.15
 
-	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None):
+	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None , exclusion_conditions = None):
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
+		self.exclusion_conditions = exclusion_conditions 
 		self.queryset = Food.m4_objects.exclude(name__in = exclude)
+
+		if exclusion_conditions : 
+			self.queryset = self.queryset.filter(exclusion_conditions)
+		
 		self.exclude = exclude
 		self.disease = disease
 		self.marked = self.queryset
@@ -405,8 +447,7 @@ class M4(Base):
 	def select_fruit(self):
 		self.option = "fruits"
 		calories = self.calories_goal
-		fruit_items = self.marked.filter(fruit = 1)
-		# if self.disease == 
+		fruit_items = self.marked.filter(fruit = 1).exclude(name__contains = "Handful")
 		self.fruits = self.select_best_minimum(fruit_items , calories , "fruit")
 		self.fruits.update_quantity(2)
 
@@ -442,18 +483,22 @@ class M4(Base):
 			new_weight = min(250,selected.weight + steps * 10)
 			selected.update_weight(new_weight/selected.weight)
 
+	def get_probabilities(self):
+		if ("nuts" , 0) in self.exclusion_conditions.children:
+			return [1/3,0,1/3,1/3]
+		return [0.25 , 0.25 , 0.25 , 0.25]
+
 	def build(self):
 		if self.disease and hasattr( self.disease , "m4_build"):
 			getattr(self.disease , "m4_build")(self)
 		else:
 			self.select_drink()
-			print("Not Disease --------------")
-			probability = [0.25 , 0.25 , 0.25 , 0.25]
+			probability = self.get_probabilities()
 			if self.disease and hasattr(self.disease , "nuts_probability"):
 				probability = self.disease.nuts_probability
 			func = choice([
 				self.select_fruit , self.select_nut , self.select_snacks , self.select_salad
-			], 1 , probability)[0]
+			], size = 1 , p = probability)[0]
 			func()
 			self.rethink()
 		return self
@@ -461,7 +506,8 @@ class M4(Base):
 class M5(Base):
 	percent = 0.20
 
-	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None):
+	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None , exclusion_conditions = None):
+		self.exclusion_conditions = exclusion_conditions
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.disease = disease
@@ -474,6 +520,10 @@ class M5(Base):
 		self.queryset = self.queryset.exclude(name__in = exclude).filter(calarie__gt = 0)
 		if self.disease:
 			self.queryset = self.queryset.filter(self.disease.queryset_filter)
+
+		if exclusion_conditions : 
+			self.queryset = self.queryset.filter(exclusion_conditions)
+
 		self.marked = self.queryset
 		self.selected = []
 
@@ -496,9 +546,41 @@ class M5(Base):
 		food_list = self.marked.filter(pulses = 1)
 		self.pulses = self.select_best_minimum(food_list , calories , "pulses")
 
-	def build(self):
+	def makeGeneric(self):
+		print("Building Dinner")
 		self.select_cereals()
 		self.select_pulses()
 		self.select_vegetables()
-		self.rethink()
+		print("Cereals" , self.cereals)
+		print("Pulses" , self.pulses)
+		print("Vegetables" , self.vegetables)
+		return self
+
+	def makeCombination(self):
+		food_list = self.marked.filter(cuisine = "Combination")
+		self.combination = self.select_best_minimum(food_list , self.calories_goal , name = "combination")
+		steps = round( (self.calories_goal - self.combination.calarie) * self.combination.weight/(self.combination.calarie *10))
+		new_weight = min(250 , self.combination.weight + steps*10)
+		self.combination.update_weight(new_weight/self.combination.weight)
+
+	def get_steps(self , item):
+		difference = self.calories_goal - self.calories
+		unit = item.calarie/(5*item.weight)
+		steps = round(difference/unit)
+		return steps
+
+	def rethink(self):
+		if not hasattr(self , "combination"):
+			if self.calories < self.calories_goal:
+				new_weight = min(self.pulses.weight +  self.get_steps(self.pulses)*5) 
+				self.pulses.update_weight(new_weight/self.pulses.weight)
+
+	def build(self):
+		probabilities = [ 1/7 , 6/7]
+		func = choice([
+			self.makeCombination , self.makeGeneric
+		],
+		size = 1 , 
+		p = probabilities )[0]
+		func()
 		return self
