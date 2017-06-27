@@ -137,17 +137,16 @@ class M1(Base):
 		
 		self.marked = self.queryset
 		self.selected = []
-		# heapq.heapify(self.marked)
-
+		
 	def allocate_restrictions(self):
 		self.select_item(self.drink)
 		self.remove_drinks()
 
-		if not ('egg' , 0) in self.exclusion_conditions.children and hasattr(self,"egg"):
+		if  ('egg' , 0) not in self.exclusion_conditions.children and hasattr(self,"egg"):
 			self.egg = Food.m1_objects.filter(name = "Boiled Egg White").first()
 			self.select_item(self.egg , remove = False)
-		elif hasattr(self , "egg"):
-			self.egg.update_quantity(1.5)
+		# elif hasattr(self , "egg"):
+		# 	self.egg.update_quantity(1.5)
 
 	def pop_snack(self):
 		# self.snack_list = list(filter(lambda x : x.snaks , self.marked ))
