@@ -47,7 +47,7 @@ class Pipeline:
 			week = get_week(datetime.today())
 		user_week = 1
 		
-		self.exclusion_conditions =Q()	
+		self.exclusion_conditions = Q()	
 		if self.user:
 			user_week = week - get_week(user.create_on) + 1
 			self.excluded = [self.get_initial_exclude()]

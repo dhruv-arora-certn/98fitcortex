@@ -198,13 +198,17 @@ class M2(Base):
 	def __init__(self , calories , goal , exclude , extra = 0 , disease = None , exclusion_conditions = None):
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
-		self.queryset = Food.m2_objects.exclude(name__in = exclude)
+		self.exclude = exclude
+		self.queryset = self.getDefaultQueryset().exclude(name__in = exclude)
 		self.marked = self.queryset
 		self.selected = []
 		self.exclusion_conditions = exclusion_conditions
 
 		if self.exclusion_conditions : 
 			self.queryset = self.queryset.filter(self.exclusion_conditions)
+
+	def getDefaultQueryset(self):
+		return Food.m2_objects
 
 	def select_fruit(self):
 		self.option = "fruit"
@@ -231,6 +235,8 @@ class M2(Base):
 		self.option = "nut"
 		calories = self.calories_goal
 		nuts_items = self.marked.filter(Q(name__startswith = "Handful")).all()
+		if not nuts_items.count():
+			nuts_items = self.getDefaultQueryset().filter(Q(name__startswith = "Handful"))
 		try:
 			self.nuts = self.select_best_minimum(nuts_items , calories , name = "nuts")
 		except Exception as e:
@@ -511,12 +517,9 @@ class M5(Base):
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.disease = disease
-		if goal == Goals.WeightLoss : 
-			self.queryset = Food.m5loss_objects
-		if goal == Goals.WeightGain or goal == Goals.MuscleGain:
-			self.queryset = Food.m5gain_objects
-		if goal == Goals.MaintainWeight:
-			self.queryset = Food.m5stable_objects
+
+		self.queryset = self.getQuerysetFromGoal()
+
 		self.queryset = self.queryset.exclude(name__in = exclude).filter(calarie__gt = 0)
 		if self.disease:
 			self.queryset = self.queryset.filter(self.disease.queryset_filter)
@@ -526,6 +529,15 @@ class M5(Base):
 
 		self.marked = self.queryset
 		self.selected = []
+
+	def getQuerysetFromGoal(self):
+		if self.goal == Goals.WeightLoss : 
+			queryset = Food.m5loss_objects
+		if self.goal == Goals.WeightGain or self.goal == Goals.MuscleGain:
+			queryset = Food.m5gain_objects
+		if self.goal == Goals.MaintainWeight:
+			queryset = Food.m5stable_objects
+		return queryset
 
 	def select_vegetables(self):
 		calories = 0.22*self.calories_goal
@@ -539,6 +551,8 @@ class M5(Base):
 	def select_cereals(self):
 		calories = 0.39*self.calories_goal
 		food_list = self.marked.filter(grains_cereals = 1)
+		if not food_list.count():
+			food_list = self.getQuerysetFromGoal().filter(self.exclusion_conditions)
 		self.cereals = self.select_best_minimum(food_list , calories , "cereals")
 
 	def select_pulses(self):
