@@ -468,7 +468,6 @@ class M4(Base):
 		self.option = "nuts"
 		calories = self.calories_goal
 		nuts_items = self.marked.filter(nuts = 1)
-		# ipdb.set_trace()
 		self.nuts = self.select_best_minimum(nuts_items , calories , "nuts")
 		self.nuts.update_quantity(2)
 
