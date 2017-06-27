@@ -118,16 +118,14 @@ class Base:
 class M1(Base):
 	percent = .25
 
-	def __init__(self , calories , goal , exclude=  "" , extra = 0 , disease = None , exclusion_conditions = None):
+	def __init__(self , calories , goal , exclude=  "" , extra = 0 , disease = None , exclusion_conditions = Q()):
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.exclude = exclude
 		self.disease = disease
 		self.exclusion_conditions = exclusion_conditions
 		self.queryset = Food.m1_objects.exclude(name__in = exclude)
-		
-		if self.exclusion_conditions : 
-			self.queryset = self.queryset.filter(self.exclusion_conditions)
+		self.queryset = self.queryset.filter(self.exclusion_conditions)
 
 		if goal == Goals.WeightLoss : 
 			self.queryset = self.queryset.filter(for_loss = '1').all()
@@ -142,11 +140,9 @@ class M1(Base):
 		self.select_item(self.drink)
 		self.remove_drinks()
 
-		if  ('egg' , 0) not in self.exclusion_conditions.children and hasattr(self,"egg"):
+		if  ('egg' , 0) not in self.exclusion_conditions.children and not hasattr(self,"egg"):
 			self.egg = Food.m1_objects.filter(name = "Boiled Egg White").first()
 			self.select_item(self.egg , remove = False)
-		# elif hasattr(self , "egg"):
-		# 	self.egg.update_quantity(1.5)
 
 	def pop_snack(self):
 		# self.snack_list = list(filter(lambda x : x.snaks , self.marked ))
@@ -169,24 +165,26 @@ class M1(Base):
 		return self
 
 	def rethink(self):
+		print("Running M1 rethink")
 		selected = self.snacks
 		if self.calories_remaining > 0:	
-			if "Parantha" in selected.name or "Roti" in selected.name or "Dosa" in selected.name or "Cheela" in selected.name:
+			if "Parantha" in selected.name or "Roti" in selected.name or "Dosa" in selected.name or "Cheela" in selected.name or "Bun" in selected.name:
 				steps = math.floor(self.calories_remaining * selected.quantity/(selected.calarie))
 				new_quantity = steps + selected.quantity
 				selected.update_quantity(new_quantity/selected.quantity)
 			else:
+				print("Updatin " , selected , selected.weight)
 				steps = math.floor(self.calories_remaining * selected.weight/(selected.calarie*10))
 				new_weight = min(200 , selected.weight + steps * 10)
 				selected.update_weight(new_weight/selected.weight)
-	
+				print("New weight" , selected.weight)
 	def build(self):
 		self.allocate_restrictions()
 		calories = self.calories_remaining
 		food_list = self.marked.filter(snaks = '1')
 		self.snacks = self.select_best_minimum(food_list , calories , name = "snacks")
 		if self.protein_ideal - self.protein > 8 and hasattr(self , "egg"):
-			self.select_item(self.egg , remove = False)
+			self.egg.update_quantity(1.5)
 		self.rethink()
 		return self
 

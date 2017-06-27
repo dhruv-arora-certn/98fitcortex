@@ -99,6 +99,7 @@ class Food(models.Model):
 		return self.name
 
 	def update(self,factor):
+		print("Calling Weight" , factor)
 		self.protein *= factor
 		self.fat *= factor
 		self.carbohydrates *= factor
@@ -108,8 +109,9 @@ class Food(models.Model):
 	def update_weight(self, factor):
 		new_weight = self.weight * factor
 		new_weight = int( 5 * round(new_weight/5))
+		factor = new_weight/self.weight
 		self.weight = new_weight
-		self.update(new_weight/self.weight)
+		self.update(factor)
 		return self
 			
 	def update_quantity(self ,factor):
