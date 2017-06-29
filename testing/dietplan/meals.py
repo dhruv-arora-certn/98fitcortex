@@ -354,12 +354,14 @@ class M3(Base):
 			steps = round((calories - self.cereals.calarie) * self.cereals.quantity/(self.cereals.calarie))
 			new_quantity = steps + self.cereals.quantity
 			self.cereals.update_quantity(new_quantity/self.cereals.quantity)
-	def select_pulses(self):
+	
+	def select_pulses(self , calories = None):
 		if self.isYogurt : 
 			percent = 0.23
 		else:
 			percent = 0.18
-		calories = percent * self.calories_goal
+		if not calories:
+			calories = percent * self.calories_goal
 		food_list = self.marked.filter(pulses = 1)
 		try:
 			self.pulses = self.select_best_minimum(food_list , calories , "pulses")
@@ -368,9 +370,18 @@ class M3(Base):
 			self.select_item(self.pulses)
 
 	def makeGeneric(self):
-		self.select_vegetables()
 		self.select_cereals()
-		self.select_pulses()
+		
+		if self.cereals.vegetables == 1 and self.cereals.pulse == 0:
+			self.select_pulses(calories = self.calories_remaining)
+		elif self.cereals.vegetables == 0 and self.cereals.pulse == 1:
+			self.select_vegetables(calories = self.calories_remaining)
+		elif self.cereals.vegetables == 1 and self.cereals.pulse == 1:
+			self.select_pulses(calories = self.calories_remaining)
+		if self.cereals.vegetables == 0 and self.cereals.pulse == 0:
+			self.select_pulses()
+			self.select_vegetables()	
+		return self
 
 	def makeCombinations(self):
 		if self.isYogurt:
@@ -395,7 +406,7 @@ class M3(Base):
 		]
 
 	def build(self):
-		prob_yogurt_dessert = [2/7 , 5/7]
+		prob_yogurt_dessert = [5/7 , 2/7]
 		func1 = choice([
 				self.select_yogurt, self.select_dessert
 			],
@@ -481,7 +492,7 @@ class M4(Base):
 			new_quantity = steps + selected.quantity
 			selected.update_quantity(new_quantity/selected.quantity)
 		else:
-			steps = round(self.calories_remaining * selected.weight/(selected.calarie*10))
+			steps = min( 5 , round(self.calories_remaining * selected.weight/(selected.calarie*10)))
 			new_weight = min(250,selected.weight + steps * 10)
 			selected.update_weight(new_weight/selected.weight)
 
@@ -535,10 +546,10 @@ class M5(Base):
 			queryset = Food.m5stable_objects
 		return queryset
 
-	def select_vegetables(self):
-		calories = 0.22*self.calories_goal
+	def select_vegetables(self , percent = 0.22):
+		calories = percent*self.calories_goal
 		self.vegetable_calories = calories
-		food_list = self.marked.filter(vegetable = 1)
+		food_list = self.marked.filter(vegetables = 1)
 		if self.disease and hasattr(self.disease , "m5_vegetable_filter"):
 			food_list = food_list.filter(self.disease.m5_vegetable_filter)
 		self.vegetables = self.select_best_minimum(food_list , calories , "vegetables")
@@ -551,19 +562,23 @@ class M5(Base):
 			food_list = self.getQuerysetFromGoal().filter(self.exclusion_conditions)
 		self.cereals = self.select_best_minimum(food_list , calories , "cereals")
 
-	def select_pulses(self):
-		calories = 0.39 * self.calories_goal
-		food_list = self.marked.filter(pulses = 1)
+	def select_pulses(self , percent = 0.39):
+		calories = percent * self.calories_goal
+		food_list = self.marked.filter(pulse = 1)
 		self.pulses = self.select_best_minimum(food_list , calories , "pulses")
 
 	def makeGeneric(self):
-		print("Building Dinner")
 		self.select_cereals()
-		self.select_pulses()
-		self.select_vegetables()
-		print("Cereals" , self.cereals)
-		print("Pulses" , self.pulses)
-		print("Vegetables" , self.vegetables)
+		
+		if self.cereals.vegetables == 1 and self.cereals.pulse == 0:
+			self.select_pulses(percent = 0.61)
+		elif self.cereals.vegetables == 0 and self.cereals.pulse == 1:
+			self.select_vegetables(percent = 0.61)
+		elif self.cereals.vegetables == 1 and self.cereals.pulse == 1:
+			self.select_pulses(percent = 0.61)
+		if self.cereals.vegetables == 0 and self.cereals.pulse == 0:
+			self.select_pulses()
+			self.select_vegetables()	
 		return self
 
 	def makeCombination(self):

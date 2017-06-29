@@ -38,6 +38,7 @@ class Food(models.Model):
 	salad = models.IntegerField()
 	dessert = models.IntegerField()
 	pulses = models.IntegerField()
+	pulse = models.IntegerField()
 	for_loss = models.IntegerField()
 	wheat = models.IntegerField()
 	lamb_mutton = models.IntegerField()
@@ -51,7 +52,8 @@ class Food(models.Model):
 	other_meat = models.IntegerField()
 	nut = models.IntegerField()
 	nuts = models.IntegerField()
-	
+	non_veg_gravy_items = models.IntegerField()
+	vegetables = models.IntegerField()
 	cuisine = models.TextField()
 	calcium = models.FloatField()
 	vitaminc = models.FloatField()
@@ -195,6 +197,31 @@ class Customer(models.Model):
 
 	is_authenticated = True
 
+	def get_exclusions(self):
+		q = models.Q()
+		for e in self.customerfoodexclusions_set.all():
+			q &= exclusionMapper.get(e.food_type)
+		q &= food_category_exclusion_mapper.get(self.food_cat , models.Q())
+		return q
+
+	@property
+	def args_attrs(self):
+		return [
+			self.weight,
+			self.height,
+			self.lifestyle,
+			self.goal,
+			self.gender.number,
+			[]
+		]
+
+	@property
+	def kwargs_attrs(self):
+		kwargs_attrs = {
+			'exclusion_conditions' : self.get_exclusions()
+		}
+		return kwargs_attrs
+
 	@property
 	def plans(self):
 		return {
@@ -250,17 +277,11 @@ class Customer(models.Model):
 		if self.lifestyle == 1.9:
 			return "Extra Active"
 			
+
+
 	@property
 	def is_active(self):
 		return True
-
-	def get_exclusions(self):
-		q = models.Q()
-		for e in self.customerfoodexclusions_set.all():
-			q &= exclusionMapper.get(e.food_type)
-		q &= food_category_exclusion_mapper.get(self.food_cat , models.Q())
-		return q
-
 
 	@property
 	def medical_conditions_string(self):
@@ -473,6 +494,8 @@ class GeneratedDietPlanFoodDetails(models.Model):
 				return ~models.Q(name__contains = "Handful")
 		return models.Q()
 
+	def otherDishesFromMeal(self):
+		return GeneratedDietPlanFoodDetails.objects.filter(dietplan = self.dietplan).filter(meal_type = self.meal_type).filter(day = self.day).exclude(id = self.id)
 
 class GeneratedExercisePlan(models.Model):
 	class Meta:
