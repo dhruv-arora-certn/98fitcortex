@@ -555,6 +555,7 @@ class LoginCustomer(models.Model):
 	email = models.EmailField()
 	first_name = models.CharField(max_length = 100)
 	password = models.CharField(max_length = 255)
+	customer = models.OneToOneField(Customer , db_column = "erp_customer_id")
 
 class DishReplacementSuggestions(models.Model):
 	dietplan_food_details = models.ForeignKey(GeneratedDietPlanFoodDetails)
