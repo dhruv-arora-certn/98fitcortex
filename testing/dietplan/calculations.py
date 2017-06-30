@@ -13,7 +13,7 @@ import itertools , threading , lego
 
 class Calculations:
 	@lego.assemble
-	def __init__(self , weight , height , activity , goal , gender,  exclude , disease = None , exclusion_conditions = None):
+	def __init__(self , weight , height , activity , goal , gender,  exclude , disease = None , exclusion_conditions = None , exclude2 = None):
 		#calculations
 		self.bmi = BMI(weight , height)
 		self.ibw = IBW(self.height, self.gender)
@@ -29,7 +29,13 @@ class Calculations:
 		return self
 
 	def makeMeals(self):
-		self.m5 = meals.M5(self.calories , self.goal , exclude = self.exclude , disease = self.disease , exclusion_conditions = self.exclusion_conditions)
+		self.m5 = meals.M5(self.calories ,
+			 self.goal ,
+			 exclude = self.exclude ,
+			 disease = self.disease ,
+			 exclusion_conditions = self.exclusion_conditions,
+			 exclude2 = self.exclude2
+		)
 		self.m5.build()
 		
 		self.m3 = meals.M3(
@@ -39,7 +45,8 @@ class Calculations:
 			extra = self.m5.calories_remaining , 
 			disease = self.disease , 
 			exclusion_conditions = self.exclusion_conditions,
-			make_combination = hasattr(self.m5, "combination")
+			make_combination = hasattr(self.m5, "combination"),
+			exclude2 = self.exclude2
 		)
 		self.m3.build()
 		
@@ -52,9 +59,20 @@ class Calculations:
 			exclusion_conditions = self.exclusion_conditions
 		)
 		self.m1.build()
-		self.m4 = meals.M4(self.calories , self.goal , exclude = self.exclude + [e.name for e in self.m3.selected+self.m5.selected+self.m1.selected], extra = self.m1.calories_remaining , disease = self.disease , exclusion_conditions = self.exclusion_conditions)
+		self.m4 = meals.M4(
+			self.calories ,
+			self.goal ,
+			exclude = self.exclude + [e.name for e in self.m3.selected+self.m5.selected+self.m1.selected],
+			extra = self.m1.calories_remaining ,
+			disease = self.disease ,
+			exclusion_conditions = self.exclusion_conditions)
 		self.m4.build()
-		self.m2 = meals.M2(self.calories , self.goal , exclude = self.exclude + [e.name for e in self.m3.selected+self.m5.selected+self.m1.selected+self.m4.selected], extra = self.m4.calories_remaining , disease = self.disease , exclusion_conditions = self.exclusion_conditions)
+		self.m2 = meals.M2(self.calories ,
+			self.goal ,
+			exclude = self.exclude + [e.name for e in self.m3.selected+self.m5.selected+self.m1.selected+self.m4.selected],
+			extra = self.m4.calories_remaining ,
+			disease = self.disease ,
+			exclusion_conditions = self.exclusion_conditions)
 		self.m2.build()
 		
 		self.meals = [

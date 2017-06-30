@@ -1,4 +1,4 @@
-from epilogue.models import Food
+from epilogue.models import Food , GeneratedDietPlan
 from .utils import annotate_food , mark_squared_diff
 from .goals import Goals
 from .medical_conditions import Osteoporosis , Anemia
@@ -298,12 +298,13 @@ class M2(Base):
 class M3(Base):
 	percent = 0.25
 
-	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None , exclusion_conditions = None , make_combination = True):
+	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None , exclusion_conditions = None , make_combination = True , exclude2 = None):
 		self.calories_goal = calories*self.percent + extra
 		self.extra = extra
 		self.goal = goal
 		self.disease = disease
-		self.queryset = Food.m3_objects.exclude(name__in = exclude)
+		self.exclude2 = exclude2
+		self.queryset = self.getQuerysetFromGoal().exclude(name__in = exclude)
 		if self.disease:
 			self.queryset = self.queryset.filter(self.disease.queryset_filter)
 
@@ -312,6 +313,11 @@ class M3(Base):
 		self.marked = self.queryset
 		self.selected = []
 		self.make_combination = make_combination
+
+
+	def getQuerysetFromGoal(self):
+		f = Food.m3_objects.filter(for_loss = 1)
+		return f
 
 	def select_yogurt(self):
 		self.isYogurt = True
@@ -348,7 +354,10 @@ class M3(Base):
 
 	def select_cereals(self , percent = 0.37):		
 		calories = percent * self.calories_goal
-		food_list = self.marked.filter(grains_cereals = 1)
+		if self.exclude2:
+			food_list = self.getQuerysetFromGoal().exclude(name__in = self.exclude2).filter(grains_cereals = 1)
+		else:
+			food_list = self.marked.filter(grains_cereals = 1)
 		self.cereals = self.select_best_minimum(food_list , calories , "cereals")
 		if "Parantha" in self.cereals.name or "Roti" in self.cereals.name:
 			steps = round((calories - self.cereals.calarie) * self.cereals.quantity/(self.cereals.calarie))
@@ -519,12 +528,13 @@ class M4(Base):
 class M5(Base):
 	percent = 0.20
 
-	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None , exclusion_conditions = None):
+	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None , exclusion_conditions = None , exclude2 = None):
 		self.exclusion_conditions = exclusion_conditions
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.disease = disease
-
+		self.exclude = exclude
+		self.exclude2 = exclude2
 		self.queryset = self.getQuerysetFromGoal()
 
 		self.queryset = self.queryset.exclude(name__in = exclude).filter(calarie__gt = 0)
@@ -557,9 +567,12 @@ class M5(Base):
 
 	def select_cereals(self):
 		calories = 0.39*self.calories_goal
-		food_list = self.marked.filter(grains_cereals = 1)
-		if not food_list.count():
-			food_list = self.getQuerysetFromGoal().filter(self.exclusion_conditions)
+		if self.exclude2:
+			food_list = self.getQuerysetFromGoal().exclude(name__in = self.exclude2).filter(grains_cereals = 1)
+		else:
+			food_list = self.marked.filter(grains_cereals = 1)
+		if food_list.count() < 3:
+			food_list = self.getQuerysetFromGoal().filter(self.exclusion_conditions).filter(grains_cereals = 1)
 		self.cereals = self.select_best_minimum(food_list , calories , "cereals")
 
 	def select_pulses(self , percent = 0.39):
