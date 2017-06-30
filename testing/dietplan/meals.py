@@ -343,7 +343,7 @@ class M3(Base):
 		
 		if not calories:
 			calories = percent * self.calories_goal
-		food_list = self.marked.filter(vegetable = 1)
+		food_list = self.marked.filter(vegetable = 1).filter(grains_cereals = 0)
 		if self.disease and hasattr(self.disease , "vegetable_filter"):
 			food_list = food_list.filter(self.disease.vegetable_filter)
 		self.vegetables = self.select_best_minimum(food_list , calories , "vegetables")
@@ -371,7 +371,7 @@ class M3(Base):
 			percent = 0.18
 		if not calories:
 			calories = percent * self.calories_goal
-		food_list = self.marked.filter(pulses = 1)
+		food_list = self.marked.filter(pulses = 1).filter(grains_cereals = 0)
 		try:
 			self.pulses = self.select_best_minimum(food_list , calories , "pulses")
 		except Exception as e:
@@ -559,7 +559,7 @@ class M5(Base):
 	def select_vegetables(self , percent = 0.22):
 		calories = percent*self.calories_goal
 		self.vegetable_calories = calories
-		food_list = self.marked.filter(vegetables = 1)
+		food_list = self.marked.filter(vegetables = 1).filter(grains_cereals = 0)
 		if self.disease and hasattr(self.disease , "m5_vegetable_filter"):
 			food_list = food_list.filter(self.disease.m5_vegetable_filter)
 		self.vegetables = self.select_best_minimum(food_list , calories , "vegetables")
@@ -577,7 +577,7 @@ class M5(Base):
 
 	def select_pulses(self , percent = 0.39):
 		calories = percent * self.calories_goal
-		food_list = self.marked.filter(pulse = 1)
+		food_list = self.marked.filter(pulse = 1).filter(grains_cereals = 0)
 		self.pulses = self.select_best_minimum(food_list , calories , "pulses")
 
 	def makeGeneric(self):

@@ -119,7 +119,8 @@ class Food(models.Model):
 	def update_quantity(self ,factor):
 		self.quantity *= factor
 		self.quantity = round(self.quantity )
-		self.update(factor)
+		self.weight *= factor
+		self.weight = round( self.weight )
 		return self
 
 	def goal_nutrition(self,goal):
