@@ -3,7 +3,6 @@ from django.http import HttpResponse , JsonResponse
 from .forms import AnalysisForm
 from dietplan.goals import Goals
 from dietplan.utils import annotate_food
-# from dietplan.models import Food
 from dietplan.calculations import Calculations
 from dietplan.bodyTypes import BodyTypes
 from dietplan.activity import ActivityLevel

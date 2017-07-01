@@ -350,7 +350,7 @@ class M3(Base):
 		
 		if not calories:
 			calories = percent * self.calories_goal
-		food_list = self.marked.filter(vegetable = 1).filter(grains_cereals = 0)
+		food_list = self.marked.filter(vegetable = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
 		if self.disease and hasattr(self.disease , "vegetable_filter"):
 			food_list = food_list.filter(self.disease.vegetable_filter)
 		self.vegetables = self.select_best_minimum(food_list , calories , "vegetables")
@@ -365,6 +365,7 @@ class M3(Base):
 			food_list = self.getQuerysetFromGoal().exclude(name__in = self.exclude2).filter(grains_cereals = 1)
 		else:
 			food_list = self.marked.filter(grains_cereals = 1)
+		food_list = food_list.filter(cuisine = "Generic")
 		self.cereals = self.select_best_minimum(food_list , calories , "cereals")
 		if "Parantha" in self.cereals.name or "Roti" in self.cereals.name:
 			steps = round((calories - self.cereals.calarie) * self.cereals.quantity/(self.cereals.calarie))
@@ -378,7 +379,7 @@ class M3(Base):
 			percent = 0.18
 		if not calories:
 			calories = percent * self.calories_goal
-		food_list = self.marked.filter(pulses = 1).filter(grains_cereals = 0)
+		food_list = self.marked.filter(pulses = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
 		try:
 			self.pulses = self.select_best_minimum(food_list , calories , "pulses")
 		except Exception as e:
@@ -566,7 +567,7 @@ class M5(Base):
 	def select_vegetables(self , percent = 0.22):
 		calories = percent*self.calories_goal
 		self.vegetable_calories = calories
-		food_list = self.marked.filter(vegetables = 1).filter(grains_cereals = 0)
+		food_list = self.marked.filter(vegetables = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
 		if self.disease and hasattr(self.disease , "m5_vegetable_filter"):
 			food_list = food_list.filter(self.disease.m5_vegetable_filter)
 		self.vegetables = self.select_best_minimum(food_list , calories , "vegetables")
@@ -575,16 +576,16 @@ class M5(Base):
 	def select_cereals(self):
 		calories = 0.39*self.calories_goal
 		if self.exclude2:
-			food_list = self.getQuerysetFromGoal().exclude(name__in = self.exclude2).filter(grains_cereals = 1)
+			food_list = self.getQuerysetFromGoal().exclude(name__in = self.exclude2).filter(grains_cereals = 1).filter(cuisine = "Generic")
 		else:
-			food_list = self.marked.filter(grains_cereals = 1)
+			food_list = self.marked.filter(grains_cereals = 1).filter(cuisine = "Generic")
 		if food_list.count() < 3:
-			food_list = self.getQuerysetFromGoal().filter(self.exclusion_conditions).filter(grains_cereals = 1)
+			food_list = self.getQuerysetFromGoal().filter(self.exclusion_conditions).filter(grains_cereals = 1).filter(cuisine = "Generic")
 		self.cereals = self.select_best_minimum(food_list , calories , "cereals")
 
 	def select_pulses(self , percent = 0.39):
 		calories = percent * self.calories_goal
-		food_list = self.marked.filter(pulse = 1).filter(grains_cereals = 0)
+		food_list = self.marked.filter(pulse = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
 		self.pulses = self.select_best_minimum(food_list , calories , "pulses")
 
 	def makeGeneric(self):
