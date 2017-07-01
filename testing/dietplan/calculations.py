@@ -13,14 +13,13 @@ import itertools , threading , lego
 
 class Calculations:
 	@lego.assemble
-	def __init__(self , weight , height , activity , goal , gender,  exclude , disease = None , exclusion_conditions = None , exclude2 = None):
+	def __init__(self , weight , height , activity , goal , gender,  exclude , disease = None , exclusion_conditions = None , exclude2 = None , comboDays = None , dessertDays = None):
 		#calculations
 		self.bmi = BMI(weight , height)
 		self.ibw = IBW(self.height, self.gender)
 		self.calorieNumber = CalorieNumber(self.bmi , self.activity)
 		self.countCalories()
 		# self.exclude += [e.name for e in Food.objects.filter(self.exclusion_conditions)]
-
 
 	def countCalories(self):
 		# import ipdb
@@ -34,7 +33,8 @@ class Calculations:
 			 exclude = self.exclude ,
 			 disease = self.disease ,
 			 exclusion_conditions = self.exclusion_conditions,
-			 exclude2 = self.exclude2
+			 exclude2 = self.exclude2,
+			 make_combination = self.comboDays.get('m5')
 		)
 		self.m5.build()
 		
@@ -45,7 +45,8 @@ class Calculations:
 			extra = self.m5.calories_remaining , 
 			disease = self.disease , 
 			exclusion_conditions = self.exclusion_conditions,
-			make_combination = hasattr(self.m5, "combination"),
+			make_combination = self.comboDays.get('m3'),
+			make_dessert = self.dessertDays,
 			exclude2 = self.exclude2
 		)
 		self.m3.build()

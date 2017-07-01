@@ -19,6 +19,12 @@ class Base:
 		goal = self.goal
 		return item.goal_nutrition(goal)
 
+	def get_steps(self , item):
+		difference = self.calories_goal - self.calories
+		unit = item.calarie/(5*item.weight)
+		steps = round(difference/unit)
+		return steps
+	
 	@property
 	def calories(self):
 		return sum([i.calorie for i in self.selected])
@@ -298,7 +304,7 @@ class M2(Base):
 class M3(Base):
 	percent = 0.25
 
-	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None , exclusion_conditions = None , make_combination = True , exclude2 = None):
+	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None , exclusion_conditions = None , make_combination = False , make_dessert = False ,  exclude2 = None):
 		self.calories_goal = calories*self.percent + extra
 		self.extra = extra
 		self.goal = goal
@@ -313,6 +319,7 @@ class M3(Base):
 		self.marked = self.queryset
 		self.selected = []
 		self.make_combination = make_combination
+		self.make_dessert = make_dessert
 
 
 	def getQuerysetFromGoal(self):
@@ -400,37 +407,36 @@ class M3(Base):
 		food_list = self.marked.filter(cuisine = "Combination")
 		self.combination = self.select_best_minimum(food_list , calories , name = "combination")
 		steps = round( (calories-self.combination.calarie) * self.combination.weight/(self.combination.calarie*10))
-		new_weight = min(250,self.combination.weight + steps * 10)
+		new_weight = min(350,self.combination.weight + steps * 10)
 		self.combination.update_weight(new_weight/self.combination.weight)
 
-	def get_combination_generic_probability(self):
-		if self.make_combination:
-			return [
-				2/7,
-				5/7
-			]
-		return [
-			1/6 ,
-			5/6
-		]
+	def rethink(self):
+		if self.calories < self.calories_goal:
+			if hasattr(self,"combination"):
+				selected = self.combination
+			elif hasattr(self , "pulses" ):
+				selected = self.pulses
+			elif hasattr(self , "vegetables"):
+				selected = self.vegetables
+			try:
+				new_weight = min(200,selected.weight +  self.get_steps(selected)*5) 
+			except Exception as e:
+				# ipdb.set_trace()
+				pass
+			selected.update_weight(new_weight/selected.weight)
 
 	def build(self):
-		prob_yogurt_dessert = [5/7 , 2/7]
-		func1 = choice([
-				self.select_yogurt, self.select_dessert
-			],
-			1 ,  prob_yogurt_dessert)[0]
-		func1()
-		if not self.disease:
-			prob_generic_combination = self.get_combination_generic_probability()
-			func2 = choice([
-				self.makeCombinations, self.makeGeneric
-			],
-			1 , prob_generic_combination)[0]
-			func2()
+		
+		if self.make_dessert:
+			self.select_dessert()
+		else:
+			self.select_yogurt()
+
+		if self.make_combination:
+			self.makeCombinations()
 		else:
 			self.makeGeneric()
-		self.rethink()
+		
 		return self
 
 	@property
@@ -491,7 +497,7 @@ class M4(Base):
 	def select_snacks(self):
 		self.option = "snacks"
 		calories = self.calories_goal
-		snack_items = self.marked.filter(snaks = 1)
+		snack_items = self.marked.filter(snaks = 1).filter(dessert = 1)
 		self.snacks = self.select_best_minimum(snack_items , calories , "snacks")
 
 	def rethink(self):
@@ -528,7 +534,7 @@ class M4(Base):
 class M5(Base):
 	percent = 0.20
 
-	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None , exclusion_conditions = None , exclude2 = None):
+	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None , exclusion_conditions = None , exclude2 = None , make_combination = False):
 		self.exclusion_conditions = exclusion_conditions
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
@@ -536,6 +542,7 @@ class M5(Base):
 		self.exclude = exclude
 		self.exclude2 = exclude2
 		self.queryset = self.getQuerysetFromGoal()
+		self.make_combination = make_combination
 
 		self.queryset = self.queryset.exclude(name__in = exclude).filter(calarie__gt = 0)
 		if self.disease:
@@ -601,12 +608,6 @@ class M5(Base):
 		new_weight = min(250 , self.combination.weight + steps*10)
 		self.combination.update_weight(new_weight/self.combination.weight)
 
-	def get_steps(self , item):
-		difference = self.calories_goal - self.calories
-		unit = item.calarie/(5*item.weight)
-		steps = round(difference/unit)
-		return steps
-
 	def rethink(self):
 		if not hasattr(self , "combination"):
 			if self.calories < self.calories_goal:
@@ -614,11 +615,8 @@ class M5(Base):
 				self.pulses.update_weight(new_weight/self.pulses.weight)
 
 	def build(self):
-		probabilities = [ 1/7 , 6/7]
-		func = choice([
-			self.makeCombination , self.makeGeneric
-		],
-		size = 1 , 
-		p = probabilities )[0]
-		func()
+		if self.make_combination:
+			self.makeCombination()
+		else:
+			self.makeGeneric()
 		return self

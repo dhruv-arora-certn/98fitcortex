@@ -14,11 +14,12 @@ from epilogue.utils import get_day , get_week
 import itertools , threading , lego , numpy as np , click
 from datetime import datetime
 from django.db.models import Q
+from numpy.random import choice
 
 
 class Day:
 	@lego.assemble
-	def __init__(self , calculations , day = None , persist = False , dietplan = None):
+	def __init__(self , calculations , day = None , persist = False , dietplan = None , comboDays = None):
 		pass
 
 	def makeMeals(self):
@@ -61,6 +62,50 @@ class Pipeline:
 		if self.persist and self.user and not self.dietplan:
 			self.dietplan = GeneratedDietPlan.objects.create(customer = user , week_id = week , user_week_id = user_week)
 
+		self.comboDays = self.daysForCombinations()
+		self.dessertDays = self.getDessertDays()
+
+	def daysForCombinations(self):
+		l = [e for e in range(1,8)]
+		m3 = choice(
+			l,
+			size = 2,
+			replace = True,
+			p = [1/7 for _ in range(7)]
+		)
+		#Remove elements from list
+		try: 
+			[l.remove(e) for e in m3]
+		except Exception as e:
+			# import ipdb
+			# ipdb.set_trace()
+			pass
+		m5 = choice(
+			l,
+			size = 1,
+			replace = True,
+			p = [1/5 for _ in range(5)]
+		)
+		return {
+			'3' : m3,
+			'5' : m5
+		}
+
+	def getDessertDays(self):
+
+		if self.user.goal == Goals.WeightLoss:
+			size = 1
+		else:
+			size = 2
+
+		l = [e for e in range(1,8)]
+		dessert = choice(
+			l , 
+			size = size,
+			p = [1/7 for _ in range(7)]
+		)
+		return dessert
+
 	def get_initial_exclude(self , days = 4):
 		'''
 		Initialize the list of excluded items from the past 3 days and user's food preferences
@@ -75,56 +120,174 @@ class Pipeline:
 	def Day1(self):
 		print("Day 1 Exclude ," , self.exclude)
 		self.day1 = Day(
-			Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease , exclusion_conditions = self.exclusion_conditions , exclude2 = self.excluded2 ), 
-			persist = self.persist, dietplan = self.dietplan , day = "1")
+			Calculations(self.weight ,
+			 self.height ,
+			 self.activity ,
+			 self.goal ,
+			 self.gender,
+			 self.exclude ,
+			 disease = self.disease ,
+			 exclusion_conditions = self.exclusion_conditions ,
+			 exclude2 = self.excluded2,
+			 comboDays = {
+			 	'm3' : 1 in self.comboDays.get('3'),
+			 	'm5' : 1 in self.comboDays.get('5')
+			 },
+			 dessertDays = 1 in self.dessertDays
+			), 
+			persist = self.persist, 
+			dietplan = self.dietplan,
+			day = "1")
 		self.day1.makeMeals()
 		self.push_to_exclude(self.day1)
 
 	def Day2(self):
 		print("Day 2 Exclude ," , self.exclude)
 		self.day2 = Day(
-			Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease , exclusion_conditions = self.exclusion_conditions , exclude2 = self.excluded2 ), 
-			persist = self.persist, dietplan = self.dietplan , day = "2")
+			Calculations(self.weight ,
+			 	self.height ,
+			 	self.activity ,
+			 	self.goal ,
+			 	self.gender,
+			 	self.exclude ,
+			 	disease = self.disease ,
+			 	exclusion_conditions = self.exclusion_conditions ,
+			 	exclude2 = self.excluded2 ,
+				comboDays = {
+			 	'm3' : 2 in self.comboDays.get('3'),
+			 	'm5' : 2 in self.comboDays.get('5')
+			 }, 
+			 dessertDays = 2 in self.dessertDays
+			), 
+			persist = self.persist, 
+			dietplan = self.dietplan,
+			day = "2"
+		)
 		self.day2.makeMeals()
 		self.push_to_exclude(self.day2)
 	
 	def Day3(self):
 		print("Day 3 Exclude ," , self.exclude)
 		self.day3 = Day(
-			Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease , exclusion_conditions = self.exclusion_conditions , exclude2 = self.excluded2 ), 
-			persist = self.persist, dietplan = self.dietplan , day = "3")
+			Calculations(self.weight ,
+			 self.height ,
+			 self.activity ,
+			 self.goal ,
+			 self.gender,
+			 self.exclude ,
+			 disease = self.disease ,
+			 exclusion_conditions = self.exclusion_conditions , 
+			 exclude2 = self.excluded2 ,
+			comboDays = {
+			 	'm3' : 3 in self.comboDays.get('3'),
+			 	'm5' : 3 in self.comboDays.get('5')
+			 },
+			 dessertDays = 3 in self.dessertDays
+			), 
+			persist = self.persist, 
+			dietplan = self.dietplan,
+			day = "3"
+		)
 		self.day3.makeMeals()
 		self.push_to_exclude(self.day3)
 	
 	def Day4(self):
 		print("Day 4 Exclude ," , self.exclude)
 		self.day4 = Day(
-			Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease , exclusion_conditions = self.exclusion_conditions , exclude2 = self.excluded2 ), 
-			persist = self.persist, dietplan = self.dietplan , day = "4")
+			Calculations(self.weight ,
+			 self.height ,
+			 self.activity ,
+			 self.goal ,
+			 self.gender,
+			 self.exclude ,
+			 disease = self.disease ,
+			 exclusion_conditions = self.exclusion_conditions ,
+			 exclude2 = self.excluded2 ,
+			 comboDays = {
+			 	'm3' : 4 in self.comboDays.get('3'),
+			 	'm5' : 4 in self.comboDays.get('5')
+			 },
+			 dessertDays = 4 in self.dessertDays
+			), 
+			persist = self.persist, 
+			dietplan = self.dietplan,
+			day = "4"
+		)
 		self.day4.makeMeals()
 		self.push_to_exclude(self.day4)
 	
 	def Day5(self):
 		print("Day 5 Exclude ," , self.exclude)
 		self.day5 = Day(
-			Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease , exclusion_conditions = self.exclusion_conditions , exclude2 = self.excluded2 ), 
-			persist = self.persist, dietplan = self.dietplan , day = "5")
+			Calculations(self.weight ,
+			 self.height ,
+			 self.activity ,
+			 self.goal ,
+			 self.gender,
+			 self.exclude ,
+			 disease = self.disease ,
+			 exclusion_conditions = self.exclusion_conditions ,
+			 exclude2 = self.excluded2 ,
+			 comboDays = {
+			 	'm3' : 5 in self.comboDays.get('3'),
+			 	'm5' : 5 in self.comboDays.get('5')
+			 },
+			 dessertDays = 5 in self.dessertDays
+			 ), 
+			persist = self.persist,
+			dietplan = self.dietplan,
+			day = "5"
+		)
 		self.day5.makeMeals()
 		self.push_to_exclude(self.day5)
 	
 	def Day6(self):
 		print("Day 6 Exclude ," , self.exclude)
 		self.day6 = Day(
-			Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease , exclusion_conditions = self.exclusion_conditions , exclude2 = self.excluded2 ), 
-			persist = self.persist, dietplan = self.dietplan , day = "6")
+			Calculations(self.weight ,
+				self.height ,
+				self.activity ,
+				self.goal ,
+				self.gender,
+				self.exclude ,
+				disease = self.disease ,
+				exclusion_conditions = self.exclusion_conditions ,
+				exclude2 = self.excluded2 ,
+				comboDays = {
+			 	'm3' : 6 in self.comboDays.get('3'),
+			 	'm5' : 6 in self.comboDays.get('5')
+			 },
+			 dessertDays = 6 in self.dessertDays
+			), 
+			persist = self.persist, 
+			dietplan = self.dietplan,
+			day = "6"
+		)
 		self.day6.makeMeals()
 		self.push_to_exclude(self.day6)
 	
 	def Day7(self):
 		print("Day 7 Exclude ," , self.exclude)
 		self.day7 = Day(
-			Calculations(self.weight , self.height , self.activity , self.goal , self.gender, self.exclude , disease = self.disease , exclusion_conditions = self.exclusion_conditions , exclude2 = self.excluded2 ), 
-			persist = self.persist, dietplan = self.dietplan , day = "7")
+			Calculations(self.weight ,
+			 self.height ,
+			 self.activity ,
+			 self.goal ,
+			 self.gender,
+			 self.exclude ,
+			 disease = self.disease ,
+			 exclusion_conditions = self.exclusion_conditions ,
+			 exclude2 = self.excluded2 ,
+			 comboDays = {
+			 	'm3' : 7 in self.comboDays.get('3'),
+			 	'm5' : 7 in self.comboDays.get('5')
+			 } ,
+			 dessertDays = 7 in self.dessertDays
+			), 
+			persist = self.persist, 
+			dietplan = self.dietplan,
+			day = "7"
+		)
 		self.day7.makeMeals()
 		self.push_to_exclude(self.day7)
 
