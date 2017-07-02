@@ -342,7 +342,7 @@ class GeneratedDietPlan(models.Model):
 		db_table = "erp_diet_plan"
 		managed = False
 
-	customer = models.ForeignKey(Customer , db_column = "erp_customer_id")
+	customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "dietplans")
 	created_on = models.DateTimeField(auto_now_add = True)
 	user_week_id = models.IntegerField(default = 1)
 	week_id = models.IntegerField(default = 1)
@@ -392,6 +392,17 @@ class GeneratedDietPlan(models.Model):
 		)
 		self.pipeline.regenerate()
 
+	def markForRegeneration(self):
+		if not hasattr(self , "regeneration"):
+			DietPlanRegenerationMarker.objects.create( dietplan = self , value = 0)
+		else :
+			self.regeneration.value = True
+			self.regeneration.save()
+	
+	def unmarkForRegeneration(self):
+		self.regeneration.value = False
+		self.regeneration.save()
+
 	@property
 	def items(self):
 		return list(self.generateddietplanfooddetails_set.values_list("food_name" , flat = True))
@@ -404,7 +415,7 @@ class GeneratedDietPlanFoodDetails(models.Model):
 		managed = False
 		db_table = "erp_diet_plan_food_details"
 
-	dietplan = models.ForeignKey(GeneratedDietPlan , db_column = "erp_diet_plan_id" ) 
+	dietplan = models.ForeignKey(GeneratedDietPlan , db_column = "erp_diet_plan_id"  , related_name = "meals") 
 	food_item = models.ForeignKey(Food , db_column = "business_diet_list_id")
 	food_name = models.CharField(max_length = 255)
 	meal_type = models.CharField(max_length = 20)
@@ -620,6 +631,10 @@ class CustomerWeightRecord(models.Model):
 		if customer :
 			return self.objects.filter(customer = customer).last()
 
+class DietPlanRegenerationMarker(models.Model):
+	dietplan = models.OneToOneField(GeneratedDietPlan , related_name = "regeneration")
+	value = models.BooleanField()
+	created = models.DateTimeField(auto_now = True)
 
 from django.conf import settings
 from django.db.models.signals import post_save
