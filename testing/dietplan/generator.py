@@ -15,13 +15,13 @@ import itertools , threading , lego , numpy as np , click
 from datetime import datetime
 from django.db.models import Q
 from numpy.random import choice
-
+import ipdb
 
 class Day:
 	@lego.assemble
 	def __init__(self , calculations , day = None , persist = False , dietplan = None , comboDays = None):
 		pass
-
+	
 	def makeMeals(self):
 		self.calculations.makeMeals()
 		self.persist_db()
@@ -34,10 +34,20 @@ class Day:
 		print("&&&&&& "  ,self.persist , self.day , self.dietplan)
 		if self.persist and self.day and self.dietplan:
 			self.generated = []
-			for m in self.calculations.meals:	
-				for e in m.selected:
+			for m,v in self.calculations._selected.items():	
+				for t,e in v.items(): 
 					print("Pushing Day to DB")
-					obj = GeneratedDietPlanFoodDetails.objects.create(dietplan = self.dietplan , food_item = e , food_name = e.name , day = self.day , meal_type = m.__class__.__name__.lower() , calorie = str(e.calarie)  , weight = e.weight , quantity = e.quantity , size = e.size)
+					obj = GeneratedDietPlanFoodDetails.objects.create(
+						dietplan = self.dietplan ,
+						food_item = e ,
+						food_name = e.name ,
+						food_type = t,
+						day = self.day ,
+						meal_type = m ,
+						calorie = str(e.calarie)  ,
+						weight = e.weight ,
+						quantity = e.quantity ,
+						size = e.size)
 					self.generated.append(obj)
 
 class Pipeline:
@@ -47,7 +57,7 @@ class Pipeline:
 		if self.week is None:
 			week = get_week(datetime.today())
 		user_week = 1
-		
+		self.excluded2 = None	
 		self.exclusion_conditions = Q()	
 		if self.user:
 			user_week = week - get_week(user.create_on) + 1
@@ -80,12 +90,15 @@ class Pipeline:
 			# import ipdb
 			# ipdb.set_trace()
 			pass
-		m5 = choice(
-			l,
-			size = 1,
-			replace = True,
-			p = [1/5 for _ in range(5)]
+		try:
+			m5 = choice(
+				l,
+				size = 1,
+				replace = True,
+				p = [1/5 for _ in range(5)]
 		)
+		except Exception as e:
+			ipdb.set_trace()
 		return {
 			'3' : m3,
 			'5' : m5
@@ -93,7 +106,7 @@ class Pipeline:
 
 	def getDessertDays(self):
 
-		if self.user.goal == Goals.WeightLoss:
+		if self.goal == Goals.WeightLoss:
 			size = 1
 		else:
 			size = 2
@@ -134,7 +147,7 @@ class Pipeline:
 			 	'm5' : 1 in self.comboDays.get('5')
 			 },
 			 dessertDays = 1 in self.dessertDays
-			), 
+			 ), 
 			persist = self.persist, 
 			dietplan = self.dietplan,
 			day = "1")
@@ -156,7 +169,7 @@ class Pipeline:
 				comboDays = {
 			 	'm3' : 2 in self.comboDays.get('3'),
 			 	'm5' : 2 in self.comboDays.get('5')
-			 }, 
+			 },
 			 dessertDays = 2 in self.dessertDays
 			), 
 			persist = self.persist, 
