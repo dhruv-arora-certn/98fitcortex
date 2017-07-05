@@ -107,6 +107,7 @@ class Food(models.Model):
 		self.carbohydrates *= factor
 		self.calarie *= factor
 		self.calcium *= factor
+		return self
 		
 	def update_weight(self, factor):
 		new_weight = self.weight * factor
@@ -423,6 +424,7 @@ class GeneratedDietPlanFoodDetails(models.Model):
 	calorie = models.CharField(max_length = 50)
 	weight = models.FloatField(default = 0)
 	quantity = models.FloatField(default = 0)
+	food_type = models.CharField(max_length = 50)
 	size = models.CharField(max_length = 50)
 	day1 = Day1()
 	day2 = Day2()
@@ -490,7 +492,7 @@ class GeneratedDietPlanFoodDetails(models.Model):
 
 	@property
 	def old_suggestions(self):
-		return list(self.dishreplacementsuggestions_set.values_list('food__name' , flat = True))
+		return list(self.suggestions.values_list('food__name' , flat = True))
 
 	def update_attrs(self , item):
 		self.calorie = str(item.calarie)
@@ -570,7 +572,7 @@ class LoginCustomer(models.Model):
 	customer = models.OneToOneField(Customer , db_column = "erp_customer_id")
 
 class DishReplacementSuggestions(models.Model):
-	dietplan_food_details = models.ForeignKey(GeneratedDietPlanFoodDetails)
+	dietplan_food_details = models.ForeignKey(GeneratedDietPlanFoodDetails , related_name = "suggestions")
 	food = models.ForeignKey(Food)
 #	created_on = models.DateTimeField(auto_now = True)
 

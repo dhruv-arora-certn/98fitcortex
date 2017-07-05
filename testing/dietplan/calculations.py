@@ -19,6 +19,13 @@ class Calculations:
 		self.ibw = IBW(self.height, self.gender)
 		self.calorieNumber = CalorieNumber(self.bmi , self.activity)
 		self.countCalories()
+		self._selected = {
+			'm1' : dict(),
+			'm2' : dict(),
+			'm3' : dict(),
+			'm4' : dict(),
+			'm5' : dict()
+		} 
 		# self.exclude += [e.name for e in Food.objects.filter(self.exclusion_conditions)]
 
 	def countCalories(self):
@@ -34,46 +41,53 @@ class Calculations:
 			 disease = self.disease ,
 			 exclusion_conditions = self.exclusion_conditions,
 			 exclude2 = self.exclude2,
-			 make_combination = self.comboDays.get('m5')
+			 make_combination = self.comboDays.get('m5'),
+			 selected = self._selected.get('m5')
 		)
 		self.m5.build()
 		
 		self.m3 = meals.M3(
 			self.calories , 
 			self.goal , 
-			exclude = self.exclude + [e.name for e in self.m5.selected] , 
+			exclude = self.exclude + [e.name for e in self.m5.selected.values()] , 
 			extra = self.m5.calories_remaining , 
 			disease = self.disease , 
 			exclusion_conditions = self.exclusion_conditions,
 			make_combination = self.comboDays.get('m3'),
 			make_dessert = self.dessertDays,
-			exclude2 = self.exclude2
+			exclude2 = self.exclude2,
+			selected = self._selected.get('m3')
 		)
 		self.m3.build()
 		
 		self.m1 = meals.M1(
 			self.calories , 
 			self.goal , 
-			exclude = self.exclude + [e.name for e in self.m3.selected+self.m5.selected], 
+			exclude = self.exclude + [e.name for e in itertools.chain(self.m3.selected.values() ,  self.m5.selected.values())], 
 			extra = self.m3.calories_remaining, 
 			disease = self.disease, 
-			exclusion_conditions = self.exclusion_conditions
+			exclusion_conditions = self.exclusion_conditions,
+			selected = self._selected.get('m1')
 		)
 		self.m1.build()
 		self.m4 = meals.M4(
 			self.calories ,
 			self.goal ,
-			exclude = self.exclude + [e.name for e in self.m3.selected+self.m5.selected+self.m1.selected],
+			exclude = self.exclude + [e.name for e in itertools.chain(self.m3.selected.values() , self.m5.selected.values(),self.m1.selected.values())],
 			extra = self.m1.calories_remaining ,
 			disease = self.disease ,
-			exclusion_conditions = self.exclusion_conditions)
+			exclusion_conditions = self.exclusion_conditions,
+			selected = self._selected.get('m4')
+		)
 		self.m4.build()
 		self.m2 = meals.M2(self.calories ,
 			self.goal ,
-			exclude = self.exclude + [e.name for e in self.m3.selected+self.m5.selected+self.m1.selected+self.m4.selected],
+			exclude = self.exclude + [e.name for e in itertools.chain(self.m3.selected.values() , self.m5.selected.values(),self.m1.selected.values(),self.m4.selected.values())],
 			extra = self.m4.calories_remaining ,
 			disease = self.disease ,
-			exclusion_conditions = self.exclusion_conditions)
+			exclusion_conditions = self.exclusion_conditions,
+			selected = self._selected.get('m2')
+		)
 		self.m2.build()
 		
 		self.meals = [
@@ -82,8 +96,7 @@ class Calculations:
 
 	@property
 	def selected(self):
-		return list(itertools.chain(*[self.m1.selected, self.m3.selected , self.m5.selected , self.m4.selected , self.m2.selected]))
-
+		return itertools.chain(*[e.values() for e in self._selected.values()])	
 	@property
 	def protein(self):
 		return self.sum_property("protein")

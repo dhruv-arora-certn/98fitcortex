@@ -27,7 +27,7 @@ class Base:
 	
 	@property
 	def calories(self):
-		return sum([i.calorie for i in self.selected])
+		return sum([i.calorie for i in self.selected.values()])
 
 	@property
 	def calories_remaining(self):
@@ -47,22 +47,22 @@ class Base:
 
 	@property
 	def protein(self):
-		return sum([i.protein for i in self.selected])
+		return sum([i.protein for i in self.selected.values()])
 
 	@property
 	def fat(self):
-		return sum([i.fat for i in self.selected])
+		return sum([i.fat for i in self.selected.values()])
 
 	@property
 	def carbs(self):
-		return sum([i.carbohydrates for i in self.selected])
+		return sum([i.carbohydrates for i in self.selected.values()])
 
 	@property
 	def calories_remaining(self):
 		return self.calories_goal - self.calories
 
 	def random(self):
-		return random.sample(self.for_random , min(2,len(self.selected)))
+		return random.sample(self.for_random , min(2,len(self.selected.values())))
 
 	@property
 	def for_random(self):
@@ -85,13 +85,15 @@ class Base:
 		else:
 			i = min(select_from , key = lambda x : abs(calories - x.calarie))
 		finally:
-			self.select_item(i)
+			self.select_item(i , name)
 			return i
 
-	def select_item(self , item , remove = True):
+	def select_item(self , item , key , remove = True):
 		if item is None:
 			return
-		self.selected.append(item)
+		self.selected.update({
+			key : item
+		})
 		if remove:
 			self.marked.exclude(id = item.id)
 		return item
@@ -107,7 +109,7 @@ class Base:
 		return self
 
 	def rethink(self):
-		for item in self.selected:
+		for item in self.selected.values():
 			if self.calories < self.calories_goal:
 				if "Parantha" in item.name or "Roti" in item.name or "Cheela" in item.name:
 					if item.quantity < 2:
@@ -124,7 +126,7 @@ class Base:
 class M1(Base):
 	percent = .25
 
-	def __init__(self , calories , goal , exclude=  "" , extra = 0 , disease = None , exclusion_conditions = Q()):
+	def __init__(self , calories , goal , exclude=  "" , extra = 0 , disease = None , exclusion_conditions = Q() , selected = None):
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.exclude = exclude
@@ -140,15 +142,15 @@ class M1(Base):
 			self.queryset = self.queryset.filter(self.disease.queryset_filter)		
 		
 		self.marked = self.queryset
-		self.selected = []
+		self.selected = selected
 		
 	def allocate_restrictions(self):
-		self.select_item(self.drink)
+		self.select_item(self.drink , "drink")
 		self.remove_drinks()
 
 		if  ('egg' , 0) not in self.exclusion_conditions.children and not hasattr(self,"egg"):
 			self.egg = Food.m1_objects.filter(name = "Boiled Egg White").first()
-			self.select_item(self.egg , remove = False)
+			self.select_item(self.egg , "egg" ,remove = False)
 
 	def pop_snack(self):
 		# self.snack_list = list(filter(lambda x : x.snaks , self.marked ))
@@ -172,7 +174,7 @@ class M1(Base):
 
 	def rethink(self):
 		print("Running M1 rethink")
-		selected = self.snacks
+		selected = self.snack
 		if self.calories_remaining > 0:	
 			if "Parantha" in selected.name or "Roti" in selected.name or "Dosa" in selected.name or "Cheela" in selected.name or "Bun" in selected.name:
 				steps = math.floor(self.calories_remaining * selected.quantity/(selected.calarie))
@@ -200,7 +202,7 @@ class M1(Base):
 class M2(Base):
 	percent = 0.15
 
-	def __init__(self , calories , goal , exclude , extra = 0 , disease = None , exclusion_conditions = None):
+	def __init__(self , calories , goal , exclude , extra = 0 , disease = None , exclusion_conditions = None , selected = None):
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.exclude = exclude
@@ -210,7 +212,7 @@ class M2(Base):
 			self.queryset = self.queryset.filter(for_loss = 1)
 
 		self.marked = self.queryset
-		self.selected = []
+		self.selected = selected
 		self.exclusion_conditions = exclusion_conditions
 
 		if self.exclusion_conditions : 
@@ -228,7 +230,7 @@ class M2(Base):
 		except Exception as e:
 			print("From M2 Fruit " , e)
 			self.fruits = random.choice(fruit_items)
-			self.select_item(self.fruits)
+			self.select_item(self.fruits , "fruits")
 
 	def select_salad(self):
 		self.option = "salad"
@@ -238,7 +240,7 @@ class M2(Base):
 			self.salad = self.select_best_minimum(salad_items , calories , name = "salad")
 		except Exception as e:
 			self.salad = random.choice(salad_items)
-			self.select_item(self.salad)
+			self.select_item(self.salad , "salad")
 
 	def select_nut(self):
 		self.option = "nut"
@@ -251,7 +253,7 @@ class M2(Base):
 		except Exception as e:
 			# ipdb.set_trace()
 			self.nuts = random.choice(nuts_items)
-			self.select_item(self.nuts)
+			self.select_item(self.nuts , "nuts")
 
 	def select_snacks(self):
 		self.option = "snack"
@@ -261,7 +263,7 @@ class M2(Base):
 			self.snack = self.select_best_minimum(snack_items , calories , name = "snack")
 		except Exception as e:
 			self.snack = random.choice(snack_items)
-			self.select_item(self.snack)
+			self.select_item(self.snack , "snack")
 
 	def check(self):
 		choices = ["snack" , "nut" , "salad" , "fruit"]
@@ -283,9 +285,10 @@ class M2(Base):
 			self.select_item(val , remove = False)
 
 	def rethink(self):
-		steps = round(self.calories_remaining * self.selected[0].weight/(self.selected[0].calarie*10))
-		new_weight = self.selected[0].weight + steps * 10
-		self.selected[0].update_weight(new_weight/self.selected[0].weight)
+		for e in self.selected.values():
+			steps = round(self.calories_remaining * e.weight/(e.calarie*10))
+			new_weight = e.weight + steps * 10
+			e.update_weight(new_weight/e.weight)
 
 	def get_probability(self):
 		print("Calling get Probability")
@@ -310,12 +313,13 @@ class M2(Base):
 class M3(Base):
 	percent = 0.25
 
-	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None , exclusion_conditions = None , make_combination = False , make_dessert = False ,  exclude2 = None):
+	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None , exclusion_conditions = None , make_combination = False , make_dessert = False ,  exclude2 = None , selected = None):
 		self.calories_goal = calories*self.percent + extra
 		self.extra = extra
 		self.goal = goal
 		self.disease = disease
 		self.exclude2 = exclude2
+		self.selected = selected
 		self.queryset = self.getQuerysetFromGoal().exclude(name__in = exclude)
 
 		if self.goal == Goals.WeightLoss:
@@ -327,7 +331,6 @@ class M3(Base):
 		self.exclusion_conditions = exclusion_conditions
 		self.queryset = self.queryset.filter(exclusion_conditions)
 		self.marked = self.queryset
-		self.selected = []
 		self.make_combination = make_combination
 		self.make_dessert = make_dessert
 		self.isYogurt = False
@@ -347,6 +350,7 @@ class M3(Base):
 		self.yogurts.update_weight(new_weight/self.yogurts.weight)
 
 
+
 	def select_dessert(self):
 		self.isYogurt = False
 		calories = 0.12*self.calories_goal
@@ -364,10 +368,10 @@ class M3(Base):
 		food_list = self.marked.filter(vegetable = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
 		if self.disease and hasattr(self.disease , "vegetable_filter"):
 			food_list = food_list.filter(self.disease.vegetable_filter)
-		self.vegetables = self.select_best_minimum(food_list , calories , "vegetables")
-		steps = round((calories - self.vegetables.calarie ) * self.vegetables.weight/(self.vegetables.calarie*10))
-		new_weight = min(250,self.vegetables.weight + steps * 10)
-		self.vegetables.update_weight(new_weight/self.vegetables.weight)
+		self.vegetable = self.select_best_minimum(food_list , calories , "vegetable")
+		steps = round((calories - self.vegetable.calarie ) * self.vegetable.weight/(self.vegetable.calarie*10))
+		new_weight = min(250,self.vegetable.weight + steps * 10)
+		self.vegetable.update_weight(new_weight/self.vegetable.weight)
 
 
 	def select_cereals(self , percent = 0.37):		
@@ -397,21 +401,21 @@ class M3(Base):
 			calories = percent * self.calories_goal
 		food_list = self.marked.filter(pulses = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
 		try:
-			self.pulses = self.select_best_minimum(food_list , calories , "pulses")
+			self.pulses = self.select_best_minimum(food_list , calories , "pulse")
 		except Exception as e:
 			self.pulses = min(food_list , key = lambda x : abs(calories - x.calarie))
-			self.select_item(self.pulses)
+			self.select_item(self.pulses , "pulse")
 
 	def makeGeneric(self):
 		self.select_cereals()
 		
-		if self.cereals.vegetables == 1 and self.cereals.pulse == 0:
+		if self.cereal.vegetables == 1 and self.cereal.pulse == 0:
 			self.select_pulses(calories = self.calories_remaining)
-		elif self.cereals.vegetables == 0 and self.cereals.pulse == 1:
+		elif self.cereal.vegetables == 0 and self.cereal.pulse == 1:
 			self.select_vegetables(calories = self.calories_remaining)
-		elif self.cereals.vegetables == 1 and self.cereals.pulse == 1:
+		elif self.cereal.vegetables == 1 and self.cereal.pulse == 1:
 			self.select_pulses(calories = self.calories_remaining)
-		if self.cereals.vegetables == 0 and self.cereals.pulse == 0:
+		if self.cereal.vegetables == 0 and self.cereal.pulse == 0:
 			self.select_pulses()
 			self.select_vegetables()	
 		return self
@@ -460,7 +464,8 @@ class M3(Base):
 class M4(Base):
 	percent = 0.15
 
-	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None , exclusion_conditions = None):
+
+	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None , exclusion_conditions = None , selected = None):
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
 		self.exclusion_conditions = exclusion_conditions 
@@ -477,7 +482,14 @@ class M4(Base):
 		self.marked = self.queryset
 		if disease :
 			self.marked = disease.get_queryset(self.queryset)
-		self.selected = []
+		self.selected = selected
+		self.builderMapper = {
+			'drink' : self.select_drink,
+			'fruit' : self.select_fruit,
+			'salad' : self.select_salad,
+			'nuts'  : self.select_nut,
+			'snack' : self.select_snacks
+		}
 
 	def select_drink(self):
 		calories = 0.15*self.calories_goal
@@ -488,7 +500,7 @@ class M4(Base):
 			self.drink = self.select_best_minimum(food_list , calories , "drink")
 		except Exception as e:
 			self.drink = random.choice(food_list)
-			self.select_item(self.drink)
+			self.select_item(self.drink , "drink")
 
 	def select_fruit(self):
 		self.option = "fruits"
@@ -551,7 +563,7 @@ class M4(Base):
 class M5(Base):
 	percent = 0.20
 
-	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None , exclusion_conditions = None , exclude2 = None , make_combination = False):
+	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None , exclusion_conditions = None , exclude2 = None , make_combination = False , selected = None):
 		self.exclusion_conditions = exclusion_conditions
 		self.calories_goal = calories*self.percent + extra
 		self.goal = goal
@@ -569,7 +581,14 @@ class M5(Base):
 			self.queryset = self.queryset.filter(exclusion_conditions)
 
 		self.marked = self.queryset
-		self.selected = []
+		self.selected = selected
+
+		self.builderMapper = {
+			'vegetable' : self.select_vegetables,
+			'cereal' : self.select_cereals,
+			'pulse' : self.select_pulses,
+			'combination' : self.makeCombination
+		}
 
 	def getQuerysetFromGoal(self):
 		if self.goal == Goals.WeightLoss : 
@@ -586,7 +605,7 @@ class M5(Base):
 		food_list = self.marked.filter(vegetables = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
 		if self.disease and hasattr(self.disease , "m5_vegetable_filter"):
 			food_list = food_list.filter(self.disease.m5_vegetable_filter)
-		self.vegetables = self.select_best_minimum(food_list , calories , "vegetables")
+		self.vegetables = self.select_best_minimum(food_list , calories , "vegetable")
 
 
 	def select_cereals(self):
@@ -605,7 +624,7 @@ class M5(Base):
 	def select_pulses(self , percent = 0.39):
 		calories = percent * self.calories_goal
 		food_list = self.marked.filter(pulse = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
-		self.pulses = self.select_best_minimum(food_list , calories , "pulses")
+		self.pulses = self.select_best_minimum(food_list , calories , "pulse")
 
 	def makeGeneric(self):
 		self.select_cereals()
