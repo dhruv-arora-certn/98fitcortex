@@ -75,7 +75,9 @@ class Pipeline:
 		)
 		#Remove elements from list
 		try: 
+			print("M3" , m3)
 			[l.remove(e) for e in m3]
+			print("L" , l)
 		except Exception as e:
 			# import ipdb
 			# ipdb.set_trace()
