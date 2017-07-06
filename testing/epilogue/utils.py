@@ -6,7 +6,9 @@ def get_week(date):
 
 def get_day(date):
 	return date.isocalendar()[2]
-
+	
+def get_year(date = datetime.now()):
+	return date.isocalendar()[0]
 
 class BulkDifferential:
 

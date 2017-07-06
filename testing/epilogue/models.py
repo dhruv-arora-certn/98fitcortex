@@ -349,7 +349,7 @@ class GeneratedDietPlan(models.Model):
 	company_id = models.IntegerField(default = 0)
 	plan_type = models.CharField(max_length = 50 , default = "system generated plan")
 	medi_applicable = models.CharField(max_length = 20 , default = "")
-
+	year = models.IntegerField()
 	@property
 	def dayWisePlan(self):
 		return {

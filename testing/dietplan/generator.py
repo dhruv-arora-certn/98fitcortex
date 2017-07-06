@@ -10,7 +10,7 @@ from .ibw import IBW
 from .calculations import Calculations
 from knapsack.knapsack_dp import knapsack
 from epilogue.models import Food , GeneratedDietPlan , GeneratedDietPlanFoodDetails
-from epilogue.utils import get_day , get_week
+from epilogue.utils import get_day , get_week , get_year
 import itertools , threading , lego , numpy as np , click
 from datetime import datetime
 from django.db.models import Q
@@ -60,7 +60,7 @@ class Pipeline:
 		if self.dietplan:
 			self._is_dietplan_set = True
 		if self.persist and self.user and not self.dietplan:
-			self.dietplan = GeneratedDietPlan.objects.create(customer = user , week_id = week , user_week_id = user_week)
+			self.dietplan = GeneratedDietPlan.objects.create(customer = user , week_id = week , user_week_id = user_week , year = get_year())
 
 		self.comboDays = self.daysForCombinations()
 		self.dessertDays = self.getDessertDays()
