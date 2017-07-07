@@ -15,6 +15,7 @@ import itertools , threading , lego , numpy as np , click
 from datetime import datetime
 from django.db.models import Q
 from numpy.random import choice
+from random import sample
 
 
 class Day:
@@ -67,12 +68,7 @@ class Pipeline:
 
 	def daysForCombinations(self):
 		l = [e for e in range(1,8)]
-		m3 = choice(
-			l,
-			size = 2,
-			replace = True,
-			p = [1/7 for _ in range(7)]
-		)
+		m3 = sample( l , 2 )
 		#Remove elements from list
 		try: 
 			print("M3" , m3)
@@ -82,12 +78,7 @@ class Pipeline:
 			# import ipdb
 			# ipdb.set_trace()
 			pass
-		m5 = choice(
-			l,
-			size = 1,
-			replace = True,
-			p = [1/5 for _ in range(5)]
-		)
+		m5 = choice( l , 1)
 		return {
 			'3' : m3,
 			'5' : m5
@@ -101,10 +92,9 @@ class Pipeline:
 			size = 2
 
 		l = [e for e in range(1,8)]
-		dessert = choice(
+		dessert = sample(
 			l , 
-			size = size,
-			p = [1/7 for _ in range(7)]
+			size
 		)
 		return dessert
 
