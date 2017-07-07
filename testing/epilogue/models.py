@@ -405,7 +405,7 @@ class GeneratedDietPlan(models.Model):
 
 	@property
 	def items(self):
-		return list(self.generateddietplanfooddetails_set.values_list("food_name" , flat = True))
+		return list(self.meals.values_list("food_name" , flat = True))
 
 class GeneratedDietPlanFoodDetails(models.Model):
 	'''
