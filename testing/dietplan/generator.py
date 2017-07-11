@@ -132,6 +132,7 @@ class Pipeline:
 			day = "1")
 		self.day1.makeMeals()
 		self.push_to_exclude(self.day1)
+		self.push_to_exclude2(self.day1)
 
 	def Day2(self):
 		print("Day 2 Exclude ," , self.exclude)
@@ -157,6 +158,7 @@ class Pipeline:
 		)
 		self.day2.makeMeals()
 		self.push_to_exclude(self.day2)
+		self.push_to_exclude2(self.day2)
 	
 	def Day3(self):
 		print("Day 3 Exclude ," , self.exclude)
@@ -182,6 +184,7 @@ class Pipeline:
 		)
 		self.day3.makeMeals()
 		self.push_to_exclude(self.day3)
+		self.push_to_exclude2(self.day3)
 	
 	def Day4(self):
 		print("Day 4 Exclude ," , self.exclude)
@@ -207,6 +210,7 @@ class Pipeline:
 		)
 		self.day4.makeMeals()
 		self.push_to_exclude(self.day4)
+		self.push_to_exclude2(self.day4)
 	
 	def Day5(self):
 		print("Day 5 Exclude ," , self.exclude)
@@ -232,6 +236,7 @@ class Pipeline:
 		)
 		self.day5.makeMeals()
 		self.push_to_exclude(self.day5)
+		self.push_to_exclude2(self.day5)
 	
 	def Day6(self):
 		print("Day 6 Exclude ," , self.exclude)
@@ -257,6 +262,7 @@ class Pipeline:
 		)
 		self.day6.makeMeals()
 		self.push_to_exclude(self.day6)
+		self.push_to_exclude2(self.day6)
 	
 	def Day7(self):
 		print("Day 7 Exclude ," , self.exclude)
@@ -282,12 +288,17 @@ class Pipeline:
 		)
 		self.day7.makeMeals()
 		self.push_to_exclude(self.day7)
+		self.push_to_exclude2(self.day7)
 
 	def push_to_exclude(self , day):
 		self.excluded.append([e.name for e in day.calculations.selected if e.nuts == 0])
 		self.excluded = self.excluded[-3:]
 		if len(self.excluded) > 3:
 			self.excluded += list(np.random.choice(self.excluded[4:] , 15  , replace = True))
+
+	def push_to_exclude2(self , day):
+		if hasattr("self" , "excluded2"):
+			self.excluded2.append([e.name for e in day.calculations.selected])
 
 	def generate(self , day = None):
 		#If it is the present week
