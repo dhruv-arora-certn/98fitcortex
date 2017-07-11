@@ -180,7 +180,7 @@ class M1(Base):
 				selected.update_quantity(new_quantity/selected.quantity)
 			else:
 				print("Updatin " , selected , selected.weight)
-				steps = math.floor(self.calories_remaining * selected.weight/(selected.calarie*10))
+				steps = max( 2 , math.floor(self.calories_remaining * selected.weight/(selected.calarie*10)))
 				new_weight = min(200 , selected.weight + steps * 10)
 				selected.update_weight(new_weight/selected.weight)
 				print("New weight" , selected.weight)
