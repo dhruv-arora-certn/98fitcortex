@@ -205,6 +205,10 @@ class M2(Base):
 		self.goal = goal
 		self.exclude = exclude
 		self.queryset = self.getDefaultQueryset().exclude(name__in = exclude)
+
+		if self.goal = Goals.WeightLoss:
+			self.queryset = self.queryset.filter(for_loss = 1)
+
 		self.marked = self.queryset
 		self.selected = []
 		self.exclusion_conditions = exclusion_conditions
@@ -313,6 +317,10 @@ class M3(Base):
 		self.disease = disease
 		self.exclude2 = exclude2
 		self.queryset = self.getQuerysetFromGoal().exclude(name__in = exclude)
+
+		if self.goal == Goals.WeightLoss:
+			self.queryset = self.queryset.filter(for_loss = 1)
+
 		if self.disease:
 			self.queryset = self.queryset.filter(self.disease.queryset_filter)
 
@@ -455,6 +463,9 @@ class M4(Base):
 		self.exclusion_conditions = exclusion_conditions 
 		self.queryset = Food.m4_objects.exclude(name__in = exclude)
 
+		if self.goal == Goals.WeightLoss:
+			self.queryset = self.queryset.filter(for_loss = 1)
+
 		if exclusion_conditions : 
 			self.queryset = self.queryset.filter(exclusion_conditions)
 		
@@ -547,6 +558,9 @@ class M5(Base):
 		self.queryset = self.getQuerysetFromGoal()
 		self.make_combination = make_combination
 
+		if self.goal == Goals.WeightLoss:
+			self.queryset = self.queryset.exclude(for_loss = 1)
+			
 		self.queryset = self.queryset.exclude(name__in = exclude).filter(calarie__gt = 0)
 		if self.disease:
 			self.queryset = self.queryset.filter(self.disease.queryset_filter)
