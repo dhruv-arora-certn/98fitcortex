@@ -181,7 +181,7 @@ class M1(Base):
 			elif not selected.weight < 100:
 				print("Updatin " , selected , selected.weight)
 				steps = max( 2 , math.floor(self.calories_remaining * selected.weight/(selected.calarie*10)))
-				new_weight = min(200 , selected.weight + steps * 10)
+				new_weight =  selected.weight + steps * 10
 				selected.update_weight(new_weight/selected.weight)
 				print("New weight" , selected.weight)
 	def build(self):
@@ -189,7 +189,7 @@ class M1(Base):
 		calories = self.calories_remaining
 		food_list = self.marked.filter(snaks = '1').filter(dairy = 0)
 		if hasattr(self , "egg"):
-			food_list = food_list.exclude(egg = 1)
+			food_list = food_list.exclude(egg = 1	)
 		self.snacks = self.select_best_minimum(food_list , calories , name = "snacks")
 		if self.protein_ideal - self.protein > 8 and hasattr(self , "egg"):
 			self.egg.update_quantity(1.5)
