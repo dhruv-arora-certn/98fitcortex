@@ -371,11 +371,16 @@ class M3(Base):
 
 	def select_cereals(self , percent = 0.37):		
 		calories = percent * self.calories_goal
+		
 		if self.exclude2:
 			food_list = self.getQuerysetFromGoal().exclude(name__in = self.exclude2).filter(grains_cereals = 1)
+			food_list = food_list.filter(self.exclusion_conditions)
 		else:
 			food_list = self.marked.filter(grains_cereals = 1)
+			food_list = food_list.filter(self.exclusion_conditions)
+		
 		food_list = food_list.filter(cuisine = "Generic")
+		# ipdb.set_trace()
 		self.cereals = self.select_best_minimum(food_list , calories , "cereals")
 		if "Parantha" in self.cereals.name or "Roti" in self.cereals.name:
 			steps = round((calories - self.cereals.calarie) * self.cereals.quantity/(self.cereals.calarie))
@@ -589,11 +594,14 @@ class M5(Base):
 	def select_cereals(self):
 		calories = 0.39*self.calories_goal
 		if self.exclude2:
-			food_list = self.getQuerysetFromGoal().exclude(name__in = self.exclude2).filter(grains_cereals = 1).filter(cuisine = "Generic")
+			food_list = self.getQuerysetFromGoal().exclude(name__in = self.exclude2).exclude(name__in = self.exclude).filter(grains_cereals = 1).filter(cuisine = "Generic")
+			food_list = food_list.filter(self.exclusion_conditions)
 		else:
 			food_list = self.marked.filter(grains_cereals = 1).filter(cuisine = "Generic")
-		if food_list.count() < 3:
-			food_list = self.getQuerysetFromGoal().filter(self.exclusion_conditions).filter(grains_cereals = 1).filter(cuisine = "Generic")
+		# ipdb.set_trace()
+		if food_list.count() < 1:
+			food_list = self.getQuerysetFromGoal().filter(grains_cereals = 1).filter(cuisine = "Generic")
+			food_list = food_list.filter(self.exclusion_conditions)
 		self.cereals = self.select_best_minimum(food_list , calories , "cereals")
 
 	def select_pulses(self , percent = 0.39):
