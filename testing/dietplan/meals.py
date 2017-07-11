@@ -339,7 +339,8 @@ class M3(Base):
 	def select_yogurt(self):
 		self.isYogurt = True
 		calories = 0.15*self.calories_goal
-		food_list = Food.m3_objects.filter(yogurt = 1).all()
+		food_list = Food.m3_objects.filter(yogurt = 1)
+		food_list = food_list.filter(self.exclusion_conditions)
 		self.yogurts = self.select_item(random.choice(food_list) , remove = False)
 		steps = round( (calories - self.yogurts.calarie) * self.yogurts.weight/(self.yogurts.calarie*10))
 		new_weight = min(250,self.yogurts.weight + steps * 10)
@@ -445,7 +446,7 @@ class M3(Base):
 		
 		if self.make_dessert:
 			self.select_dessert()
-		else:
+		elif ('dairy' , 0) not in self.exclusion_conditions.children:
 			self.select_yogurt()
 
 		if self.make_combination:
