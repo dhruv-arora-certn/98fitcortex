@@ -1,10 +1,10 @@
 from datetime import datetime
 
 
-def get_week(date):
+def get_week(date = datetime.now()):
 	return date.isocalendar()[1]
 
-def get_day(date):
+def get_day(date = datetime.now()):
 	return date.isocalendar()[2]
 	
 def get_year(date = datetime.now()):

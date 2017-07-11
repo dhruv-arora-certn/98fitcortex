@@ -152,7 +152,7 @@ class M1(Base):
 
 	def pop_snack(self):
 		# self.snack_list = list(filter(lambda x : x.snaks , self.marked ))
-		self.snack_list = self.marked.filter(snaks = '1')
+		self.snack_list = self.marked.filter(snaks = '1').filter(dairy = 0)
 		heapq.heapify(self.snack_list)
 		return heapq.heappop(self.snack_list)	
 	
@@ -498,7 +498,7 @@ class M4(Base):
 	def select_snacks(self):
 		self.option = "snacks"
 		calories = self.calories_goal
-		snack_items = self.marked.filter(snaks = 1).filter(dessert = 1)
+		snack_items = self.marked.filter(snaks = 1).filter(dessert = 0)
 		self.snacks = self.select_best_minimum(snack_items , calories , "snacks")
 
 	def rethink(self):
