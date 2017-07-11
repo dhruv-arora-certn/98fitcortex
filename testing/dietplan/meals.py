@@ -7,9 +7,6 @@ import heapq ,  re , random , ipdb , math
 from django.db.models import Q
 from numpy.random import choice
 
-class GenericBase():
-	def makeGeneric(self):
-		
 
 class Base:
 	fieldMapper = {
@@ -479,28 +476,28 @@ class M4(Base):
 
 	def select_fruit(self):
 		self.option = "fruits"
-		calories = self.calories_goal
+		calories = self.calories_remaining
 		fruit_items = self.marked.filter(fruit = 1).exclude(name__contains = "Handful")
 		self.fruits = self.select_best_minimum(fruit_items , calories , "fruit")
 		self.fruits.update_quantity(2)
 
 	def select_salad(self):
 		self.option = "salad"
-		calories = self.calories_goal
+		calories = self.calories_remaining
 		salad_items = self.marked.filter(salad = 1 ).filter(~Q(name__startswith = "Handful")).all()
 		self.salad = self.select_best_minimum(salad_items , calories , "salad")
 		self.salad.update_weight(1.5)
 
 	def select_nut(self):
 		self.option = "nuts"
-		calories = self.calories_goal
+		calories = self.calories_remaining
 		nuts_items = self.marked.filter(nuts = 1)
 		self.nuts = self.select_best_minimum(nuts_items , calories , "nuts")
 		self.nuts.update_quantity(2)
 
 	def select_snacks(self):
 		self.option = "snacks"
-		calories = self.calories_goal
+		calories = self.calories_remaining
 		snack_items = self.marked.filter(snaks = 1).filter(dessert = 0)
 		self.snacks = self.select_best_minimum(snack_items , calories , "snacks")
 
