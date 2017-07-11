@@ -558,9 +558,6 @@ class M5(Base):
 		self.queryset = self.getQuerysetFromGoal()
 		self.make_combination = make_combination
 
-		if self.goal == Goals.WeightLoss:
-			self.queryset = self.queryset.exclude(for_loss = 1)
-
 		self.queryset = self.queryset.exclude(name__in = exclude).filter(calarie__gt = 0)
 		if self.disease:
 			self.queryset = self.queryset.filter(self.disease.queryset_filter)
