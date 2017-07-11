@@ -330,7 +330,7 @@ class M3(Base):
 		self.selected = []
 		self.make_combination = make_combination
 		self.make_dessert = make_dessert
-
+		self.isYogurt = False
 
 	def getQuerysetFromGoal(self):
 		f = Food.m3_objects.filter(for_loss = 1)
