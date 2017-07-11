@@ -206,7 +206,7 @@ class M2(Base):
 		self.exclude = exclude
 		self.queryset = self.getDefaultQueryset().exclude(name__in = exclude)
 
-		if self.goal = Goals.WeightLoss:
+		if self.goal == Goals.WeightLoss:
 			self.queryset = self.queryset.filter(for_loss = 1)
 
 		self.marked = self.queryset
@@ -560,7 +560,7 @@ class M5(Base):
 
 		if self.goal == Goals.WeightLoss:
 			self.queryset = self.queryset.exclude(for_loss = 1)
-			
+
 		self.queryset = self.queryset.exclude(name__in = exclude).filter(calarie__gt = 0)
 		if self.disease:
 			self.queryset = self.queryset.filter(self.disease.queryset_filter)
