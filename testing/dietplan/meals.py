@@ -7,6 +7,9 @@ import heapq ,  re , random , ipdb , math
 from django.db.models import Q
 from numpy.random import choice
 
+class GenericBase():
+	def makeGeneric(self):
+		
 
 class Base:
 	fieldMapper = {
@@ -187,7 +190,7 @@ class M1(Base):
 	def build(self):
 		self.allocate_restrictions()
 		calories = self.calories_remaining
-		food_list = self.marked.filter(snaks = '1')
+		food_list = self.marked.filter(snaks = '1').filter(dairy = 0)
 		self.snacks = self.select_best_minimum(food_list , calories , name = "snacks")
 		if self.protein_ideal - self.protein > 8 and hasattr(self , "egg"):
 			self.egg.update_quantity(1.5)
