@@ -417,10 +417,7 @@ class M3(Base):
 		return self
 
 	def makeCombinations(self):
-		if self.isYogurt:
-			calories = (0.25 + 0.37 + 0.23)*self.calories_goal
-		else:
-			calories = (0.18 + 0.37 + 0.25)*self.calories_goal
+		calories = self.calories_remaining
 		food_list = self.marked.filter(cuisine = "Combination")
 		self.combination = self.select_best_minimum(food_list , calories , name = "combination")
 		steps = round( (calories-self.combination.calarie) * self.combination.weight/(self.combination.calarie*10))
