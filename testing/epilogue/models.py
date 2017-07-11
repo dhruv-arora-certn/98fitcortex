@@ -118,7 +118,7 @@ class Food(models.Model):
 			
 	def update_quantity(self ,factor):
 		self.quantity *= factor
-		self.quantity = round(self.quantity )
+		self.quantity = max( 1 , round(self.quantity ))
 		self.weight *= factor
 		self.weight = round( self.weight )
 		return self
@@ -473,7 +473,7 @@ class GeneratedDietPlanFoodDetails(models.Model):
 		print("New item" , f)
 		if not f:
 			#If previous suggestions exist , cycle them
-			return None
+			return self
 
 		self.food_item = f
 		if any(x in f.name for x in QUANTITY_MANIPULATE ):
