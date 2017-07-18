@@ -22,10 +22,15 @@ def mark_exp_diff(args):
 	
 	item._f = (item.fat / (pi[2] * item.calarie / 9))
 	item.f = item._f*np.exp(np.sign(item._f)*(item._f-1))
-	
+	print(pi[3])	
 	item.pcf = item.p+item.c+item.f
-	setattr(item , pi[3] , np.square(item.pcf - 3))
-	item.save()
+	try:
+		setattr(item , pi[3] , np.square(item.pcf - 3))
+		item.save()
+	except Exception as e:
+		print(item.p , item.c , item.f , item.pcf)
+		print(item._p , item._c , item._f)
+		print("Error is " , e)
 	return item
 
 def annotate_food(food_queryset , goal ):
