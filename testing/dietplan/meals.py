@@ -203,6 +203,7 @@ class M1(Base):
 		 
 	def build(self):
 		self.allocate_restrictions()
+		self.select_snack()
 		if self.protein_ideal - self.protein > 8 and hasattr(self , "egg"):
 			self.egg.update_quantity(1.5)
 		self.rethink()
@@ -557,7 +558,6 @@ class M4(Base):
 		calories = self.calories_remaining
 		snack_items = self.marked.filter(snaks = 1).filter(dessert = 0)
 		self.snacks = self.select_best_minimum(snack_items , calories , "snacks")
-
 	def rethink(self):
 		selected = getattr(self , self.option)
 		if self.option == "fruits" or self.option == "nuts":
