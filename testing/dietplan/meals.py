@@ -143,9 +143,14 @@ class M1(Base):
 		
 		self.marked = self.queryset
 		self.selected = selected
-		
+
+		self.buildMapper = {
+			'snack' : self.select_snack,
+			'drink' : self.select_drink
+		}
+	
 	def allocate_restrictions(self):
-		self.select_item(self.drink , "drink")
+		self.drink = self.select_item(self.get_drink , "drink")
 		self.remove_drinks()
 
 		if  ('egg' , 0) not in self.exclusion_conditions.children and not hasattr(self,"egg"):
@@ -159,13 +164,16 @@ class M1(Base):
 		return heapq.heappop(self.snack_list)	
 	
 	@property
-	def drink(self):
+	def get_drink(self):
 		self.drink_list = self.marked.filter(drink = '1')
 		if ('dairy',0) not in self.exclusion_conditions.children:
 			self.drink_list = self.drink_list.filter(dairy = '1')
 		if not self.drink_list.count():
 			return 
 		return min(self.drink_list , key = lambda x : abs(self.calories_goal * 0.15 - x.calorie))
+
+	def select_drink(self):
+		self.select_item(self.get_drink , "drink")
 
 	def remove_drinks(self):
 		# self.marked = list(set(self.marked) - set(self.drink_list))
@@ -186,13 +194,15 @@ class M1(Base):
 				new_weight =  selected.weight + steps * 10
 				selected.update_weight(new_weight/selected.weight)
 				print("New weight" , selected.weight)
-	def build(self):
-		self.allocate_restrictions()
+	def select_snack(self):
 		calories = self.calories_remaining
 		food_list = self.marked.filter(snaks = '1').filter(dairy = 0)
 		if hasattr(self , "egg"):
 			food_list = food_list.exclude(egg = 1	)
-		self.snacks = self.select_best_minimum(food_list , calories , name = "snacks")
+		self.snack = self.select_best_minimum(food_list , calories , name = "snack")
+		 
+	def build(self):
+		self.allocate_restrictions()
 		if self.protein_ideal - self.protein > 8 and hasattr(self , "egg"):
 			self.egg.update_quantity(1.5)
 		self.rethink()
@@ -218,6 +228,13 @@ class M2(Base):
 		if self.exclusion_conditions : 
 			self.queryset = self.queryset.filter(self.exclusion_conditions)
 
+		self.buildMapper = {
+			'nut' : self.select_nut,
+			'salad' : self.select_salad,
+			'fruit' : self.select_fruit,
+			'snack' : self.select_snacks
+		}
+
 	def getDefaultQueryset(self):
 		return Food.m2_objects
 
@@ -226,10 +243,10 @@ class M2(Base):
 		calories = self.calories_goal
 		fruit_items = Food.m2_objects.filter(fruit= 1)
 		try:
-			self.fruits = self.select_best_minimum(fruit_items , calories , name = "fruit")
+			self.fruit = self.select_best_minimum(fruit_items , calories , name = "fruit")
 		except Exception as e:
 			print("From M2 Fruit " , e)
-			self.fruits = random.choice(fruit_items)
+			self.fruit = random.choice(fruit_items)
 			self.select_item(self.fruits , "fruits")
 
 	def select_salad(self):
@@ -335,6 +352,14 @@ class M3(Base):
 		self.make_dessert = make_dessert
 		self.isYogurt = False
 
+		self.buildMapper = {
+			'yogurt' : self.select_yogurt,
+			'dessert' : self.select_dessert,
+			'vegetable' : self.select_vegetables,
+			'pulse' : self.select_pulses,
+			'cereal' : self.select_cereals,
+		}
+
 	def getQuerysetFromGoal(self):
 		f = Food.m3_objects.filter(for_loss = 1)
 		return f
@@ -344,7 +369,7 @@ class M3(Base):
 		calories = 0.15*self.calories_goal
 		food_list = Food.m3_objects.filter(yogurt = 1)
 		food_list = food_list.filter(self.exclusion_conditions)
-		self.yogurts = self.select_item(random.choice(food_list) , remove = False)
+		self.yogurts = self.select_item(random.choice(food_list) , key = "yogurt",remove = False)
 		steps = round( (calories - self.yogurts.calarie) * self.yogurts.weight/(self.yogurts.calarie*10))
 		new_weight = min(250,self.yogurts.weight + steps * 10)
 		self.yogurts.update_weight(new_weight/self.yogurts.weight)
@@ -386,11 +411,11 @@ class M3(Base):
 		
 		food_list = food_list.filter(cuisine = "Generic")
 		# ipdb.set_trace()
-		self.cereals = self.select_best_minimum(food_list , calories , "cereals")
-		if "Parantha" in self.cereals.name or "Roti" in self.cereals.name:
-			steps = round((calories - self.cereals.calarie) * self.cereals.quantity/(self.cereals.calarie))
-			new_quantity = steps + self.cereals.quantity
-			self.cereals.update_quantity(new_quantity/self.cereals.quantity)
+		self.cereal = self.select_best_minimum(food_list , calories , "cereals")
+		if "Parantha" in self.cereal.name or "Roti" in self.cereal.name:
+			steps = round((calories - self.cereal.calarie) * self.cereal.quantity/(self.cereal.calarie))
+			new_quantity = steps + self.cereal.quantity
+			self.cereal.update_quantity(new_quantity/self.cereal.quantity)
 	
 	def select_pulses(self , calories = None):
 		if self.isYogurt : 
@@ -483,7 +508,7 @@ class M4(Base):
 		if disease :
 			self.marked = disease.get_queryset(self.queryset)
 		self.selected = selected
-		self.builderMapper = {
+		self.buildMapper = {
 			'drink' : self.select_drink,
 			'fruit' : self.select_fruit,
 			'salad' : self.select_salad,
@@ -503,6 +528,7 @@ class M4(Base):
 			self.select_item(self.drink , "drink")
 
 	def select_fruit(self):
+		print("Calling Select Fruit")
 		self.option = "fruits"
 		calories = self.calories_remaining
 		fruit_items = self.marked.filter(fruit = 1).exclude(name__contains = "Handful")
@@ -510,6 +536,7 @@ class M4(Base):
 		self.fruits.update_quantity(2)
 
 	def select_salad(self):
+		print("Calling Select Salad")
 		self.option = "salad"
 		calories = self.calories_remaining
 		salad_items = self.marked.filter(salad = 1 ).filter(~Q(name__startswith = "Handful")).all()
@@ -517,6 +544,7 @@ class M4(Base):
 		self.salad.update_weight(1.5)
 
 	def select_nut(self):
+		print("Calling Select Nuts")
 		self.option = "nuts"
 		calories = self.calories_remaining
 		nuts_items = self.marked.filter(nuts = 1)
@@ -524,6 +552,7 @@ class M4(Base):
 		self.nuts.update_quantity(2)
 
 	def select_snacks(self):
+		print("Calling Select Snacks")
 		self.option = "snacks"
 		calories = self.calories_remaining
 		snack_items = self.marked.filter(snaks = 1).filter(dessert = 0)
@@ -583,7 +612,7 @@ class M5(Base):
 		self.marked = self.queryset
 		self.selected = selected
 
-		self.builderMapper = {
+		self.buildMapper = {
 			'vegetable' : self.select_vegetables,
 			'cereal' : self.select_cereals,
 			'pulse' : self.select_pulses,
@@ -602,9 +631,10 @@ class M5(Base):
 	def select_vegetables(self , percent = 0.22):
 		calories = percent*self.calories_goal
 		self.vegetable_calories = calories
-		food_list = self.marked.filter(vegetables = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
+		food_list = self.marked.filter(vegetable = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
 		if self.disease and hasattr(self.disease , "m5_vegetable_filter"):
 			food_list = food_list.filter(self.disease.m5_vegetable_filter)
+		self.vegetable_list = food_list
 		self.vegetables = self.select_best_minimum(food_list , calories , "vegetable")
 
 
@@ -615,16 +645,15 @@ class M5(Base):
 			food_list = food_list.filter(self.exclusion_conditions)
 		else:
 			food_list = self.marked.filter(grains_cereals = 1).filter(cuisine = "Generic")
-		# ipdb.set_trace()
 		if food_list.count() < 1:
 			food_list = self.getQuerysetFromGoal().filter(grains_cereals = 1).filter(cuisine = "Generic")
 			food_list = food_list.filter(self.exclusion_conditions)
-		self.cereals = self.select_best_minimum(food_list , calories , "cereals")
+		self.cereals = self.select_best_minimum(food_list , calories , "cereal")
 
 	def select_pulses(self , percent = 0.39):
 		calories = percent * self.calories_goal
 		food_list = self.marked.filter(pulse = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
-		self.pulses = self.select_best_minimum(food_list , calories , "pulse")
+		self.pulse = self.select_best_minimum(food_list , calories , "pulse")
 
 	def makeGeneric(self):
 		self.select_cereals()
@@ -643,15 +672,12 @@ class M5(Base):
 	def makeCombination(self):
 		food_list = self.marked.filter(cuisine = "Combination")
 		self.combination = self.select_best_minimum(food_list , self.calories_goal , name = "combination")
-		steps = round( (self.calories_goal - self.combination.calarie) * self.combination.weight/(self.combination.calarie *10))
-		new_weight = min(250 , self.combination.weight + steps*10)
-		self.combination.update_weight(new_weight/self.combination.weight)
-
+	
 	def rethink(self):
 		if not hasattr(self , "combination"):
 			if self.calories < self.calories_goal:
-				new_weight = min(self.pulses.weight +  self.get_steps(self.pulses)*5) 
-				self.pulses.update_weight(new_weight/self.pulses.weight)
+				new_weight = min(self.pulse.weight +  self.get_steps(self.pulse)*5) 
+				self.pulse.update_weight(new_weight/self.pulse.weight)
 
 	def build(self):
 		if self.make_combination:

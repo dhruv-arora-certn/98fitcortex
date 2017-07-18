@@ -18,6 +18,7 @@ from numpy.random import choice
 from random import sample
 
 import ipdb
+import random
 
 class Day:
 	@lego.assemble
@@ -79,7 +80,7 @@ class Pipeline:
 
 	def daysForCombinations(self):
 		l = [e for e in range(1,8)]
-		m3 = sample( l , 2 )
+		m3 = random.sample( l , 2 ) 
 		#Remove elements from list
 		try: 
 			print("M3" , m3)
@@ -89,8 +90,11 @@ class Pipeline:
 			# import ipdb
 			# ipdb.set_trace()
 			pass
-		m5 = choice( l , 1)
-	return {
+		try:
+			m5 = random.sample(l,1)
+		except Exception as e:
+			ipdb.set_trace()
+		return {
 			'3' : m3,
 			'5' : m5
 		}
@@ -103,10 +107,7 @@ class Pipeline:
 			size = 2
 
 		l = [e for e in range(1,8)]
-		dessert = sample(
-			l , 
-			size
-		)
+		dessert = random.sample( l , size)
 		return dessert
 
 	def get_initial_exclude(self , days = 4):

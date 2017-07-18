@@ -38,7 +38,7 @@ class PseudoMeal():
 			'goal' : self._user.goal,
 			'make_combination' : self._get_make_combination(),
 			'make_dessert' : self._get_make_dessert(),
-			'selected' : self._get_selected()[self.dish.meal_type]
+			'selected' : self._get_selected()
 		}
 		self.meal = self._meal_type(
 			**self.getMealArgs()
@@ -46,9 +46,12 @@ class PseudoMeal():
 
 	def build(self):
 		if self.replaceMeal:
+			print("Building Meal Again")
 			self.meal.build()
 		else:
+
 			func = self.meal.buildMapper.get(self.dish.food_type)
+			print("Calling " , func)
 			func()
 
 	def getMealArgs(self):
@@ -98,9 +101,9 @@ class ReplacementPipeline():
 	def __init__(self , dish = None ,replaceMeal = False):
 		self._user = self.dish.dietplan.customer
 		if replaceMeal:
-			baseQ = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.dish.dietplan.id).filter(day = self.dish.day).filter(meal_type = self.dish.meal_type).exclude(id = self.dish.id)
-			self.other_dishes = baseQ
-			self.other_dishes_dict = {
+			baseQ = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.dish.dietplan.id).filter(day = self.dish.day).filter(meal_type = self.dish.meal_type)
+			self.dishes = baseQ
+			self.dishes_dict = {
 				e.food_type : e for e in baseQ
 			}
 		self.dietplan_id = self.dish.dietplan.id
@@ -111,7 +114,7 @@ class ReplacementPipeline():
 
 
 	def intializeMeal(self):
-		return PseudoMeal(self.dish , self.get_initial_exclude() , selected = self._selected ,replaceMeal = True) 
+		return PseudoMeal(self.dish , self.get_initial_exclude() , selected = self._selected ,replaceMeal = self.replaceMeal) 
 
 	def get_initial_exclude(self , days = 4):
 		items = []
@@ -125,55 +128,81 @@ class ReplacementPipeline():
 	def get_suggestions_exclude(self):
 		items = list(self.dish.suggestions.values_list("food__name", flat = True))
 		if self.replaceMeal:
-			for e in self.other_dishes:
+			for e in self.dishes:
 				items.extend(e.suggestions.values_list("food__name" , flat = True)[:5])
 		return items
 
 	def get_same_day_exclude(self):
-		baseQ = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.dish.dietplan.id).filter(day = self.dish.day).exclude(meal_type = self.dish.meal_type)
+		baseQ = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.dish.dietplan.id).filter(day = self.dish.day)
 		items = baseQ.values_list('food_name' , flat = True)
 		return items
 
 	def getSelected(self):
 		baseQ = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.dish.dietplan.id).exclude(id = self.dish.id).filter(day = self.dish.day)
 		if self.replaceMeal:
-			return {
-				self.dish.meal_type : {}
-			}
+			return {}
 		else:
 			baseQ = baseQ.filter(meal_type = self.dish.meal_type)
 		d = {  
-			self.dish.meal_type : {
 				e.food_type : e.food_item.update(e.factor) for e in baseQ
-				}
 			}
 		return d
 	
+	def update_dish(self , dish , item):
+		dish.food_item = item
+		dish.food_name = item.name
+		dish.calorie = str(item.calarie)
+		dish.weight = item.weight
+		dish.quantity = item.quantity
+		dish.size = item.size
+
 	def save(self):
 		self.created = {}
 		if self.replaceMeal:
-			for e,f in self._selected.get(self.dish.meal_type).items():
-				c = GeneratedDietPlanFoodDetails.objects.create(
-					dietplan = self.dietplan_id,
-					food_item  = f,
-					food_name = f.name,
-					food_type = e,
+			existing_keys = self.dishes_dict.keys()
+			new_keys = self._selected.keys()
+			common_keys = set(existing_keys) & new_keys
+			to_delete = set(existing_keys) - new_keys
+			to_add = set(new_keys) - existing_keys
+			print("Existin " , existing_keys)	
+			print("New Keys " , new_keys)	
+			print("Common Keys " , common_keys)	
+			print("To Delete Keys " , to_delete)	
+			print("To Add Keys" , to_add)	
+			for i in common_keys:
+				print(i)
+				e = self.dishes_dict[i]
+				new_item = self._selected.get(i)
+				e.suggestions.create(food = e.food_item)
+				self.update_dish(e , new_item)
+				e.save()
+			
+			for i  in to_add:
+				e = self._selected[i]
+				dish = GeneratedDietPlanFoodDetails.objects.create(
+					dietplan_id = self.dietplan_id,
+					food_item = e,
+					food_name = e.name,
+					food_type = i,
 					day = self.day,
 					meal_type = self.meal_type,
-					calorie = str(f.calarie),
-					weight = f.weight,
-					quantity = f.quantity,
-					size = f.size
+					calorie = str(e.calarie),
+					weight = e.weight,
+					quantity = e.quantity,
+					size = e.size
 				)
-				self.created.update({e:c})
-			self.dish.delete()
-			[e.delete() for e in self.other_dishes]
+				self.dishes_dict[i] = dish
+
+			for i in to_delete:
+				self.dishes_dict[i].delete()
+				del self.dishes_dict[i]
 		else:
-			pass
-			
+			self.toUpdate = self._selected.get(self.dish.food_type)
+			self.update_dish(self.dish , self.toUpdate)
+				
 	@property
 	def selected(self):
-		return list(self._selected.get(self.dish.meal_type).values())
+		return list(self._selected.values())
 
 	@property
 	def replacement(self):
