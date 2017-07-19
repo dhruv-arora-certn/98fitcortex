@@ -1,35 +1,37 @@
+import boto3 , datetime , ipdb , random
+from datetime import datetime as dt
+
+from django.core.exceptions import ObjectDoesNotExist
+from django.template.loader import render_to_string
+from django.views import View
 from django.shortcuts import render
 from django.http import HttpResponse , JsonResponse
-from .forms import AnalysisForm
+
 from dietplan.goals import Goals
 from dietplan.utils import annotate_food
 from dietplan.calculations import Calculations
 from dietplan.bodyTypes import BodyTypes
 from dietplan.activity import ActivityLevel
 from dietplan.meals import M1 , M5 , M3
-from knapsack.knapsack_dp import knapsack,display
 from dietplan.generator import Pipeline
 from dietplan.medical_conditions import Osteoporosis , Anemia
+ 
 from rest_framework.generics import RetrieveUpdateAPIView ,RetrieveAPIView , GenericAPIView , CreateAPIView
 from rest_framework.views import APIView
-from epilogue.models import *
-from epilogue.serializers import *
-import ipdb , random
-from epilogue.authentication import CustomerAuthentication
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import exceptions , status
-from django.core.exceptions import ObjectDoesNotExist
-from epilogue.mixins import* 
-from django.conf import settings
 from rest_framework_bulk import ListBulkCreateAPIView
-from django.template.loader import render_to_string
-from weasyprint import HTML , CSS
-from django.views import View
-from datetime import datetime as dt
-from .utils import get_day , get_week , BulkDifferential
-import boto3 , datetime
-import tempfile
+
+from epilogue.forms import AnalysisForm
+from epilogue.models import *
+from epilogue.serializers import *
+from epilogue.authentication import CustomerAuthentication
+from epilogue.mixins import* 
+from epilogue.utils import get_day , get_week , BulkDifferential
+from epilogue.replacement import *
+
+from weasyprint import HTML
 
 
 DATE_FORMAT = '%B {S} - %Y, %A'
@@ -134,7 +136,9 @@ class DishReplaceView(RetrieveAPIView):
 	def get(self , request , *args , **kwargs):
 		print("Calling Dish Replace")
 		obj = self.get_object()
-		a = obj.find_closest(save = True)
+		r = ReplacementPipeline(dish = obj , replaceMeal = False)
+		r.meal.build()
+		a = r.save()
 		if not a:
 			return Response(
 				status = status.HTTP_404_NOT_FOUND
@@ -156,8 +160,10 @@ class MealReplaceView(GenericAPIView):
 	
 	def get_object(self):
 		qs = self.get_queryset().last()
-		objs = qs.changeMeal(day = self.kwargs.get('day') , meal = self.kwargs.get('meal'))
-		return objs
+		objs = self.get_diet_plan_details(qs).last()
+		r = ReplacementPipeline(dish = objs , replaceMeal = True)
+		r.meal.build()
+		return r.save()
 
 	def get(self, request , *args , **kwargs):
 		objs = self.get_object()

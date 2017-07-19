@@ -169,6 +169,7 @@ class ReplacementPipeline():
 			print("Common Keys " , common_keys)	
 			print("To Delete Keys " , to_delete)	
 			print("To Add Keys" , to_add)	
+			#Replace the 3 for loops using map()
 			for i in common_keys:
 				print(i)
 				e = self.dishes_dict[i]
@@ -196,10 +197,14 @@ class ReplacementPipeline():
 			for i in to_delete:
 				self.dishes_dict[i].delete()
 				del self.dishes_dict[i]
+
+			return [e for e in self.dishes_dict.values()]
 		else:
 			self.toUpdate = self._selected.get(self.dish.food_type)
+			self.dish.suggestions.create(food = self.toUpdate)
 			self.update_dish(self.dish , self.toUpdate)
-				
+			self.dish.save()
+			return self.dish	
 	@property
 	def selected(self):
 		return list(self._selected.values())

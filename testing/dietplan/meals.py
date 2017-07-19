@@ -148,7 +148,12 @@ class M1(Base):
 			'snack' : self.select_snack,
 			'drink' : self.select_drink
 		}
-	
+		backwardMapper ={
+			'snaks' : self.select_snack,
+			'pulses' : self.select_snack
+		}
+		self.buildMapper.update(backwardMapper)
+
 	def allocate_restrictions(self):
 		self.drink = self.select_item(self.get_drink , "drink")
 		self.remove_drinks()
@@ -188,17 +193,22 @@ class M1(Base):
 				steps = math.floor(self.calories_remaining * selected.quantity/(selected.calarie))
 				new_quantity = steps + selected.quantity
 				selected.update_quantity(new_quantity/selected.quantity)
-			elif not selected.weight < 100:
+			else:
 				print("Updatin " , selected , selected.weight)
-				steps = max( 2 , math.floor(self.calories_remaining * selected.weight/(selected.calarie*10)))
+				steps = math.floor(self.calories_remaining * selected.weight/(selected.calarie*10))
 				new_weight =  selected.weight + steps * 10
 				selected.update_weight(new_weight/selected.weight)
 				print("New weight" , selected.weight)
+	
 	def select_snack(self):
-		calories = self.calories_remaining
+		calories = self.calories_goal
+		if ("dairy",0) not in self.exclusion_conditions:
+			calories *= 0.85
 		food_list = self.marked.filter(snaks = '1').filter(dairy = 0)
-		if hasattr(self , "egg"):
+		if not ("egg",0) in self.exclusion_conditions.children:
 			food_list = food_list.exclude(egg = 1	)
+			calories -= 36
+		# ipdb.set_trace()
 		self.snack = self.select_best_minimum(food_list , calories , name = "snack")
 		 
 	def build(self):
@@ -235,6 +245,13 @@ class M2(Base):
 			'fruit' : self.select_fruit,
 			'snack' : self.select_snacks
 		}
+		backwardMapper = {
+			'fruits' : self.select_fruit,
+			'nuts' : self.select_nut,
+			'pulses' : self.select_snacks,
+			'snaks' : self.select_snacks
+		}
+		self.buildMapper.update(backwardMapper)
 
 	def getDefaultQueryset(self):
 		return Food.m2_objects
@@ -359,7 +376,14 @@ class M3(Base):
 			'vegetable' : self.select_vegetables,
 			'pulse' : self.select_pulses,
 			'cereal' : self.select_cereals,
+		
 		}
+		backwardMapper = {
+			'cereals' : self.select_cereals,
+			'grains_cereals' : self.select_cereals,
+			'pulses' : self.select_pulses,
+		}
+		self.buildMapper.update(backwardMapper)
 
 	def getQuerysetFromGoal(self):
 		f = Food.m3_objects.filter(for_loss = 1)
@@ -516,6 +540,12 @@ class M4(Base):
 			'nuts'  : self.select_nut,
 			'snack' : self.select_snacks
 		}
+		backwardMapper = {
+			'pulses' : self.select_snacks,
+			'snacks' : self.select_snacks,
+			'snaks' : self.select_snacks
+		}
+		self.buildMapper.update(backwardMapper)
 
 	def select_drink(self):
 		calories = 0.15*self.calories_goal
@@ -618,6 +648,11 @@ class M5(Base):
 			'pulse' : self.select_pulses,
 			'combination' : self.makeCombination
 		}
+		backwardMapper = {
+			'grains_cereals' : self.select_cereals,
+			'pulses' : self.select_pulses,
+		}
+		self.buildMapper.update(backwardMapper)
 
 	def getQuerysetFromGoal(self):
 		if self.goal == Goals.WeightLoss : 
