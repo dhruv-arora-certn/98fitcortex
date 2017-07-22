@@ -1,7 +1,7 @@
 from . import filters
 
 
-class VegetableManipulater(filters.BaseFilter):
+class VegetablePulseCategoriser(filters.BaseFilter):
 	
 
 	#List of filters that need to be applied to the item. 

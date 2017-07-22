@@ -638,6 +638,14 @@ class DietPlanRegenerationMarker(models.Model):
 	value = models.BooleanField()
 	created = models.DateTimeField(auto_now = True)
 
+class FoodTypeSizes(models.Model):
+	class Meta:
+		managed = False
+		db_table = "food_type_sizes"
+	size = models.CharField(max_length = 50)
+	weight = models.IntegerField()
+	type = models.CharField(max_length = 50)
+
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
