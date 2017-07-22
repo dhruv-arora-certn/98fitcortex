@@ -12,5 +12,22 @@ class VegetablePulseCategoriser(filters.BaseFilter):
 		filters.vegetable_filter,
 	]
 
-	def __init__(self , item):
-		self.item = item
+class TeaCoffeeCategoriser(filters.BaseFilter):
+
+	filters = [
+		filters.tea_coffee_filter
+	]
+
+
+class BiryaniCategoriser(filters.BaseFilter):
+	
+	filters = [
+		filters.veg_biryani_filter,
+		filters.non_veg_biryani_filter	
+	]
+
+class RotiCategoriser(filters.BaseFilter):
+	filters = [
+		filters.roti_filter,
+	]
+
