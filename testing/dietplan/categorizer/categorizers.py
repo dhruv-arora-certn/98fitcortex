@@ -40,5 +40,6 @@ class GrainsCerealsCategoriser(filters.BaseFilter):
 		filters.veg_biryani_filter,
 		filters.non_veg_biryani_filter,
 		filters.rice_pulao_filter,
-		filters.roti_filter
+		filters.roti_filter,
+		filters.parantha_filter
 	]

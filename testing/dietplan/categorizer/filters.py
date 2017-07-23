@@ -14,7 +14,7 @@ tea_coffee_filter.name = "beverage"
 rice_pulao_filter = lambda x : x.grains_cereals == 1 and x.size == "Quarter Plate" and x.wheat == 0
 rice_pulao_filter.name = "rice_pulao"
 
-roti_filter = lambda x : x.grains_cereals == 1 and "roti" in x.name.lower() and (x.size == "Pieces" or x.size == "Piece")
+roti_filter = lambda x : x.grains_cereals == 1 and ("roti" in x.name.lower() or "chapati" in x.name.lower()) and (x.size == "Pieces" or x.size == "Piece")
 roti_filter.name = "roti"
 
 khichdi_filter = lambda x : combination_filter(x) and "khichdi" in x.name.lower()
@@ -38,6 +38,12 @@ def soup_filter(item):
 	return drink_filter(item) and item.size == "Soup Bowl"
 soup_filter.name = "soup"
 
+def plain_parantha_filter(item):
+	return "parantha" in item.name.lower() or "prantha" in item.name.lower() and vegetable == 0 
+plain_parantha_filter.name = "plain_parantha"
+
+def stuffed_parantha_filter(item):
+	return 
 class BaseFilter():
 	'''
 	Base class for filters

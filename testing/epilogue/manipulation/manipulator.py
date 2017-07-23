@@ -30,6 +30,7 @@ class DummyFood:
 
 	def __repr__(self):
 		return "<" + self.__class__.__name__ + ": " +self.name +" >"
+
 class Manipulator():
 	
 	def __init__( self , items = [] , categorizers = [] , goal = Goals.WeightLoss):
