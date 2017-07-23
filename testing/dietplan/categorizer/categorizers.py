@@ -25,9 +25,20 @@ class BiryaniCategoriser(filters.BaseFilter):
 		filters.veg_biryani_filter,
 		filters.non_veg_biryani_filter	
 	]
+class RiceCategoriser(filters.BaseFilter):
 
+	filters = [
+		filters.rice_pulao_filter
+	]
 class RotiCategoriser(filters.BaseFilter):
 	filters = [
 		filters.roti_filter,
 	]
 
+class GrainsCerealsCategoriser(filters.BaseFilter):
+	filters = [
+		filters.veg_biryani_filter,
+		filters.non_veg_biryani_filter,
+		filters.rice_pulao_filter,
+		filters.roti_filter
+	]
