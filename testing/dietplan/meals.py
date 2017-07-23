@@ -6,8 +6,8 @@ from knapsack.knapsack_dp import knapsack,display
 import heapq ,  re , random , ipdb , math
 from django.db.models import Q
 from numpy.random import choice
-
-
+from epilogue.manipulation.manipulator import Manipulator
+from dietplan.categorizer.categorizers import *
 class Base:
 	fieldMapper = {
 		Goals.WeightLoss : "squared_diff_weight_loss",
@@ -170,11 +170,13 @@ class M1(Base):
 	
 	@property
 	def get_drink(self):
-		self.drink_list = self.marked.filter(drink = '1')
+		self.drink_list = self.marked.filter(drink = '1').filter(size = "Teacup")
 		if ('dairy',0) not in self.exclusion_conditions.children:
 			self.drink_list = self.drink_list.filter(dairy = '1')
 		if not self.drink_list.count():
-			return 
+			return
+		m = Manipulator(items = self.drink_list , categorizers = [DrinkCategoriser])
+		self.drink_list = m.categorize().get_final_list()
 		return min(self.drink_list , key = lambda x : abs(self.calories_goal * 0.15 - x.calorie))
 
 	def select_drink(self):
@@ -189,7 +191,7 @@ class M1(Base):
 		print("Running M1 rethink")
 		selected = self.snack
 		if self.calories_remaining > 0:	
-			if "Parantha" in selected.name or "Roti" in selected.name or "Dosa" in selected.name or "Cheela" in selected.name or "Bun" in selected.name:
+			if "Roti" in selected.name or "Dosa" in selected.name or "Cheela" in selected.name or "Bun" in selected.name:
 				steps = math.floor(self.calories_remaining * selected.quantity/(selected.calarie))
 				new_quantity = steps + selected.quantity
 				selected.update_quantity(new_quantity/selected.quantity)
@@ -208,7 +210,8 @@ class M1(Base):
 		if not ("egg",0) in self.exclusion_conditions.children:
 			food_list = food_list.exclude(egg = 1	)
 			calories -= 36
-		# ipdb.set_trace()
+		m = Manipulator(items = food_list , categorizers = [ParanthaCategoriser])
+		food_list = m.categorize().get_final_list()
 		self.snack = self.select_best_minimum(food_list , calories , name = "snack")
 		 
 	def build(self):

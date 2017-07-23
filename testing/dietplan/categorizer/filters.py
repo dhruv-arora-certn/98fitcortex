@@ -1,11 +1,19 @@
-veg_filter = lambda x : x.poultary == 0 and x.seafood == 0 and x.pork == 0 and x.meat == 0 and x.lamb_mutton == 0 and x.beef == 0 and x.other_meat == 0 and x.egg == 0
-combination_filter = lambda x : x.cuisine == "Combination"
-biryani_filter = lambda x : combination_filter(x) and "biryani" in x.name.lower()
+def veg_filter(x): 
+	return x.poultary == 0 and x.seafood == 0 and x.pork == 0 and x.meat == 0 and x.lamb_mutton == 0 and x.beef == 0 and x.other_meat == 0 and x.egg == 0
 
-vegetable_filter = lambda x : x.vegetable == 1
+def combination_filter(x): 
+	return x.cuisine == "Combination"
+
+def biryani_filter(x) : 
+	return combination_filter(x) and "biryani" in x.name.lower()
+
+def vegetable_filter(x) : 
+	return x.vegetable == 1
+
 vegetable_filter.name = "vegetable"
 
-gravy_filter = lambda x: x.pulses ==  1
+def gravy_filter(x): 
+	return x.pulses ==  1
 gravy_filter.name = "pulses"
 
 tea_coffee_filter = lambda x : x.drink == 1 and x.size ==  "Teacup"
@@ -38,12 +46,22 @@ def soup_filter(item):
 	return drink_filter(item) and item.size == "Soup Bowl"
 soup_filter.name = "soup"
 
+def parantha_filter(item):
+	return "parantha" in item.name.lower() or "prantha" in item.name.lower() or item.grains_cereals == 1
+
 def plain_parantha_filter(item):
-	return "parantha" in item.name.lower() or "prantha" in item.name.lower() and vegetable == 0 
+	return  parantha_filter(item) and item.vegetable == 0 and item.pulse == 0 and item.egg == 0
 plain_parantha_filter.name = "plain_parantha"
 
+
 def stuffed_parantha_filter(item):
-	return 
+	return parantha_filter(item) and not plain_parantha_filter(item)
+stuffed_parantha_filter.name = "stuffed_parantha"
+
+def soup_filter(item):
+	return "soup" in item.name.lower()
+soup_filter.name = "soup"
+
 class BaseFilter():
 	'''
 	Base class for filters

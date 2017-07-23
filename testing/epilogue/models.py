@@ -121,6 +121,7 @@ class Food(models.Model):
 		self.quantity *= factor
 		self.quantity = max( 1 , round(self.quantity ))
 		self.weight *= factor
+		self.update(factor)
 		self.weight = round( self.weight )
 		return self
 
