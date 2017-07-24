@@ -63,3 +63,8 @@ class CombinationCategoriser(filters.BaseFilter):
 		filters.veg_biryani_filter,
 		filters.non_veg_biryani_filter
 	]
+
+class YogurtCategoriser(filters.BaseFilter):
+	filters = [
+		filters.yogurt_filter
+	]

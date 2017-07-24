@@ -42,12 +42,12 @@ class Day:
 					print("Pushing Day to DB")
 					obj = GeneratedDietPlanFoodDetails.objects.create(
 						dietplan = self.dietplan ,
-						food_item = e ,
+						food_item_id = e.id ,
 						food_name = e.name ,
 						food_type = t,
 						day = self.day ,
 						meal_type = m ,
-						calorie = str(e.calarie)  ,
+						calorie = str(e.calorie)  ,
 						weight = e.weight ,
 						quantity = e.quantity ,
 						size = e.size)

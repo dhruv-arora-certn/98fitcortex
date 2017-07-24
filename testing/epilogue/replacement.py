@@ -149,9 +149,9 @@ class ReplacementPipeline():
 		return d
 	
 	def update_dish(self , dish , item):
-		dish.food_item = item
+		dish.food_item_id = item.id
 		dish.food_name = item.name
-		dish.calorie = str(item.calarie)
+		dish.calorie = str(item.calorie)
 		dish.weight = item.weight
 		dish.quantity = item.quantity
 		dish.size = item.size
@@ -182,12 +182,12 @@ class ReplacementPipeline():
 				e = self._selected[i]
 				dish = GeneratedDietPlanFoodDetails.objects.create(
 					dietplan_id = self.dietplan_id,
-					food_item = e,
+					food_item_id = e.id,
 					food_name = e.name,
 					food_type = i,
 					day = self.day,
 					meal_type = self.meal_type,
-					calorie = str(e.calarie),
+					calorie = str(e.calorie),
 					weight = e.weight,
 					quantity = e.quantity,
 					size = e.size
@@ -201,7 +201,7 @@ class ReplacementPipeline():
 			return [e for e in self.dishes_dict.values()]
 		else:
 			self.toUpdate = self._selected.get(self.dish.food_type)
-			self.dish.suggestions.create(food = self.toUpdate)
+			self.dish.suggestions.create(food_id = self.toUpdate.id)
 			self.update_dish(self.dish , self.toUpdate)
 			self.dish.save()
 			return self.dish	

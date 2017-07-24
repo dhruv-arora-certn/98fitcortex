@@ -22,9 +22,10 @@ gender = Female.number
 exclude = []
 
 def generate_diet_plan():
-	p = Pipeline(weight , height , activity , goal , gender , disease = Anemia)
+	p = Pipeline(weight , height , activity , goal , gender)
 	c = Calculations(weight , height , activity , goal , gender , exclude)
 	return p,c
+
 def regenerate():
 	c = Customer.objects.get(pk = 8)
 	g = c.dietplans.last()
@@ -39,4 +40,4 @@ def categoriser():
 	l = m.categorize()
 	return f,m,l
 
-f,m,l = categoriser()
+p,c = generate_diet_plan()

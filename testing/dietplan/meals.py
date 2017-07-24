@@ -81,9 +81,10 @@ class Base:
 		try:
 			i = self.get_best_minimum(select_from , calories , name)
 		except Exception as e:
-			i = min(select_from , key = lambda x : abs(calories - x.calarie) )
+			print("Some MF _____" , e)
+			i = min(select_from , key = lambda x : abs(calories - x.calorie) )
 		else:
-			i = min(select_from , key = lambda x : abs(calories - x.calarie))
+			i = min(select_from , key = lambda x : abs(calories - x.calorie))
 		finally:
 			self.select_item(i , name)
 			return i
@@ -190,7 +191,7 @@ class M1(Base):
 	def rethink(self):
 		print("Running M1 rethink")
 		selected = self.snack
-		if self.calories_remaining > 0:	
+		if self.calories_remaining > 0 and isinstance(selected, Food):	
 			if "Roti" in selected.name or "Dosa" in selected.name or "Cheela" in selected.name or "Bun" in selected.name:
 				steps = math.floor(self.calories_remaining * selected.quantity/(selected.calarie))
 				new_quantity = steps + selected.quantity
@@ -397,12 +398,14 @@ class M3(Base):
 		calories = 0.15*self.calories_goal
 		food_list = Food.m3_objects.filter(yogurt = 1)
 		food_list = food_list.filter(self.exclusion_conditions)
+		m = Manipulator(items = food_list , categorizers = [YogurtCategoriser])
+		food_list = m.categorize().get_final_list()
 		self.yogurts = self.select_item(random.choice(food_list) , key = "yogurt",remove = False)
-		steps = round( (calories - self.yogurts.calarie) * self.yogurts.weight/(self.yogurts.calarie*10))
-		new_weight = min(250,self.yogurts.weight + steps * 10)
-		self.yogurts.update_weight(new_weight/self.yogurts.weight)
-
-
+		
+		if isinstance(self.yogurts , Food):
+			steps = round( (calories - self.yogurts.calorie) * self.yogurts.weight/(self.yogurts.calorie*10))
+			new_weight = min(250,self.yogurts.weight + steps * 10)
+			self.yogurts.update_weight(new_weight/self.yogurts.weight)
 
 	def select_dessert(self):
 		self.isYogurt = False
@@ -421,10 +424,14 @@ class M3(Base):
 		food_list = self.marked.filter(vegetable = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
 		if self.disease and hasattr(self.disease , "vegetable_filter"):
 			food_list = food_list.filter(self.disease.vegetable_filter)
+		m = Manipulator(items = food_list , categorizers = [VegetablePulseCategoriser])
+		food_list = m.categorize().get_final_list()
 		self.vegetable = self.select_best_minimum(food_list , calories , "vegetable")
-		steps = round((calories - self.vegetable.calarie ) * self.vegetable.weight/(self.vegetable.calarie*10))
-		new_weight = min(250,self.vegetable.weight + steps * 10)
-		self.vegetable.update_weight(new_weight/self.vegetable.weight)
+		
+		if isinstance(self.vegetable , Food):
+			steps = round((calories - self.vegetable.calarie ) * self.vegetable.weight/(self.vegetable.calarie*10))
+			new_weight = min(250,self.vegetable.weight + steps * 10)
+			self.vegetable.update_weight(new_weight/self.vegetable.weight)
 
 
 	def select_cereals(self , percent = 0.37):		
@@ -439,12 +446,10 @@ class M3(Base):
 		
 		food_list = food_list.filter(cuisine = "Generic")
 		# ipdb.set_trace()
+		m = Manipulator(items = food_list , categorizers = [GrainsCerealsCategoriser])
+		food_list = m.categorize().get_final_list()
 		self.cereal = self.select_best_minimum(food_list , calories , "cereals")
-		if "Parantha" in self.cereal.name or "Roti" in self.cereal.name:
-			steps = round((calories - self.cereal.calarie) * self.cereal.quantity/(self.cereal.calarie))
-			new_quantity = steps + self.cereal.quantity
-			self.cereal.update_quantity(new_quantity/self.cereal.quantity)
-	
+		
 	def select_pulses(self , calories = None):
 		if self.isYogurt : 
 			percent = 0.23
@@ -453,6 +458,8 @@ class M3(Base):
 		if not calories:
 			calories = percent * self.calories_goal
 		food_list = self.marked.filter(pulses = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
+		m = Manipulator(items = food_list , categorizers = [VegetablePulseCategoriser])
+		food_list = m.categorize().get_final_list()
 		try:
 			self.pulses = self.select_best_minimum(food_list , calories , "pulse")
 		except Exception as e:
@@ -672,6 +679,8 @@ class M5(Base):
 		food_list = self.marked.filter(vegetable = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
 		if self.disease and hasattr(self.disease , "m5_vegetable_filter"):
 			food_list = food_list.filter(self.disease.m5_vegetable_filter)
+		m = Manipulator(items = food_list , categorizers = [VegetablePulseCategoriser])
+		food_list = m.categorize().get_final_list()
 		self.vegetable_list = food_list
 		self.vegetables = self.select_best_minimum(food_list , calories , "vegetable")
 
@@ -686,11 +695,15 @@ class M5(Base):
 		if food_list.count() < 1:
 			food_list = self.getQuerysetFromGoal().filter(grains_cereals = 1).filter(cuisine = "Generic")
 			food_list = food_list.filter(self.exclusion_conditions)
+		m = Manipulator(items = food_list , categorizers = [GrainsCerealsCategoriser])
+		food_list = m.categorize().get_final_list()
 		self.cereals = self.select_best_minimum(food_list , calories , "cereal")
 
 	def select_pulses(self , percent = 0.39):
 		calories = percent * self.calories_goal
 		food_list = self.marked.filter(pulse = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
+		m = Manipulator(items = food_list , categorizers = [VegetablePulseCategoriser])
+		food_list = m.categorize().get_final_list()
 		self.pulse = self.select_best_minimum(food_list , calories , "pulse")
 
 	def makeGeneric(self):
