@@ -82,6 +82,7 @@ class Base:
 			i = self.get_best_minimum(select_from , calories , name)
 		except Exception as e:
 			print("Some MF _____" , e)
+			# ipdb.set_trace()
 			i = min(select_from , key = lambda x : abs(calories - x.calorie) )
 		else:
 			i = min(select_from , key = lambda x : abs(calories - x.calorie))
@@ -400,6 +401,7 @@ class M3(Base):
 		food_list = food_list.filter(self.exclusion_conditions)
 		m = Manipulator(items = food_list , categorizers = [YogurtCategoriser])
 		food_list = m.categorize().get_final_list()
+		# ipdb.set_trace()
 		self.yogurts = self.select_item(random.choice(food_list) , key = "yogurt",remove = False)
 		
 		if isinstance(self.yogurts , Food):
@@ -572,34 +574,30 @@ class M4(Base):
 			self.drink = random.choice(food_list)
 			self.select_item(self.drink , "drink")
 
-	def select_fruit(self):
+	def select_fruit(self , calories):
 		print("Calling Select Fruit")
 		self.option = "fruits"
-		calories = self.calories_remaining
 		fruit_items = self.marked.filter(fruit = 1).exclude(name__contains = "Handful")
 		self.fruits = self.select_best_minimum(fruit_items , calories , "fruit")
 		self.fruits.update_quantity(2)
 
-	def select_salad(self):
+	def select_salad(self , calories):
 		print("Calling Select Salad")
 		self.option = "salad"
-		calories = self.calories_remaining
 		salad_items = self.marked.filter(salad = 1 ).filter(~Q(name__startswith = "Handful")).all()
 		self.salad = self.select_best_minimum(salad_items , calories , "salad")
 		self.salad.update_weight(1.5)
 
-	def select_nut(self):
+	def select_nut(self , calories):
 		print("Calling Select Nuts")
 		self.option = "nuts"
-		calories = self.calories_remaining
 		nuts_items = self.marked.filter(nuts = 1)
 		self.nuts = self.select_best_minimum(nuts_items , calories , "nuts")
 		self.nuts.update_quantity(2)
 
-	def select_snacks(self):
+	def select_snacks(self , calories):
 		print("Calling Select Snacks")
 		self.option = "snacks"
-		calories = self.calories_remaining
 		snack_items = self.marked.filter(snaks = 1).filter(dessert = 0)
 		self.snacks = self.select_best_minimum(snack_items , calories , "snacks")
 	def rethink(self):
@@ -629,7 +627,11 @@ class M4(Base):
 			func = choice([
 				self.select_fruit , self.select_nut , self.select_snacks , self.select_salad
 			], size = 1 , p = probability)[0]
-			func()
+			if hasattr(self , "drink"):
+				cals = self.calories_remaining
+			else:
+				cals = self.calories * 0.85	
+			func(calories = cals)
 			self.rethink()
 		return self
 
@@ -700,8 +702,9 @@ class M5(Base):
 			food_list = self.getQuerysetFromGoal().filter(grains_cereals = 1).filter(cuisine = "Generic")
 			food_list = food_list.filter(self.exclusion_conditions)
 		m = Manipulator(items = food_list , categorizers = [GrainsCerealsCategoriser])
-		food_list = m.categorize().get_final_list()
-		self.cereals = self.select_best_minimum(food_list , calories , "cereal")
+		final_food_list = m.categorize().get_final_list()
+		# ipdb.set_trace()
+		self.cereals = self.select_best_minimum(final_food_list , calories , "cereal")
 
 	def select_pulses(self , percent = 0.39):
 		calories = percent * self.calories_goal
