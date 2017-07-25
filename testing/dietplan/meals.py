@@ -376,7 +376,7 @@ class M3(Base):
 			'vegetable' : self.select_vegetables,
 			'pulse' : self.select_pulses,
 			'cereal' : self.select_cereals,
-		
+			'combination' : self.makeCombinations
 		}
 		backwardMapper = {
 			'cereals' : self.select_cereals,
@@ -472,6 +472,10 @@ class M3(Base):
 
 	def makeCombinations(self):
 		calories = self.calories_remaining
+		if self.make_dessert:
+			calories *= 0.88
+		else:
+			calories *= 0.85
 		food_list = self.marked.filter(cuisine = "Combination")
 		self.combination = self.select_best_minimum(food_list , calories , name = "combination")
 		steps = round( (calories-self.combination.calarie) * self.combination.weight/(self.combination.calarie*10))
