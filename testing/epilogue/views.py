@@ -360,3 +360,48 @@ class UserDietPlanRegenerationView(GenericAPIView):
 				"weeks" : [e.week_id for e in possibleDietPlans],
 				"message" : "Successfully Regenrated"
 			}, status = status.HTTP_200_OK)
+
+
+class DietPlanMobileView(GenericAPIView):
+	serializer_class = DietPlanSerializer
+	authentication_classes = (CustomerAuthentication,)
+	permission_classes = (IsAuthenticated,)
+	lookup_fields = ("week_id" , "day" , "meal")
+
+	def get_queryset(self):
+		return GeneratedDietPlan.objects.filter(customer = self.request.user)
+
+	def get_diet_plan_details(self , dietplan ):
+		return GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(calorie__gt = 0).filter(day = int(self.kwargs['day'])).filter(meal_type = self.kwargs.get("meal"))
+	
+	def get_object(self):
+		qs = self.get_queryset()
+		user = self.request.user
+		week_id = int(self.kwargs.get("week_id"))
+		current_week = get_week(dt.today())
+
+		#If the requested week is farther away than 2 weeks, deny the request
+		print("Truth" , abs(abs(week_id) - abs(current_week)))
+		if abs(abs(week_id) - abs(current_week)) > 2:
+			raise exceptions.PermissionDenied({
+				"message" : "You cannot access this week's diet plan"
+			})
+		
+		qs = qs.filter(week_id = int(self.kwargs['week_id'])).last()
+		if qs is None:
+			p = Pipeline(user.weight , user.height , float(user.lifestyle) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id))
+			try:
+				print("Trying to generate")
+				p.generate()
+			except Exception as e:
+				print("There has been a MF exception " , e )
+				p.dietplan.delete()
+			else:
+				qs = p.dietplan
+		g = self.get_diet_plan_details(qs)
+		return g
+
+	def get(self , request , *args , **kwargs):
+		objs = self.get_object()
+		data = DietPlanSerializer(objs , many = True).data
+		return Response(data)
