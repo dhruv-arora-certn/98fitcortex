@@ -574,29 +574,37 @@ class M4(Base):
 			self.drink = random.choice(food_list)
 			self.select_item(self.drink , "drink")
 
-	def select_fruit(self , calories = 0.85 * self.calories_goal ):
+	def select_fruit(self , calories = 0 ):
 		print("Calling Select Fruit")
+		if calories == 0:
+			calories = 0.85*self.calories_goal
 		self.option = "fruits"
 		fruit_items = self.marked.filter(fruit = 1).exclude(name__contains = "Handful")
 		self.fruits = self.select_best_minimum(fruit_items , calories , "fruit")
 		self.fruits.update_quantity(2)
 
-	def select_salad(self , calories = 0.85 * self.calories_goal):
+	def select_salad(self , calories = 0):
 		print("Calling Select Salad")
+		if calories == 0:
+			calories = 0.85*self.calories_goal
 		self.option = "salad"
 		salad_items = self.marked.filter(salad = 1 ).filter(~Q(name__startswith = "Handful")).all()
 		self.salad = self.select_best_minimum(salad_items , calories , "salad")
 		self.salad.update_weight(1.5)
 
-	def select_nut(self , calories = 0.85 * self.calories_goal):
+	def select_nut(self , calories = 0):
 		print("Calling Select Nuts")
+		if calories == 0:
+			calories = 0.85*self.calories_goal
 		self.option = "nuts"
 		nuts_items = self.marked.filter(nuts = 1)
 		self.nuts = self.select_best_minimum(nuts_items , calories , "nuts")
 		self.nuts.update_quantity(2)
 
-	def select_snacks(self , calories = 0.85 * self.calories_goal):
+	def select_snacks(self , calories = 0):
 		print("Calling Select Snacks")
+		if calories == 0:
+			calories = 0.85*self.calories_goal
 		self.option = "snacks"
 		snack_items = self.marked.filter(snaks = 1).filter(dessert = 0)
 		self.snacks = self.select_best_minimum(snack_items , calories , "snacks")
