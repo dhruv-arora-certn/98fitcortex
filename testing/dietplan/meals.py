@@ -8,6 +8,7 @@ from django.db.models import Q
 from numpy.random import choice
 from epilogue.manipulation.manipulator import Manipulator
 from dietplan.categorizer.categorizers import *
+
 class Base:
 	fieldMapper = {
 		Goals.WeightLoss : "squared_diff_weight_loss",
@@ -82,7 +83,6 @@ class Base:
 			i = self.get_best_minimum(select_from , calories , name)
 		except Exception as e:
 			print("Some MF _____" , e)
-			# ipdb.set_trace()
 			i = min(select_from , key = lambda x : abs(calories - x.calorie) )
 		else:
 			i = min(select_from , key = lambda x : abs(calories - x.calorie))
@@ -397,12 +397,12 @@ class M3(Base):
 	def select_yogurt(self):
 		self.isYogurt = True
 		calories = 0.15*self.calories_goal
-		food_list = Food.m3_objects.filter(yogurt = 1)
+		food_list = self.marked.filter(yogurt = 1)
 		food_list = food_list.filter(self.exclusion_conditions)
 		m = Manipulator(items = food_list , categorizers = [YogurtCategoriser])
 		food_list = m.categorize().get_final_list()
 		# ipdb.set_trace()
-		self.yogurts = self.select_item(random.choice(food_list) , key = "yogurt",remove = False)
+		self.yogurts = self.select_best_minimum(food_list , calories , name="yogurt")
 		
 		if isinstance(self.yogurts , Food):
 			steps = round( (calories - self.yogurts.calorie) * self.yogurts.weight/(self.yogurts.calorie*10))
@@ -452,14 +452,21 @@ class M3(Base):
 		food_list = m.categorize().get_final_list()
 		self.cereal = self.select_best_minimum(food_list , calories , "cereals")
 		
-	def select_pulses(self , calories = None):
+	def select_pulses(self , calories = None , non_veg = False):
+		
 		if self.isYogurt : 
 			percent = 0.23
 		else:
 			percent = 0.18
+		
 		if not calories:
 			calories = percent * self.calories_goal
-		food_list = self.marked.filter(pulses = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
+		
+		if 	non_veg:
+			food_list = self.marked.filter( Q(non_veg_gravy_items = 1) | Q(pulses = 1)  & Q(vegetable = 1) & Q(cuisine = "Generic") & Q(grains_cereals = 0))
+		else:
+			food_list = self.marked.filter(pulses = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
+		
 		m = Manipulator(items = food_list , categorizers = [VegetablePulseCategoriser])
 		food_list = m.categorize().get_final_list()
 		try:
@@ -471,12 +478,20 @@ class M3(Base):
 	def makeGeneric(self):
 		self.select_cereals()
 		
+		#Already Implemented
 		if self.cereal.vegetables == 1 and self.cereal.pulse == 0:
 			self.select_pulses(calories = self.calories_remaining)
+		
 		elif self.cereal.vegetables == 0 and self.cereal.pulse == 1:
 			self.select_vegetables(calories = self.calories_remaining)
+		
+		#Already Implemented
 		elif self.cereal.vegetables == 1 and self.cereal.pulse == 1:
 			self.select_pulses(calories = self.calories_remaining)
+		
+		elif self.cereal.non_veg == 1:
+			self.select_pulses(non_veg = True)
+
 		if self.cereal.vegetables == 0 and self.cereal.pulse == 0:
 			self.select_pulses()
 			self.select_vegetables()	
@@ -640,7 +655,6 @@ class M4(Base):
 			else:
 				cals = self.calories_goal * 0.85	
 			func(calories = cals)
-			self.rethink()
 		return self
 
 class M5(Base):

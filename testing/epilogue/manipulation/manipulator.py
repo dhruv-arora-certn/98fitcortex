@@ -12,7 +12,7 @@ class DummyFood:
 	'''
 	Class To Contain Dummy Food objects after cross join
 	'''
-	def __init__(self , id , name , size , weight ,nuts ,vegetables , pulse ,squared_diff_weight_loss , squared_diff_weight_gain , squared_diff_weight_maintain , calorie , protein , fat , carbohydrates):
+	def __init__(self , id , name , size , weight ,nuts ,vegetables , pulse , non_veg ,squared_diff_weight_loss , squared_diff_weight_gain , squared_diff_weight_maintain , calorie , protein , fat , carbohydrates):
 		self.id = id
 		self.name = name
 		self.size = size
@@ -28,6 +28,7 @@ class DummyFood:
 		self.quantity = -1
 		self.vegetables = vegetables
 		self.pulse = pulse
+		self.non_veg = non_veg
 
 	def __str__(self):
 		return self.name
@@ -76,6 +77,7 @@ class Manipulator():
 			t2.nuts,
 			t2.vegetables,
 			t2.pulse,
+			t2.poultary | t2.seafood | t2.pork | t2.meat | t2.lamb_mutton | t2.beef | t2.other_meat | t2.meat as non_veg,
 			t2.squared_diff_weight_loss ,
 			t2.squared_diff_weight_gain ,
 			t2.squared_diff_weight_maintain,

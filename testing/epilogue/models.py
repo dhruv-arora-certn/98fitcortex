@@ -63,7 +63,8 @@ class Food(models.Model):
 	squared_diff_weight_maintain = models.FloatField(default = 0)
 	squared_diff_weight_gain = models.FloatField(default = 0)
 	image_name = models.CharField(max_length = 100)
-
+	non_veg = models.IntegerField()
+	
 	def __init__(self , *args , **kwargs):
 		super().__init__(*args , **kwargs)
 		self.squared_diff_muscle_gain = self.squared_diff_weight_gain

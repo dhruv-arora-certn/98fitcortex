@@ -123,10 +123,12 @@ class ReplacementPipeline():
 			items = last_plan.get_last_days(days)
 		items.extend(self.get_same_day_exclude())
 		items.extend(self.get_suggestions_exclude())
+		print("Initial Exclude " , items)
 		return items
 
 	def get_suggestions_exclude(self):
-		items = list(self.dish.suggestions.values_list("food__name", flat = True))
+		items = list(self.dish.suggestions.order_by("id").values_list("food__name", flat = True).distinct())
+		items = items[max(len(items)//2 , 5):]
 		if self.replaceMeal:
 			for e in self.dishes:
 				items.extend(e.suggestions.values_list("food__name" , flat = True)[:5])
