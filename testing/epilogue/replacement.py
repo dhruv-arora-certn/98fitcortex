@@ -12,6 +12,7 @@ mealMapper = {
 	'm4' : meals.M4,
 	'm5' : meals.M5
 }
+
 class PseudoMeal():
 
 	@lego.assemble

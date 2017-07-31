@@ -4,10 +4,10 @@ from .goals import Goals
 from .medical_conditions import Osteoporosis , Anemia
 from knapsack.knapsack_dp import knapsack,display
 import heapq ,  re , random , ipdb , math
-from django.db.models import Q
 from numpy.random import choice
 from epilogue.manipulation.manipulator import Manipulator
 from dietplan.categorizer.categorizers import *
+from django.db.models import Q
 
 class Base:
 	fieldMapper = {
@@ -581,7 +581,9 @@ class M4(Base):
 	def select_drink(self):
 		calories = 0.15*self.calories_goal
 		food_list = self.marked.filter(drink = 1)
-		if self.disease == Osteoporosis:
+        m = Manipulator(items = food_list , categorizers=[DrinkCategoriser])
+        food_list = m.categorize().get_final_list()
+        if self.disease == Osteoporosis:
 			food_list.filter(Q(name__contains = "Lassi"))
 		try:
 			self.drink = self.select_best_minimum(food_list , calories , "drink")
@@ -623,7 +625,8 @@ class M4(Base):
 		self.option = "snacks"
 		snack_items = self.marked.filter(snaks = 1).filter(dessert = 0)
 		self.snacks = self.select_best_minimum(snack_items , calories , "snacks")
-	def rethink(self):
+
+    def rethink(self):
 		selected = getattr(self , self.option)
 		if self.option == "fruits" or self.option == "nuts":
 			steps = round(self.calories_remaining * selected.quantity/(selected.calarie))
@@ -725,7 +728,6 @@ class M5(Base):
 			food_list = food_list.filter(self.exclusion_conditions)
 		m = Manipulator(items = food_list , categorizers = [GrainsCerealsCategoriser])
 		final_food_list = m.categorize().get_final_list()
-		# ipdb.set_trace()
 		self.cereals = self.select_best_minimum(final_food_list , calories , "cereal")
 
 	def select_pulses(self , percent = 0.39):
