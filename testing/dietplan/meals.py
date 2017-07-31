@@ -581,9 +581,9 @@ class M4(Base):
 	def select_drink(self):
 		calories = 0.15*self.calories_goal
 		food_list = self.marked.filter(drink = 1)
-        m = Manipulator(items = food_list , categorizers=[DrinkCategoriser])
-        food_list = m.categorize().get_final_list()
-        if self.disease == Osteoporosis:
+		m = Manipulator(items = food_list , categorizers=[DrinkCategoriser])
+		food_list = m.categorize().get_final_list()
+		if self.disease == Osteoporosis:
 			food_list.filter(Q(name__contains = "Lassi"))
 		try:
 			self.drink = self.select_best_minimum(food_list , calories , "drink")
