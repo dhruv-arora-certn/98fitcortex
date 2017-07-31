@@ -626,7 +626,7 @@ class M4(Base):
 		snack_items = self.marked.filter(snaks = 1).filter(dessert = 0)
 		self.snacks = self.select_best_minimum(snack_items , calories , "snacks")
 
-    def rethink(self):
+	def rethink(self):
 		selected = getattr(self , self.option)
 		if self.option == "fruits" or self.option == "nuts":
 			steps = round(self.calories_remaining * selected.quantity/(selected.calarie))
