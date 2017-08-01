@@ -161,13 +161,13 @@ class Objective(models.Model):
 
 	@property
 	def goal(self):
-		if self.name == "Weight Loss":
+		if self.name.strip() == "Weight Loss":
 			return Goals.WeightLoss
-		if self.name == "Weight Gain":
+		if self.name.strip() == "Weight Gain":
 			return Goals.WeightGain
-		if self.name == "Muscle Gain":
+		if self.name.strip() == "Muscle Gain":
 			return Goals.MuscleGain
-		if self.name == "Be Healthy":
+		if self.name.strip() == "Be Healthy":
 			return Goals.MaintainWeight	
 
 class Customer(models.Model):
