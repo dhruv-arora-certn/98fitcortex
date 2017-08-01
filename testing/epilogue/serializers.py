@@ -31,7 +31,7 @@ class DietPlanSerializer(serializers.ModelSerializer):
 	protein = serializers.SerializerMethodField()
 	fat = serializers.SerializerMethodField()
 	carbohydrates = serializers.SerializerMethodField()
-	image = serializers.CharField(source = "food_item.image")
+	image = serializers.SerializerMethodField()
 	quantity = serializers.SerializerMethodField()
 	weight = serializers.SerializerMethodField()
 	dietplan_id = serializers.SerializerMethodField()
@@ -71,6 +71,10 @@ class DietPlanSerializer(serializers.ModelSerializer):
 		if obj.food_item.drink == 1:
 			return 'ml'
 		return 'gms'
+
+	def get_image(self , obj):
+		item = Food.objects.get(pk = obj.food_item_id)
+		return item.image
 
 class LoginSerializer(serializers.Serializer):
 	email = serializers.EmailField(required = True)

@@ -27,7 +27,7 @@ class M5_Gain(models.Manager):
 
 class M5_Loss(models.Manager):
 	def get_queryset(self):
-		return super().get_queryset().filter(m5_loss = '1').filter(calarie__gt = 0)
+		return super().get_queryset().filter(m5_loss = '1').filter(for_loss = 1).filter(calarie__gt = 0)
 
 class M5_Stable(models.Manager):
 	def get_queryset(self):

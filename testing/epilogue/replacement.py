@@ -27,7 +27,8 @@ class PseudoMeal():
 			**self._user.kwargs_attrs
 		)
 		self.replaceMeal = replaceMeal
-		self.calories = self.calculations.calories
+		self.calories = selected['calories']
+		del selected['calories'] 
 		self._selected = selected 
 		self.argMapper = {
 			'calories' : self._get_calories(),
@@ -63,7 +64,8 @@ class PseudoMeal():
 				e : self.argMapper[e]
 			})
 		return args_dict
-	
+
+
 	def save(self):
 		pass
 
@@ -141,23 +143,31 @@ class ReplacementPipeline():
 		return items
 
 	def getSelected(self):
-		baseQ = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.dish.dietplan.id).exclude(id = self.dish.id).filter(day = self.dish.day)
+		baseQ = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.dish.dietplan.id).filter(day = self.dish.day).filter(meal_type = self.dish.meal_type)
 		if self.replaceMeal:
-			return {}
+			return {
+				'calories' : sum(int(e.calorie) for e in baseQ)
+			}
 		else:
 			baseQ = baseQ.filter(meal_type = self.dish.meal_type)
 		d = {  
 				e.food_type : e.food_item.update(e.factor) for e in baseQ
 			}
+		d['calories'] = int(self.dish.calorie)
 		return d
 	
 	def update_dish(self , dish , item):
-		dish.food_item_id = item.id
+		if isinstance(item , Food):
+			dish.food_item = item
+		else:
+			i = Food.objects.get(pk = item.id)
+			dish.food_item = i
 		dish.food_name = item.name
 		dish.calorie = str(item.calorie)
 		dish.weight = item.weight
 		dish.quantity = item.quantity
 		dish.size = item.size
+		return dish
 
 	def save(self):
 		self.created = {}
@@ -167,19 +177,16 @@ class ReplacementPipeline():
 			common_keys = set(existing_keys) & new_keys
 			to_delete = set(existing_keys) - new_keys
 			to_add = set(new_keys) - existing_keys
-			print("Existin " , existing_keys)	
-			print("New Keys " , new_keys)	
-			print("Common Keys " , common_keys)	
-			print("To Delete Keys " , to_delete)	
-			print("To Add Keys" , to_add)	
+			
 			#Replace the 3 for loops using map()
 			for i in common_keys:
 				print(i)
 				e = self.dishes_dict[i]
 				new_item = self._selected.get(i)
 				e.suggestions.create(food = e.food_item)
-				self.update_dish(e , new_item)
+				e = self.update_dish(e , new_item)
 				e.save()
+				self.dishes_dict[i] = e
 			
 			for i  in to_add:
 				e = self._selected[i]
@@ -205,7 +212,7 @@ class ReplacementPipeline():
 		else:
 			self.toUpdate = self._selected.get(self.dish.food_type)
 			self.dish.suggestions.create(food_id = self.toUpdate.id)
-			self.update_dish(self.dish , self.toUpdate)
+			self.dish = self.update_dish(self.dish , self.toUpdate)
 			self.dish.save()
 			return self.dish	
 	@property

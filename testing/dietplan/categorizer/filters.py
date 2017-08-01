@@ -1,6 +1,9 @@
 def veg_filter(x): 
 	return x.poultary == 0 and x.seafood == 0 and x.pork == 0 and x.meat == 0 and x.lamb_mutton == 0 and x.beef == 0 and x.other_meat == 0 and x.egg == 0
 
+def non_veg_filter(x):
+	return x.poultary == 0 or x.seafood == 0 or x.pork == 0 or x.meat == 0 or x.lamb_mutton == 0 or x.beef == 0 or x.other_meat == 0 or x.egg == 0
+
 def combination_filter(x): 
 	return x.cuisine == "Combination"
 
@@ -31,7 +34,7 @@ khichdi_filter.name = "khichdi"
 veg_biryani_filter = lambda x : biryani_filter(x) and veg_filter(x)
 veg_biryani_filter.name = "veg_biryani"
 
-non_veg_biryani_filter = lambda x : biryani_filter(x) and not veg_filter(x)
+non_veg_biryani_filter = lambda x : biryani_filter(x) and non_veg_filter(x)
 non_veg_biryani_filter.name = "non_veg_biryani"
 
 def yogurt_filter(item):

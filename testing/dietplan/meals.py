@@ -8,7 +8,7 @@ from numpy.random import choice
 from epilogue.manipulation.manipulator import Manipulator
 from dietplan.categorizer.categorizers import *
 from django.db.models import Q
-
+from random import sample
 class Base:
 	fieldMapper = {
 		Goals.WeightLoss : "squared_diff_weight_loss",
@@ -346,7 +346,7 @@ class M2(Base):
 				p = [0.5 , 0.5]
 			)[0]
 			self.choice()
-		self.rethink()
+		#self.rethink()
 		return self
 
 
@@ -452,7 +452,7 @@ class M3(Base):
 		food_list = m.categorize().get_final_list()
 		self.cereal = self.select_best_minimum(food_list , calories , "cereals")
 		
-	def select_pulses(self , calories = None , non_veg = False):
+	def select_pulses(self , calories = None , extra_filter = Q()):
 		
 		if self.isYogurt : 
 			percent = 0.23
@@ -462,11 +462,8 @@ class M3(Base):
 		if not calories:
 			calories = percent * self.calories_goal
 		
-		if 	non_veg:
-			food_list = self.marked.filter( Q(non_veg_gravy_items = 1) | Q(pulses = 1)  & Q(vegetable = 1) & Q(cuisine = "Generic") & Q(grains_cereals = 0))
-		else:
-			food_list = self.marked.filter(pulses = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
-		
+		food_list = self.marked.filter(pulses = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
+		food_list = food_list.filter(extra_filter)
 		m = Manipulator(items = food_list , categorizers = [VegetablePulseCategoriser])
 		food_list = m.categorize().get_final_list()
 		try:
@@ -477,20 +474,21 @@ class M3(Base):
 
 	def makeGeneric(self):
 		self.select_cereals()
-		
+
+		if self.cereal.non_veg == 1:
+			self.select_pulses(calories = calories_remaining , extra_filter = Q(non_veg_gravy_items = 1) & Q(vegetable = 1))
+			return self
+
 		#Already Implemented
 		if self.cereal.vegetables == 1 and self.cereal.pulse == 0:
-			self.select_pulses(calories = self.calories_remaining)
+			self.select_pulses(calories = self.calories_remaining , extra_filter = Q(pulse = 1))
 		
 		elif self.cereal.vegetables == 0 and self.cereal.pulse == 1:
-			self.select_vegetables(calories = self.calories_remaining)
+			self.select_vegetables(calories = self.calories_remaining , extra_filter = Q(vegetable = 1))
 		
 		#Already Implemented
 		elif self.cereal.vegetables == 1 and self.cereal.pulse == 1:
 			self.select_pulses(calories = self.calories_remaining)
-		
-		elif self.cereal.non_veg == 1:
-			self.select_pulses(non_veg = True)
 
 		if self.cereal.vegetables == 0 and self.cereal.pulse == 0:
 			self.select_pulses()
@@ -504,10 +502,9 @@ class M3(Base):
 		else:
 			calories *= 0.85
 		food_list = self.marked.filter(cuisine = "Combination")
+		m = Manipulator(items = food_list , categorizers = [CombinationCategoriser])
+		food_list = m.categorize().get_final_list()
 		self.combination = self.select_best_minimum(food_list , calories , name = "combination")
-		steps = round( (calories-self.combination.calarie) * self.combination.weight/(self.combination.calarie*10))
-		new_weight = min(350,self.combination.weight + steps * 10)
-		self.combination.update_weight(new_weight/self.combination.weight)
 
 	def rethink(self):
 		if self.calories < self.calories_goal:
@@ -650,9 +647,9 @@ class M4(Base):
 			probability = self.get_probabilities()
 			if self.disease and hasattr(self.disease , "nuts_probability"):
 				probability = self.disease.nuts_probability
-			func = choice([
+			func = sample([
 				self.select_fruit , self.select_nut , self.select_snacks , self.select_salad
-			], size = 1 , p = probability)[0]
+			], 1)[0]
 			if hasattr(self , "drink"):
 				cals = self.calories_remaining
 			else:
@@ -730,9 +727,10 @@ class M5(Base):
 		final_food_list = m.categorize().get_final_list()
 		self.cereals = self.select_best_minimum(final_food_list , calories , "cereal")
 
-	def select_pulses(self , percent = 0.39):
+	def select_pulses(self , percent = 0.39, extra_filter = Q()):
 		calories = percent * self.calories_goal
 		food_list = self.marked.filter(pulse = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
+		food_list = food_list.filter(extra_filter)
 		m = Manipulator(items = food_list , categorizers = [VegetablePulseCategoriser])
 		food_list = m.categorize().get_final_list()
 		self.pulse = self.select_best_minimum(food_list , calories , "pulse")
@@ -740,19 +738,26 @@ class M5(Base):
 	def makeGeneric(self):
 		self.select_cereals()
 		
+		#In case the item is non vegetarian cereal, only a pulse is required
+		if self.cereals.non_veg == 1:
+			self.select_pulses(percent = 0.61 , extra_filter = Q(non_veg_gravy_items = 1) & Q(vegetable = 1))
+			return self
+
 		if self.cereals.vegetables == 1 and self.cereals.pulse == 0:
-			self.select_pulses(percent = 0.61)
+			self.select_pulses(percent = 0.61 , extra_filter = Q(pulse = 1))
 		elif self.cereals.vegetables == 0 and self.cereals.pulse == 1:
 			self.select_vegetables(percent = 0.61)
 		elif self.cereals.vegetables == 1 and self.cereals.pulse == 1:
 			self.select_pulses(percent = 0.61)
 		if self.cereals.vegetables == 0 and self.cereals.pulse == 0:
 			self.select_pulses()
-			self.select_vegetables()	
+			self.select_vegetables()
 		return self
 
 	def makeCombination(self):
 		food_list = self.marked.filter(cuisine = "Combination")
+		m = Manipulator(items = food_list , categorizers = [CombinationCategoriser])
+		food_list = m.categorize().get_final_list()
 		self.combination = self.select_best_minimum(food_list , self.calories_goal , name = "combination")
 	
 	def rethink(self):
