@@ -88,6 +88,7 @@ class DietPlanView(GenericAPIView):
 	authentication_classes = (CustomerAuthentication,)
 	permission_classes = (IsAuthenticated,)
 	lookup_fields = ("week_id" , "day")
+	queryset = GeneratedDietPlan.objects
 
 	def get_queryset(self):
 		return GeneratedDietPlan.objects.filter(customer = self.request.user)
