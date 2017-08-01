@@ -27,8 +27,7 @@ class PseudoMeal():
 			**self._user.kwargs_attrs
 		)
 		self.replaceMeal = replaceMeal
-		self.calories = selected['calories']
-		del selected['calories'] 
+		self.calories =self.calculations.calories
 		self._selected = selected 
 		self.argMapper = {
 			'calories' : self._get_calories(),
@@ -36,7 +35,7 @@ class PseudoMeal():
 			'exclude' : self._get_exclude(),
 			'exclude2' : self._get_exclude2(),
 			'exclusion_conditions' : self._get_exclusion_conditions(),
-			'extra' : 0,
+			'extra' : self.extraCals(),
 			'goal' : self._user.goal,
 			'make_combination' : self._get_make_combination(),
 			'make_dessert' : self._get_make_dessert(),
@@ -65,7 +64,21 @@ class PseudoMeal():
 			})
 		return args_dict
 
+	def extraCals(self):
+		if self._meal_type == meals.M5:
+			return 0
+		sequence = ["m5" ,"m3" ,"m1"  ,"m4"  ,"m2" ]
+		cals = 0
+		for e in sequence:
+			if e == self.dish.meal_type:
+				return cals
+			meal_cals = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.dish.dietplan_id).filter(meal_type = e).filter(day = self.dish.day).aggregate(cals =models.Sum('calorie'))
+			print("Meal Cals " , e , meal_cals)
+			meal = mealMapper.get(e)
+			cals += (self.calculations.calories * meal.percent - meal_cals.get('cals',0))
+		return cals
 
+			
 	def save(self):
 		pass
 
@@ -115,7 +128,7 @@ class ReplacementPipeline():
 		self._selected = self.getSelected()
 		self.meal = self.intializeMeal()
 
-
+	
 	def intializeMeal(self):
 		return PseudoMeal(self.dish , self.get_initial_exclude() , selected = self._selected ,replaceMeal = self.replaceMeal) 
 
@@ -146,14 +159,12 @@ class ReplacementPipeline():
 		baseQ = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.dish.dietplan.id).filter(day = self.dish.day).filter(meal_type = self.dish.meal_type)
 		if self.replaceMeal:
 			return {
-				'calories' : sum(int(e.calorie) for e in baseQ)
 			}
 		else:
 			baseQ = baseQ.filter(meal_type = self.dish.meal_type)
 		d = {  
 				e.food_type : e.food_item.update(e.factor) for e in baseQ
 			}
-		d['calories'] = int(self.dish.calorie)
 		return d
 	
 	def update_dish(self , dish , item):
