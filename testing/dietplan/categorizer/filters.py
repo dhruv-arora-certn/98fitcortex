@@ -1,8 +1,8 @@
 def veg_filter(x): 
-	return x.poultary == 0 and x.seafood == 0 and x.pork == 0 and x.meat == 0 and x.lamb_mutton == 0 and x.beef == 0 and x.other_meat == 0 and x.egg == 0
+	return not bool(x.non_veg) 
 
 def non_veg_filter(x):
-	return x.poultary == 0 or x.seafood == 0 or x.pork == 0 or x.meat == 0 or x.lamb_mutton == 0 or x.beef == 0 or x.other_meat == 0 or x.egg == 0
+	return bool(x.non_veg) 
 
 def combination_filter(x): 
 	return x.cuisine == "Combination"
@@ -53,12 +53,12 @@ def parantha_filter(item):
 	return "parantha" in item.name.lower() or "prantha" in item.name.lower() or item.grains_cereals == 1
 
 def plain_parantha_filter(item):
-	return  parantha_filter(item) and item.vegetable == 0 and item.pulse == 0 and item.egg == 0
+	return  parantha_filter(item) and item.vegetable == 0 and item.pulse == 0 and not non_veg_filter(item) 
 plain_parantha_filter.name = "plain_parantha"
 
 
 def stuffed_parantha_filter(item):
-	return parantha_filter(item) and not plain_parantha_filter(item)
+	return parantha_filter(item) and not plain_parantha_filter(item) 
 stuffed_parantha_filter.name = "stuffed_parantha"
 
 def soup_filter(item):
