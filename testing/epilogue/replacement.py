@@ -139,15 +139,28 @@ class ReplacementPipeline():
 			items = last_plan.get_last_days(days)
 		items.extend(self.get_same_day_exclude())
 		items.extend(self.get_suggestions_exclude())
+		items.append(self.dish.food_name)
 		print("Initial Exclude " , items)
 		return items
+	
+	def get_suggestions_slice(self, items):
+		'''
+		Get a slice of the items suggestion listw
+
+		'''
+		l = len(items)
+		if 0 <= l <= 5:
+			return items
+		elif l > 5:
+			return items[max(l//2 , 5):]
 
 	def get_suggestions_exclude(self):
 		items = list(self.dish.suggestions.order_by("id").values_list("food__name", flat = True).distinct())
-		items = items[max(len(items)//2 , 5):]
+		items = self.get_suggestions_slice(items) 
 		if self.replaceMeal:
 			for e in self.dishes:
 				items.extend(e.suggestions.values_list("food__name" , flat = True)[:5])
+		print("Suggestions Exclude " ,items)
 		return items
 
 	def get_same_day_exclude(self):
@@ -222,7 +235,7 @@ class ReplacementPipeline():
 			return [e for e in self.dishes_dict.values()]
 		else:
 			self.toUpdate = self._selected.get(self.dish.food_type)
-			self.dish.suggestions.create(food_id = self.toUpdate.id)
+			self.dish.suggestions.create(food_id = self.dish.food_item.id)
 			self.dish = self.update_dish(self.dish , self.toUpdate)
 			self.dish.save()
 			return self.dish	

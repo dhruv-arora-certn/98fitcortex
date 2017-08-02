@@ -484,7 +484,7 @@ class M3(Base):
 			self.select_pulses(calories = self.calories_remaining , extra_filter = Q(pulse = 1))
 		
 		elif self.cereal.vegetables == 0 and self.cereal.pulse == 1:
-			self.select_vegetables(calories = self.calories_remaining , extra_filter = Q(vegetable = 1))
+			self.select_pulses(calories = self.calories_remaining , extra_filter = Q(vegetables = 1))
 		
 		#Already Implemented
 		elif self.cereal.vegetables == 1 and self.cereal.pulse == 1:
@@ -589,7 +589,6 @@ class M4(Base):
 			self.select_item(self.drink , "drink")
 
 	def select_fruit(self , calories = 0 ):
-		print("Calling Select Fruit")
 		if calories == 0:
 			calories = 0.85*self.calories_goal
 		self.option = "fruits"
