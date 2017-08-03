@@ -782,7 +782,7 @@ class M5(Base,CerealTreeSelector):
 
 	def select_pulses(self , percent = 0.39, extra_filter = Q()):
 		calories = percent * self.calories_goal
-		food_list = self.marked.filter(pulse = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
+		food_list = self.marked.filter(pulses = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
 		food_list = food_list.filter(extra_filter)
 		m = Manipulator(items = food_list , categorizers = [VegetablePulseCategoriser])
 		food_list = m.categorize().get_final_list()
