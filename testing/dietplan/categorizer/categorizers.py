@@ -18,8 +18,8 @@ class RotiCategoriser(filters.BaseFilter):
 
 class ParanthaCategoriser(filters.BaseFilter):
 	filters = [
-		filters.plain_parantha_filter,
 		filters.stuffed_parantha_filter,
+		filters.plain_parantha_filter,
 		filters.roti_filter
 	]
 class GrainsCerealsCategoriser(filters.BaseFilter):
@@ -30,9 +30,9 @@ class GrainsCerealsCategoriser(filters.BaseFilter):
 		filters.veg_biryani_filter,
 		filters.non_veg_biryani_filter,
 		filters.rice_pulao_filter,
-		filters.roti_filter,
+		filters.stuffed_parantha_filter,
 		filters.plain_parantha_filter,
-		filters.stuffed_parantha_filter
+		filters.roti_filter,
 	]
 
 class DrinkCategoriser(filters.BaseFilter):
