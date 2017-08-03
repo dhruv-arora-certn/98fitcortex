@@ -784,6 +784,8 @@ class M5(Base,CerealTreeSelector):
 		calories = percent * self.calories_goal
 		food_list = self.marked.filter(pulses = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
 		food_list = food_list.filter(extra_filter)
+		if food_list.count() < 3:
+			food_list = self.getQuerysetFromGoal().filter(pulses = 1).filter(extra_filter).filter(self.exclusion_conditions) 
 		m = Manipulator(items = food_list , categorizers = [VegetablePulseCategoriser])
 		food_list = m.categorize().get_final_list()
 		self.pulse = self.select_best_minimum(food_list , calories , "pulse")
