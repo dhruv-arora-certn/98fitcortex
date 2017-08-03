@@ -101,7 +101,7 @@ class PseudoMeal():
 		return 0
 	
 	def _get_make_combination(self):
-		return self.dish.food_type == "combination"
+		return self.dish.food_type.strip().lower() == "combination"
 	
 	def _get_make_dessert(self):
 		return self.dish.food_type == "dessert"

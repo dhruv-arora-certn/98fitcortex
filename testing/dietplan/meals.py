@@ -264,7 +264,7 @@ class M1(Base):
 		self.select_snack()
 		if self.protein_ideal - self.protein > 8 and hasattr(self , "egg"):
 			self.egg.update_quantity(1.5)
-		self.rethink()
+		#self.rethink()
 		return self
 
 
@@ -404,7 +404,7 @@ class M3(Base , CerealTreeSelector):
 		self.exclude2 = exclude2
 		self.selected = selected
 		self.queryset = self.getQuerysetFromGoal().exclude(name__in = exclude)
-
+		self.exclude = exclude
 		if self.goal == Goals.WeightLoss:
 			self.queryset = self.queryset.filter(for_loss = 1)
 
@@ -491,6 +491,9 @@ class M3(Base , CerealTreeSelector):
 		
 		food_list = food_list.filter(cuisine = "Generic").filter(extra_filter)
 		# ipdb.set_trace()
+		if food_list.count() < 3:
+			food_list = self.getQuerysetFromGoal().filter(grains_cereals = 1).exclude(name__in = self.exclude[len(self.exclude)//2:])
+			food_list = food_list.filter(self.exclusion_conditions)
 		m = Manipulator(items = food_list , categorizers = [GrainsCerealsCategoriser])
 		food_list = m.categorize().get_final_list()
 		print("Selecting Cereals")
@@ -565,12 +568,12 @@ class M3(Base , CerealTreeSelector):
 			selected.update_weight(new_weight/selected.weight)
 
 	def build(self):
-		
+		print("Make Combination " , self.make_combination)	
 		if self.make_dessert:
 			self.select_dessert()
 		elif ('dairy' , 0) not in self.exclusion_conditions.children:
 			self.select_yogurt()
-
+		
 		if self.make_combination:
 			self.makeCombinations()
 		else:
