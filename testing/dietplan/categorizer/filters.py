@@ -25,7 +25,7 @@ tea_coffee_filter.name = "beverage"
 rice_pulao_filter = lambda x : x.grains_cereals == 1 and x.size == "Quarter Plate" and x.wheat == 0
 rice_pulao_filter.name = "rice_pulao"
 
-roti_filter = lambda x : x.grains_cereals == 1 and (x.size == "Pieces" or x.size == "Piece") and m1==0
+roti_filter = lambda x : x.grains_cereals == 1 and (x.size == "Pieces" or x.size == "Piece") and item.m1==0
 roti_filter.name = "roti"
 
 khichdi_filter = lambda x : combination_filter(x) and "khichdi" in x.name.lower()
@@ -50,7 +50,7 @@ def soup_filter(item):
 soup_filter.name = "soup"
 
 def parantha_filter(item):
-	return item.grains_cereals == 1 and m1==1
+	return item.grains_cereals == 1 and item.m1==1
 
 def plain_parantha_filter(item):
 	return  parantha_filter(item) and item.vegetables == 0 and item.pulse == 0 and not non_veg_filter(item) 
