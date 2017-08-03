@@ -53,12 +53,12 @@ def parantha_filter(item):
 	return "parantha" in item.name.lower() or "prantha" in item.name.lower() or item.grains_cereals == 1
 
 def plain_parantha_filter(item):
-	return  parantha_filter(item) and item.vegetable == 0 and item.pulse == 0 and not non_veg_filter(item) 
+	return  parantha_filter(item) and item.vegetables == 0 and item.pulse == 0 and not non_veg_filter(item) 
 plain_parantha_filter.name = "plain_parantha"
 
 
 def stuffed_parantha_filter(item):
-	return parantha_filter(item) and not plain_parantha_filter(item) 
+	return parantha_filter(item) or item.vegetables == 1 or item.pulse == 1 or non_veg_filter(item) 
 stuffed_parantha_filter.name = "stuffed_parantha"
 
 def soup_filter(item):
