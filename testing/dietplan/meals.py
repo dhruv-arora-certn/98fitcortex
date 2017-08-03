@@ -801,7 +801,7 @@ class M5(Base,CerealTreeSelector):
 		if self.cereals.vegetables == 1 and self.cereals.pulse == 0:
 			self.select_pulses(percent = 0.61 , extra_filter = Q(pulse = 1))
 		elif self.cereals.vegetables == 0 and self.cereals.pulse == 1:
-			self.select_vegetables(percent = 0.61)
+			self.select_pulses(percent = 0.61,extra_filter = Q(vegetable = 1))
 		elif self.cereals.vegetables == 1 and self.cereals.pulse == 1:
 			self.select_pulses(percent = 0.61)
 		if self.cereals.vegetables == 0 and self.cereals.pulse == 0:
