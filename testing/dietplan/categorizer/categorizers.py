@@ -68,3 +68,8 @@ class YogurtCategoriser(filters.BaseFilter):
 	filters = [
 		filters.yogurt_filter
 	]
+
+class SaladCategoriser(filters.BaseFilter):
+	filters = [
+		filters.salad_filter
+	]

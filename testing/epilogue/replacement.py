@@ -233,12 +233,24 @@ class ReplacementPipeline():
 				del self.dishes_dict[i]
 
 			return [e for e in self.dishes_dict.values()]
-		else:
+		elif self.meal_type != 'm4':
 			self.toUpdate = self._selected.get(self.dish.food_type)
 			self.dish.suggestions.create(food_id = self.dish.food_item.id)
 			self.dish = self.update_dish(self.dish , self.toUpdate)
 			self.dish.save()
-			return self.dish	
+			return self.dish
+		else:
+		 	dishKey = self.dish.food_type
+		 	newKeySet = set(self._selected.keys()).difference([dishKey , "drink"])
+		 	if not newKeySet:
+		 		newKey = dishKey
+		 	else:
+		 		newKey = newKeySet.pop()
+		 	self.toUpdate = self._selected[newKey]
+		 	self.dish.suggestions.create(food_id = self.dish.food_item.id)
+		 	self.dish = self.update_dish(self.dish , self.toUpdate)
+		 	self.dish.save()
+		 	return self.dish
 	@property
 	def selected(self):
 		return list(self._selected.values())

@@ -65,6 +65,10 @@ def soup_filter(item):
 	return "soup" in item.name.lower()
 soup_filter.name = "soup"
 
+def salad_filter(item):
+	return item.salad == 1 
+salad_filter.name = "salad"
+
 class BaseFilter():
 	'''
 	Base class for filters

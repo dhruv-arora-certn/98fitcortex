@@ -9,6 +9,42 @@ from epilogue.manipulation.manipulator import Manipulator
 from dietplan.categorizer.categorizers import *
 from django.db.models import Q
 from random import sample
+
+class CerealTreeSelector():
+	
+	def cerealReplacer(self):
+		self.getCerealFromSelected()
+		extra_filter = Q()
+		if self.cereal.non_veg == 1:
+			extra_filter &= Q(non_veg = 1)
+		if self.cereal.vegetables == 1:
+			extra_filter &= Q(vegetables = 1)
+		if self.cereal.pulse == 1:
+			extra_filter &= Q(pulse = 1)
+		self.select_cereals(extra_filter = extra_filter)
+		return self
+	
+	def pulseReplacer(self):
+		self.getCerealFromSelected()	
+		extra_filter = Q()
+		if self.cereal.non_veg == 1:
+			extra_filter &= Q(non_veg_gravy_items = 1) & Q(vegetable = 1)
+		elif self.cereal.vegetables ==1 and self.cereal.pulse == 0:
+			extra_filter &= Q(pulse = 1)
+		elif self.cereal.vegetables == 0 and self.cereal.pulse == 1:
+			extra_filter &= Q(vegetables = 1)
+		
+		self.select_pulses(extra_filter = extra_filter)
+		return self
+	
+	def getCerealFromSelected(self):
+		self.cereal = self.selected.get('cereal')
+		if not self.cereal:
+			self.cereal = self.selected.get('cereals')
+		if not self.cereal:
+			self.cereal = self.selected.get('grains_cereals')
+
+
 class Base:
 	fieldMapper = {
 		Goals.WeightLoss : "squared_diff_weight_loss",
@@ -25,7 +61,14 @@ class Base:
 		unit = item.calarie/(5*item.weight)
 		steps = round(difference/unit)
 		return steps
-	
+	def get_steps_quantity(self,item):
+		print("Calories Goal",self.calories_goal)
+		print("Calories Remaining", self.calories)
+		difference = self.calories_goal - self.calories
+		unit = item.calarie/item.quantity
+		steps = round(difference/unit)
+		return steps
+
 	@property
 	def calories(self):
 		return sum([i.calorie for i in self.selected.values()])
@@ -350,7 +393,7 @@ class M2(Base):
 		return self
 
 
-class M3(Base):
+class M3(Base , CerealTreeSelector):
 	percent = 0.25
 
 	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None , exclusion_conditions = None , make_combination = False , make_dessert = False ,  exclude2 = None , selected = None):
@@ -379,14 +422,14 @@ class M3(Base):
 			'yogurt' : self.select_yogurt,
 			'dessert' : self.select_dessert,
 			'vegetable' : self.select_vegetables,
-			'pulse' : self.select_pulses,
-			'cereal' : self.select_cereals,
+			'pulse' : self.pulseReplacer,
+			'cereal' : self.cerealReplacer,
 			'combination' : self.makeCombinations
 		}
 		backwardMapper = {
-			'cereals' : self.select_cereals,
-			'grains_cereals' : self.select_cereals,
-			'pulses' : self.select_pulses,
+			'cereals' : self.cerealReplacer,
+			'grains_cereals' : self.cerealReplacer,
+			'pulses' : self.cerealReplacer,
 		}
 		self.buildMapper.update(backwardMapper)
 
@@ -436,7 +479,7 @@ class M3(Base):
 			self.vegetable.update_weight(new_weight/self.vegetable.weight)
 
 
-	def select_cereals(self , percent = 0.37):		
+	def select_cereals(self , percent = 0.37,extra_filter = Q()):		
 		calories = percent * self.calories_goal
 		
 		if self.exclude2:
@@ -446,14 +489,14 @@ class M3(Base):
 			food_list = self.marked.filter(grains_cereals = 1)
 			food_list = food_list.filter(self.exclusion_conditions)
 		
-		food_list = food_list.filter(cuisine = "Generic")
+		food_list = food_list.filter(cuisine = "Generic").filter(extra_filter)
 		# ipdb.set_trace()
 		m = Manipulator(items = food_list , categorizers = [GrainsCerealsCategoriser])
 		food_list = m.categorize().get_final_list()
+		print("Selecting Cereals")
 		self.cereal = self.select_best_minimum(food_list , calories , "cereals")
 		
 	def select_pulses(self , calories = None , extra_filter = Q()):
-		
 		if self.isYogurt : 
 			percent = 0.23
 		else:
@@ -534,7 +577,6 @@ class M3(Base):
 			self.makeGeneric()
 		
 		return self
-
 	@property
 	def for_random(self):
 		return list(filter( lambda x : not bool(x.dessert) , self.selected))
@@ -562,16 +604,16 @@ class M4(Base):
 			self.marked = disease.get_queryset(self.queryset)
 		self.selected = selected
 		self.buildMapper = {
-			'drink' : self.select_drink,
-			'fruit' : self.select_fruit,
-			'salad' : self.select_salad,
-			'nuts'  : self.select_nut,
-			'snack' : self.select_snacks
+			'drink' : self.get_random_item,
+			'fruit' : self.get_random_item,
+			'salad' : self.get_random_item,
+			'nuts'  : self.get_random_item,
+			'snack' : self.get_random_item
 		}
 		backwardMapper = {
-			'pulses' : self.select_snacks,
-			'snacks' : self.select_snacks,
-			'snaks' : self.select_snacks
+			'pulses' : self.get_random_item,
+			'snacks' : self.get_random_item,
+			'snaks' : self.get_random_item
 		}
 		self.buildMapper.update(backwardMapper)
 
@@ -594,7 +636,7 @@ class M4(Base):
 		self.option = "fruits"
 		fruit_items = self.marked.filter(fruit = 1).exclude(name__contains = "Handful")
 		self.fruits = self.select_best_minimum(fruit_items , calories , "fruit")
-		self.fruits.update_quantity(2)
+		#self.fruits.update_quantity(2)
 
 	def select_salad(self , calories = 0):
 		print("Calling Select Salad")
@@ -602,8 +644,10 @@ class M4(Base):
 			calories = 0.85*self.calories_goal
 		self.option = "salad"
 		salad_items = self.marked.filter(salad = 1 ).filter(~Q(name__startswith = "Handful")).all()
+		m = Manipulator(items = salad_items , categorizers = [SaladCategoriser] )
+		salad_items = m.categorize().get_final_list()
 		self.salad = self.select_best_minimum(salad_items , calories , "salad")
-		self.salad.update_weight(1.5)
+		#self.salad.update_weight(1.5)
 
 	def select_nut(self , calories = 0):
 		print("Calling Select Nuts")
@@ -612,7 +656,9 @@ class M4(Base):
 		self.option = "nuts"
 		nuts_items = self.marked.filter(nuts = 1)
 		self.nuts = self.select_best_minimum(nuts_items , calories , "nuts")
-		self.nuts.update_quantity(2)
+		steps = self.get_steps_quantity(self.nuts)
+		print("Nuts Steps",steps)
+		self.nuts.update_quantity((self.nuts.quantity + steps)/self.nuts.quantity)
 
 	def select_snacks(self , calories = 0):
 		print("Calling Select Snacks")
@@ -636,27 +682,31 @@ class M4(Base):
 	def get_probabilities(self):
 		if ("nuts" , 0) in self.exclusion_conditions.children:
 			return [1/3,0,1/3,1/3]
-		return [0.25 , 0.25 , 0.25 , 0.25]
-
-	def build(self):
-		if self.disease and hasattr( self.disease , "m4_build"):
-			getattr(self.disease , "m4_build")(self)
-		else:
-			self.select_drink()
+		return [ 0.33 , 0.33 , 0.33]
+	
+	def get_random_item(self):
 			probability = self.get_probabilities()
 			if self.disease and hasattr(self.disease , "nuts_probability"):
 				probability = self.disease.nuts_probability
 			func = sample([
-				self.select_fruit , self.select_nut , self.select_snacks , self.select_salad
+				self.select_fruit , self.select_snacks , self.select_salad
 			], 1)[0]
 			if hasattr(self , "drink"):
 				cals = self.calories_remaining
 			else:
 				cals = self.calories_goal * 0.85	
 			func(calories = cals)
+			return self
+
+	def build(self):
+		if self.disease and hasattr( self.disease , "m4_build"):
+			getattr(self.disease , "m4_build")(self)
+		else:
+			self.select_drink()
+			self.get_random_item()
 		return self
 
-class M5(Base):
+class M5(Base,CerealTreeSelector):
 	percent = 0.20
 
 	def __init__(self , calories , goal , exclude = "" , extra = 0 , disease = None , exclusion_conditions = None , exclude2 = None , make_combination = False , selected = None):
@@ -681,13 +731,13 @@ class M5(Base):
 
 		self.buildMapper = {
 			'vegetable' : self.select_vegetables,
-			'cereal' : self.select_cereals,
-			'pulse' : self.select_pulses,
+			'cereal' : self.cerealReplacer,
+			'pulse' : self.pulseReplacer,
 			'combination' : self.makeCombination
 		}
 		backwardMapper = {
-			'grains_cereals' : self.select_cereals,
-			'pulses' : self.select_pulses,
+			'grains_cereals' : self.cerealReplacer,
+			'pulses' : self.pulseReplacer,
 		}
 		self.buildMapper.update(backwardMapper)
 
@@ -712,7 +762,7 @@ class M5(Base):
 		self.vegetables = self.select_best_minimum(food_list , calories , "vegetable")
 
 
-	def select_cereals(self):
+	def select_cereals(self,extra_filter = Q()):
 		calories = 0.39*self.calories_goal
 		if self.exclude2:
 			food_list = self.getQuerysetFromGoal().exclude(name__in = self.exclude2).exclude(name__in = self.exclude).filter(grains_cereals = 1).filter(cuisine = "Generic")
@@ -722,6 +772,7 @@ class M5(Base):
 		if food_list.count() < 1:
 			food_list = self.getQuerysetFromGoal().filter(grains_cereals = 1).filter(cuisine = "Generic")
 			food_list = food_list.filter(self.exclusion_conditions)
+		food_list = food_list.filter(extra_filter)
 		m = Manipulator(items = food_list , categorizers = [GrainsCerealsCategoriser])
 		final_food_list = m.categorize().get_final_list()
 		self.cereals = self.select_best_minimum(final_food_list , calories , "cereal")
@@ -758,6 +809,22 @@ class M5(Base):
 		m = Manipulator(items = food_list , categorizers = [CombinationCategoriser])
 		food_list = m.categorize().get_final_list()
 		self.combination = self.select_best_minimum(food_list , self.calories_goal , name = "combination")
+		
+	def pulseReplacer(self):
+		self.getCerealFromSelected()	
+		extra_filter = Q()
+		percent = 0.39
+		if self.cereal.non_veg == 1:
+			extra_filter &= Q(non_veg_gravy_items = 1) & Q(vegetable = 1)
+			percent = 0.61
+		elif self.cereal.vegetables ==1 and self.cereal.pulse == 0:
+			extra_filter &= Q(pulse = 1)
+			percent = 0.61
+		elif self.cereal.vegetables == 0 and self.cereal.pulse == 1:
+			extra_filter &= Q(vegetables = 1)
+			percent = 0.61	
+		self.select_pulses(percent = percent , extra_filter = extra_filter)
+		return self
 	
 	def rethink(self):
 		if not hasattr(self , "combination"):
@@ -771,3 +838,4 @@ class M5(Base):
 		else:
 			self.makeGeneric()
 		return self
+
