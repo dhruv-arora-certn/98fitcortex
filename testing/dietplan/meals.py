@@ -831,7 +831,7 @@ class M5(Base,CerealTreeSelector):
 		return self
 
 	def makeCombination(self):
-		food_list = self.marked.filter(cuisine = "Combination").filter(calarie__gte = self.calories_goal) 
+		food_list = self.marked.filter(cuisine = "Combination") 
 		m = Manipulator(items = food_list , categorizers = [CombinationCategoriser])
 		food_list = m.categorize().get_final_list()
 		self.combination = self.select_best_minimum(food_list , self.calories_goal , name = "combination")
