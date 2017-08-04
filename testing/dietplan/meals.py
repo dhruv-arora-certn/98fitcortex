@@ -441,7 +441,9 @@ class M3(Base , CerealTreeSelector):
 		self.buildMapper.update(backwardMapper)
 
 	def getQuerysetFromGoal(self):
-		f = Food.m3_objects.filter(for_loss = 1)
+		f = Food.m3_objects
+		if self.goal == Goals.WeightLoss:
+			f = f.filter(for_loss = 1)
 		return f
 
 	def select_yogurt(self):
@@ -476,6 +478,8 @@ class M3(Base , CerealTreeSelector):
 		food_list = self.marked.filter(vegetable = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
 		if self.disease and hasattr(self.disease , "vegetable_filter"):
 			food_list = food_list.filter(self.disease.vegetable_filter)
+		if food_list.count() < 3:
+			food_list = self.getQuerysetFromGoal().filter(vegetable = 1).filter(grains_cereals = 0).filter(cuisine = "Generic").filter(extra_filter)
 		m = Manipulator(items = food_list , categorizers = [VegetablePulseCategoriser])
 		food_list = m.categorize().get_final_list()
 		self.vegetable = self.select_best_minimum(food_list , calories , "vegetable")
@@ -500,7 +504,7 @@ class M3(Base , CerealTreeSelector):
 		# ipdb.set_trace()
 		if food_list.count() < 3:
 			food_list = self.getQuerysetFromGoal().filter(grains_cereals = 1).exclude(name__in = self.exclude[len(self.exclude)//2:])
-			food_list = food_list.filter(self.exclusion_conditions)
+			food_list = food_list.filter(self.exclusion_conditions).filter(extra_filter)
 		m = Manipulator(items = food_list , categorizers = [GrainsCerealsCategoriser])
 		food_list = m.categorize().get_final_list()
 		print("Selecting Cereals")
@@ -519,6 +523,8 @@ class M3(Base , CerealTreeSelector):
 		
 		food_list = self.marked.filter(pulses = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
 		food_list = food_list.filter(extra_filter)
+		if food_list.count() < 3:
+			food_list = self.getQuerysetFromGoal().filter(pulses = 1).filter(grains_cereals = 0).filter(cuisine = "Generic").filter(self.exclusion_conditions).filter(extra_filter)
 		m = Manipulator(items = food_list , categorizers = [VegetablePulseCategoriser])
 		food_list = m.categorize().get_final_list()
 		try:
@@ -766,6 +772,9 @@ class M5(Base,CerealTreeSelector):
 		calories = percent*self.calories_goal
 		self.vegetable_calories = calories
 		food_list = self.marked.filter(vegetable = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
+		if food_list.count() < 3 : 
+			food_list = self.getQuerysetFromGoal().filter(vegetable = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
+			food_list = food_list.filter(exclusion_conditions)
 		if self.disease and hasattr(self.disease , "m5_vegetable_filter"):
 			food_list = food_list.filter(self.disease.m5_vegetable_filter)
 		m = Manipulator(items = food_list , categorizers = [VegetablePulseCategoriser])
