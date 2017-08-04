@@ -192,6 +192,16 @@ class ReplacementPipeline():
 		dish.size = item.size
 		return dish
 
+	def saveExtend(self):
+			self.toUpdate = self._selected.get(self.dish.food_type)
+			if self.dish.suggestions.count() < 4:
+				self.dish.suggestions.get_or_create(food_id = self.dish.food_item.id)
+			else:
+				self.dish.suggestions.first().delete()
+				self.dish.suggestions.get_or_create(food_id = self.dish.food_item.id)
+			self.dish = self.update_dish(self.dish , self.toUpdate)
+			self.dish.save()
+			return self.dish		
 	def save(self):
 		self.created = {}
 		if self.replaceMeal:
@@ -232,17 +242,11 @@ class ReplacementPipeline():
 				del self.dishes_dict[i]
 
 			return [e for e in self.dishes_dict.values()]
-		elif self.meal_type != 'm4' and self.dish_type != "drink":
-			self.toUpdate = self._selected.get(self.dish.food_type)
-			if self.dish.suggestions.count() < 4:
-				self.dish.suggestions.get_or_create(food_id = self.dish.food_item.id)
-			else:
-				self.dish.suggestions.first().delete()
-				self.dish.suggestions.get_or_create(food_id = self.dish.food_item.id)
-			self.dish = self.update_dish(self.dish , self.toUpdate)
-			self.dish.save()
-			return self.dish
-		else:
+		elif self.dish.meal_type != 'm4':
+			return self.saveExtend()
+		elif self.dish.meal_type == "m4" and self.food_type == "drink":
+			return self.saveExtend()
+		elif self.dish.meal_type == "m4" and self.food_type != "drink":
 		 	dishKey = self.dish.food_type
 		 	newKeySet = set(self._selected.keys()).difference([dishKey , "drink"])
 		 	if not newKeySet:
