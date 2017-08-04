@@ -232,7 +232,7 @@ class ReplacementPipeline():
 				del self.dishes_dict[i]
 
 			return [e for e in self.dishes_dict.values()]
-		elif self.meal_type != 'm4':
+		elif self.meal_type != 'm4' and self.dish_type != "drink":
 			self.toUpdate = self._selected.get(self.dish.food_type)
 			if self.dish.suggestions.count() < 4:
 				self.dish.suggestions.get_or_create(food_id = self.dish.food_item.id)
