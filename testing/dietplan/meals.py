@@ -451,6 +451,8 @@ class M3(Base , CerealTreeSelector):
 		calories = 0.15*self.calories_goal
 		food_list = self.marked.filter(yogurt = 1)
 		food_list = food_list.filter(self.exclusion_conditions)
+		if food_list.count() < 3:
+			food_list = self.getQuerysetFromGoal().filter(yogurt = 1)
 		m = Manipulator(items = food_list , categorizers = [YogurtCategoriser])
 		food_list = m.categorize().get_final_list()
 		# ipdb.set_trace()
@@ -464,7 +466,7 @@ class M3(Base , CerealTreeSelector):
 	def select_dessert(self):
 		self.isYogurt = False
 		calories = 0.12*self.calories_goal
-		food_list = self.marked.filter(dessert = 1)
+		food_list = self.getQuerysetFromGoal().filter(dessert = 1)
 		self.dessert = self.select_best_minimum(food_list , calories , name = "dessert")
 
 	def select_vegetables(self , calories = None):
@@ -790,7 +792,7 @@ class M5(Base,CerealTreeSelector):
 			food_list = food_list.filter(self.exclusion_conditions)
 		else:
 			food_list = self.marked.filter(grains_cereals = 1).filter(cuisine = "Generic")
-		if food_list.count() < 1:
+		if food_list.count() < 3:
 			food_list = self.getQuerysetFromGoal().filter(grains_cereals = 1).filter(cuisine = "Generic")
 			food_list = food_list.filter(self.exclusion_conditions)
 		food_list = food_list.filter(extra_filter)
