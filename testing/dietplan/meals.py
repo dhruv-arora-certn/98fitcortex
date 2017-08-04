@@ -33,8 +33,15 @@ class CerealTreeSelector():
 			extra_filter &= Q(pulse = 1)
 		elif self.cereal.vegetables == 0 and self.cereal.pulse == 1:
 			extra_filter &= Q(vegetables = 1)
-		
-		self.select_pulses(extra_filter = extra_filter)
+		calories = self.calories_goal - self.cereal.calorie
+		if self.selected.get('yogurt'):
+			yogurt = self.selected['yogurt']
+			calories -= yogurt.calorie
+		else:
+			dessert = self.selected.get('dessert')
+			if dessert:
+				calories -= dessert.calorie	
+		self.select_pulses(calories = calories , extra_filter = extra_filter)
 		return self
 	
 	def getCerealFromSelected(self):

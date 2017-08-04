@@ -39,7 +39,6 @@ class Day:
 			self.generated = []
 			for m,v in self.calculations._selected.items():	
 				for t,e in v.items(): 
-					print("Pushing Day to DB")
 					obj = GeneratedDietPlanFoodDetails.objects.create(
 						dietplan = self.dietplan ,
 						food_item_id = e.id ,
