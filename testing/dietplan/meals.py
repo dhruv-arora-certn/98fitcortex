@@ -607,7 +607,7 @@ class M4(Base):
 			self.marked = disease.get_queryset(self.queryset)
 		self.selected = selected
 		self.buildMapper = {
-			'drink' : self.get_random_item,
+			'drink' : self.select_drink,
 			'fruit' : self.get_random_item,
 			'salad' : self.get_random_item,
 			'nuts'  : self.get_random_item,
