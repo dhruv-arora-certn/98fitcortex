@@ -466,7 +466,7 @@ class M3(Base , CerealTreeSelector):
 	def select_dessert(self):
 		self.isYogurt = False
 		calories = 0.12*self.calories_goal
-		food_list = self.getQuerysetFromGoal().filter(dessert = 1)
+		food_list = self.marked.filter(dessert = 1)
 		self.dessert = self.select_best_minimum(food_list , calories , name = "dessert")
 
 	def select_vegetables(self , calories = None):
