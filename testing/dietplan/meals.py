@@ -507,6 +507,8 @@ class M3(Base , CerealTreeSelector):
 		
 		if not calories:
 			calories = percent * self.calories_goal
+		else:
+			calories = calories
 		
 		food_list = self.marked.filter(pulses = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
 		food_list = food_list.filter(extra_filter)
