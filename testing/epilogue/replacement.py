@@ -132,7 +132,7 @@ class ReplacementPipeline():
 	def intializeMeal(self):
 		return PseudoMeal(self.dish , self.get_initial_exclude() , selected = self._selected ,replaceMeal = self.replaceMeal) 
 
-	def get_initial_exclude(self , days = 4):
+	def get_initial_exclude(self , days = 2):
 		items = []
 		last_plan = GeneratedDietPlan.objects.filter(customer = self._user).last()
 		if last_plan:
@@ -149,14 +149,13 @@ class ReplacementPipeline():
 
 		'''
 		l = len(items)
-		if 0 <= l <= 5:
+		if 0 <= l < 5 :
 			return items
-		elif l > 5:
-			return items[max(l//2 , 5):]
+		else:
+			return items
 
 	def get_suggestions_exclude(self):
 		items = list(self.dish.suggestions.order_by("id").values_list("food__name", flat = True).distinct())
-		items = self.get_suggestions_slice(items) 
 		if self.replaceMeal:
 			for e in self.dishes:
 				items.extend(e.suggestions.values_list("food__name" , flat = True)[:5])
@@ -235,7 +234,11 @@ class ReplacementPipeline():
 			return [e for e in self.dishes_dict.values()]
 		elif self.meal_type != 'm4':
 			self.toUpdate = self._selected.get(self.dish.food_type)
-			self.dish.suggestions.create(food_id = self.dish.food_item.id)
+			if self.dish.suggestions.count() < 4:
+				self.dish.suggestions.get_or_create(food_id = self.dish.food_item.id)
+			else:
+				self.dish.suggestions.first().delete()
+				self.dish.suggestions.get_or_create(food_id = self.dish.food_item.id)
 			self.dish = self.update_dish(self.dish , self.toUpdate)
 			self.dish.save()
 			return self.dish
