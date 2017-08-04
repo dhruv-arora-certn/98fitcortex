@@ -158,9 +158,9 @@ class ReplacementPipeline():
 		items = list(self.dish.suggestions.order_by("id").values_list("food__name", flat = True).distinct())
 		if self.replaceMeal:
 			for e in self.dishes:
-				items.extend(e.suggestions.values_list("food__name" , flat = True)[:5])
+				items.extend(e.suggestions.values_list("food__name" , flat = True)[:3])
 		print("Suggestions Exclude " ,items)
-		return items
+		return list(set(items))
 
 	def get_same_day_exclude(self):
 		baseQ = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.dish.dietplan.id).filter(day = self.dish.day)
