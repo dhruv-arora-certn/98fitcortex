@@ -244,9 +244,9 @@ class ReplacementPipeline():
 			return [e for e in self.dishes_dict.values()]
 		elif self.dish.meal_type != 'm4':
 			return self.saveExtend()
-		elif self.dish.meal_type == "m4" and self.food_type == "drink":
+		elif self.dish.meal_type == "m4" and self.dish.food_type == "drink":
 			return self.saveExtend()
-		elif self.dish.meal_type == "m4" and self.food_type != "drink":
+		elif self.dish.meal_type == "m4" and self.dish.food_type != "drink":
 		 	dishKey = self.dish.food_type
 		 	newKeySet = set(self._selected.keys()).difference([dishKey , "drink"])
 		 	if not newKeySet:
