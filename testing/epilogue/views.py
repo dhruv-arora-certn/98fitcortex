@@ -111,7 +111,7 @@ class DietPlanView(GenericAPIView):
 		
 		qs = qs.filter(week_id = int(self.kwargs['week_id'])).last()
 		if qs is None:
-			p = Pipeline(user.weight , user.height , float(user.lifestyle) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id))
+			p = Pipeline(user.latest_weight , user.height , float(user.latest_activity) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id))
 			try:
 				print("Trying to generate")
 				p.generate()

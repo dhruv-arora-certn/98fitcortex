@@ -6,6 +6,10 @@ from django.db.models.expressions import RawSQL
 from django.db.models import Max
 from .mappers import *
 from rest_framework import exceptions
+
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 #Model Managers for Food Model
 
 	
@@ -303,6 +307,13 @@ class Customer(models.Model):
 		return self.weight
 
 	@property
+	def latest_activity(self):
+		last_activity = ActivityLevelLog.latest_record(customer = self)
+		if last_activity:
+			return float(last_activity.lifestyle)
+		return float(self.lifestyle)
+	
+	@property
 	def weight_type(self):
 		if self.w_type == 1:
 			return "Kgs"
@@ -386,7 +397,7 @@ class GeneratedDietPlan(models.Model):
 		self.pipeline = Pipeline(
 			self.customer.latest_weight,
 			self.customer.height, 
-			float(self.customer.lifestyle),
+			float(self.customer.latest_activity),
 			self.customer.goal,
 			self.customer.gender.number,
 			user = self.customer,
@@ -648,10 +659,21 @@ class FoodTypeSizes(models.Model):
 	weight = models.IntegerField()
 	type = models.CharField(max_length = 50)
 
-from django.conf import settings
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
+class ActivityLevelLog(models.Model):
+	class Meta:
+		managed = False
+		db_table = "relation_log"
+	customer = models.ForeignKey(Customer , db_column = "erp_customer_id")
+	lifestyle = models.FloatField()
+	
+	@classmethod
+	def latest_record(self,customer=None):
+		'''
+		Return the latest activity level of a user
+		'''
+		if customer:
+			return self.objects.filter(customer = customer).last()
 
 @receiver(post_save , sender = Customer)
 def create_auth_token(sender , instance = None , created = False , **kwargs):
