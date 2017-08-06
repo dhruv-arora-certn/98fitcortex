@@ -150,3 +150,22 @@ REST_AUTH_SERIALIZERS = {
 REST_AUTH_TOKEN_MODEL = 'epilogue.models.Token'
 REST_SESSION_LOGIN = False
 CORS_ORIGIN_ALLOW_ALL =  True
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'shikhar.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
