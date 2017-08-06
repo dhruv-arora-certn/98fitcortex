@@ -180,7 +180,7 @@ class Objective(models.Model):
 			return Goals.WeightGain
 		if self.name.strip() == "Muscle Gain":
 			return Goals.MuscleGain
-		if self.name.strip() == "Be Healthy":
+		if self.name.strip() == "Be healthy":
 			return Goals.MaintainWeight	
 
 class Customer(models.Model):
