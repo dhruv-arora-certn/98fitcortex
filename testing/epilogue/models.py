@@ -422,17 +422,6 @@ class GeneratedDietPlan(models.Model):
 		)
 		self.pipeline.regenerate()
 
-	def markForRegeneration(self):
-		if not hasattr(self , "regeneration"):
-			DietPlanRegenerationMarker.objects.create( dietplan = self , value = 0)
-		else :
-			self.regeneration.value = True
-			self.regeneration.save()
-	
-	def unmarkForRegeneration(self):
-		self.regeneration.value = False
-		self.regeneration.save()
-
 	@property
 	def items(self):
 		return list(self.meals.values_list("food_name" , flat = True))
@@ -696,11 +685,6 @@ class CustomerWeightRecord(models.Model):
 		'''
 		if customer :
 			return self.objects.filter(customer = customer).last()
-
-class DietPlanRegenerationMarker(models.Model):
-	dietplan = models.OneToOneField(GeneratedDietPlan , related_name = "regeneration")
-	value = models.BooleanField()
-	created = models.DateTimeField(auto_now = True)
 
 class FoodTypeSizes(models.Model):
 	class Meta:
