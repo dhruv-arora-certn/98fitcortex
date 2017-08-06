@@ -217,7 +217,7 @@ class Customer(models.Model):
 	def get_exclusions(self):
 		q = models.Q()
 		for e in self.customerfoodexclusions_set.all():
-			q &= exclusionMapper.get(e.food_type)
+			q &= exclusionMapper.get(e.food_type , models.Q())
 		q &= food_category_exclusion_mapper.get(self.food_cat , models.Q())
 		return q
 
