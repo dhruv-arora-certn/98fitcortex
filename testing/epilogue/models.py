@@ -324,7 +324,7 @@ class Customer(models.Model):
 			if relation.preiodise == '1' and exercise_plan_count > 12:
 				print("Relation =======> " , (relation.preiodise , exercise_plan_count , relation.uppercut))
 				return relation.uppercut	
-			elif float(last_activity.lifestyle) < float(self.lifestyle):
+			elif last_activity and  float(last_activity.lifestyle) < float(self.lifestyle):
 				print("New Activity ======>" , relation.new_activity)
 				return relation.new_activity
 		return float(self.lifestyle)
