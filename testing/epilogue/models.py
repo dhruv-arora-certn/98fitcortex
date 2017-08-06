@@ -255,7 +255,7 @@ class Customer(models.Model):
 			inches = 12 * float(feet) + float(inches)
 			val =  inches * 0.0254
 		if self.h_type == 2: #Centimeters
-			val =  self.h/100
+			val =  int(self.h)/100
 		return round(val , 2)
 
 	@property
