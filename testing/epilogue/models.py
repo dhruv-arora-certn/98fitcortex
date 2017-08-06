@@ -10,6 +10,15 @@ from rest_framework import exceptions
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
+
+from django.conf import settings
+from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import ugettext_lazy as _
+
+import binascii
+import os
 #Model Managers for Food Model
 
 	
@@ -202,7 +211,7 @@ class Customer(models.Model):
 	gen = models.CharField(max_length = 20 , db_column = "gender", blank = True)
 	body_type = models.CharField(max_length = 50, blank = True)
 	food_cat = models.CharField(max_length = 50 , choices=  food_cat_choices, blank = True)
-
+	level = models.IntegerField()
 	is_authenticated = True
 
 	def get_exclusions(self):
@@ -308,9 +317,16 @@ class Customer(models.Model):
 
 	@property
 	def latest_activity(self):
+		exercise_plan_count = GeneratedExercisePlan.objects.filter(customer = self).count()
+		relation = ExerciseDietRelation.objects.filter(act_level = self.lifestyle).filter(fit_level = self.level).first()
 		last_activity = ActivityLevelLog.latest_record(customer = self)
-		if last_activity:
-			return float(last_activity.lifestyle)
+		if relation:
+			if relation.preiodise == '1' and exercise_plan_count > 12:
+				print("Relation =======> " , (relation.preiodise , exercise_plan_count , relation.uppercut))
+				return relation.uppercut	
+			elif float(last_activity.lifestyle) < float(self.lifestyle):
+				print("New Activity ======>" , relation.new_activity)
+				return relation.new_activity
 		return float(self.lifestyle)
 	
 	@property
@@ -531,14 +547,49 @@ class GeneratedExercisePlan(models.Model):
 	
 	customer = models.ForeignKey(Customer , db_column = "erp_customer_id")
 	created_on = models.DateTimeField(default = None)
+	glo_level_id = models.IntegerField()
 
-import binascii
-import os
+class ActivityLevelLog(models.Model):
+	class Meta:
+		managed = False
+		db_table = "relation_log"
+	customer = models.ForeignKey(Customer , db_column = "erp_customer_id")
+	lifestyle = models.CharField()	
+	
+	@property
+	def activity(self):
+		return float(self.lifestyle)
 
-from django.conf import settings
-from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
-from django.utils.translation import ugettext_lazy as _
+	@classmethod
+	def latest_record(self , customer = None):
+		if customer:
+			return self.objects.filter(customer = customer).last()
+
+class ExerciseDietRelation(models.Model):
+	class Meta:
+		managed = False
+		db_table = "relation_ep_dp"
+	act_level = models.CharField(max_length = 150)
+	fit_level = models.CharField(max_length = 150)
+	new_act_lavel = models.CharField(max_length = 150)
+	preiodise = models.IntegerField()
+	uppercut = models.CharField(max_length = 30)
+
+	@property
+	def activity(self):
+		return float(self.act_level)
+
+	@property
+	def fitness(self):
+		return float(self.fit_level)
+
+	@property
+	def new_activity(self):
+		return float(self.new_act_lavel)
+
+	@property
+	def uppercut_level(self):
+		return float(self.uppercut) 
 
 
 @python_2_unicode_compatible
@@ -658,22 +709,6 @@ class FoodTypeSizes(models.Model):
 	size = models.CharField(max_length = 50)
 	weight = models.IntegerField()
 	type = models.CharField(max_length = 50)
-
-
-class ActivityLevelLog(models.Model):
-	class Meta:
-		managed = False
-		db_table = "relation_log"
-	customer = models.ForeignKey(Customer , db_column = "erp_customer_id")
-	lifestyle = models.FloatField()
-	
-	@classmethod
-	def latest_record(self,customer=None):
-		'''
-		Return the latest activity level of a user
-		'''
-		if customer:
-			return self.objects.filter(customer = customer).last()
 
 @receiver(post_save , sender = Customer)
 def create_auth_token(sender , instance = None , created = False , **kwargs):
