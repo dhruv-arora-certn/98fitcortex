@@ -1,5 +1,5 @@
 from rest_framework import serializers , exceptions
-from epilogue.models import Customer , LoginCustomer ,GeneratedDietPlan , GeneratedDietPlanFoodDetails , Food , Objective , CustomerFoodExclusions , CustomerMedicalConditions
+from epilogue.models import * 
 from django.core.exceptions import ObjectDoesNotExist
 from passlib.hash import bcrypt
 
@@ -133,3 +133,8 @@ class CreateCustomerSerializer(serializers.ModelSerializer):
 
 	def get_auth_token(self , obj):
 		return obj.auth_token.key
+
+class WaterLoggingSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = CustomerWaterLogs
+		fields = "__all__"

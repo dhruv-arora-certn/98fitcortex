@@ -698,3 +698,28 @@ class FoodTypeSizes(models.Model):
 def create_auth_token(sender , instance = None , created = False , **kwargs):
 	if created:
 		Token.objects.create( user = instance )
+
+class WaterContainer(models.Model):
+	Bottle = "bottle"
+	Glass = "glass" 
+	choices = [
+		(Bottle , "Bottle"),
+		(Glass , "Glass")
+	]
+	name = models.CharField(max_length = 20 , choices = choices)
+
+class CustomerWaterLogs(models.Model):
+	saved = models.DateTimeField(auto_now_add = True)
+	count = models.IntegerField()
+	customer = models.ForeignKey(Customer)
+	container = models.ForeignKey(WaterContainer)
+	quantity = models.IntegerField()
+	
+	class Meta:
+		indexes = [
+			models.Index(fields = ['customer_id']),
+			models.Index(fields = ['container'])
+		]
+	@property
+	def total(self):
+		return self.quantity * self.count

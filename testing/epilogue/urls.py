@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from .views import get_analysis , UserView , DietPlanView , DishReplaceView , MealReplaceView , CustomerFoodExclusionView ,\
  					CustomerMedicalConditionsView , CreateCustomerView , GuestPDFView , DietPlanRegenerationView , UserDietPlanRegenerationView ,\
- 					DietPlanMobileView 
+ 					DietPlanMobileView , WaterBulkView  
 
 
 urlpatterns = [
@@ -16,5 +16,6 @@ urlpatterns = [
 	url(r'^guest-diet-pdf/$' , GuestPDFView.as_view()),
 	url(r'^dietplans/(?P<id>[0-9]+)/regenerate/$' , DietPlanRegenerationView.as_view()),
 	url(r'^user/regenerate' , UserDietPlanRegenerationView.as_view()),
-	url(r'^dietplans/(?P<week_id>[0-9]+)/day/(?P<day>[1-7])/meal/(?P<meal>(m1|m2|m3|m4|m5))/$' , DietPlanMobileView.as_view())
+	url(r'^dietplans/(?P<week_id>[0-9]+)/day/(?P<day>[1-7])/meal/(?P<meal>(m1|m2|m3|m4|m5))/$' , DietPlanMobileView.as_view()),
+	url(r'^logging/water/',WaterBulkView.as_view())
 ]
