@@ -412,3 +412,9 @@ class DietPlanMobileView(GenericAPIView):
 		objs = self.get_object()
 		data = DietPlanSerializer(objs , many = True).data
 		return Response(data)
+
+class WaterBulkView(ListBulkCreateAPIView):
+	serializer_class = WaterLoggingSerializer
+	queryset = CustomerWaterLogs.objects
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [IsAuthenticated]
