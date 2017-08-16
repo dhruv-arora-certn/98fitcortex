@@ -5,7 +5,15 @@ from epilogue.models import *
 
 # Create your models here.
 
-class CardioFloorExercise(models.Model):
+class BaseExercise():
+	
+	def __repr__(self):
+		return self.workout_name
+
+	def __str__(self):
+		return self.workout_name
+
+class CardioFloorExercise(BaseExercise,models.Model):
 	workout_name = models.CharField(max_length=250, blank=True, null=True)
 	reps = models.IntegerField(blank=True, null=True)
 	duration = models.CharField(max_length=100, blank=True, null=True)
@@ -19,31 +27,31 @@ class CardioFloorExercise(models.Model):
 	status = models.IntegerField(blank=True, null=True)
 	image_name = models.CharField(max_length=250, blank=True, null=True)
 	
-class CardioTimeBasedExercise(models.Model):
+class CardioTimeBasedExercise(BaseExercise,models.Model):
 	workout_name = models.CharField(max_length=250, blank=True, null=True)
 	duration = models.CharField(max_length=250, blank=True, null=True)
-	home = models.CharField(max_length=10, blank=True, null=True)
-	gym = models.CharField(max_length=10, blank=True, null=True)
-	machine_required = models.CharField(max_length=10, blank=True, null=True)
+	home = models.BooleanField(default = True)
+	gym = models.BooleanField(default = True)
+	machine_required = models.BooleanField(default = True)
 	machine_required_home = models.CharField(max_length=250, blank=True, null=True)
 	machine_required_gym = models.CharField(max_length=250, blank=True, null=True)
 	exercise_level = models.CharField(max_length=50, blank=True, null=True)
 	functional_warmup = models.CharField(max_length=200, blank=True, null=True)
-	status = models.IntegerField(blank=True, null=True)
+	status = models.IntegerField(blank=True,default = 1)
 	image_name = models.CharField(max_length=100, blank=True, null=True)
 
-class NoviceCoreStrengthiningExercise(models.Model):
+class NoviceCoreStrengthiningExercise(BaseExercise,models.Model):
 	workout_name = models.CharField(max_length=250)
 	reps = models.CharField(max_length=50)
-	duration = models.CharField(max_length=10)
-	hold = models.CharField(max_length=10)
-	swing1 = models.CharField(max_length=10)
-	rotation = models.CharField(max_length=10)
-	swing2 = models.CharField(max_length=10)
+	duration = models.IntegerField()
+	hold = models.BooleanField(default = False)
+	swing1 = models.BooleanField(default = False)
+	rotation = models.BooleanField()
+	swing2 = models.BooleanField(default = False)
 	sets = models.IntegerField()
-	home = models.CharField(max_length=50)
-	gym = models.CharField(max_length=50)
-	machine_required = models.CharField(max_length=10)
+	home = models.BooleanField(default = True)
+	gym = models.BooleanField(default = True)
+	machine_required = models.BooleanField(default = True)
 	machine_name = models.CharField(max_length=100, blank=True, null=True)
 	exercise_level = models.CharField(max_length=100, blank=True, null=True)
 	muscle_group_cat = models.CharField(max_length=100, blank=True, null=True)
@@ -53,30 +61,31 @@ class NoviceCoreStrengthiningExercise(models.Model):
 	status = models.IntegerField(blank=True, null=True)
 	image_name = models.CharField(max_length=200, blank=True, null=True)
 
-class ResistanceTrainingExercise(models.Model):
-	workout_name = models.CharField(max_length = 100)
-	exercise_group = models.CharField(max_length = 30)
-	left_right = models.BooleanField()
-	home = models.BooleanField()
-	gym = models.BooleanField()
-	eqip_name_home = models.CharField(max_length = 100)
-	machine_required = models.BooleanField()
-	machine_name = models.CharField(max_length = 100)
-	exercise_level = models.CharField(max_length  =10)
-	muscle_group_cat = models.CharField(max_length = 100)
-	sub_muscle_group = models.CharField(max_length = 30)
-	body_part = models.CharField(max_length = 30)
-	exercise_type = models.CharField(max_length = 100)
-	status = models.IntegerField()
-	image_name = models.CharField(max_length = 50)
+class ResistanceTrainingExercise(BaseExercise,models.Model):
+	workout_name = models.CharField(max_length = 100,blank=True, null=True)
+	exercise_group = models.CharField(max_length = 30,blank=True, null=True)
+	left_right = models.BooleanField(default = True)
+	home = models.BooleanField(default = True)
+	gym = models.BooleanField(default = True)
+	eqip_name_home = models.CharField(max_length = 100,blank=True, null=True)
+	machine_required = models.BooleanField(default = True)
+	machine_name = models.CharField(max_length = 100,blank=True, null=True)
+	exercise_level = models.CharField(max_length  =10,blank=True, null=True)
+	muscle_group_cat = models.CharField(max_length = 100,blank=True, null=True)
+	muscle_group_name = models.CharField(max_length = 100,blank=True, null=True)
+	sub_muscle_group = models.CharField(max_length = 30,blank=True, null=True)
+	body_part = models.CharField(max_length = 30,blank=True, null=True)
+	exercise_type = models.CharField(max_length = 100,blank=True, null=True)
+	status = models.IntegerField(default = 1)
+	image_name = models.CharField(max_length = 50,blank=True, null=True)
 
 
-class StretchingExercise(models.Model):
+class StretchingExercise(BaseExercise,models.Model):
 	workout_name = models.CharField(max_length=250, blank=True, null=True)
-	swing1 = models.BooleanField()
-	home = models.BooleanField()
-	gym = models.BooleanField()
-	machine_required = models.BooleanField()
+	swing1 = models.BooleanField(default = True)
+	home = models.BooleanField(default = True)
+	gym = models.BooleanField(default = True)
+	machine_required = models.BooleanField(default = True)
 	machine_name = models.CharField(max_length=250, blank=True, null=True)
 	muscle_group_cat = models.CharField(max_length=250, blank=True, null=True)
 	sub_muscle_group_name = models.CharField(max_length=250, blank=True, null=True)
@@ -87,29 +96,31 @@ class StretchingExercise(models.Model):
 	image_name = models.CharField(max_length=250, blank=True, null=True)
 
 
-class WarmupCoolDownMobilityDrillExercise(models.Model):
+class WarmupCoolDownMobilityDrillExercise(BaseExercise,models.Model):
 	workout_name = models.CharField(max_length = 100)
-	duration = models.IntegerField()
-	reps = models.IntegerField()
-	swing1 = models.BooleanField()
-	home  = models.BooleanField()
-	gym  = models.BooleanField()
-	machine_required  = models.BooleanField()
-	machine_name = models.CharField(max_length = 100)
-	exercise_level = models.CharField(max_length = 30)
-	joint_name = models.CharField(max_length = 50)
-	body_part = models.CharField(max_length = 50)
-	muscle_group_name = models.CharField(max_length = 100)
-	description = models.CharField(max_length = 255)
-	status = models.IntegerField()
-	image_name = models.CharField(max_length = 50)
+	duration = models.IntegerField(default = 0)
+	reps = models.IntegerField(default = 0)
+	swing1 = models.BooleanField(default = False)
+	rotation = models.BooleanField(default = False)
+	swing2 = models.BooleanField(default = False)
+	home  = models.BooleanField(default = True)
+	gym  = models.BooleanField(default = True)
+	machine_required  = models.BooleanField(default = True)
+	machine_name = models.CharField(max_length = 100, blank=True, null=True)
+	exercise_level = models.CharField(max_length = 30, blank=True, null=True)
+	joint_name = models.CharField(max_length = 50, blank=True, null=True)
+	body_part = models.CharField(max_length = 50, blank=True, null=True)
+	muscle_group_name = models.CharField(max_length = 100, blank=True, null=True)
+	description = models.CharField(max_length = 255, blank=True, null=True)
+	status = models.IntegerField(default = 0)
+	image_name = models.CharField(max_length = 50, blank=True, null=True)
 
 
-class WarmupCoolDownTimeBasedExercise(models.Model):	
+class WarmupCoolDownTimeBasedExercise(BaseExercise,models.Model):	
 	workout_name = models.CharField(max_length = 100)
 	duration = models.IntegerField()
 	total_time = models.IntegerField()
-	time_unit = models.IntegerField()
+	time_unit = models.CharField(max_length = 10 , default = "secs")
 	machine_required  = models.BooleanField()
 	machine_name = models.CharField(max_length = 100)
 	exercise_level = models.CharField(max_length = 30)
