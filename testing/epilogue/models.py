@@ -3,10 +3,9 @@ from dietplan.goals import Goals
 from dietplan.gender import Male , Female
 from epilogue.managers import *
 from django.db.models.expressions import RawSQL
-from django.db.models import Max
 from .mappers import *
 from rest_framework import exceptions
-
+from epilogue.utils import get_month,annotate_avg , annotate_max , annotate_min,get_week
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -342,6 +341,26 @@ class Customer(models.Model):
 		if self.h_type == 2:
 			return "Cms"
 
+	def aggregate_sleep(self,queryset):
+		field = "minutes"
+		a = annotate_avg(queryset , field)
+		b = annotate_min(a , field)
+		c = annotate_max(b , field)
+		return c
+
+	def monthly_sleep(self , month = None):
+		if not month:
+			month = get_month()
+		baseQ = self.sleep_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[])).values("week")
+		baseQ = baseQ.filter(month = month)	
+		return self.aggregate_sleep(baseQ)	
+
+	def weekly_sleep(self,week = None):
+		if not week:
+			week = get_week()
+		baseQ = self.sleep_logs.annotate(week = RawSQL("Week(start)",[])).annotate(day = RawSQL("Day(start)",[])).values("day")
+		baseQ = baseQ.filter(week = week)
+		return self.aggregate_sleep(baseQ)	
 	def __str__(self):
 		return self.first_name + " : " + self.email
 
@@ -722,3 +741,16 @@ class CustomerWaterLogs(models.Model):
 	@property
 	def total(self):
 		return self.quantity * self.count
+	
+	def aggregate_monthly(self , month):
+		pass
+
+class CustomerSleepLogs(models.Model):
+	class Meta:
+		db_table = "user_sleep_logs"
+		managed = False
+	start = models.DateTimeField(auto_now = False)
+	end = models.DateTimeField(auto_now = False)
+	minutes = models.IntegerField()
+	customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "sleep_logs")
+	saved = models.DateTimeField(auto_now_add = True)

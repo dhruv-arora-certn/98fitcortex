@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from django.db.models import Max,Sum,Count,Min,Max,Avg
 
 def get_week(date = datetime.now()):
 	return date.isocalendar()[1]
@@ -9,6 +9,18 @@ def get_day(date = datetime.now()):
 	
 def get_year(date = datetime.now()):
 	return date.isocalendar()[0]
+
+def get_month(date = datetime.now()):
+	return date.month
+
+def annotate_avg(qs,field):
+	return qs.annotate(avg = Avg(field))
+
+def annotate_min(qs,field):
+	return qs.annotate(min = Min(field))
+
+def annotate_max(qs,field):
+	return qs.annotate(max = Max(field))
 
 class BulkDifferential:
 
