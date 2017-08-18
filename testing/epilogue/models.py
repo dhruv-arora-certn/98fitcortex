@@ -271,9 +271,9 @@ class Customer(models.Model):
 
 	@property
 	def gender(self):
-		if self.gen == "male":
+		if self.gen.lower.strip() == "male":
 			return Male
-		if self.gen == "female":
+		if self.gen.lower.strip() == "female":
 			return Female
 
 	@property
