@@ -143,7 +143,13 @@ class SleepLoggingWeeklySerializer(serializers.Serializer):
 	day = serializers.IntegerField()
 	minutes = serializers.IntegerField()
 
+class SleepLoggingMonthlySerializer(serializers.Serializer):
+	week = models.IntegerField()
+	minutes = models.IntegerField()
+
 class SleepAggregationSerializer(serializers.Serializer):
 	minimum = serializers.IntegerField()
 	maximum = serializers.IntegerField()
 	average = serializers.IntegerField()
+
+

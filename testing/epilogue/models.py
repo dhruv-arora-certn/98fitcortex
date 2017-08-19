@@ -348,9 +348,9 @@ class Customer(models.Model):
 	def aggregate_sleep(self,queryset):
 		field = "minutes"
 		a = annotate_avg(queryset , field)
-		b = annotate_min(a , field)
-		c = annotate_max(b , field)
-		return c
+		b = annotate_min(queryset , field)
+		c = annotate_max(queryset , field)
+		return {**a,**b,**c}
 
 	def monthly_sleep(self , month = None , mapped = True):
 		if not month:
@@ -371,13 +371,13 @@ class Customer(models.Model):
 		return baseQ
 		
 	def weekly_sleep_aggregated(self , week = None):
-		q = self.weekly_sleep(week = week)
-		return self.aggregate_sleep(q)
+		baseQ = self.sleep_logs.annotate(week = RawSQL("Week(start)",[])).annotate(day = RawSQL("weekday(start)+1",[]))
+		return self.aggregate_sleep(baseQ)
 
 	def monthly_sleep_aggregate(self, month = None):
-		q = self.monthly_sleep(month = month)
-		return self.aggregate_sleep(q)
-
+		baseQ = self.sleep_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[]))
+		return self.aggregate_sleep(baseQ)
+	
 	def __str__(self):
 		return self.first_name + " : " + self.email
 
