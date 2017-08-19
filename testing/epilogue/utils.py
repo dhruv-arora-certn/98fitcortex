@@ -15,13 +15,13 @@ def get_month(date = datetime.now()):
 	return date.month
 
 def annotate_avg(qs,field):
-	return qs.annotate(avg = Avg(field))
+	return qs.aggregate(average =  Avg(field))
 
 def annotate_min(qs,field):
-	return qs.annotate(min = Min(field))
+	return qs.aggregate( minimum =  Min(field))
 
 def annotate_max(qs,field):
-	return qs.annotate(max = Max(field))
+	return qs.aggregate( maximum = Max(field))
 
 class BulkDifferential:
 
