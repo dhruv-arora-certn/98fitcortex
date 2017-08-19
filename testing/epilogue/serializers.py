@@ -138,3 +138,12 @@ class WaterLoggingSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = CustomerWaterLogs
 		fields = "__all__"
+
+class SleepLoggingWeeklySerializer(serializers.Serializer):
+	day = serializers.IntegerField()
+	minutes = serializers.IntegerField()
+
+class SleepAggregationSerializer(serializers.Serializer):
+	minimum = serializers.IntegerField()
+	maximum = serializers.IntegerField()
+	average = serializers.IntegerField()

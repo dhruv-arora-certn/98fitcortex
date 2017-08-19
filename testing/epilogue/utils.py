@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.db.models import Max,Sum,Count,Min,Max,Avg
+from functools import partial
 
 def get_week(date = datetime.now()):
 	return date.isocalendar()[1]

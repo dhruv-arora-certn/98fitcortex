@@ -4,6 +4,7 @@ from dietplan.gender import Male , Female
 from epilogue.managers import *
 from django.db.models.expressions import RawSQL
 from .mappers import *
+from epilogue.dummyModels import *
 from rest_framework import exceptions
 from epilogue.utils import get_month,annotate_avg , annotate_max , annotate_min,get_week
 from django.conf import settings
@@ -341,6 +342,9 @@ class Customer(models.Model):
 		if self.h_type == 2:
 			return "Cms"
 
+	def map_aggregate(self , qs , obj):
+		return map( lambda x : obj(**x) , qs)
+
 	def aggregate_sleep(self,queryset):
 		field = "minutes"
 		a = annotate_avg(queryset , field)
@@ -348,19 +352,32 @@ class Customer(models.Model):
 		c = annotate_max(b , field)
 		return c
 
-	def monthly_sleep(self , month = None):
+	def monthly_sleep(self , month = None , mapped = True):
 		if not month:
 			month = get_month()
 		baseQ = self.sleep_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[])).values("week")
 		baseQ = baseQ.filter(month = month)	
-		return self.aggregate_sleep(baseQ)	
+		if mapped : 
+			return self.map_aggregate(baseQ , SleepMonthly)
+		return baseQ
 
-	def weekly_sleep(self,week = None):
+	def weekly_sleep(self,week = None, mapped = False):
 		if not week:
 			week = get_week()
-		baseQ = self.sleep_logs.annotate(week = RawSQL("Week(start)",[])).annotate(day = RawSQL("Day(start)",[])).values("day")
+		baseQ = self.sleep_logs.annotate(week = RawSQL("Week(start)",[])).annotate(day = RawSQL("weekday(start)+1",[])).values("day","minutes")
 		baseQ = baseQ.filter(week = week)
-		return self.aggregate_sleep(baseQ)	
+		if mapped:
+			return self.map_aggregate(baseQ , SleepWeekly )
+		return baseQ
+		
+	def weekly_sleep_aggregated(self , week = None):
+		q = self.weekly_sleep(week = week)
+		return self.aggregate_sleep(q)
+
+	def monthly_sleep_aggregate(self, month = None):
+		q = self.monthly_sleep(month = month)
+		return self.aggregate_sleep(q)
+
 	def __str__(self):
 		return self.first_name + " : " + self.email
 

@@ -1,7 +1,7 @@
 #Contains Exercise Tables
 
 from django.db import models
-from epilogue.models import *
+from epilogue.models import *  
 
 # Create your models here.
 
