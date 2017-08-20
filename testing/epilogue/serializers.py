@@ -150,6 +150,4 @@ class SleepLoggingMonthlySerializer(serializers.Serializer):
 class SleepAggregationSerializer(serializers.Serializer):
 	minimum = serializers.IntegerField()
 	maximum = serializers.IntegerField()
-	average = serializers.IntegerField()
-
-
+	average = serializers.FloatField()

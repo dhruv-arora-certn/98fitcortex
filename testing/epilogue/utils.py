@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.db.models import Max,Sum,Count,Min,Max,Avg
+from django.db.models.expressions import RawSQL 
 from functools import partial
 
 def get_week(date = datetime.now()):
@@ -22,6 +23,15 @@ def annotate_min(qs,field):
 
 def annotate_max(qs,field):
 	return qs.aggregate( maximum = Max(field))
+
+def get_monthly_annotation(queryset,field):
+	baseQ = queryset.annotate(month = RawSQL("Month(%s)",[field])).annotate(week = RawSQL("FLOOR((DayOfMonth(%s)-1)/7)+1",[field]))
+	return baseQ
+
+def get_weekly_annotation(queryset,field):
+	baseQ = queryset.annotate(week = RawSQL("Week(%s)",[field])).annotate(day = RawSQL("weekday(%s)+1",[field]))
+	return baseQ
+
 
 class BulkDifferential:
 
