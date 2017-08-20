@@ -418,3 +418,64 @@ class WaterBulkView(ListBulkCreateAPIView):
 	queryset = CustomerWaterLogs.objects
 	authentication_classes = [CustomerAuthentication]
 	permission_classes = [IsAuthenticated]
+
+class SleepWeeklyAggregationView(GenericAPIView):
+	authentication_classes = (CustomerAuthentication,)
+	permission_classes = (IsAuthenticated ,)
+	
+	def serializeWeeklyLogs(self , user,week = None):
+		weekly_logs = user.weekly_sleep(week)
+		data = SleepLoggingWeeklySerializer(data = list(weekly_logs) , many = True)
+		if data.is_valid():
+			return data.data
+		return {} 
+
+	def serializeWeeklyAggregatedLogs(self,user,week = None):
+		aggregated_logs = user.weekly_sleep_aggregated(week)
+		data = SleepAggregationSerializer(data = aggregated_logs )
+		if data.is_valid():
+			return data.data
+		return data.errors 
+
+	def get(self,request , *args ,**kwargs):
+		user = request.user
+		week = int(kwargs['week'])
+		weekly_logs = self.serializeWeeklyLogs(user,week)
+		weekly_aggregated_logs = self.serializeWeeklyAggregatedLogs(user,week)
+		return Response({
+			"logs" : weekly_logs,
+			"data" : weekly_aggregated_logs,
+			"week" : week
+		})
+
+class SleepMonthlyAggregatedView(GenericAPIView):
+	authentication_classes = (CustomerAuthentication,)
+	permission_classes = (IsAuthenticated,)
+
+	def serializeMonthlyLogs(self,user,month = None):
+		monthly_logs = user.monthly_sleep(month)
+		print(monthly_logs)
+		data = SleepLoggingMonthlySerializer(data = list(monthly_logs) , many = True)		
+		if data.is_valid():
+			print("Data is " , data.data)
+			return data.data
+		print("Errors are :",data.errors)
+		return data.errors
+
+	def serializeMonthlyAggregatedLogs(self,user,month = None):
+		aggregated_logs = user.monthly_sleep_aggregate(month)
+		data = SleepAggregationSerializer(data = aggregated_logs)
+		if data.is_valid():
+			return data.data
+		return data.errors
+	
+	def get(self,request,*args ,**kwargs):
+		user = request.user
+		month = int(kwargs['month'])
+		monthly_logs = self.serializeMonthlyLogs(user , month)
+		monthly_aggregated_logs = self.serializeMonthlyAggregatedLogs(user,month)
+		return Response({
+			"logs" : monthly_logs,
+			"data" : monthly_aggregated_logs,
+			"month" : month
+		})

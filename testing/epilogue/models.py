@@ -6,7 +6,7 @@ from django.db.models.expressions import RawSQL
 from .mappers import *
 from epilogue.dummyModels import *
 from rest_framework import exceptions
-from epilogue.utils import get_month,annotate_avg , annotate_max , annotate_min,get_week
+from epilogue.utils import get_month,annotate_avg , annotate_max , annotate_min,get_week, get_monthly_annotation , get_weekly_annotation
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -352,32 +352,44 @@ class Customer(models.Model):
 		c = annotate_max(queryset , field)
 		return {**a,**b,**c}
 
-	def monthly_sleep(self , month = None , mapped = True):
+	def monthly_sleep(self , month = None , mapped = False):
 		if not month:
 			month = get_month()
-		baseQ = self.sleep_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[])).values("week")
+		baseQ = self.sleep_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[])).values("week","minutes")
 		baseQ = baseQ.filter(month = month)	
 		if mapped : 
 			return self.map_aggregate(baseQ , SleepMonthly)
 		return baseQ
 
+	def monthly_sleep_aggregate(self, month = None):
+		if not month:
+			month = get_month()
+		baseQ = self.sleep_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[])).values("week","minutes")
+		baseQ = baseQ.filter(month = month)
+		return self.aggregate_sleep(baseQ)
+	
 	def weekly_sleep(self,week = None, mapped = False):
 		if not week:
 			week = get_week()
-		baseQ = self.sleep_logs.annotate(week = RawSQL("Week(start)",[])).annotate(day = RawSQL("weekday(start)+1",[])).values("day","minutes")
+		baseQ = self.sleep_logs.annotate(week = RawSQL("Week(start)",[])).annotate(day = RawSQL("weekday(start)+1",[])).values("day", "minutes")
 		baseQ = baseQ.filter(week = week)
 		if mapped:
 			return self.map_aggregate(baseQ , SleepWeekly )
 		return baseQ
 		
 	def weekly_sleep_aggregated(self , week = None):
-		baseQ = self.sleep_logs.annotate(week = RawSQL("Week(start)",[])).annotate(day = RawSQL("weekday(start)+1",[]))
+		if not week:
+			week = get_week()
+		baseQ = self.sleep_logs.annotate(week = RawSQL("Week(start)",[])).annotate(day = RawSQL("weekday(start)+1",[])).values("day", "minutes")
+		baseQ = baseQ.filter(week = week)
 		return self.aggregate_sleep(baseQ)
 
-	def monthly_sleep_aggregate(self, month = None):
-		baseQ = self.sleep_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[]))
-		return self.aggregate_sleep(baseQ)
 	
+	def monthly_water(self,month = None):
+		if not month:
+			month = get_month()
+		baseQ = self.sleep_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)/7)+1",[]))
+				
 	def __str__(self):
 		return self.first_name + " : " + self.email
 
@@ -746,10 +758,10 @@ class WaterContainer(models.Model):
 class CustomerWaterLogs(models.Model):
 	saved = models.DateTimeField(auto_now_add = True)
 	count = models.IntegerField()
-	customer = models.ForeignKey(Customer)
+	customer = models.ForeignKey(Customer, related_name = "water_logs")
 	container = models.ForeignKey(WaterContainer)
 	quantity = models.IntegerField()
-	
+	added = models.DateTimeField()	
 	class Meta:
 		indexes = [
 			models.Index(fields = ['customer_id']),
