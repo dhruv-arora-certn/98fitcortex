@@ -388,7 +388,33 @@ class Customer(models.Model):
 	def monthly_water(self,month = None):
 		if not month:
 			month = get_month()
-		baseQ = self.sleep_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)/7)+1",[]))
+		baseQ = self.water_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)/7)+1",[])).annotate(total_day)
+	
+	def weekly_water(self , week = None):
+		if not week:
+			week = get_week()
+		baseQ = self.water_logs.annotate(day = RawSQL("weekday(added)+1",[])).values("day").annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))
+		baseQ = baseQ.annotate(
+			glasses =models.Sum(models.Case(
+				models.When(
+					container__name = "glass",
+					then = models.F("count")
+				),
+				default = 0,
+				output_field = models.IntegerField()
+			)
+		))
+		baseQ = baseQ.annotate(
+			bottles = models.Sum(models.Case(
+				models.When(
+					container__name = "bottle",
+					then = models.F("count")
+				),
+				default =0,
+				output_field = models.IntegerField()
+			))
+		)
+		return baseQ
 				
 	def __str__(self):
 		return self.first_name + " : " + self.email
@@ -761,7 +787,8 @@ class CustomerWaterLogs(models.Model):
 	customer = models.ForeignKey(Customer, related_name = "water_logs")
 	container = models.ForeignKey(WaterContainer)
 	quantity = models.IntegerField()
-	added = models.DateTimeField()	
+	added = models.DateTimeField(null = True)	
+
 	class Meta:
 		indexes = [
 			models.Index(fields = ['customer_id']),
