@@ -355,7 +355,7 @@ class Customer(models.Model):
 	def monthly_sleep(self , month = None , mapped = False):
 		if not month:
 			month = get_month()
-		baseQ = self.sleep_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[])).values("week","minutes")
+		baseQ = self.sleep_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[])).annotate(total_minutes = models.Sum("minutes")).values("week","total_minutes")
 		baseQ = baseQ.filter(month = month)	
 		if mapped : 
 			return self.map_aggregate(baseQ , SleepMonthly)
