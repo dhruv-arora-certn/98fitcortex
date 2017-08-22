@@ -16,7 +16,7 @@ from dietplan.meals import M1 , M5 , M3
 from dietplan.generator import Pipeline
 from dietplan.medical_conditions import Osteoporosis , Anemia
  
-from rest_framework.generics import RetrieveUpdateAPIView ,RetrieveAPIView , GenericAPIView , CreateAPIView
+from rest_framework.generics import RetrieveUpdateAPIView ,RetrieveAPIView , GenericAPIView , CreateAPIView,ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -479,3 +479,21 @@ class SleepMonthlyAggregatedView(GenericAPIView):
 			"data" : monthly_aggregated_logs,
 			"month" : month
 		})
+
+class WaterWeeklyAggregateView(ListAPIView):
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [IsAuthenticated]
+	serializer_class = WaterLoggingWeeklySerializer
+	lookup_field = "week"	
+
+	def get_queryset(self):
+		return self.request.user.weekly_water(week = self.kwargs.get("week"))
+
+class WaterMonthlyAggregateView(ListAPIView):
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [IsAuthenticated]
+	serializer_class = WaterLoggingMonthlySerializer
+	lookup_field = "month"	
+
+	def get_queryset(self):
+		return self.request.user.monthly_water(month = self.kwargs.get("month"))

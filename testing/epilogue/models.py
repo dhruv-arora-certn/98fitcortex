@@ -6,7 +6,7 @@ from django.db.models.expressions import RawSQL
 from .mappers import *
 from epilogue.dummyModels import *
 from rest_framework import exceptions
-from epilogue.utils import get_month,annotate_avg , annotate_max , annotate_min,get_week, get_monthly_annotation , get_weekly_annotation
+from epilogue.utils import get_month,annotate_avg , annotate_max , annotate_min,get_week , countBottles , countGlasses
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -388,32 +388,17 @@ class Customer(models.Model):
 	def monthly_water(self,month = None):
 		if not month:
 			month = get_month()
-		baseQ = self.water_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)/7)+1",[])).annotate(total_day)
-	
+		baseQ = self.water_logs.annotate(month = RawSQL("Month(added)",[])).filter(month = month).annotate(week = RawSQL("Week(added)",[])).values("week").annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))	
+		baseQ = countBottles(baseQ)
+		baseQ = countGlasses(baseQ)
+		return baseQ
+
 	def weekly_water(self , week = None):
 		if not week:
 			week = get_week()
 		baseQ = self.water_logs.annotate(day = RawSQL("weekday(added)+1",[])).values("day").annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))
-		baseQ = baseQ.annotate(
-			glasses =models.Sum(models.Case(
-				models.When(
-					container__name = "glass",
-					then = models.F("count")
-				),
-				default = 0,
-				output_field = models.IntegerField()
-			)
-		))
-		baseQ = baseQ.annotate(
-			bottles = models.Sum(models.Case(
-				models.When(
-					container__name = "bottle",
-					then = models.F("count")
-				),
-				default =0,
-				output_field = models.IntegerField()
-			))
-		)
+		baseQ = countBottles(baseQ)
+		baseQ = countGlasses(baseQ)
 		return baseQ
 				
 	def __str__(self):

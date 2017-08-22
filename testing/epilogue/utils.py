@@ -1,5 +1,5 @@
 from datetime import datetime
-from django.db.models import Max,Sum,Count,Min,Max,Avg
+from django.db import models 
 from django.db.models.expressions import RawSQL 
 from functools import partial
 
@@ -16,21 +16,39 @@ def get_month(date = datetime.now()):
 	return date.month
 
 def annotate_avg(qs,field):
-	return qs.aggregate(average =  Avg(field))
+	return qs.aggregate(average =  models.Avg(field))
 
 def annotate_min(qs,field):
-	return qs.aggregate( minimum =  Min(field))
+	return qs.aggregate( minimum =  models.Min(field))
 
 def annotate_max(qs,field):
-	return qs.aggregate( maximum = Max(field))
+	return qs.aggregate( maximum = models.Max(field))
 
-def get_monthly_annotation(queryset,field):
-	baseQ = queryset.annotate(month = RawSQL("Month(%s)",[field])).annotate(week = RawSQL("FLOOR((DayOfMonth(%s)-1)/7)+1",[field]))
-	return baseQ
+def countGlasses(queryset):
+		queryset = queryset.annotate(
+			glasses =models.Sum(models.Case(
+				models.When(
+					container__name = "glass",
+					then = models.F("count")
+				),
+				default = 0,
+				output_field = models.IntegerField()
+			)
+		))
+		return queryset
 
-def get_weekly_annotation(queryset,field):
-	baseQ = queryset.annotate(week = RawSQL("Week(%s)",[field])).annotate(day = RawSQL("weekday(%s)+1",[field]))
-	return baseQ
+def countBottles(queryset):
+		queryset = queryset.annotate(
+			bottles = models.Sum(models.Case(
+				models.When(
+					container__name = "bottle",
+					then = models.F("count")
+				),
+				default =0,
+				output_field = models.IntegerField()
+			))
+		)
+		return queryset
 
 
 class BulkDifferential:
