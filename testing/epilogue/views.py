@@ -456,11 +456,7 @@ class SleepMonthlyAggregatedView(GenericAPIView):
 		monthly_logs = user.monthly_sleep(month)
 		print(monthly_logs)
 		data = SleepLoggingMonthlySerializer(data = list(monthly_logs) , many = True)		
-		if data.is_valid():
-			print("Data is " , data.data)
-			return data.data
-		print("Errors are :",data.errors)
-		return data.errors
+		return list(monthly_logs)
 
 	def serializeMonthlyAggregatedLogs(self,user,month = None):
 		aggregated_logs = user.monthly_sleep_aggregate(month)
