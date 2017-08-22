@@ -134,11 +134,17 @@ class CreateCustomerSerializer(serializers.ModelSerializer):
 	def get_auth_token(self , obj):
 		return obj.auth_token.key
 
-class WaterLoggingSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = CustomerWaterLogs
-		fields = "__all__"
+class WaterLoggingSerializer(serializers.Serializer):
+	total_quantity = serializers.IntegerField()
+	glasses = serializers.IntegerField()
+	bottles = serializers.IntegerField()
 
+class WaterLoggingWeeklySerializer(WaterLoggingSerializer ):
+	day = serializers.IntegerField()
+
+class WaterLoggingMonthlySerializer(WaterLoggingSerializer):
+	week = serializers.IntegerField()
+	
 class SleepLoggingWeeklySerializer(serializers.Serializer):
 	day = serializers.IntegerField()
 	minutes = serializers.IntegerField()
