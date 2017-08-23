@@ -346,7 +346,7 @@ class Customer(models.Model):
 		return map( lambda x : obj(**x) , qs)
 
 	def aggregate_sleep(self,queryset):
-		field = "minutes"
+		field = "total_minutes"
 		a = annotate_avg(queryset , field)
 		b = annotate_min(queryset , field)
 		c = annotate_max(queryset , field)
@@ -355,7 +355,7 @@ class Customer(models.Model):
 	def monthly_sleep(self , month = None , mapped = False):
 		if not month:
 			month = get_month()
-		baseQ = self.sleep_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[])).annotate(total_minutes = models.Sum("minutes")).values("week","total_minutes")
+		baseQ = self.sleep_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[])).values("week").annotate(total_minutes = models.Sum("minutes")).values("week","total_minutes")
 		baseQ = baseQ.filter(month = month)	
 		if mapped : 
 			return self.map_aggregate(baseQ , SleepMonthly)
@@ -364,14 +364,14 @@ class Customer(models.Model):
 	def monthly_sleep_aggregate(self, month = None):
 		if not month:
 			month = get_month()
-		baseQ = self.sleep_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[])).values("week","minutes")
+		baseQ = self.sleep_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[])).values("week").annotate(total_minutes = models.Sum("minutes")).values("week","total_minutes")
 		baseQ = baseQ.filter(month = month)
 		return self.aggregate_sleep(baseQ)
 	
 	def weekly_sleep(self,week = None, mapped = False):
 		if not week:
 			week = get_week()
-		baseQ = self.sleep_logs.annotate(week = RawSQL("Week(start)",[])).annotate(day = RawSQL("weekday(start)+1",[])).values("day", "minutes")
+		baseQ = self.sleep_logs.annotate(week = RawSQL("Week(start)",[])).annotate(day = RawSQL("weekday(start)+1",[])).values("day").annotate(total_minutes = models.Sum("minutes")).values("day","total_minutes")
 		baseQ = baseQ.filter(week = week)
 		if mapped:
 			return self.map_aggregate(baseQ , SleepWeekly )
@@ -380,7 +380,7 @@ class Customer(models.Model):
 	def weekly_sleep_aggregated(self , week = None):
 		if not week:
 			week = get_week()
-		baseQ = self.sleep_logs.annotate(week = RawSQL("Week(start)",[])).annotate(day = RawSQL("weekday(start)+1",[])).values("day", "minutes")
+		baseQ = self.sleep_logs.annotate(week = RawSQL("Week(start)",[])).annotate(day = RawSQL("weekday(start)+1",[])).values("day").annotate(total_minutes = models.Sum("minutes")).values("day", "total_minutes")
 		baseQ = baseQ.filter(week = week)
 		return self.aggregate_sleep(baseQ)
 
