@@ -414,7 +414,7 @@ class DietPlanMobileView(GenericAPIView):
 		return Response(data)
 
 class WaterBulkView(ListBulkCreateAPIView):
-	serializer_class = WaterLoggingSerializer
+	serializer_class = WaterLoggingModelSerializer
 	queryset = CustomerWaterLogs.objects
 	authentication_classes = [CustomerAuthentication]
 	permission_classes = [IsAuthenticated]
