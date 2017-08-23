@@ -816,7 +816,7 @@ class M5(Base,CerealTreeSelector):
 		
 		#In case the item is non vegetarian cereal, only a pulse is required
 		if self.cereals.non_veg == 1:
-			self.select_pulses(percent = 0.61 , extra_filter = Q(non_veg_gravy_items = 1) | Q(vegetable = 1))
+			self.select_pulses(percent = 0.61 , extra_filter = (vegetables = 1))
 			return self
 
 		if self.cereals.vegetables == 1 and self.cereals.pulse == 0:
