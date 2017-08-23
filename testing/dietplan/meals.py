@@ -807,7 +807,6 @@ class M5(Base,CerealTreeSelector):
 		if food_list.count() < 3:
 			food_list = self.getQuerysetFromGoal().filter(pulses = 1).filter(extra_filter).filter(self.exclusion_conditions) 
 		m = Manipulator(items = food_list , categorizers = [VegetablePulseCategoriser])
-#		ipdb.set_trace()
 		food_list = m.categorize().get_final_list()
 		self.pulse = self.select_best_minimum(food_list , calories , "pulse")
 
@@ -816,7 +815,7 @@ class M5(Base,CerealTreeSelector):
 		
 		#In case the item is non vegetarian cereal, only a pulse is required
 		if self.cereals.non_veg == 1:
-			self.select_pulses(percent = 0.61 , extra_filter = Q(non_veg_gravy_items = 1) | Q(vegetable = 1))
+			self.select_pulses(percent = 0.61 , extra_filter =  Q(vegetables = 1))
 			return self
 
 		if self.cereals.vegetables == 1 and self.cereals.pulse == 0:
