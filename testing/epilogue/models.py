@@ -810,7 +810,7 @@ class CustomerActivityLogs(models.Model):
 	timestamp = models.DateTimeField(auto_now = True)
 	steps = models.IntegerField()
 	cals = models.IntegerField()
-	customer = models.ForeignKey(Customer , related_name = "activity_logs")
+	customer = models.ForeignKey(Customer , related_name = "activity_logs", db_column = "erp_customer_id")
 	duration = models.IntegerField()
 	start = models.DateTimeField(auto_now = False)
 	end = models.DateTimeField(auto_now = False)
