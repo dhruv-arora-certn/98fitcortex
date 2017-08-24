@@ -410,6 +410,25 @@ class Customer(models.Model):
 		day = previous_day()
 		baseQ = self.sleep_logs.annotate(date = RawSQL("date(start)",[])).filter(date = day).values("date").annotate(total_minutes = models.Sum("minutes")).values("total_minutes" , "date" , "end").first()
 		return baseQ
+
+	def weekly_activity(self,week = None):
+		if not week:
+			week =  get_week()
+		year = get_year()
+		baseQ = self.activity_logs.annotate(day = RawSQL("weekday(start)+1",[])).annotate(year = RawSQL("Year(start)",[])).filter(year = year).annotate(week = RawSQL("Week(start)",[])).filter(week = week)
+		baseQ = baseQ.values("day").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration"))
+		baseQ = baseQ.values("day" , "total_cals" , "total_steps" , "total_distance" , "total_duration")
+		return baseQ
+
+	def monthly_activity(self,month = None):
+		if not month:
+			month = get_month()
+		year = get_year()
+
+		baseQ = self.activity_logs.annotate(month = RawSQL("Month(start)",[])).annotate(year = RawSQL("Year(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[])).filter(month = month)
+		baseQ = baseQ.values("week").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration"))
+		baseQ = baseQ.values("week" , "total_cals" , "total_steps" , "total_distance" , "total_duration")
+		return baseQ
 				
 	def __str__(self):
 		return self.first_name + " : " + self.email
@@ -807,7 +826,7 @@ class CustomerSleepLogs(models.Model):
 	saved = models.DateTimeField(auto_now_add = True)
 
 class CustomerActivityLogs(models.Model):
-	timestamp = models.DateTimeField(auto_now = True)
+	timestamp = models.DateTimeField(null = True)
 	steps = models.IntegerField()
 	cals = models.IntegerField()
 	customer = models.ForeignKey(Customer , related_name = "activity_logs", db_column = "erp_customer_id")
