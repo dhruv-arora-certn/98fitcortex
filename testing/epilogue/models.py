@@ -805,3 +805,13 @@ class CustomerSleepLogs(models.Model):
 	minutes = models.IntegerField()
 	customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "sleep_logs")
 	saved = models.DateTimeField(auto_now_add = True)
+
+class CustomerActivityLogs(models.Model):
+	timestamp = models.DateTimeField(auto_now = True)
+	steps = models.IntegerField()
+	cals = models.IntegerField()
+	customer = models.ForeignKey(Customer , related_name = "activity_logs")
+	duration = models.IntegerField()
+	start = models.DateTimeField(auto_now = False)
+	end = models.DateTimeField(auto_now = False)
+	distance = models.IntegerField()
