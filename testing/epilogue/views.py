@@ -508,3 +508,21 @@ class LastDaySleepView(GenericAPIView):
 		if s.is_valid():
 			return Response(s.data)
 		return Response(s.errors)
+
+class WeeklyActivityView(ListAPIView):
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [IsAuthenticated]
+	serializer_class = WeeklyActivitySerializer
+	lookup_field = "week"
+	
+	def get_queryset(self):
+		return self.request.user.weekly_activity(week = self.kwargs.get("week"))
+
+class MonthlyActivityView(ListAPIView):
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [IsAuthenticated]
+	serializer_class = MonthlyActivitySerializer
+	lookup_field = "month"
+	
+	def get_queryset(self):
+		return self.request.user.monthly_activity(month = self.kwargs.get("month"))

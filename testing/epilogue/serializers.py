@@ -168,3 +168,15 @@ class SleepPreviousDaySerializer(serializers.Serializer):
 	date = serializers.DateField()
 	end = serializers.DateTimeField()
 	total_minutes = serializers.IntegerField()
+
+class ActivitySerializer(serializers.Serializer):
+	total_steps = serializers.IntegerField()
+	total_cals = serializers.IntegerField()
+	total_distance = serializers.IntegerField()
+	total_duration = serializers.IntegerField()
+
+class MonthlyActivitySerializer(ActivitySerializer):
+	week = serializers.IntegerField()
+
+class WeeklyActivitySerializer(ActivitySerializer):
+	day = serializers.IntegerField()
