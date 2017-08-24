@@ -1,7 +1,8 @@
 from django.conf.urls import url
 from .views import get_analysis , UserView , DietPlanView , DishReplaceView , MealReplaceView , CustomerFoodExclusionView ,\
  					CustomerMedicalConditionsView , CreateCustomerView , GuestPDFView , DietPlanRegenerationView , UserDietPlanRegenerationView ,\
- 					DietPlanMobileView , WaterBulkView  ,SleepWeeklyAggregationView,SleepMonthlyAggregatedView, WaterWeeklyAggregateView,WaterMonthlyAggregateView
+ 					DietPlanMobileView , WaterBulkView  ,SleepWeeklyAggregationView,SleepMonthlyAggregatedView, WaterWeeklyAggregateView,WaterMonthlyAggregateView , \
+					LastDaySleepView
 
 
 urlpatterns = [
@@ -20,6 +21,7 @@ urlpatterns = [
 	url(r'^logging/water/$',WaterBulkView.as_view()),
 	url(r'^logging/sleep/aggregate/weekly/(?P<week>[0-9]+)/$' , SleepWeeklyAggregationView.as_view()),
 	url(r'^logging/sleep/aggregate/monthly/(?P<month>[0-9]+)/$' , SleepMonthlyAggregatedView.as_view()),
+	url(r'^logging/sleep/aggregate/last/$' ,LastDaySleepView.as_view()),
 	url(r'^logging/water/aggregate/weekly/(?P<week>[0-9]+)/$' , WaterWeeklyAggregateView.as_view()),
 	url(r'^logging/water/aggregate/monthly/(?P<month>[0-9]+)/$' ,WaterMonthlyAggregateView.as_view()),
 ]

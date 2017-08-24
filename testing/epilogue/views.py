@@ -16,7 +16,7 @@ from dietplan.meals import M1 , M5 , M3
 from dietplan.generator import Pipeline
 from dietplan.medical_conditions import Osteoporosis , Anemia
  
-from rest_framework.generics import RetrieveUpdateAPIView ,RetrieveAPIView , GenericAPIView , CreateAPIView,ListAPIView
+from rest_framework.generics import RetrieveUpdateAPIView ,RetrieveAPIView , GenericAPIView , CreateAPIView,ListAPIView,RetrieveAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -493,3 +493,18 @@ class WaterMonthlyAggregateView(ListAPIView):
 
 	def get_queryset(self):
 		return self.request.user.monthly_water(month = self.kwargs.get("month"))
+
+class LastDaySleepView(GenericAPIView):
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [IsAuthenticated]
+	serializer_class = SleepPreviousDaySerializer
+	
+	def get_queryset(self):
+		return self.request.user.last_day_sleep()
+	
+	def get(self,request):
+		data = self.get_queryset()
+		s = self.serializer_class(data = data)
+		if s.is_valid():
+			return Response(s.data)
+		return Response(s.errors)

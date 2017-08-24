@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime,timedelta
 from django.db import models 
 from django.db.models.expressions import RawSQL 
 from functools import partial
@@ -26,6 +26,10 @@ def aggregate_max(qs,field):
 
 def aggregate_sum(qs,field):
 	return qs.aggregate(total = models.Sum(field))
+
+def previous_day():
+	today = datetime.now().date()
+	return today - timedelta(days = 1)
 
 def countGlasses(queryset):
 		queryset = queryset.annotate(
