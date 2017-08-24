@@ -15,14 +15,17 @@ def get_year(date = datetime.now()):
 def get_month(date = datetime.now()):
 	return date.month
 
-def annotate_avg(qs,field):
+def aggregate_avg(qs,field):
 	return qs.aggregate(average =  models.Avg(field))
 
-def annotate_min(qs,field):
+def aggregate_min(qs,field):
 	return qs.aggregate( minimum =  models.Min(field))
 
-def annotate_max(qs,field):
+def aggregate_max(qs,field):
 	return qs.aggregate( maximum = models.Max(field))
+
+def aggregate_sum(qs,field):
+	return qs.aggregate(total = models.Sum(field))
 
 def countGlasses(queryset):
 		queryset = queryset.annotate(

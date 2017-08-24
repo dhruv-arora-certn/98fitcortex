@@ -158,6 +158,7 @@ class SleepAggregationSerializer(serializers.Serializer):
 	minimum = serializers.IntegerField()
 	maximum = serializers.IntegerField()
 	average = serializers.FloatField()
+	total = serializers.IntegerField()
 
 class SleepLoggingMonthlySerializer(serializers.Serializer):
 	week = models.IntegerField()

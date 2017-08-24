@@ -6,7 +6,7 @@ from django.db.models.expressions import RawSQL
 from .mappers import *
 from epilogue.dummyModels import *
 from rest_framework import exceptions
-from epilogue.utils import get_month , get_year , get_week  ,annotate_avg , annotate_max , annotate_min,get_week , countBottles , countGlasses
+from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -347,10 +347,11 @@ class Customer(models.Model):
 
 	def aggregate_sleep(self,queryset):
 		field = "total_minutes"
-		a = annotate_avg(queryset , field)
-		b = annotate_min(queryset , field)
-		c = annotate_max(queryset , field)
-		return {**a,**b,**c}
+		a = aggregate_avg(queryset , field)
+		b = aggregate_min(queryset , field)
+		c = aggregate_max(queryset , field)
+		d = aggregate_sum(queryset , field)
+		return {**a,**b,**c ,**d}
 
 	def monthly_sleep(self , month = None , mapped = False):
 		if not month:
@@ -403,6 +404,9 @@ class Customer(models.Model):
 		baseQ = countBottles(baseQ)
 		baseQ = countGlasses(baseQ)
 		return baseQ
+
+	def last_day_sleep(self):
+		return
 				
 	def __str__(self):
 		return self.first_name + " : " + self.email
