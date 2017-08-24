@@ -6,7 +6,7 @@ from django.db.models.expressions import RawSQL
 from .mappers import *
 from epilogue.dummyModels import *
 from rest_framework import exceptions
-from epilogue.utils import get_month,annotate_avg , annotate_max , annotate_min,get_week , countBottles , countGlasses
+from epilogue.utils import get_month , get_year , get_week  ,annotate_avg , annotate_max , annotate_min,get_week , countBottles , countGlasses
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -355,7 +355,9 @@ class Customer(models.Model):
 	def monthly_sleep(self , month = None , mapped = False):
 		if not month:
 			month = get_month()
-		baseQ = self.sleep_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[])).values("week").annotate(total_minutes = models.Sum("minutes")).values("week","total_minutes")
+		year = get_year()
+		baseQ = self.sleep_logs.annotate(year = RawSQL("Year(start)",[])).filter(year = year)
+		baseQ = baseQ.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[])).values("week").annotate(total_minutes = models.Sum("minutes")).values("week","total_minutes")
 		baseQ = baseQ.filter(month = month)	
 		if mapped : 
 			return self.map_aggregate(baseQ , SleepMonthly)
@@ -371,8 +373,9 @@ class Customer(models.Model):
 	def weekly_sleep(self,week = None, mapped = False):
 		if not week:
 			week = get_week()
-		baseQ = self.sleep_logs.annotate(week = RawSQL("Week(start)",[])).annotate(day = RawSQL("weekday(start)+1",[])).values("day").annotate(total_minutes = models.Sum("minutes")).values("day","total_minutes")
-		baseQ = baseQ.filter(week = week)
+		year = get_year()
+		baseQ = self.sleep_logs.annotate(year = RawSQL("Year(start)",[])).filter(year = year)
+		baseQ = self.sleep_logs.annotate(week = RawSQL("Week(start)",[])).filter(week = week).annotate(day = RawSQL("weekday(start)+1",[])).values("day").annotate(total_minutes = models.Sum("minutes")).values("day","total_minutes")
 		if mapped:
 			return self.map_aggregate(baseQ , SleepWeekly )
 		return baseQ
