@@ -36,6 +36,7 @@ class DietPlanSerializer(serializers.ModelSerializer):
 	weight = serializers.SerializerMethodField()
 	dietplan_id = serializers.SerializerMethodField()
 	unit = serializers.SerializerMethodField()
+	calories_2 = serializers.SerializerMethodField()
 
 	class Meta:
 		model = GeneratedDietPlanFoodDetails
@@ -75,6 +76,9 @@ class DietPlanSerializer(serializers.ModelSerializer):
 	def get_image(self , obj):
 		item = Food.objects.get(pk = obj.food_item_id)
 		return item.image
+	
+	def get_calories2(self,obj):
+		return float(obj.calorie)
 
 class LoginSerializer(serializers.Serializer):
 	email = serializers.EmailField(required = True)
