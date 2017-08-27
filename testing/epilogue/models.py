@@ -10,6 +10,7 @@ from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , agg
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from workoutplan import levels
 
 
 from django.conf import settings
@@ -429,6 +430,16 @@ class Customer(models.Model):
 		baseQ = baseQ.values("week").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration"))
 		baseQ = baseQ.values("week" , "total_cals" , "total_steps" , "total_distance" , "total_duration")
 		return baseQ
+
+	@property
+	def level_obj(self):
+		if self.level == 1:
+			return levels.Novice
+		elif self.level == 2:
+			return levels.Beginner
+		elif self.level == 3:
+			return levels.Intermediate
+		return levels.Novice
 				
 	def __str__(self):
 		return self.first_name + " : " + self.email
@@ -485,7 +496,7 @@ class GeneratedDietPlan(models.Model):
 	def get_last_days(self , days):
 		assert days > 0 and days <= 7
 		baseQ = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.id)
-		max_day = baseQ.aggregate(Max('day')).get("day__max") or 7
+		max_day = baseQ.aggregate(models.Max('day')).get("day__max") or 7
 		print("Max Day " , max_day)
 		items = []
 		for day in range(max_day , max_day - days , -1):
