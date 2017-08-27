@@ -1,3 +1,4 @@
+from workoutplan import exercise
 
 class Base():
 	
@@ -14,17 +15,29 @@ class Warmup(Base):
 		self.duration = duration
 		self.mainExercise = mainExercise
 	
+	def decideWarmup(self):
+		'''
+		Decide Which Function is to be called For generating the Warmup
+		The function is assigned to the object rather than returned,
+		Self is returned instead
+		This will enable me to perform chaining and allow subsequent functions to use the attribute
+		'''
+		if isinstance(self.mainExercise , exercise.FloorBasedCardio):
+			self.__funcToCall = self.floor_based_cardio	
+		return self
+
 	def floor_based_cardio(self):
 		'''
 		To be used in the case where main exercise is Floor Based Cardio
 		'''
-		pass
+		self.normal_warmup_cooldown()
+
 	def normal_warmup_cooldown(self):
 		'''
 		To be used in the case where a normal Warm Up and Cool Down is to be generated
 		'''
 		pass
-	
+			
 
 class Main(Base):
 	_type = "main"
