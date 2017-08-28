@@ -37,6 +37,9 @@ class Warmup(Base):
 		To be used in the case where a normal Warm Up and Cool Down is to be generated
 		'''
 		pass
+
+	def time_based_cardio(self):
+		pass
 			
 
 class Main(Base):
