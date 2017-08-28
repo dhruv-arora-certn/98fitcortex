@@ -543,7 +543,7 @@ class ActivityLevelLog(models.Model):
 		managed = False
 		db_table = "relation_log"
 	customer = models.ForeignKey(Customer , db_column = "erp_customer_id")
-	lifestyle = models.CharField()	
+	lifestyle = models.CharField(max_length = 50)	
 	
 	@property
 	def activity(self):
