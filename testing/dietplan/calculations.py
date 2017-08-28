@@ -31,7 +31,7 @@ class Calculations:
 	def countCalories(self):
 		# import ipdb
 		# ipdb.set_trace()
-		self.calories = max( 1240 , self.ibw.ibw * self.calorieNumber.number)
+		self.calories = max( 1220 , self.ibw.ibw * self.calorieNumber.number)
 		return self
 
 	def makeMeals(self):
