@@ -25,7 +25,5 @@ class CustomerGoogleClientView(generics.GenericAPIView):
 
 
 class CustomerTrackingView(generics.CreateAPIView):
-	authentication_classes = [CustomerAuthentication]
-	permission_classes = [permissions.IsAuthenticated]
 	serializer_class = CustomerTrackingSerializer
 
