@@ -8,7 +8,6 @@ class CustomerGoogleClient(models.Model):
 	visited = models.DateTimeField(auto_now_add = True)
 	customer = models.ForeignKey(Customer , related_name = "gaclientids")
 	clientId = models.CharField(max_length = 255)
-	
 
 	class Meta:
 		indexes = [

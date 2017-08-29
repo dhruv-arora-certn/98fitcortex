@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/',  include("epilogue.urls")),
     url(r'^auth/' , include("rest_auth.urls")),
+    url(r'^analytics/' , include("analytics.urls")),
     url(r'^docs/', include('rest_framework_docs.urls')),
 ]
 urlpatterns += staticfiles_urlpatterns()
