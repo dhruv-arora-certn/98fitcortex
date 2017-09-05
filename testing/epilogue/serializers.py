@@ -170,6 +170,7 @@ class SleepLoggingMonthlySerializer(serializers.Serializer):
 
 class SleepPreviousDaySerializer(serializers.Serializer):
 	date = serializers.DateField()
+	start = serializers.DateTimeField()
 	end = serializers.DateTimeField()
 	total_minutes = serializers.IntegerField()
 

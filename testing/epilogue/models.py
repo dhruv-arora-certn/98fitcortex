@@ -402,14 +402,14 @@ class Customer(models.Model):
 	def weekly_water(self , week = None):
 		if not week:
 			week = get_week()
-		baseQ = self.water_logs.annotate(day = RawSQL("weekday(added)+1",[])).values("day").annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))
+		baseQ = self.water_logs.annotate(day = RawSQL("weekday(added)+1",[])).annotate(week = RawSQL("Week(added)",[])).filter(week = week).values("day").annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))
 		baseQ = countBottles(baseQ)
 		baseQ = countGlasses(baseQ)
 		return baseQ
 
 	def last_day_sleep(self):
 		day = previous_day()
-		baseQ = self.sleep_logs.annotate(date = RawSQL("date(start)",[])).filter(date = day).values("date").annotate(total_minutes = models.Sum("minutes")).values("total_minutes" , "date" , "end").first()
+		baseQ = self.sleep_logs.annotate(date = RawSQL("date(start)",[])).filter(date = day).values("date").annotate(total_minutes = models.Sum("minutes")).values("total_minutes" , "date" , "end" , "start").first()
 		return baseQ
 
 	def weekly_activity(self,week = None):
