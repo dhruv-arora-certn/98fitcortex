@@ -497,17 +497,15 @@ class WaterMonthlyAggregateView(ListAPIView):
 class LastDaySleepView(GenericAPIView):
 	authentication_classes = [CustomerAuthentication]
 	permission_classes = [IsAuthenticated]
-	serializer_class = SleepPreviousDaySerializer
+	serializer_class = SleepLogginSerializer
 	
 	def get_queryset(self):
 		return self.request.user.last_day_sleep()
 	
 	def get(self,request):
 		data = self.get_queryset()
-		s = self.serializer_class(data = data)
-		if s.is_valid():
-			return Response(s.data)
-		return Response(s.errors)
+		s = self.serializer_class(data)
+		return Response(s.data)
 
 class WeeklyActivityView(ListAPIView):
 	authentication_classes = [CustomerAuthentication]

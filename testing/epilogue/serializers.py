@@ -185,3 +185,8 @@ class MonthlyActivitySerializer(ActivitySerializer):
 
 class WeeklyActivitySerializer(ActivitySerializer):
 	day = serializers.IntegerField()
+
+class SleepLogginSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = CustomerSleepLogs
+		fields = "__all__"

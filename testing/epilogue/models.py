@@ -409,7 +409,7 @@ class Customer(models.Model):
 
 	def last_day_sleep(self):
 		day = previous_day()
-		baseQ = self.sleep_logs.annotate(date = RawSQL("date(start)",[])).filter(date = day).values("date").annotate(total_minutes = models.Sum("minutes")).values("total_minutes" , "date" , "end" , "start").first()
+		baseQ = self.sleep_logs.last()
 		return baseQ
 
 	def weekly_activity(self,week = None):
@@ -440,7 +440,7 @@ class Customer(models.Model):
 		elif self.level == 3:
 			return levels.Intermediate
 		return levels.Novice
-				
+
 	def __str__(self):
 		return self.first_name + " : " + self.email
 
@@ -478,6 +478,7 @@ class GeneratedDietPlan(models.Model):
 	plan_type = models.CharField(max_length = 50 , default = "system generated plan")
 	medi_applicable = models.CharField(max_length = 20 , default = "")
 	year = models.IntegerField()
+
 	@property
 	def dayWisePlan(self):
 		return {
