@@ -190,3 +190,8 @@ class SleepLogginSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = CustomerSleepLogs
 		fields = "__all__"
+
+class CustomerActivityLogsSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = CustomerActivityLogs
+		fields = "__all__"

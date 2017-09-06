@@ -419,6 +419,12 @@ class WaterBulkView(ListBulkCreateAPIView):
 	authentication_classes = [CustomerAuthentication]
 	permission_classes = [IsAuthenticated]
 
+class ActivityLogView(CreateAPIView):
+	serializer_class = CustomerActivityLogsSerializer
+	queryset = CustomerActivityLogs.objects
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [IsAuthenticated]
+
 class SleepWeeklyAggregationView(GenericAPIView):
 	authentication_classes = (CustomerAuthentication,)
 	permission_classes = (IsAuthenticated ,)
@@ -512,7 +518,7 @@ class WeeklyActivityView(ListAPIView):
 	permission_classes = [IsAuthenticated]
 	serializer_class = WeeklyActivitySerializer
 	lookup_field = "week"
-	
+
 	def get_queryset(self):
 		return self.request.user.weekly_activity(week = self.kwargs.get("week"))
 
