@@ -417,7 +417,8 @@ class Customer(models.Model):
 			week =  get_week()
 		year = get_year()
 		baseQ = self.activity_logs.annotate(day = RawSQL("weekday(start)+1",[])).annotate(year = RawSQL("Year(start)",[])).filter(year = year).annotate(week = RawSQL("Week(start)",[])).filter(week = week)
-		baseQ = baseQ.values("day").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration")).order_by("-end")
+		
+		baseQ = baseQ.values("day").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration"))
 		baseQ = baseQ.values("day" , "total_cals" , "total_steps" , "total_distance" , "total_duration")
 		return baseQ
 
