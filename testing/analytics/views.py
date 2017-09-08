@@ -1,8 +1,8 @@
 from django.shortcuts import render
 
 # Create your views here.
-from analytics.serializers import CustomerTrackingSerializer ,  CustomerGoogleClientSerializer
-from analytics.models import CustomerTracking , CustomerGoogleClient
+from analytics.serializers import CustomerTrackingSerializer ,  CustomerGoogleClientSerializer , EventPageTrackingSerializer
+from analytics.models import CustomerTracking , CustomerGoogleClient, EventPageTracking
 from rest_framework import generics
 from rest_framework.response import Response
 from epilogue.authentication import CustomerAuthentication
@@ -27,3 +27,5 @@ class CustomerGoogleClientView(generics.GenericAPIView):
 class CustomerTrackingView(generics.CreateAPIView):
 	serializer_class = CustomerTrackingSerializer
 
+class EventPageTrackingView(generics.CreateAPIView):
+	serializer_class = EventPageTrackingSerializer
