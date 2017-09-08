@@ -20,3 +20,10 @@ class CustomerTracking(models.Model):
 	url = models.URLField(db_index = True , null = False)
 	clientId = models.CharField(max_length = 255)
 	visited = models.DateTimeField(auto_now_add = True)
+
+class EventPageTracking(models.Model):
+	url = models.URLField(db_index = True , null = False)
+	saved = models.DateTimeField(auto_now_add = True)
+	gaclient = models.CharField(max_length = 255)
+	referralId = models.CharField(max_length = 255)
+	event_type = models.CharField(max_length = 100)
