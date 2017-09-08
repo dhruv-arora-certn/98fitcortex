@@ -1,4 +1,5 @@
 from workoutplan import exercise
+from workoutplan import utils
 
 class Base():
 	
@@ -40,12 +41,13 @@ class Warmup(Base):
 
 	def time_based_cardio(self):
 		pass
-			
+
 
 class Main(Base):
 	_type = "main"
-	def __init__(self):
-		pass
+
+	def __init__(self , user , makeCardio = False , makeCoreStrengthening = True):
+		self.user = user
 
 class CoolDown(Base):
 	_type = "cooldown"
