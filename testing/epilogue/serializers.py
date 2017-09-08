@@ -10,12 +10,12 @@ class ObjectiveSerializer(serializers.ModelSerializer):
 		fields = ["id" , "name"]
 
 class CustomerSerializer(serializers.ModelSerializer):
-	height = serializers.CharField(source = "h")
-	weight = serializers.CharField(source = "w")
-	gender = serializers.CharField(source = "gen")
-	lifestyle = serializers.CharField(source = "ls")
-	height_type = serializers.IntegerField(source = "h_type")
-	weight_type = serializers.IntegerField(source = "w_type")
+	height = serializers.CharField(source = "h" , required = False)
+	weight = serializers.CharField(source = "w", required = False)
+	gender = serializers.CharField(source = "gen", required = False)
+	lifestyle = serializers.CharField(source = "ls", required = False)
+	height_type = serializers.IntegerField(source = "h_type", required = False)
+	weight_type = serializers.IntegerField(source = "w_type", required = False)
 
 	class Meta:
 		model = Customer
