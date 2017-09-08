@@ -127,13 +127,13 @@ class CreateCustomerSerializer(serializers.ModelSerializer):
 		fields = [ "email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender" , "body_type" , "food_cat" , "auth_token",  "weight_type" , "height_type"]
 
 
-	weight = serializers.CharField(source = "w")		
-	height = serializers.CharField(source = "h")		
+	weight = serializers.CharField(source = "w",  required = False)		
+	height = serializers.CharField(source = "h",required = False)		
 	auth_token = serializers.SerializerMethodField()
-	gender = serializers.CharField(source = "gen")
-	lifestyle = serializers.CharField(source = "ls")
-	weight_type = serializers.IntegerField(source = "w_type")
-	height_type = serializers.IntegerField(source = "h_type")
+	gender = serializers.CharField(source = "gen",required = False)
+	lifestyle = serializers.CharField(source = "ls",required = False)
+	weight_type = serializers.IntegerField(source = "w_type",required = False)
+	height_type = serializers.IntegerField(source = "h_type",required = False)
 
 	def get_auth_token(self , obj):
 		return obj.auth_token.key
