@@ -25,5 +25,5 @@ class EventPageTracking(models.Model):
 	url = models.URLField(db_index = True , null = False)
 	saved = models.DateTimeField(auto_now_add = True)
 	gaclient = models.CharField(max_length = 255)
-	referralId = models.CharField(max_length = 255)
+	referralId = models.CharField(max_length = 255,blank = True)
 	event_type = models.CharField(max_length = 100)
