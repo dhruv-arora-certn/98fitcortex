@@ -201,7 +201,7 @@ class Customer(models.Model):
 	last_name = models.CharField(max_length = 25 , blank = True , null = True)
 	create_on = models.DateTimeField(auto_now_add = True)
 	mobile = models.CharField(max_length = 11 , blank = True , null = True)
-	age = models.IntegerField( blank = True)
+	age = models.IntegerField( blank = True , null = True)
 	w = models.CharField(db_column = "weight", max_length = 11 , blank = True)
 	w_type = models.IntegerField(db_column = "weight_type" , blank = True)
 	h = models.CharField(db_column = "height", max_length = 20, blank = True )
