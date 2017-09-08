@@ -203,15 +203,15 @@ class Customer(models.Model):
 	mobile = models.CharField(max_length = 11 , blank = True , null = True)
 	age = models.IntegerField( blank = True)
 	w = models.CharField(db_column = "weight", max_length = 11 , blank = True)
-	w_type = models.IntegerField(db_column = "weight_type")
+	w_type = models.IntegerField(db_column = "weight_type" , blank = True)
 	h = models.CharField(db_column = "height", max_length = 20, blank = True )
-	h_type = models.IntegerField(db_column = "height_type")
+	h_type = models.IntegerField(db_column = "height_type" , blank = True)
 	ls = models.CharField( max_length = 50 , db_column = "lifestyle" , blank = True)
 	objective = models.ForeignKey(Objective , db_column = "objective", blank = True)
 	gen = models.CharField(max_length = 20 , db_column = "gender", blank = True)
 	body_type = models.CharField(max_length = 50, blank = True)
 	food_cat = models.CharField(max_length = 50 , choices=  food_cat_choices, blank = True)
-	level = models.IntegerField()
+	level = models.IntegerField(blank = True)
 	is_authenticated = True
 
 	def get_exclusions(self):
