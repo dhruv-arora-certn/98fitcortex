@@ -150,8 +150,8 @@ REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER' : 'epilogue.serializers.CustomerSerializer'
 }
 
-REST_AUTH_TOKEN_MODEL = 'epilogue.models.Token'
-REST_SESSION_LOGIN = False
+REST_AUTH_TOKEN_MODEL = 'epilogue.models.Token' 
+REST_SESSION_LOGIN = False 
 CORS_ORIGIN_ALLOW_ALL =  True
 
 LOGGING = {
@@ -172,3 +172,20 @@ LOGGING = {
         },
     },
 }
+
+#AWS SES Details
+EMAIL_BACKEND = 'django_ses.SESBackend'
+
+AWS_ACCESS_KEY_ID = 'AKIAIGH4FX24ZSFPKRSA' 
+AWS_SECRET_ACCESS_KEY = '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'
+
+AWS_SES_REGION_NAME = 'us-west-2'
+AWS_SES_REGION_ENDPOINT = 'email-smtp.us-west-2.amazonaws.com'
+
+
+email_user="Forrest<ghost@projectforrest.com>"
+EMAIL_HOST_USER="AKIAI5EL2SYGCS62IDQA"
+email_password="\$Tom\$\$Bombadil"
+EMAIL_HOST_PASSWORD="AqJF54BZeSJofQ+di5r3p4L5yV23JXTWLMib7BcAqO7y"
+email_user_name="Ghost"
+DEFAULT_FROM_USER="info@98Fit"
