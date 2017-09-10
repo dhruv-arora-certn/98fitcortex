@@ -723,6 +723,8 @@ class LoginCustomer(models.Model):
 	first_name = models.CharField(max_length = 100)
 	password = models.CharField(max_length = 255)
 	customer = models.OneToOneField(Customer , db_column = "erp_customer_id")
+	status_id = models.BooleanField(default = True)
+	created_on = models.DateTimeField(auto_now_add = True)	
 
 class DishReplacementSuggestions(models.Model):
 	dietplan_food_details = models.ForeignKey(GeneratedDietPlanFoodDetails , related_name = "suggestions")
