@@ -27,11 +27,12 @@ class RegistrationSerializer(serializers.Serializer):
 			)
 			return lc
 		else:
+			email = validated_data['email']
 			c = Customer.objects.create(
-				email = validated_data['email']
+				email = email
 			)
 			lc = LoginCustomer.objects.create(
-				email = validated_data['email'],
+				email = email,
 				password = bcrypt.hash(validated_data['password']),
 				customer = c
 			)
