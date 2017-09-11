@@ -20,7 +20,8 @@ class RegistrationView(generics.GenericAPIView):
 		s.is_valid(raise_exception = True)
 		lc = s.save()
 		return response.Response({
-			"key" : lc.customer.auth_token.key 
+			"key" : lc.customer.auth_token.key ,
+			"id" : lc.customer.id
 		})
 
 class AccountAssociationView(generics.GenericAPIView):
@@ -39,5 +40,6 @@ class AccountAssociationView(generics.GenericAPIView):
 		s.is_valid(raise_exception = True)
 		lc = s.save()
 		return response.Response({
-			"key" : request.user.auth_token.key
+			"key" : request.user.auth_token.key,
+			"id" : request.user.id 
 		})
