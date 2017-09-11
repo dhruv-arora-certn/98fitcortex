@@ -38,6 +38,6 @@ class AccountAssociationView(generics.GenericAPIView):
 		)
 		s.is_valid(raise_exception = True)
 		lc = s.save()
-		return Response({
+		return response.Response({
 			"key" : request.user.auth_token.key
 		})
