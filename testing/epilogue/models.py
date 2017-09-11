@@ -213,7 +213,7 @@ class Customer(models.Model):
 	food_cat = models.CharField(max_length = 50 , choices=  food_cat_choices, blank = True)
 	level = models.IntegerField(blank = True)
 	is_authenticated = True
-	is_anonymous = True
+	is_anonymous = False
 
 	def get_exclusions(self):
 		q = models.Q()
