@@ -837,7 +837,7 @@ class CustomerSleepLogs(models.Model):
 		managed = False
 	start = models.DateTimeField(auto_now = False)
 	end = models.DateTimeField(auto_now = False)
-	minutes = models.IntegerField()
+	minutes = models.IntegerField(blank = True)
 	customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "sleep_logs")
 	saved = models.DateTimeField(auto_now_add = True)
 

@@ -2,7 +2,7 @@ from rest_framework import serializers , exceptions
 from epilogue.models import * 
 from django.core.exceptions import ObjectDoesNotExist
 from passlib.hash import bcrypt
-
+import datetime
 
 class ObjectiveSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -195,3 +195,15 @@ class CustomerActivityLogsSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = CustomerActivityLogs
 		fields = "__all__"
+
+class CustomerSleepLoggingSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = CustomerSleepLogs
+		fields = "__all__"
+	
+	def create(self , validated_data):
+		start = validated_data['start']
+		end = validated_data['end']
+		d = end - start
+		validated_data['minutes'] = d.total_seconds()//60
+		return super().create(validated_data)

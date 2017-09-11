@@ -530,3 +530,9 @@ class MonthlyActivityView(ListAPIView):
 	
 	def get_queryset(self):
 		return self.request.user.monthly_activity(month = self.kwargs.get("month"))
+
+class CustomerSleepLoggingView(CreateAPIView):
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [IsAuthenticated]
+	serializer_class = CustomerSleepLoggingSerializer
+	queryset = CustomerSleepLogs.objects
