@@ -25,6 +25,8 @@ class RegistrationSerializer(serializers.Serializer):
 				password = bcrypt.hash(validated_data["password"]),
 				customer = self.context['request'].user
 			)
+			customer.email = validated_data['email']
+			customer.save()
 			return lc
 		else:
 			email = validated_data['email']

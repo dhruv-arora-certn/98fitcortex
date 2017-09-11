@@ -200,7 +200,7 @@ class CustomerSleepLoggingSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = CustomerSleepLogs
 		fields = "__all__"
-	
+
 	def create(self , validated_data):
 		start = validated_data['start']
 		end = validated_data['end']
