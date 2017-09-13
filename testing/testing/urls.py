@@ -22,7 +22,7 @@ urlpatterns = [
     url(r'^api/',  include("epilogue.urls")),
     url(r'^auth/' , include("rest_auth.urls")),
     url(r'^authentication/' , include("authentication.urls")),
-    url(r'^analytics/' , include("analytics.urls")),
+    url(r'^cheese/' , include("analytics.urls")),
     url(r'^workout/' , include("workout.urls")),
     url(r'^docs/', include('rest_framework_docs.urls')),
 ]
