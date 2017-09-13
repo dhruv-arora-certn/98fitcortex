@@ -57,8 +57,14 @@ class RegistrationSerializer(serializers.Serializer):
 		return password
 
 class GoogleLoginSerializer(serializers.Serializer):
-	pass
+	auth_code = serializers.CharField()
+	access_token = serializers.CharField()
 
+	def validate(self , attrs):
+		return attrs
+
+	def create(self , validated_data):
+		raise UserAlreadyExists("User Already Exists") 
 class FacebookLoginSerializer(serializers.Serializer):
 	pass
 

@@ -27,3 +27,8 @@ class EventPageTracking(models.Model):
 	gaclient = models.CharField(max_length = 255)
 	referralId = models.CharField(max_length = 255,blank = True)
 	event_type = models.CharField(max_length = 100)
+
+class NavratriUserEmailSharing(models.Model):
+	email = models.EmailField()
+	link = models.URLField()
+	language = models.CharField(max_length = 20)

@@ -29,3 +29,6 @@ class CustomerTrackingView(generics.CreateAPIView):
 
 class EventPageTrackingView(generics.CreateAPIView):
 	serializer_class = EventPageTrackingSerializer
+
+class EventMailingView(generics.CreateAPIView):
+    pass
