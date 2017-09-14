@@ -1,16 +1,15 @@
-from rest_framework import serializers
+from rest_framework import serializers , exceptions
 from epilogue.serializers import LoginSerializer
 from epilogue.models import LoginCustomer , Customer
 from django.contrib.auth import password_validation
 from authentication.exceptions import UserAlreadyExists
 from passlib.hash import bcrypt
+from .adapters import GoogleAdapter  , FacebookAdapter
 import ipdb 
 
-class RegistrationSerializer(serializers.Serializer):
-	email = serializers.EmailField()
-	password = serializers.CharField()
-
-	def create(self , validated_data):
+class BaseRegistrationSerializer(serializers.Serializer):
+	
+	def user_create(self , validated_data):
 		'''
 		Create an instance of LoginCustomer.
 		If the ERPCustomer is present in the request, bind the LoginCustomer instance to it. Otherwise create ERPCustomer Instance as well.
@@ -40,6 +39,15 @@ class RegistrationSerializer(serializers.Serializer):
 			)
 			return lc
 
+
+
+class RegistrationSerializer(serializers.Serializer):
+	email = serializers.EmailField()
+	password = serializers.CharField()
+
+	def create(self , validated_data):
+		return super().user_create(validated_data)
+
 	def validate_email(self , email ):
 		print("Calling Validate Email")
 		l = LoginCustomer.objects.filter(email = email)
@@ -58,13 +66,63 @@ class RegistrationSerializer(serializers.Serializer):
 
 class GoogleLoginSerializer(serializers.Serializer):
 	auth_code = serializers.CharField()
-	access_token = serializers.CharField()
+	access_token = serializers.CharField( required = False)
 
-	def validate(self , attrs):
+	def validate(self ,attrs):
+		adapter = GoogleAdapter(
+			auth_code = attrs['auth_code'],
+			access_token = attrs.get('access_token')
+		)
+		try:
+			credentials = adapter.complete_login()
+			if not self.context['request'].user.is_anonymous:
+				assert credentials.id_token['email'] == self.context['request'].user.email , exceptions.ValidationError("Conflicting Email Addresses")
+		except Exception as e:
+			raise exceptions.ValidationError(e)
+		else:
+			return credentials.id_token
 		return attrs
 
-	def create(self , validated_data):
-		raise UserAlreadyExists("User Already Exists") 
+	def create(self , credentials):
+
+		email = credentials['email']
+		first_name =  credentials['given_name']
+		last_name =  credentials['family_name']
+		picture = credentials['picture']
+
+		try:
+			l = LoginCustomer.objects.get(email = email)
+		except LoginCustomer.DoesNotExist as e:
+			if self.context['request'].user.is_anonymous:
+				customer,created = Customer.objects.get_or_create(email = email)
+				customer.first_name = first_name
+				customer.last_name = last_name
+				customer.image = picture
+				customer.save()
+				lc = LoginCustomer.objects.create(
+					email = email,
+					first_name = first_name,
+					last_name = last_name,
+					customer = customer
+				)
+				return lc
+			else:
+				customer = self.context.get("request").user
+				if customer.email != email:
+					raise exceptions.ValidationError("Conflicting Email Addresses")
+				customer.first_name = first_name
+				customer.last_name = last_name
+				customer.image = picture
+				lc , created = LoginCustomer.objects.get_or_create(
+					email = email,
+					first_name = first_name,
+					last_name = last_name,
+					customer = customer
+				)
+				return lc
+		return l
+
+
 class FacebookLoginSerializer(serializers.Serializer):
 	pass
 

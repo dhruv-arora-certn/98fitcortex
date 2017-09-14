@@ -214,6 +214,7 @@ class Customer(models.Model):
 	level = models.IntegerField(blank = True)
 	is_authenticated = True
 	is_anonymous = False
+	image = models.CharField(blank = True , max_length = 200 , blank = True , null = True)
 
 	def get_exclusions(self):
 		q = models.Q()
@@ -722,6 +723,7 @@ class LoginCustomer(models.Model):
 		managed = False
 	email = models.EmailField()
 	first_name = models.CharField(max_length = 100)
+	last_name = models.CharField(max_length = 100)
 	password = models.CharField(max_length = 255)
 	customer = models.OneToOneField(Customer , db_column = "erp_customer_id")
 	status_id = models.BooleanField(default = True)

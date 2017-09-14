@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from authentication.serializers import RegistrationSerializer
+from authentication.serializers import RegistrationSerializer , GoogleLoginSerializer
 from rest_framework import generics
 from rest_framework import response
 from rest_framework import permissions
@@ -42,4 +42,18 @@ class AccountAssociationView(generics.GenericAPIView):
 		return response.Response({
 			"key" : request.user.auth_token.key,
 			"id" : request.user.id 
+		})
+
+class GoogleLoginView(generics.GenericAPIView):
+	serializer_class = GoogleLoginSerializer
+	
+	def post(self, request , *args, **kwargs):
+		s = self.serializer_class(data = request.data , context = {
+			'request' : request
+		})
+		s.is_valid(raise_exception = True)
+		lc = s.save()
+		return response.Response({
+			"key" : lc.customer.auth_token.key ,
+			"id" : lc.customer.id
 		})

@@ -59,3 +59,4 @@ class EmailMessage():
 			Destination = self.get_destination_object(),
 			Message = self.get_message_object()
 		)
+
