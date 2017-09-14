@@ -214,7 +214,7 @@ class Customer(models.Model):
 	level = models.IntegerField(blank = True)
 	is_authenticated = True
 	is_anonymous = False
-	image = models.CharField(blank = True , max_length = 200 , blank = True , null = True)
+	image = models.CharField( max_length = 200 , blank = True , null = True)
 
 	def get_exclusions(self):
 		q = models.Q()
