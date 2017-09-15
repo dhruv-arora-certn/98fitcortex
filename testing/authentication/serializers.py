@@ -65,6 +65,8 @@ class BaseSocialSerializer(serializers.Serializer):
 				if customer.email  and customer.email != email:
 					raise exceptions.ValidationError("Conflicting Email Addresses")
 				customer.image = picture
+				customer.email = email
+				customer.save()
 				lc , created = LoginCustomer.objects.get_or_create(
 					email = email,
 					first_name = customer.first_name or first_name,
@@ -138,3 +140,26 @@ class FacebookLoginSerializer(BaseSocialSerializer):
 				if not credentials['email'] == self.context['request'].user.email:
 					raise exceptions.ValidationError("Conflicting Email Addresses")
 			return credentials
+
+class BatraGoogleSerializer(serializers.Serializer):
+	email = serializers.EmailField()
+	name = serializers.CharField()
+
+	def validate_email(self , email ):
+		print("Calling Validate Email")
+		l = LoginCustomer.objects.filter(email = email)
+		if l:
+			raise UserAlreadyExists("This Email is already Registered")
+		return email
+	
+	def create(self,validated_data):
+		email = validated_data['email']
+		name = validated_data['name']
+
+		customer = Customer.objects.get_or_create(email = email , first_name = name)
+		lc = LoginCustomer.objects.create(
+			customer = customer,
+			email = email,
+			first_name = name
+		)
+		return lc
