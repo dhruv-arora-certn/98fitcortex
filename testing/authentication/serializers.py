@@ -52,14 +52,11 @@ class BaseSocialSerializer(serializers.Serializer):
 			if self.context['request'].user.is_anonymous:
 				print(email)
 				customer,created = Customer.objects.get_or_create(email = email)
-				customer.first_name = first_name
-				customer.last_name = last_name
 				customer.image = picture
 				customer.save()
 				lc = LoginCustomer.objects.create(
 					email = email,
-					first_name = first_name,
-					last_name = last_name,
+					first_name = customer.first_name or first_name,
 					customer = customer
 				)
 				return lc
@@ -67,13 +64,10 @@ class BaseSocialSerializer(serializers.Serializer):
 				customer = self.context.get("request").user
 				if customer.email != email:
 					raise exceptions.ValidationError("Conflicting Email Addresses")
-				customer.first_name = first_name
-				customer.last_name = last_name
 				customer.image = picture
 				lc , created = LoginCustomer.objects.get_or_create(
 					email = email,
-					first_name = first_name,
-					last_name = last_name,
+					first_name = customer.first_name or first_name,
 					customer = customer
 				)
 				return lc
