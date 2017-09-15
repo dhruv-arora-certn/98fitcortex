@@ -109,7 +109,7 @@ class GoogleLoginSerializer(BaseSocialSerializer):
 		)
 		try:
 			credentials = adapter.complete_login()
-			if not self.context['request'].user.is_anonymous:
+			if not self.context['request'].user.is_anonymous and self.context['request'].user.email  != "" :
 				assert credentials['email'] == self.context['request'].user.email , exceptions.ValidationError("Conflicting Email Addresses")
 		except Exception as e:
 			raise exceptions.ValidationError(e)
@@ -134,9 +134,7 @@ class FacebookLoginSerializer(BaseSocialSerializer):
 			raise exceptions.ValidationError(e)
 		else:
 			#Facebook Returns the credentials
-			if not self.context['request'].user.is_anonymous:
+			if not self.context['request'].user.is_anonymous and self.context['request'].user.email  != "":
 				if not credentials['email'] == self.context['request'].user.email:
 					raise exceptions.ValidationError("Conflicting Email Addresses")
 			return credentials
-
-
