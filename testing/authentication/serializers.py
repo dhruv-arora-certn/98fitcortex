@@ -98,15 +98,13 @@ class RegistrationSerializer(serializers.Serializer):
 		return password
 
 class GoogleLoginSerializer(BaseSocialSerializer):
-	auth_code = serializers.CharField()
-	access_token = serializers.CharField( required = False)
+	access_token = serializers.CharField() 
 
 	def release_attrs(self , credentials):
-		return credentials['email'] , credentials['given_name'] , credentials['family_name'] , credentials['picture']
+		return credentials['email'] , credentials['name'] ,"" , credentials['picture']
 
 	def validate(self ,attrs):
 		adapter = GoogleAdapter(
-			auth_code = attrs['auth_code'],
 			access_token = attrs.get('access_token')
 		)
 		try:
@@ -116,7 +114,7 @@ class GoogleLoginSerializer(BaseSocialSerializer):
 		except Exception as e:
 			raise exceptions.ValidationError(e)
 		else:
-			return credentials.id_token
+			return credentials
 
 
 class FacebookLoginSerializer(BaseSocialSerializer):

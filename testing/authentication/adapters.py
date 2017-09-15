@@ -1,26 +1,21 @@
 from oauth2client.client import OAuth2WebServerFlow
+from oauth2client.client import _extract_id_token 
 import requests
 import httplib2
 import os
 
 class GoogleAdapter:
 
-	def __init__(self , auth_code , access_token =  None):
+	def __init__(self , auth_code = None , access_token =  None):
 		self.auth_code = auth_code
 		self.access_token = access_token
-		self.flow = OAuth2WebServerFlow(
-			client_id = os.environ.get("google_client_id"),
-			client_secret = os.environ.get("google_client_secret"),
-			scope = ["profile", "email"],
-			redirect_uri = "http://localhost:8000/oauth2callback"
-		)
 
 	def complete_login(self):
-		self.credentials = self.flow.step2_exchange(self.auth_code)
-		self.credentials.authorize(httplib2.Http())
+		self.credentials = _extract_id_token(self.access_token)
 		return self.credentials	
 
 class FacebookAdapter:
+
 	def __init__(self , access_token ) :
 		self.access_token = access_token
 
