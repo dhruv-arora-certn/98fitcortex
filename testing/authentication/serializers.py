@@ -103,7 +103,7 @@ class RegistrationSerializer(serializers.Serializer):
 		password_validation.validate_password(password , validators)
 		return password
 
-class GoogleLoginSerializer(BaseRegistrationSerializer):
+class GoogleLoginSerializer(BaseSocialSerializer):
 	auth_code = serializers.CharField()
 	access_token = serializers.CharField( required = False)
 
