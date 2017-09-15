@@ -144,6 +144,7 @@ class FacebookLoginSerializer(BaseSocialSerializer):
 class BatraGoogleSerializer(serializers.Serializer):
 	email = serializers.EmailField()
 	name = serializers.CharField()
+	picture = serializers.CharField()
 
 	def validate_email(self , email ):
 		print("Calling Validate Email")
@@ -151,12 +152,12 @@ class BatraGoogleSerializer(serializers.Serializer):
 		if l:
 			raise UserAlreadyExists("This Email is already Registered")
 		return email
-	
+
 	def create(self,validated_data):
 		email = validated_data['email']
 		name = validated_data['name']
 
-		customer = Customer.objects.get_or_create(email = email , first_name = name)
+		customer = Customer.objects.create(email = email , first_name = name)
 		lc = LoginCustomer.objects.create(
 			customer = customer,
 			email = email,

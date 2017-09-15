@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from authentication.serializers import RegistrationSerializer , GoogleLoginSerializer , FacebookLoginSerializer
+from authentication.serializers import RegistrationSerializer , GoogleLoginSerializer , FacebookLoginSerializer, BatraGoogleSerializer
 from rest_framework import generics
 from rest_framework import response
 from rest_framework import permissions
@@ -65,6 +65,22 @@ class FacebookLoginView(generics.GenericAPIView):
 		s = self.serializer_class(data = request.data , context = {
 			'request' : request
 		})
+		s.is_valid(raise_exception = True)
+		lc = s.save()
+		return response.Response({
+			"key" : lc.customer.auth_token.key ,
+			"id" : lc.customer.id
+		})
+
+class BatraGoogleLoginView(generics.GenericAPIView):
+	serializer_class = BatraGoogleSerializer
+
+	def post(self , request , *args , **kwargs):
+		s = self.serializer_class(
+			data = request.data , context = {
+				'request' : request
+			}
+		)
 		s.is_valid(raise_exception = True)
 		lc = s.save()
 		return response.Response({
