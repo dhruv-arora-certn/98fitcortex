@@ -110,7 +110,7 @@ class GoogleLoginSerializer(BaseSocialSerializer):
 		try:
 			credentials = adapter.complete_login()
 			if not self.context['request'].user.is_anonymous:
-				assert credentials.id_token['email'] == self.context['request'].user.email , exceptions.ValidationError("Conflicting Email Addresses")
+				assert credentials['email'] == self.context['request'].user.email , exceptions.ValidationError("Conflicting Email Addresses")
 		except Exception as e:
 			raise exceptions.ValidationError(e)
 		else:
