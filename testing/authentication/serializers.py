@@ -40,60 +40,17 @@ class BaseRegistrationSerializer(serializers.Serializer):
 			return lc
 
 
-
-class RegistrationSerializer(serializers.Serializer):
-	email = serializers.EmailField()
-	password = serializers.CharField()
-
-	def create(self , validated_data):
-		return super().user_create(validated_data)
-
-	def validate_email(self , email ):
-		print("Calling Validate Email")
-		l = LoginCustomer.objects.filter(email = email)
-		if l:
-			raise UserAlreadyExists("This Email is already Registered")
-		return email
-	
-	def validate_password(self , password):
-		validators = [
-			password_validation.NumericPasswordValidator,
-			password_validation.MinimumLengthValidator({"min_length" : 7}),
-			password_validation.CommonPasswordValidator
-		]
-		password_validation.validate_password(password , validators)
-		return password
-
-class GoogleLoginSerializer(serializers.Serializer):
-	auth_code = serializers.CharField()
-	access_token = serializers.CharField( required = False)
-
-	def validate(self ,attrs):
-		adapter = GoogleAdapter(
-			auth_code = attrs['auth_code'],
-			access_token = attrs.get('access_token')
-		)
-		try:
-			credentials = adapter.complete_login()
-			if not self.context['request'].user.is_anonymous:
-				assert credentials.id_token['email'] == self.context['request'].user.email , exceptions.ValidationError("Conflicting Email Addresses")
-		except Exception as e:
-			raise exceptions.ValidationError(e)
-		else:
-			return credentials.id_token
-		return attrs
+class BaseSocialSerializer(serializers.Serializer):
 
 	def create(self , credentials):
 
-		email = credentials['email']
-		first_name =  credentials['given_name']
-		last_name =  credentials['family_name']
-		picture = credentials['picture']
+		email , first_name , last_name , picture = self.release_attrs(credentials)
 
 		try:
 			l = LoginCustomer.objects.get(email = email)
 		except LoginCustomer.DoesNotExist as e:
 			if self.context['request'].user.is_anonymous:
+				print(email)
 				customer,created = Customer.objects.get_or_create(email = email)
 				customer.first_name = first_name
 				customer.last_name = last_name
@@ -123,6 +80,71 @@ class GoogleLoginSerializer(serializers.Serializer):
 		return l
 
 
-class FacebookLoginSerializer(serializers.Serializer):
-	pass
+class RegistrationSerializer(serializers.Serializer):
+	email = serializers.EmailField()
+	password = serializers.CharField()
+
+	def create(self , validated_data):
+		return super().user_create(validated_data)
+
+	def validate_email(self , email ):
+		print("Calling Validate Email")
+		l = LoginCustomer.objects.filter(email = email)
+		if l:
+			raise UserAlreadyExists("This Email is already Registered")
+		return email
+
+	def validate_password(self , password):
+		validators = [
+			password_validation.NumericPasswordValidator,
+			password_validation.MinimumLengthValidator({"min_length" : 7}),
+			password_validation.CommonPasswordValidator
+		]
+		password_validation.validate_password(password , validators)
+		return password
+
+class GoogleLoginSerializer(BaseRegistrationSerializer):
+	auth_code = serializers.CharField()
+	access_token = serializers.CharField( required = False)
+
+	def release_attrs(self , credentials):
+		return credentials['email'] , credentials['given_name'] , credentials['family_name'] , credentials['picture']
+
+	def validate(self ,attrs):
+		adapter = GoogleAdapter(
+			auth_code = attrs['auth_code'],
+			access_token = attrs.get('access_token')
+		)
+		try:
+			credentials = adapter.complete_login()
+			if not self.context['request'].user.is_anonymous:
+				assert credentials.id_token['email'] == self.context['request'].user.email , exceptions.ValidationError("Conflicting Email Addresses")
+		except Exception as e:
+			raise exceptions.ValidationError(e)
+		else:
+			return credentials.id_token
+
+
+class FacebookLoginSerializer(BaseSocialSerializer):
+	access_token = serializers.CharField()
+
+	def release_attrs(self , credentials):
+		return credentials['email'] , credentials['first_name'] , credentials['last_name'] , credentials['picture']['data']['url']
+
+	def validate(self , attrs):
+		adapter = FacebookAdapter(
+			access_token = attrs['access_token']
+		)
+		try:
+			credentials = adapter.complete_login()
+		except Exception as e:
+			#Facebook returns an error
+			raise exceptions.ValidationError(e)
+		else:
+			#Facebook Returns the credentials
+			if not self.context['request'].user.is_anonymous:
+				if not credentials['email'] == self.context['request'].user.email:
+					raise exceptions.ValidationError("Conflicting Email Addresses")
+			return credentials
+
 
