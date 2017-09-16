@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from analytics.models import CustomerGoogleClient , CustomerTracking , EventPageTracking , NavratriUserEmailSharing
+from analytics.models import CustomerGoogleClient , CustomerTracking , EventPageTracking 
 
 
 class CustomerGoogleClientSerializer(serializers.ModelSerializer):
@@ -17,10 +17,3 @@ class EventPageTrackingSerializer(serializers.ModelSerializer):
 			model = EventPageTracking
 			fields = "__all__"
 
-class NavratriUserEmailSharingSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = NavratriUserEmailSharing
-		fields = "__all__"
-	
-	def create(self , validated_data):
-		return super().create(validated_data)

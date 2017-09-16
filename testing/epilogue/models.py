@@ -333,9 +333,9 @@ class Customer(models.Model):
 	
 	@property
 	def weight_type(self):
-		if self.w_type == 1:
-			return "Kgs"
 		if self.w_type == 2:
+			return "Kgs"
+		if self.w_type == 1:
 			return "Lbs"
 
 	@property
