@@ -149,6 +149,7 @@ class BatraGoogleSerializer(BaseSocialSerializer):
 	picture = serializers.CharField()
 	url = serializers.URLField()
 	source = serializers.CharField(required = False)
+	language = serializers.CharField(required = False)
 
 
 	def release_attrs(self, credentials):
