@@ -4,7 +4,9 @@ from epilogue.models import LoginCustomer , Customer
 from django.contrib.auth import password_validation
 from authentication.exceptions import UserAlreadyExists
 from passlib.hash import bcrypt
+from analytics.models import UserSignupSource
 from .adapters import GoogleAdapter  , FacebookAdapter
+from .signals import navratri_signup
 import ipdb 
 
 class BaseRegistrationSerializer(serializers.Serializer):
@@ -141,26 +143,25 @@ class FacebookLoginSerializer(BaseSocialSerializer):
 					raise exceptions.ValidationError("Conflicting Email Addresses")
 			return credentials
 
-class BatraGoogleSerializer(serializers.Serializer):
+class BatraGoogleSerializer(BaseSocialSerializer):
 	email = serializers.EmailField()
 	name = serializers.CharField()
 	picture = serializers.CharField()
+	url = serializers.URLField()
+	source = serializers.CharField(required = False)
 
-	def validate_email(self , email ):
-		print("Calling Validate Email")
-		l = LoginCustomer.objects.filter(email = email)
-		if l:
-			raise UserAlreadyExists("This Email is already Registered")
-		return email
+
+	def release_attrs(self, credentials):
+		return credentials['email'], credentials['name'] , '' , credentials['picture']
 
 	def create(self,validated_data):
+		created = super().create(validated_data)
 		email = validated_data['email']
-		name = validated_data['name']
-
-		customer = Customer.objects.create(email = email , first_name = name)
-		lc = LoginCustomer.objects.create(
-			customer = customer,
-			email = email,
-			first_name = name
+		url = validated_data['url']
+		signupsource = UserSignupSource.objects.create(
+			customer = created.customer,
+			source = validated_data['source'],
+			campaign = "navratri"
 		)
-		return lc
+		navratri_signup.send(sender = LoginCustomer , email = email , url = url)
+		return created
