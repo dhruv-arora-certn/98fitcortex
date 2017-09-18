@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'epilogue',
     'analytics',
 	'workout',
+	'messaging',
 	'authentication',
 	'rest_framework',
     'rest_framework.authtoken',   
