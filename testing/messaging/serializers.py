@@ -24,7 +24,7 @@ class SMSSerializer(serializers.Serializer):
 		return r.json()['id']
 
 	def get_message(self , s_url):
-		return "You have been subscribed for daily updates. Access your plan anytime on this link: %s"%s_url
+		return "Thank you for subscribing for the 9 day Navratri Diet Plan on 98Fit.com. Check & follow your plan anytime at: %s"%s_url
 
 	def save(self ):
 		url = self.shorten_url(self.validated_data['url'])
