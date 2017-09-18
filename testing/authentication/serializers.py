@@ -170,5 +170,5 @@ class BatraGoogleSerializer(BaseSocialSerializer):
 			source = validated_data['source'],
 			campaign = "navratri"
 		)
-		navratri_signup.send(sender = LoginCustomer , email = email , url = url)
+		navratri_signup.send(sender = LoginCustomer , email = email , url = url , lang = language)
 		return created
