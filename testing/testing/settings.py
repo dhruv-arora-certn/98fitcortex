@@ -143,7 +143,17 @@ PASSWORD_HASHERS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES' : [
         'epilogue.authentication.CustomerAuthentication'
-    ]
+    ],
+	'DEFAULT_THROTTLE_CLASSES': (
+		'rest_framework.throttling.ScopedRateThrottle',
+		'rest_framework.throttling.AnonRateThrottle',
+		'rest_framework.throttling.UserRateThrottle'
+	),
+	'DEFAULT_THROTTLE_RATES' : {
+		'navratri-sms' : '10/day',
+		'anon' : '100/hour',
+		'user' : '200/hour'
+	}
 }
 
 REST_AUTH_SERIALIZERS = {
@@ -151,8 +161,8 @@ REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER' : 'epilogue.serializers.CustomerSerializer'
 }
 
-REST_AUTH_TOKEN_MODEL = 'epilogue.models.Token' 
-REST_SESSION_LOGIN = False 
+REST_AUTH_TOKEN_MODEL = 'epilogue.models.Token'
+REST_SESSION_LOGIN = False
 CORS_ORIGIN_ALLOW_ALL =  True
 
 LOGGING = {
@@ -190,3 +200,5 @@ email_password="\$Tom\$\$Bombadil"
 EMAIL_HOST_PASSWORD="AqJF54BZeSJofQ+di5r3p4L5yV23JXTWLMib7BcAqO7y"
 email_user_name="Ghost"
 DEFAULT_FROM_USER="info@98Fit"
+
+

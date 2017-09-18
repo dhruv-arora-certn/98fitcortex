@@ -6,11 +6,16 @@ import requests
 class SMSSerializer(serializers.Serializer):
 	phone = serializers.CharField()
 	url = serializers.URLField()
+	lang = serializers.CharField()
 
 	def validate_phone(self , attrs):
-		if not attrs.isdigit():
+		if not attrs.isdigit() or not len(attrs) == 10:
 			raise exceptions.ValidationError("Not a Valid Phone")
 		return attrs
+
+	def validate_lang(self , lang):
+		if lang not in ("en" , "hi"):
+			raise exceptions.ValidationError("Not a Valid Language")
 
 	def shorten_url(self , url):
 		bUrl = "https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyCtjEyqNwpb9mH6TMTroersPmSMsaDT14M"

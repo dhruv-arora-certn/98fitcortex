@@ -149,8 +149,12 @@ class BatraGoogleSerializer(BaseSocialSerializer):
 	picture = serializers.CharField()
 	url = serializers.URLField()
 	source = serializers.CharField(required = False)
-	language = serializers.CharField(required = False)
+	language = serializers.CharField()
 
+	def validate_language(self , lang):
+		if lang not in ("en" , "hi"):
+			raise exceptions.ValidationError("Not a valid language")
+		return lang
 
 	def release_attrs(self, credentials):
 		return credentials['email'], credentials['name'] , '' , credentials['picture']
@@ -159,6 +163,8 @@ class BatraGoogleSerializer(BaseSocialSerializer):
 		created = super().create(validated_data)
 		email = validated_data['email']
 		url = validated_data['url']
+		language = validated_data['language']
+
 		signupsource = UserSignupSource.objects.create(
 			customer = created.customer,
 			source = validated_data['source'],
