@@ -14,7 +14,7 @@ class SMS():
 		r = requests.get(url , params = {
 			'authkey' : MSG91_KEY,
 			'mobiles' : self.number,
-			'sender' : 'NEFIT',
+			'sender' : 'FITNES',
 			'route' : 4,
 			'message' : self.message
 		})

@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^authentication/' , include("authentication.urls")),
     url(r'^cheese/' , include("analytics.urls")),
     url(r'^workout/' , include("workout.urls")),
+    url(r'^messaging/' , include("messaging.urls")),
     url(r'^docs/', include('rest_framework_docs.urls')),
 ]
 urlpatterns += staticfiles_urlpatterns()
