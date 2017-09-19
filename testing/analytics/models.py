@@ -27,6 +27,7 @@ class EventPageTracking(models.Model):
 	gaclient = models.CharField(max_length = 255)
 	referralId = models.CharField(max_length = 255,blank = True)
 	event_type = models.CharField(max_length = 100)
+	source = models.CharField(max_length = 20 , blank = True)
 
 
 class UserSignupSource(models.Model):
