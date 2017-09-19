@@ -1,17 +1,21 @@
-from rest_framework import serializers
+from rest_framework import serializers , exceptions
+from .models import SMSTracking
 from .settings import GSHORTENER_KEY
 from .utils import SMS
 import requests
 
-class SMSSerializer(serializers.Serializer):
+class PhoneSerializer(serializers.Serializer):
 	phone = serializers.CharField()
-	url = serializers.URLField()
-	lang = serializers.CharField()
 
 	def validate_phone(self , attrs):
 		if not attrs.isdigit() or not len(attrs) == 10:
 			raise exceptions.ValidationError("Not a Valid Phone")
 		return attrs
+
+class SMSSerializer(PhoneSerializer):
+	phone = serializers.CharField()
+	url = serializers.URLField()
+	lang = serializers.CharField()
 
 	def validate_lang(self , lang):
 		if lang not in ("en" , "hi"):
@@ -35,4 +39,16 @@ class SMSSerializer(serializers.Serializer):
 		url = self.shorten_url(self.validated_data['url'])
 		message = self.get_message(url)
 		sms = SMS(number = self.validated_data['phone'] , message = message)
-		return sms.send()
+		s = SMSTrackingSerializer(data = {
+			'phone' : self.validated_data['phone'],
+			'message' : self.validated_data['message']
+		})
+		s.is_valid(raise_exception = True)
+		s.save()
+		sms.send()
+
+class SMSTrackingSerializer(PhoneSerializer , serializers.ModelSerializer):
+	class Meta:
+		fields = "__all__"
+		model = SMSTracking
+	
