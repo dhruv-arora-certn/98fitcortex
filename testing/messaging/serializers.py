@@ -41,7 +41,7 @@ class SMSSerializer(PhoneSerializer):
 		sms = SMS(number = self.validated_data['phone'] , message = message)
 		s = SMSTrackingSerializer(data = {
 			'phone' : self.validated_data['phone'],
-			'message' : self.validated_data['message']
+			'message' : message 
 		})
 		s.is_valid(raise_exception = True)
 		s.save()
