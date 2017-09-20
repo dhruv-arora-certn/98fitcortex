@@ -165,6 +165,8 @@ class BatraGoogleSerializer(BaseSocialSerializer):
 		url = validated_data['url']
 		language = validated_data['language']
 
+		created.customer.first_name = validated_data['name']
+		created.customer.save()
 		signupsource = UserSignupSource.objects.create(
 			customer = created.customer,
 			source = validated_data['source'],
