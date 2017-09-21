@@ -11,7 +11,8 @@ def send_navratri_day_email(self):
 		em = EmailMessage(
 			subject = "Day 1 Healthy Navratri Diet Plan | 98Fit",
 			recipient = [e['customer__email']],
-			message = render_to_string("navratri-day-1.html")
+			message = render_to_string("navratri-day-1.html") , 
+			html = True
 		)
 		l.append([e['customer__email'] , em.send()])
 	return l
