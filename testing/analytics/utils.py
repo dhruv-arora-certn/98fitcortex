@@ -10,6 +10,7 @@ def send_navratri_day_email( users = [] , send = True):
 	else:
 		user_list = users
 	l = []
+	sent =  []
 	for e in user_list:
 		if len(e['customer__first_name']):
 			name = e['customer__first_name']
@@ -23,7 +24,8 @@ def send_navratri_day_email( users = [] , send = True):
 			}) , 
 			html = True
 		)
-		if send:
+		if send and not e['customer__email'] in sent:
 			l.append([e['customer__email'] , em.send()])
+			sent.append(e['customer__email'])
 		l.append(e['customer__email'])
 	return l
