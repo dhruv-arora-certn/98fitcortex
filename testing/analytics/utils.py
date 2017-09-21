@@ -4,7 +4,7 @@ from django.template.loader import render_to_string
 
 
 
-def send_navratri_day_email(self , send = True):
+def send_navratri_day_email( send = True):
 	user_list = UserSignupSource.objects.filter(customer__create_on__day = 20 , customer__create_on__month = 9 , customer__create_on__year = 2017).values("customer__email" , "customer__first_name")
 	l = []
 	for e in user_list:
