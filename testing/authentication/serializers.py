@@ -170,7 +170,8 @@ class BatraGoogleSerializer(BaseSocialSerializer):
 		signupsource = UserSignupSource.objects.create(
 			customer = created.customer,
 			source = validated_data['source'],
-			campaign = "navratri"
+			campaign = "navratri",
+			language = language
 		)
 		navratri_signup.send(sender = LoginCustomer , email = email , url = url , lang = language)
 		return created

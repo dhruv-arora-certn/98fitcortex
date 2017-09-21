@@ -34,3 +34,4 @@ class UserSignupSource(models.Model):
 	customer = models.ForeignKey(Customer, db_index = True , related_name = "signupsource")
 	source = models.CharField(max_length = 50 , db_index = True)
 	campaign = models.CharField(max_length = 50 , null = True)
+	language = models.CharField(max_length = 50 , default = "english")
