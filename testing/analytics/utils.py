@@ -1,7 +1,7 @@
 from .models import UserSignupSource
 from epilogue.models import Customer
 from django.template.loader import render_to_string
-
+from authentication.utils import EmailMessage
 
 
 def send_navratri_day_email( send = True):
