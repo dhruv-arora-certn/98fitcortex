@@ -11,10 +11,16 @@ def send_navratri_day_email( users = [] , send = True):
 		user_list = users
 	l = []
 	for e in user_list:
+		if len(e['customer__first_name']):
+			name = e['customer__first_name']
+		else:
+			name = ""
 		em = EmailMessage(
 			subject = "Day 1 Healthy Navratri Diet Plan | 98Fit",
 			recipient = [e['customer__email']],
-			message = render_to_string("navratri-day-1.html") , 
+			message = render_to_string("navratri-day-1.html" , {
+				"name" : name 
+			}) , 
 			html = True
 		)
 		if send:
