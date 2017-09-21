@@ -4,8 +4,11 @@ from django.template.loader import render_to_string
 from authentication.utils import EmailMessage
 
 
-def send_navratri_day_email( send = True):
-	user_list = UserSignupSource.objects.filter(customer__create_on__day = 20 , customer__create_on__month = 9 , customer__create_on__year = 2017).values("customer__email" , "customer__first_name")
+def send_navratri_day_email( users = [] , send = True):
+	if not users:
+		user_list = UserSignupSource.objects.filter(customer__create_on__day = 20 , customer__create_on__month = 9 , customer__create_on__year = 2017).values("customer__email" , "customer__first_name")
+	else:
+		user_list = users
 	l = []
 	for e in user_list:
 		em = EmailMessage(
