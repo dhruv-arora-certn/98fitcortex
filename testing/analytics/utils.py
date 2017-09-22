@@ -17,12 +17,15 @@ def send_navratri_day_email( users = [] , send = True):
 			name = e.customer.first_name
 		else:
 			name = ""
+
 		if e.language == "hi":
 			template = "day-2-hindi.html"
 		else:
 			template = "day-2-english.html"
+
+		subject = "Day 2 Healthy Navratri Diet Plan | 98Fit"
 		em = EmailMessage(
-			subject = "Day 1 Healthy Navratri Diet Plan | 98Fit",
+			subject = subject,
 			recipient = [e.customer.email],
 			message = render_to_string(template , {
 				"name" : name 
