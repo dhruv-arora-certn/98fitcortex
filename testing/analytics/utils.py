@@ -2,7 +2,7 @@ from .models import UserSignupSource
 from epilogue.models import Customer
 from django.template.loader import render_to_string
 from authentication.utils import EmailMessage
-from django.utils.timezone import localtime
+from django.utils.timezone import localtime , now
 
 def send_navratri_day_email( users = [] , send = True):
 	d = localtime(now()).date()
@@ -30,7 +30,7 @@ def send_navratri_day_email( users = [] , send = True):
 			html = True
 		)
 		if send and not e.customer.email in sent:
-			l.append([e.customer.email] , em.send())
+			l.append([[e.customer.email] , em.send()])
 			sent.append(e.customer.email)
 		l.append(e.customer.email)
 	return l
