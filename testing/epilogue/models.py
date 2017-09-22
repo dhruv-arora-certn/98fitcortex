@@ -444,6 +444,9 @@ class Customer(models.Model):
 			return levels.Intermediate
 		return levels.Novice
 
+	def has_diabetes(self):
+		return bool(self.customermedicalconditions_set.filter(condition_name = "diabetes"))
+
 	def __str__(self):
 		return self.first_name + " : " + self.email
 

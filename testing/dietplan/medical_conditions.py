@@ -28,3 +28,6 @@ class Anemia(Base):
 	fruit_filter = Q(vitaminc__gt = 10 )
 	vegetable_filter = Q(name__contains = "Spinach") | Q(name__contains = "Palak") & Q(iron__gt = 3)
 	nuts_probability = [0.5/3 , 0.5 , 0.5/3 , 0.5/3]
+
+class Diabetes:
+	pass

@@ -1,4 +1,4 @@
-import boto3 , datetime , ipdb , random
+import boto3 , datetime , ipdb , random , json
 from datetime import datetime as dt
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -94,8 +94,22 @@ class DietPlanView(GenericAPIView):
 		return GeneratedDietPlan.objects.filter(customer = self.request.user)
 
 	def get_diet_plan_details(self , dietplan ):
-		return GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(calorie__gt = 0).filter(day = int(self.kwargs['day'])) 
-	
+		return GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(calorie__gt = 0).filter(day = int(self.kwargs['day']))
+
+	def get_diabetes(self , user):
+		c = Calculations(*user.args_attrs)
+		rounded_cals = round(c.calories/100)*100
+		if rounded_cals <= 1200:
+			cals = 1200
+		elif rounded_cals == 1300:
+			cals = 1300
+		else:
+			cals = 1400
+
+		file_to_read = "diabetes-%s-%s.txt"%(cals,self.kwargs['day'])
+		with open(file_to_read , "r") as f:
+			return json.load(f)
+
 	def get_object(self):
 		qs = self.get_queryset()
 		user = self.request.user
@@ -108,7 +122,7 @@ class DietPlanView(GenericAPIView):
 			raise exceptions.PermissionDenied({
 				"message" : "You cannot access this week's diet plan"
 			})
-		
+
 		qs = qs.filter(week_id = int(self.kwargs['week_id'])).last()
 		if qs is None:
 			p = Pipeline(user.latest_weight , user.height , float(user.latest_activity) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id))
@@ -124,6 +138,10 @@ class DietPlanView(GenericAPIView):
 		return g
 
 	def get(self , request , *args , **kwargs):
+
+		if request.user.has_diabetes():
+			return Response(self.get_diabetes(request.user))
+
 		objs = self.get_object()
 		data = DietPlanSerializer(objs , many = True).data
 		return Response(data)
@@ -214,17 +232,18 @@ class CustomerMedicalConditionsView(ListBulkCreateAPIView , BulkDifferential):
 		old = list(request.user.customermedicalconditions_set.all())
 		new = [CustomerMedicalConditions(customer = request.user , condition_name = e.get('condition_name')) for e in request.data]
 		return self.getToDelete( old , new ) , self.getToAdd( old , new )
-		
+
 	def post(self, request , *args , **kwargs):
 		bulk = isinstance(request.data , list)
 		if bulk:
 			toDelete , toAdd = self.getPartition(request)
-			
+
 			for e in toDelete:
 				e.delete()
-			
+
 			for e in toAdd:
 				e.save()
+
 		objs = request.user.customermedicalconditions_set.all()
 		data = self.serializer_class(objs , many = True)
 		return Response( data.data , status = status.HTTP_201_CREATED )
@@ -380,8 +399,12 @@ class DietPlanMobileView(GenericAPIView):
 
 	def get_diet_plan_details(self , dietplan ):
 		return GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(calorie__gt = 0).filter(day = int(self.kwargs['day'])).filter(meal_type = self.kwargs.get("meal"))
-	
+
 	def get_object(self):
+		# If user has diabetes	
+		if self.request.user.has_diabetes():
+			self.get_diabetes()
+
 		qs = self.get_queryset()
 		user = self.request.user
 		week_id = int(self.kwargs.get("week_id"))
