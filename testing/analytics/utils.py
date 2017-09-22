@@ -20,10 +20,11 @@ def send_navratri_day_email( users = [] , send = True):
 
 		if e.language == "hi":
 			template = "day-2-hindi.html"
+			subject = "सेहतमंद नवरात्रि डाइट प्लान का तीसरा दिन | 98fit"
 		else:
-			template = "day-2-english.html"
+			template = "day-3.html"
+			subject = "Day 3 Healthy Navratri Diet Plan | 98Fit"
 
-		subject = "Day 2 Healthy Navratri Diet Plan | 98Fit"
 		em = EmailMessage(
 			subject = subject,
 			recipient = [e.customer.email],
