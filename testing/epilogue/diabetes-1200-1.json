@@ -1,0 +1,80 @@
+[
+{
+	"food_name" : "Herbal Tea",
+	"meal_type" : "m0"
+},
+{
+	"food_name" : "Assorted seeds like Flax Seeds",
+	"meal_type" : "m0"
+},
+{
+	"food_name" : "Pumpkin Seeds",
+	"meal_type" : "m0"
+},
+{
+	"food_name" : "Kesar Milk without Sugar",
+	"meal_type" : "m1",
+	"quantiy" : 250,
+	"unit" : "ml"
+},
+{
+	"food_name" : "Veg Sandwich with 1 Multigrain Bread",
+	"meal_type" : "m1"
+},
+{
+	"food_name" : "Guava",
+	"meal_type" : "m2",
+	"quantity" : 1
+},
+{
+	"food_name" : "Curd Lassi",
+	"meal_type" : "m2",
+	"quantity" : -1,
+	"size" : "200ml with 100g curd"
+},
+{
+	"food_name" : "Mix Veg with 50g Paneer",
+	"meal_type" : "m3",
+	"size" : "1 Katori",
+	"quantity" : -1
+},
+{
+	 "food_name" : "Chapati",
+	 "meal_type" : "m3",
+	 "quantity" : -1,
+	 "size" : "1 Small"
+},
+{
+	"food_name" : "Mix Salad",
+	"meal_type" : "m3"
+},
+{
+	"food_name" : "Boiled Chola Chaat with Added Cucumber",
+	"meal_type" : "m4"
+},
+{
+	"food_name" : "Pumpkin Sabji",
+	"meal_type" : "m5"
+},
+{
+	"food_name" : "Sabut Masoor Dal",
+	"meal_type" : "m5",
+	"quantity" : -1,
+	"size" : "1 Katori"
+},
+{
+	"food_name" : "Chapati",
+	"meal_type" : "m5",
+	"quantity" : 1
+},
+{
+	"food_name" : "Mix Salad",
+	"meal_type" : "m5"
+},
+{
+	"food_name" : "Plain Custard without Sugar",
+	"meal_type" : "m6",
+	"weight" : 250,
+	"unit" : "ml"
+}
+]
