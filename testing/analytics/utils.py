@@ -7,17 +7,16 @@ from django.utils.timezone import localtime
 def send_navratri_day_email( users = [] , send = True):
 	d = localtime(now()).date()
 	if not users:
-		user_list = UserSignupSource.objects.filter(customer__create_on__lt = d))
+		user_list = UserSignupSource.objects.filter(customer__create_on__lt = d)
 	else:
 		user_list = users
 	l = []
 	sent =  []
-	for e in user_list:s
+	for e in user_list:
 		if len(e.customer.first_name):
 			name = e.customer.first_name
 		else:
 			name = ""
-		
 		if e.language == "hi":
 			template = "day-2-hindi.html"
 		else:
@@ -31,7 +30,7 @@ def send_navratri_day_email( users = [] , send = True):
 			html = True
 		)
 		if send and not e.customer.email in sent:
-			l.append([e.customer.email] , em.send()])
+			l.append([e.customer.email] , em.send())
 			sent.append(e.customer.email)
 		l.append(e.customer.email)
 	return l
