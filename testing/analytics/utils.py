@@ -2,30 +2,36 @@ from .models import UserSignupSource
 from epilogue.models import Customer
 from django.template.loader import render_to_string
 from authentication.utils import EmailMessage
-
+from django.utils.timezone import localtime
 
 def send_navratri_day_email( users = [] , send = True):
+	d = localtime(now()).date()
 	if not users:
-		user_list = UserSignupSource.objects.filter(customer__create_on__day = 20 , customer__create_on__month = 9 , customer__create_on__year = 2017).values("customer__email" , "customer__first_name")
+		user_list = UserSignupSource.objects.filter(customer__create_on__lt = d))
 	else:
 		user_list = users
 	l = []
 	sent =  []
-	for e in user_list:
-		if len(e['customer__first_name']):
-			name = e['customer__first_name']
+	for e in user_list:s
+		if len(e.customer.first_name):
+			name = e.customer.first_name
 		else:
 			name = ""
+		
+		if e.language == "hi":
+			template = "day-2-hindi.html"
+		else:
+			template = "day-2-english.html"
 		em = EmailMessage(
 			subject = "Day 1 Healthy Navratri Diet Plan | 98Fit",
-			recipient = [e['customer__email']],
-			message = render_to_string("navratri-day-1.html" , {
+			recipient = [e.customer.email],
+			message = render_to_string(template , {
 				"name" : name 
 			}) , 
 			html = True
 		)
-		if send and not e['customer__email'] in sent:
-			l.append([e['customer__email'] , em.send()])
-			sent.append(e['customer__email'])
-		l.append(e['customer__email'])
+		if send and not e.customer.email in sent:
+			l.append([e.customer.email] , em.send()])
+			sent.append(e.customer.email)
+		l.append(e.customer.email)
 	return l
