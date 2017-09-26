@@ -140,6 +140,7 @@ class DietPlanView(GenericAPIView):
 	def get(self , request , *args , **kwargs):
 
 		if request.user.has_diabetes():
+<<<<<<< HEAD
 			data , cals = self.get_diabetes(request.user)
 			return Response({
 				"meta" : {
@@ -148,6 +149,9 @@ class DietPlanView(GenericAPIView):
 				},
 				"data" : data
 			})
+=======
+			return Response(self.get_diabetes(request.user))
+>>>>>>> 64c2be73e749ef5926c5e1e983f99bcd2dc7f63b
 
 		objs = self.get_object()
 		data = DietPlanSerializer(objs , many = True).data
