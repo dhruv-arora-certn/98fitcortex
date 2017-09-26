@@ -106,9 +106,9 @@ class DietPlanView(GenericAPIView):
 		else:
 			cals = 1400
 
-		file_to_read = "diabetes-%s-%s.txt"%(cals,self.kwargs['day'])
+		file_to_read = "disease-data/diabetes-%s-%s.json"%(1200,self.kwargs['day'])
 		with open(file_to_read , "r") as f:
-			return json.load(f)
+			return json.load(f) , cals
 
 	def get_object(self):
 		qs = self.get_queryset()
@@ -140,7 +140,14 @@ class DietPlanView(GenericAPIView):
 	def get(self , request , *args , **kwargs):
 
 		if request.user.has_diabetes():
-			return Response(self.get_diabetes(request.user))
+			data , cals = self.get_diabetes(request.user)
+			return Response({
+				"meta" : {
+					"disease" : "diabetes",
+					"calories" :  cals 
+				},
+				"data" : data
+			})
 
 		objs = self.get_object()
 		data = DietPlanSerializer(objs , many = True).data
