@@ -79,6 +79,7 @@
 {
 	"food_name" : "Vanilla Milk Without Sugar",
 	"quantity" : 250,
-	"unit" : "ml"
+	"unit" : "ml",
+	"meal_type" : "m6"
 }
 ]
