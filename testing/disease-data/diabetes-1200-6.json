@@ -1,81 +1,79 @@
 [
-{
-	"food_name" : "Lemon Tea",
-	"meal_type" : "m0"
-},
-{
-	"food_name" : "Assorted Nuts like Almonds",
-	"meal_type" : "m0"
-},
-{
-	"food_name" : "Walnuts",
-	"meal_type" : "m0"
-},
-{
-	"food_name" : "Pumpkin Seeds",
-	"meal_type" : "m0"
-},
-{
-	"food_name" : "Milk without Sugar",
-	"meal_type" : "m1",
-	"quantiy" : 250,
-	"unit" : "ml"
-},
-{
-	"food_name" : "Veg Parantha( With 1 Tbsp Oil)",
-	"quantity" : -1,
-	"size" : "1 Small",
-	"meal_type" : "m1"
-},
-{
-	"food_name" : "Big Apple",
-	"meal_type" : "m2",
-	"quantity" : 1
-},
-{
-	"food_name" : "Curd Lassi",
-	"meal_type" : "m2",
-	"quantity" : -1,
-	"size" : "200ml with 100g curd"
-},
-{
-	"food_name" : "Masoor Dal",
-	"meal_type" : "m3",
-	"quantity" : 1,
-	"size" : "Katori"
-},
-{
-	"food_name" : "Baingan Bharta with less oil",
-	"meal_type" : "m3"
-},
-{
-	"food_name" : "Chapati",
-	"quantity" : -1,
-	"size" : "1 Small",
-	"meal_type" : "m3"
-},
-{
-	"food_name" : "Sprouts Cheela with 1 Tbsp Oil",
-	"meal_type" : "m4"
-},
-{
-	"food_name" : "Shahi Paneer(50g Paneer)",
-	"meal_type" : "m5"
-},
-{
-	"food_name" : "Brown Rice",
-	"meal_type" : "m5",
-	"quantity" : 1,
-	"size" : "Katori"
-},
-{
-	"food_name" : "Milk Without Sugar",
-	"weight" : 250,
-	"unit" : "ml",
-	"quantity": 1,
-	"size" : "Glass",
-	"meal_type" : "m6"
-}
+    {
+        "food_name": "Lemon Tea",
+        "meal_type": "m0"
+    },
+    {
+        "food_name": "Assorted Nuts like Almonds",
+        "meal_type": "m0"
+    },
+    {
+        "food_name": "Walnuts",
+        "meal_type": "m0"
+    },
+    {
+        "food_name": "Pumpkin Seeds",
+        "meal_type": "m0"
+    },
+    {
+        "food_name": "Milk without Sugar",
+        "meal_type": "m1",
+        "quantiy": 250,
+        "unit": "ml"
+    },
+    {
+        "food_name": "Veg Parantha( With 1 Tbsp Oil)",
+        "meal_type": "m1",
+        "quantity": -1,
+        "size": "1 Small"
+    },
+    {
+        "food_name": "Big Apple",
+        "meal_type": "m2",
+        "quantity": 1
+    },
+    {
+        "food_name": "Curd Lassi",
+        "meal_type": "m2",
+        "quantity": -1,
+        "size": "200ml with 100g curd"
+    },
+    {
+        "food_name": "Masoor Dal",
+        "meal_type": "m3",
+        "quantity": 1,
+        "size": "Katori"
+    },
+    {
+        "food_name": "Baingan Bharta with less oil",
+        "meal_type": "m3"
+    },
+    {
+        "food_name": "Chapati",
+        "meal_type": "m3",
+        "quantity": -1,
+        "size": "1 Small"
+    },
+    {
+        "food_name": "Sprouts Cheela with 1 Tbsp Oil",
+        "meal_type": "m4"
+    },
+    {
+        "food_name": "Shahi Paneer(50g Paneer)",
+        "meal_type": "m5"
+    },
+    {
+        "food_name": "Brown Rice",
+        "meal_type": "m5",
+        "quantity": 1,
+        "size": "Katori"
+    },
+    {
+        "food_name": "Milk Without Sugar",
+        "meal_type": "m6",
+        "quantity": 1,
+        "size": "Glass",
+        "unit": "ml",
+        "weight": 250
+    }
 ]
-
-
