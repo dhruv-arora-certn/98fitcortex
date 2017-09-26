@@ -1,0 +1,58 @@
+[
+    {
+        "food_name": "Herbal Drink",
+        "meal_type": "m0"
+    },
+    {
+        "food_name": "Assorted Seeds like Pumpkin Seeds + Flax Seeds",
+        "meal_type": "m0"
+    },
+    {
+        "food_name": "Milk without Sugar",
+        "meal_type": "m1",
+        "quantiy": 250,
+        "unit": "ml"
+    },
+    {
+        "food_name": "Veg Sandwich with 2 Multigrain Bread",
+        "meal_type": "m1"
+    },
+    {
+        "food_name": "Strawberry Raita (100g Curd)",
+        "meal_type": "m2"
+    },
+    {
+        "food_name": "Malka Dal",
+        "meal_type": "m3"
+    },
+    {
+        "food_name": "Mix Veg",
+        "meal_type": "m3"
+    },
+    {
+        "food_name": "Brown Rice",
+        "meal_type": "m3",
+        "quantity": -1,
+        "size": "2 Katori"
+    },
+    {
+        "food_name": "Boiled Kala Chana Chaat",
+        "meal_type": "m4"
+    },
+    {
+        "food_name": "Stuffed Tomatoes with 50g Paneer",
+        "meal_type": "m5"
+    },
+    {
+        "food_name": "Chapati",
+        "meal_type": "m5",
+        "quantity": -1,
+        "size": "1 Small"
+    },
+    {
+        "food_name": "Custard with 250ml Milk and Without Sugar ",
+        "meal_type": "m6",
+        "quantity": 1,
+        "size": "Katori"
+    }
+]

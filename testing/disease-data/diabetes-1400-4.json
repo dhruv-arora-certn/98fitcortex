@@ -1,0 +1,76 @@
+[
+    {
+        "food_name": "Green Tea",
+        "meal_type": "m0"
+    },
+    {
+        "food_name": "Assorted Nuts and Seeds like Almonds + Walnuts + Flax Seeds",
+        "meal_type": "m0"
+    },
+    {
+        "food_name": "Milk Without Sugar",
+        "meal_type": "m1",
+        "unit": "ml",
+        "weight": 250
+    },
+    {
+        "food_name": "Veg Dalia",
+        "meal_type": "m1",
+        "quantity": -1,
+        "size": "1 Big Katori"
+    },
+    {
+        "food_name": "Fruit Raita Without Sugar with 100gm Curd",
+        "meal_type": "m2"
+    },
+    {
+        "food_name": "Soya Daal",
+        "meal_type": "m3",
+        "quantity": -1,
+        "size": "1 Katori"
+    },
+    {
+        "food_name": "Cabbage Peas Sabzi",
+        "meal_type": "m3"
+    },
+    {
+        "food_name": "Chapati",
+        "meal_type": "m3",
+        "quantity": -1,
+        "size": "2 Small"
+    },
+    {
+        "food_name": "Mix Salad",
+        "meal_type": "m3"
+    },
+    {
+        "food_name": "Sprouts Chaat",
+        "meal_type": "m4",
+        "quantity": 1,
+        "size": "Katori"
+    },
+    {
+        "food_name": "Weak Tea",
+        "meal_type": "m4",
+        "quantity": 1,
+        "size": "Cup"
+    },
+    {
+        "food_name": "Vegetable Pulao with 50g Paneer",
+        "meal_type": "m5",
+        "quantity": -1,
+        "size": "1 Quarter Plate"
+    },
+    {
+        "food_name": "Mint Amla Chutney",
+        "meal_type": "m5"
+    },
+    {
+        "food_name": "Milk",
+        "meal_type": "m6",
+        "quantity": 1,
+        "size": "Glass",
+        "unit": "ml",
+        "weight": 250
+    }
+]

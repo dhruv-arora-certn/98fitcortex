@@ -1,0 +1,65 @@
+[
+{
+	"food_name" : "Tulsi Tea",
+	"meal_type" : "m0"
+},
+{
+	"food_name" : "Assorted Nuts like Walnut + Almonds",
+	"meal_type" : "m0"
+},
+{
+	"food_name" : "Milk Without Sugar",
+	"meal_type" : "m1",
+	"weight" : 250,
+	"unit" : "ml"
+},
+{
+	"food_name" : "Veg Oats Porridge",
+	"meal_type" : "m1",
+	"quantity" : -1,
+	"size" : "1 Katori"
+},
+{
+	"food_name" : "Papaya",
+	"meal_type" : "m2",
+	"weight" : 100,
+	"unit" : "g"
+},
+{
+	"food_name" : "Tadka Chaach",
+	"meal_type" : "m2",
+	"weight" : 200,
+	"unit" : "ml"
+},
+{
+	"food_name" : "Lobia",
+	"meal_type" : "m4",
+	"quantity" : -1,
+	"size" : "1 Katori",
+
+},
+{
+	"food_name" : "Mix Veg",
+	"meal_type" : "m4",
+	"quantity" : -1,
+	"size" : "1 Katori"
+},
+{
+	"food_name" : "Brown Rice",
+	"meal_type" : "m4",
+	"quantity" : -1,
+	"size" : "2 Katori"
+},
+{
+	"food_name" : "Mix Salad",
+	"meal_type" : "m4"
+},
+{
+	"food_name" : "Roasted Chana Chaat",
+	"meal_type" : "m5"
+},
+{
+	"food_name" : "Kulfi with 250 ml milk (Can Use Sugar Free 1 Tablet)",
+	"meal_type" : "m5",
+}
+]
