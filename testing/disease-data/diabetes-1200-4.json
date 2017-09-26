@@ -48,10 +48,6 @@
         "size": "1 Small"
     },
     {
-        "food_name": "Mix Salad",
-        "meal_type": "m3"
-    },
-    {
         "food_name": "Sprouts Chaat",
         "meal_type": "m4",
         "quantity": 1,

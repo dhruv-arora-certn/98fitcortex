@@ -45,10 +45,6 @@
 	 "size" : "1 Small"
 },
 {
-	"food_name" : "Mix Salad",
-	"meal_type" : "m3"
-},
-{
 	"food_name" : "Boiled Chola Chaat with Added Cucumber",
 	"meal_type" : "m4"
 },
@@ -66,10 +62,6 @@
 	"food_name" : "Chapati",
 	"meal_type" : "m5",
 	"quantity" : 1
-},
-{
-	"food_name" : "Mix Salad",
-	"meal_type" : "m5"
 },
 {
 	"food_name" : "Plain Custard without Sugar",

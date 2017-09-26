@@ -44,10 +44,6 @@
         "size": "1 Small"
     },
     {
-        "food_name": "Mix Salad",
-        "meal_type": "m3"
-    },
-    {
         "food_name": "Dhokla",
         "meal_type": "m4",
         "quantity": -1,
@@ -62,10 +58,6 @@
         "meal_type": "m5",
         "quantity": -1,
         "size": "1 Katori"
-    },
-    {
-        "food_name": "Mix Salad",
-        "meal_type": "m5"
     },
     {
         "food_name": "Vanilla Milk Without Sugar",

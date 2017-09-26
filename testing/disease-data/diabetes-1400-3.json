@@ -51,10 +51,6 @@
 	"size" : "2 Katori"
 },
 {
-	"food_name" : "Mix Salad",
-	"meal_type" : "m4"
-},
-{
 	"food_name" : "Roasted Chana Chaat",
 	"meal_type" : "m5"
 },
