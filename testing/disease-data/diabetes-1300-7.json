@@ -1,0 +1,76 @@
+[
+{
+	"food_name" : "Green Tea",
+	"meal_type" : "m0"
+},
+{
+	"food_name" : "4-5 Almonds/Walnuts",
+	"meal_type" : "m0"
+},
+{
+	"food_name" : "Elaichi Milk without Sugar",
+	"meal_type" : "m1",
+	"quantiy" : 250,
+	"unit" : "ml"
+},
+{
+	"food_name" : "Oats Porridge",
+	"meal_type" : "m1",
+	"quantity" : 1,
+	"size" : "Katori"
+},
+{
+	"food_name" : "Big Apple",
+	"meal_type" : "m2",
+	"quantity" : 1
+
+},
+{
+	"food_name" : "Curd/Yogurt",
+	"meal_type" : "m2",
+	"quantity" : 1,
+	"size" : "Katori"
+},
+{
+	"food_name" : "Grilled Paneer(50gm Paneer)",
+	"meal_type" : "m3"
+},
+{
+	"food_name" : "Stir Fried Bell Peppers",
+	"meal_type" : "m3",
+	"quantity" : 1,
+	"size" : "Katori"
+},
+{
+	 "food_name" : "Chapati",
+	 "meal_type" : "m3",
+	 "quantity" : -1,
+	 "size" : "1 Small"
+},
+{
+	"food_name" : "Sprouts Chaat",
+	"meal_type" : "m4"
+},
+{
+	"food_name" : "Mix Veg with less oil",
+	"meal_type" : "m5" 
+},
+{
+	"food_name" : "Chana Daal with Lauki",
+	"meal_type" : "m5",
+	"quantity" : "1",
+	"size" : "Katori" 
+},
+{
+	 "food_name" : "Chapati",
+	 "meal_type" : "m5",
+	 "quantity" : -1,
+	 "size" : "1 Small"
+},
+
+{
+	"food_name" : "Milk without Sugar",
+	"meal_type" : "m6",
+	"weight" : 250,
+	"unit" : "ml"
+}]

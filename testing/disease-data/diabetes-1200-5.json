@@ -44,10 +44,6 @@
 	"size" : "1 Katori"
 },
 {
-	"food_name" : "Mix Salad",
-	"meal_type" : "m3"
-},
-{
 	"food_name" : "Boiled Kala Chana Chaat",
 	"meal_type" : "m4"
 },
@@ -59,10 +55,6 @@
 	"food_name" : "Chapati",
 	"quantity" : -1,
 	"size" : "1 Small",
-	"meal_type" : "m5"
-},
-{
-	"food_name" : "Mix Salad",
 	"meal_type" : "m5"
 },
 {

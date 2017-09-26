@@ -63,19 +63,9 @@
 	"meal_type" : "m5"
 },
 {
-	"food_name" : "Stir Fried Broccoli and Bell Peppers with 50g Paneer",
+	"food_name" : "Flavoured Milk",
 	"meal_type" : "m5",
-},
-{
-	"food_name" : "Chapati",
-	"meal_type" : "m5",
-	"quantity" : -1,
-	"size" : "1 Small"
-	
-},
-{
-	"food_name" : "Kulfi With 250ml milk (Can use Artificial Sweetener 1 Tablet)",
-	"quantity" : 250,
+	"weight" : "100",
 	"unit" : "ml"
 }
 ]

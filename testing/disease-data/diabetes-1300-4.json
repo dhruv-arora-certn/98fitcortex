@@ -25,7 +25,7 @@
         "food_name": "Veg Dalia",
         "meal_type": "m1",
         "quantity": -1,
-        "size": "1 Katori"
+        "size": "1 Big Katori"
     },
     {
         "food_name": "Fruit Raita Without Sugar with 100gm Curd",
@@ -56,6 +56,12 @@
         "meal_type": "m4",
         "quantity": 1,
         "size": "Katori"
+    },
+    {
+        "food_name": "Weak Tea",
+        "meal_type": "m4",
+        "quantity": 1,
+        "size": "Cup"
     },
     {
         "food_name": "Vegetable Pulao with 50g Paneer",

@@ -59,6 +59,12 @@
 	"meal_type" : "m4"
 },
 {
+	"food_name" : "Cold Milk Without Sugar",
+	"meal_type" : "m4",
+	"quantity" : 1,
+	"size" : "Cup"
+},
+{
 	"food_name" : "Shahi Paneer(50g Paneer)",
 	"meal_type" : "m5"
 },
@@ -77,5 +83,3 @@
 	"meal_type" : "m6"
 }
 ]
-
-

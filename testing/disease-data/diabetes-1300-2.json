@@ -1,9 +1,5 @@
 [
     {
-        "food_name": "Green Tea",
-        "meal_type": "m0"
-    },
-    {
         "food_name": "Assorted Nuts and Seeds like Almonds + Walnuts + Flax Seeds",
         "meal_type": "m0"
     },
@@ -52,6 +48,12 @@
         "meal_type": "m4",
         "quantity": -1,
         "size": "2 Pieces"
+    },
+    {
+        "food_name": "Weak Coffee",
+        "meal_type": "m4",
+        "quantity": 1,
+        "size": "Cup"
     },
     {
         "food_name": "Palak Paneer with 50g Paneer",
