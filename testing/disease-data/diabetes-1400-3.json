@@ -12,7 +12,8 @@
 	"food_name" : "Milk Without Sugar",
 	"meal_type" : "m1",
 	"weight" : 250,
-	"unit" : "ml"
+	"unit" : "ml",
+	"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479237010_1436.jpg"
 },
 {
 	"food_name" : "Veg Oats Porridge",
