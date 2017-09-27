@@ -1,7 +1,8 @@
 [
     {
         "food_name": "Lemon Tea",
-        "meal_type": "m0"
+        "meal_type": "m0",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1483771779_707.jpg"
     },
     {
         "food_name": "Assorted Nuts like Almonds + Walnuts + Pumpkin Seeds",
@@ -11,40 +12,47 @@
         "food_name": "Milk without Sugar",
         "meal_type": "m1",
         "quantiy": 250,
-        "unit": "ml"
+        "unit": "ml",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479237010_1436.jpg"
     },
     {
         "food_name": "Veg Parantha( With 1 Tbsp Oil)",
         "meal_type": "m1",
         "quantity": -1,
-        "size": "1 Small"
+        "size": "1 Small",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479212036_890.jpg"
     },
     {
         "food_name": "Big Apple",
         "meal_type": "m2",
-        "quantity": 1
+        "quantity": 1,
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/70.jpg"
     },
     {
         "food_name": "Curd Lassi",
         "meal_type": "m2",
         "quantity": -1,
-        "size": "200ml with 100g curd"
+        "size": "200ml with 100g curd",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479211250_801.jpg"
     },
     {
         "food_name": "Masoor Dal",
         "meal_type": "m3",
         "quantity": 1,
-        "size": "Katori"
+        "size": "Katori",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/2062.jpg"
     },
     {
         "food_name": "Baingan Bharta with less oil",
-        "meal_type": "m3"
+        "meal_type": "m3",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1483791917_83.jpg"
     },
     {
         "food_name": "Chapati",
         "meal_type": "m3",
         "quantity": -1,
-        "size": "2 Small"
+        "size": "2 Small",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
     },
     {
         "food_name": "Sprouts Cheela with 1 Tbsp Oil",
@@ -54,7 +62,8 @@
         "food_name": "Cold Milk Without Sugar",
         "meal_type": "m4",
         "quantity": 1,
-        "size": "Cup"
+        "size": "Cup",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479237010_1436.jpg"
     },
     {
         "food_name": "Shahi Paneer(50g Paneer)",
@@ -64,7 +73,8 @@
         "food_name": "Brown Rice",
         "meal_type": "m5",
         "quantity": 1,
-        "size": "Katori"
+        "size": "Katori",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/177.jpg"
     },
     {
         "food_name": "Milk Without Sugar",

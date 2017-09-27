@@ -1,7 +1,8 @@
 [
 	{
 		"food_name" : "Green Tea",
-		"meal_type" : "m0"
+		"meal_type" : "m0",
+		"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479224957_815.jpg"
 	},
     {
         "food_name": "Assorted Nuts and Seeds like Almonds + Walnuts + Flax Seeds",
@@ -19,19 +20,22 @@
         "food_name": "Veg Parantha( With 1 Tbsp Oil)",
         "meal_type": "m1",
         "quantity": -1,
-        "size": "1 Small"
+        "size": "1 Small",
+	"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479212036_890.jpg"
     },
     {
         "food_name": "Fruit Lassi with 100g curd Without Sugar",
         "meal_type": "m2",
         "unit": "ml",
-        "weight": 200
+        "weight": 200,
+	"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479199307_599.jpg"
     },
     {
         "food_name": "Sabut Moong Dal",
         "meal_type": "m3",
         "quantity": 1,
-        "size": "Katori"
+        "size": "Katori",
+	"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/302.jpg"
     },
     {
         "food_name": "Baked Capsicum",
@@ -41,34 +45,40 @@
         "food_name": "Chapati",
         "meal_type": "m3",
         "quantity": -1,
-        "size": "2 Small"
+        "size": "2 Small",
+	"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
     },
     {
         "food_name": "Dhokla",
         "meal_type": "m4",
         "quantity": -1,
-        "size": "2 Pieces"
+        "size": "2 Pieces",
+	"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/535.jpg"
     },
     {
         "food_name": "Weak Coffee",
         "meal_type": "m4",
         "quantity": 1,
-        "size": "Cup"
+        "size": "Cup",
+	"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479219430_421.jpg"
     },
     {
         "food_name": "Palak Paneer with 50g Paneer",
-        "meal_type": "m5"
+        "meal_type": "m5",
+	"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479213235_1003.jpg"
     },
     {
         "food_name": "Brown Rice",
         "meal_type": "m5",
         "quantity": -1,
-        "size": "1 Katori"
+        "size": "1 Katori",
+	"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/177.jpg"
     },
     {
         "food_name": "Vanilla Milk Without Sugar",
         "meal_type": "m6",
         "weight": 250,
-        "unit": "ml"
+        "unit": "ml",
+	"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479237010_1436.jpg"
     }
 ]
