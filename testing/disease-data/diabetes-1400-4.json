@@ -40,7 +40,8 @@
         "food_name": "Chapati",
         "meal_type": "m3",
         "quantity": -1,
-        "size": "2 Small"
+        "size": "2 Small",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
     },
     {
         "food_name": "Sprouts Chaat",
@@ -53,13 +54,15 @@
         "food_name": "Weak Tea",
         "meal_type": "m4",
         "quantity": 1,
-        "size": "Cup"
+        "size": "Cup",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479218227_265.jpg"
     },
     {
         "food_name": "Vegetable Pulao with 50g Paneer",
         "meal_type": "m5",
         "quantity": -1,
-        "size": "1 Quarter Plate"
+        "size": "1 Quarter Plate",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/2118.jpg"
     },
     {
         "food_name": "Mint Amla Chutney",
