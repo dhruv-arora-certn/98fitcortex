@@ -1,7 +1,8 @@
 [
     {
         "food_name": "Green Tea",
-        "meal_type": "m0"
+        "meal_type": "m0",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479224957_815.jpg"
     },
     {
         "food_name": "Assorted Nuts and Seeds like Almonds + Walnuts + Flax Seeds",
@@ -17,11 +18,13 @@
         "food_name": "Veg Dalia",
         "meal_type": "m1",
         "quantity": -1,
-        "size": "1 Big Katori"
+        "size": "1 Big Katori",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479231922_1116.jpg"
     },
     {
         "food_name": "Fruit Raita Without Sugar with 100gm Curd",
-        "meal_type": "m2"
+        "meal_type": "m2",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479199327_601.jpg"
     },
     {
         "food_name": "Soya Daal",
@@ -43,7 +46,8 @@
         "food_name": "Sprouts Chaat",
         "meal_type": "m4",
         "quantity": 1,
-        "size": "Katori"
+        "size": "Katori",
+        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1878.jpg"
     },
     {
         "food_name": "Weak Tea",
