@@ -68,9 +68,9 @@
         "size": "1 Small"
     },
     {
-        "food_name": "Kulfi With 250ml milk (Can use Artificial Sweetener 1 Tablet)",
+        "food_name": "Kulfi With 250ml milk (Can use Sugar Free 1 Tablet)",
         "meal_type": "m6",
-        "quantity": 250,
+        "weight": 250,
         "unit": "ml"
     }
 ]
