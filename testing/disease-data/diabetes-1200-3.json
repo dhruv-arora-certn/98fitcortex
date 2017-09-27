@@ -37,25 +37,25 @@
     },
     {
         "food_name": "Lobia",
-        "meal_type": "m4",
+        "meal_type": "m3",
         "quantity": -1,
         "size": "1 Katori"
     },
     {
         "food_name": "Mix Veg",
-        "meal_type": "m4",
+        "meal_type": "m3",
         "quantity": -1,
         "size": "1 Katori"
     },
     {
         "food_name": "Brown Rice",
-        "meal_type": "m4",
+        "meal_type": "m3",
         "quantity": -1,
         "size": "1 Katori"
     },
     {
         "food_name": "Roasted Chana Chaat",
-        "meal_type": "m5"
+        "meal_type": "m4"
     },
     {
         "food_name": "Stir Fried Broccoli and Bell Peppers with 50g Paneer",
@@ -69,6 +69,7 @@
     },
     {
         "food_name": "Kulfi With 250ml milk (Can use Artificial Sweetener 1 Tablet)",
+        "meal_type": "m6",
         "quantity": 250,
         "unit": "ml"
     }
