@@ -142,6 +142,9 @@ class DietPlanView(GenericAPIView):
 		print("Diabetes" , request.user.has_diabetes())
 		if request.user.has_diabetes():
 			data , cals = self.get_diabetes(request.user)
+			for e in data:
+				if not e.get("image"):
+					e['image'] = "http://98fit.com//webroot/dietlist_images/images.jpg"
 			return Response({
 				"meta" : {
 					"disease" : "diabetes",
