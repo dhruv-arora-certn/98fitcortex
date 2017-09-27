@@ -62,10 +62,12 @@
 	"food_name" : "Chapati",
 	"quantity" : 1,
 	"size" : "Small",
-	"meal_type" : "m5"
+	"meal_type" : "m5",
+	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
 },
 {
 	"food_name" : "Kulfi with 250 ml milk (Can Use Sugar Free 1 Tablet)",
-	"meal_type" : "m6"
+	"meal_type" : "m6",
+	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1927.jpg"
 }
 ]
