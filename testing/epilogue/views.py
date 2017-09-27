@@ -353,7 +353,7 @@ class DietPlanRegenerationView(GenericAPIView):
 		else:
 			cals = 1400
 
-		file_to_read = "disease-data/diabetes-%s-%s.json"%(cals,self.kwargs['day'])
+		file_to_read = "disease-data/diabetes-%s-%s.json"%(cals,self.kwargs['id'])
 		print("File" , file_to_read)
 		with open(file_to_read , "r") as f:
 			return json.load(f) , cals
