@@ -39,28 +39,28 @@
     },
     {
         "food_name": "Lobia",
-        "meal_type": "m4",
+        "meal_type": "m3",
         "quantity": -1,
         "size": "1 Katori",
         "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1483948476_162.jpg"
     },
     {
         "food_name": "Mix Veg",
-        "meal_type": "m4",
+        "meal_type": "m3",
         "quantity": -1,
         "size": "1 Katori",
         "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479212017_888.jpg"
     },
     {
         "food_name": "Brown Rice",
-        "meal_type": "m4",
+        "meal_type": "m3",
         "quantity": -1,
         "size": "1 Katori",
         "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/177.jpg"
     },
     {
         "food_name": "Roasted Chana Chaat",
-        "meal_type": "m5",
+        "meal_type": "m4",
         "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/chola-chaat.jpg"
     },
     {
