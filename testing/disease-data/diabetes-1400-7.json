@@ -1,7 +1,8 @@
 [
 {
 	"food_name" : "Green Tea",
-	"meal_type" : "m0"
+	"meal_type" : "m0",
+	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479224957_815.jpg"
 },
 {
 	"food_name" : "4-5 Almonds/Walnuts",
@@ -17,19 +18,22 @@
 	"food_name" : "Oats Porridge",
 	"meal_type" : "m1",
 	"quantity" : 1,
-	"size" : "Katori"
+	"size" : "Katori",
+	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479212775_965.jpg"
 },
 {
 	"food_name" : "Big Apple",
 	"meal_type" : "m2",
-	"quantity" : 1
+	"quantity" : 1,
+	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/70.jpg"
 
 },
 {
 	"food_name" : "Curd/Yogurt",
 	"meal_type" : "m2",
 	"quantity" : 1,
-	"size" : "Katori"
+	"size" : "Katori",
+	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/483.jpg"
 },
 {
 	"food_name" : "Grilled Paneer(50gm Paneer)",
@@ -45,11 +49,13 @@
 	 "food_name" : "Chapati",
 	 "meal_type" : "m3",
 	 "quantity" : -1,
-	 "size" : "2 Small"
+	 "size" : "2 Small",
+	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
 },
 {
 	"food_name" : "Sprouts Chaat",
-	"meal_type" : "m4"
+	"meal_type" : "m4",
+	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1878.jpg"
 },
 {
 	"food_name" : "Mix Veg with less oil",
@@ -65,12 +71,14 @@
 	 "food_name" : "Chapati",
 	 "meal_type" : "m5",
 	 "quantity" : -1,
-	 "size" : "1 Small"
+	 "size" : "1 Small",
+	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
 },
 
 {
 	"food_name" : "Milk without Sugar",
 	"meal_type" : "m6",
 	"weight" : 250,
-	"unit" : "ml"
+	"unit" : "ml",
+	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479237010_1436.jpg"
 }]
