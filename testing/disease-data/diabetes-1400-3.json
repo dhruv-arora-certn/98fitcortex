@@ -33,29 +33,39 @@
 },
 {
 	"food_name" : "Lobia",
-	"meal_type" : "m4",
+	"meal_type" : "m3",
 	"quantity" : -1,
 	"size" : "1 Katori"
 
 },
 {
 	"food_name" : "Mix Veg",
-	"meal_type" : "m4",
+	"meal_type" : "m3",
 	"quantity" : -1,
 	"size" : "1 Katori"
 },
 {
 	"food_name" : "Brown Rice",
-	"meal_type" : "m4",
+	"meal_type" : "m3",
 	"quantity" : -1,
 	"size" : "2 Katori"
 },
 {
 	"food_name" : "Roasted Chana Chaat",
+	"meal_type" : "m4"
+},
+{
+	"food_name" : "Stir Fried Broccolli and Bell Peppers with 50g Paneer",
+	"meal_type" : "m5"
+},
+{
+	"food_name" : "Chapati",
+	"quantity" : 1,
+	"size" : "Small",
 	"meal_type" : "m5"
 },
 {
 	"food_name" : "Kulfi with 250 ml milk (Can Use Sugar Free 1 Tablet)",
-	"meal_type" : "m5",
+	"meal_type" : "m6",
 }
 ]
