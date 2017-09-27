@@ -79,6 +79,6 @@
         "meal_type": "m6",
         "weight": 250,
         "unit": "ml",
-	"meal" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479237010_1436.jpg"
+	"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479237010_1436.jpg"
     }
 ]
