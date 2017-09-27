@@ -1,7 +1,8 @@
 [
 {
 	"food_name" : "Tulsi Tea",
-	"meal_type" : "m0"
+	"meal_type" : "m0",
+	"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/2059.jpg"
 },
 {
 	"food_name" : "Assorted Nuts like Walnut + Almonds",
