@@ -1,17 +1,20 @@
 [
     {
         "food_name": "Green Tea",
-        "meal_type": "m0"
+        "meal_type": "m0",
+		"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479224957_815.jpg"
     },
     {
         "food_name": "4-5 Almonds/Walnuts",
-        "meal_type": "m0"
+        "meal_type": "m0",
+		"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
     },
     {
         "food_name": "Elaichi Milk without Sugar",
         "meal_type": "m1",
         "quantiy": 250,
-        "unit": "ml"
+        "unit": "ml",
+		"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/elaichi-milk.jpg"
     },
     {
         "food_name": "Oats Porridge",

@@ -1,14 +1,16 @@
 [
-	{
-		"food_name" : "Green Tea",
-		"meal_type" : "m0"
-	},
+    {
+        "food_name": "Green Tea",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479224957_815.jpg",
+        "meal_type": "m0"
+    },
     {
         "food_name": "Assorted Nuts and Seeds like Almonds + Walnuts + Flax Seeds",
         "meal_type": "m0"
     },
     {
         "food_name": "Elaichi Milk Without Sugar",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/elaichi-milk-100x75.jpg",
         "meal_type": "m1",
         "quantity": 1,
         "size": "Glass",
@@ -19,56 +21,66 @@
         "food_name": "Veg Parantha( With 1 Tbsp Oil)",
         "meal_type": "m1",
         "quantity": -1,
-        "size": "1 Small"
+        "size": "1 Small",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479212036_890.jpg"
     },
     {
         "food_name": "Fruit Lassi with 100g curd Without Sugar",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479199307_599.jpg",
         "meal_type": "m2",
         "unit": "ml",
         "weight": 200
     },
     {
         "food_name": "Sabut Moong Dal",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/302.jpg",
         "meal_type": "m3",
         "quantity": 1,
         "size": "Katori"
     },
     {
         "food_name": "Baked Capsicum",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/baked-capsicum.jpg",
         "meal_type": "m3"
     },
     {
         "food_name": "Chapati",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg",
         "meal_type": "m3",
         "quantity": -1,
         "size": "1 Small"
     },
     {
         "food_name": "Dhokla",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/535.jpg",
         "meal_type": "m4",
         "quantity": -1,
         "size": "2 Pieces"
     },
     {
         "food_name": "Weak Coffee",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479219430_421.jpg",
         "meal_type": "m4",
         "quantity": 1,
         "size": "Cup"
     },
     {
         "food_name": "Palak Paneer with 50g Paneer",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479213235_1003.jpg",
         "meal_type": "m5"
     },
     {
         "food_name": "Brown Rice",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/177.jpg",
         "meal_type": "m5",
         "quantity": -1,
         "size": "1 Katori"
     },
     {
         "food_name": "Vanilla Milk Without Sugar",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479237010_1436.jpg",
         "meal_type": "m6",
-        "weight": 250,
-        "unit": "ml"
+        "unit": "ml",
+        "weight": 250
     }
 ]
