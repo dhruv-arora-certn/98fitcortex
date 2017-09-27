@@ -343,7 +343,34 @@ class DietPlanRegenerationView(GenericAPIView):
 	def get_queryset(self):
 		return GeneratedDietPlan.objects.get(pk = self.kwargs.get("id"))
 
+	def get_diabetes(self , user):
+		c = Calculations(*user.args_attrs)
+		rounded_cals = round(c.calories/100)*100
+		if rounded_cals <= 1200:
+			cals = 1200
+		elif rounded_cals == 1300:
+			cals = 1300
+		else:
+			cals = 1400
+
+		file_to_read = "disease-data/diabetes-%s-%s.json"%(cals,self.kwargs['day'])
+		print("File" , file_to_read)
+		with open(file_to_read , "r") as f:
+			return json.load(f) , cals
+
 	def get(self , request , *args , **kwargs):
+		if request.user.has_diabetes():
+			data , cals = self.get_diabetes(request.user)
+			for e in data:
+				if not e.get("image"):
+					e['image'] = "http://98fit.com//webroot/dietlist_images/images.jpg"
+			return Response({
+				"meta" : {
+					"disease" : "diabetes",
+					"calories" :  cals 
+				},
+				"data" : data
+			})
 		obj = self.get_queryset()
 		try:
 			obj.regenerate()
