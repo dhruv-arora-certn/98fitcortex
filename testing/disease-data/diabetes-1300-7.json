@@ -12,7 +12,9 @@
 {
 	"food_name" : "Elaichi Milk without Sugar",
 	"meal_type" : "m1",
-	"quantiy" : 250,
+	"quantity": 1,
+	"size": "Glass",
+	"weight" : 250,
 	"unit" : "ml",
 	"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/elaichi-milk.jpg"
 },
@@ -27,6 +29,7 @@
 	"food_name" : "Big Apple",
 	"meal_type" : "m2",
 	"quantity" : 1,
+	"size": "Piece",
 	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/70.jpg"
 
 },
@@ -53,7 +56,7 @@
 	 "food_name" : "Chapati",
 	 "meal_type" : "m3",
 	 "quantity" : -1,
-	 "size" : "1 Small",
+	 "size" : "1 Small Piece",
 	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
 },
 {
@@ -77,12 +80,14 @@
 	 "food_name" : "Chapati",
 	 "meal_type" : "m5",
 	 "quantity" : -1,
-	 "size" : "1 Small",
+	 "size" : "1 Small Piece",
 	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
 },
 {
 	"food_name" : "Milk without Sugar",
 	"meal_type" : "m6",
+	"quantity": 1,
+	"size": "Glass",
 	"weight" : 250,
 	"unit" : "ml",
 	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1498302256_436.jpg"

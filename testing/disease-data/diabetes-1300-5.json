@@ -17,13 +17,17 @@
     {
         "food_name": "Milk without Sugar",
         "meal_type": "m1",
-        "quantiy": 250,
+        "quantity": 1,
+        "size": "Glass",
+        "weight": 250,
         "unit": "ml",
         "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1498302256_436.jpg"
     },
     {
         "food_name": "Veg Sandwich with Multigrain Bread",
         "meal_type": "m1",
+        "quantity": 1,
+        "size": "Piece",
         "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/230.jpg"
     },
     {

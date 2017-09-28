@@ -12,7 +12,7 @@
     {
         "food_name": "Milk without Sugar",
         "meal_type": "m1",
-        "quantiy": 250,
+        "quantity": 250,
         "unit": "ml",
         "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479237010_1436.jpg"
     },

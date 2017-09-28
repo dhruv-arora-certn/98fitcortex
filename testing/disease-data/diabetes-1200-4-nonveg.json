@@ -5,7 +5,7 @@
         "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479224957_815.jpg"
     },
     {
-        "food_name": "Assorted Nuts like Walnut",
+        "food_name": "Assorted Nuts like Almonds & Walnuts",
         "meal_type": "m0",
         "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
     },
@@ -17,6 +17,8 @@
     {
         "food_name": "Milk Without Sugar",
         "meal_type": "m1",
+        "quantity": 1,
+        "size": "Glass",
         "unit": "ml",
         "weight": 250,
         "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1498302256_436.jpg"
@@ -25,7 +27,7 @@
         "food_name": "Veg Dalia",
         "meal_type": "m1",
         "quantity": -1,
-        "size": "1 Big Katori",
+        "size": "1 Katori",
         "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/vegetable-dalia.jpg"
     },
     {
@@ -49,34 +51,32 @@
         "food_name": "Chapati",
         "meal_type": "m3",
         "quantity": -1,
-        "size": "1 Small Piece",
+        "size": "1 Small",
         "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
     },
     {
-        "food_name": "Sprouts Chaat",
+        "food_name": "Kala Chana Chaat",
         "meal_type": "m4",
         "quantity": 1,
-        "size": "Katori",
-        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1878.jpg"
+        "size": "Kathori",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/boiled-kala-chana-chaat.jpg"
     },
     {
-        "food_name": "Weak Tea",
-        "meal_type": "m4",
-        "quantity": 1,
-        "size": "Cup",
-        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/weak-tea.jpg"
-    },
-    {
-        "food_name": "Vegetable Pulao with 50g Paneer",
+        "food_name": "Bhindi Masala",
         "meal_type": "m5",
-        "quantity": -1,
-        "size": "1 Quarter Plate",
-        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/vegetable-paneer-pulao.jpg"
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/154.jpg"
     },
     {
-        "food_name": "Mint Amla Chutney",
+        "food_name": "Paneer Tikka (50 gm Paneer)",
         "meal_type": "m5",
-        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/mint-amla-chutney.jpg"
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479231854_1051.jpg"
+    },
+    {
+    "food_name" : "Chapati",
+    "meal_type" : "m5",
+    "quantity" : -1,
+    "size": "1 Small Piece",
+    "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
     },
     {
         "food_name": "Milk",
