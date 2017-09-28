@@ -6,12 +6,9 @@
 
     },
     {
-        "food_name": "Assorted Nuts",
-        "meal_type": "m0"
-    },
-    {
-        "food_name": "Walnut",
-        "meal_type": "m0"
+        "food_name": "Assorted Nuts like Walnuts",
+        "meal_type": "m0",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
     },
     {
         "food_name": "Milk Without Sugar",
@@ -65,7 +62,8 @@
     },
     {
         "food_name": "Roasted Chana Chaat",
-        "meal_type": "m4"
+        "meal_type": "m4",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/roasted-chana-chaat.jpg"
     },
     {
         "food_name": "Stir Fried Broccoli and Bell Peppers with 50g Paneer",

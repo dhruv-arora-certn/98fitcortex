@@ -5,8 +5,14 @@
         "meal_type": "m0"
     },
     {
-        "food_name": "Assorted Nuts and Seeds like Almonds + Walnuts + Flax Seeds",
-        "meal_type": "m0"
+        "food_name": "Assorted Nuts like Almonds & Walnuts",
+        "meal_type": "m0",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
+    },
+    {
+        "food_name": "Assorted Seeds like Flax Seeds",
+        "meal_type": "m0",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/flax-seeds.jpg"
     },
     {
         "food_name": "Elaichi Milk Without Sugar",
@@ -14,7 +20,8 @@
         "quantity": 1,
         "size": "Glass",
         "unit": "ml",
-        "weight": "250"
+        "weight": "250",
+        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/elaichi-milk.jpg"
     },
     {
         "food_name": "Veg Parantha( With 1 Tbsp Oil)",

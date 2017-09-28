@@ -1,11 +1,13 @@
 [
     {
         "food_name": "Herbal Drink",
-        "meal_type": "m0"
+        "meal_type": "m0",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/herbal-drink.jpg"
     },
     {
-        "food_name": "Assorted Seeds like Pumpkin Seeds + Flax Seeds",
-        "meal_type": "m0"
+        "food_name": "Assorted Seeds like Pumpkin Seeds & Flax Seeds",
+        "meal_type": "m0",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/flax-seeds.jpg"
     },
     {
         "food_name": "Milk without Sugar",
@@ -21,15 +23,18 @@
     },
     {
         "food_name": "Strawberry Raita (100g Curd)",
-        "meal_type": "m2"
+        "meal_type": "m2",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/strawberry-raita.jpg"
     },
     {
         "food_name": "Malka Dal",
-        "meal_type": "m3"
+        "meal_type": "m3",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/malka-dal.jpg"
     },
     {
         "food_name": "Mix Veg",
-        "meal_type": "m3"
+        "meal_type": "m3",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/mix-vegetables-paneer.jpg"
     },
     {
         "food_name": "Brown Rice",
@@ -40,11 +45,13 @@
     },
     {
         "food_name": "Boiled Kala Chana Chaat",
-        "meal_type": "m4"
+        "meal_type": "m4",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/boiled-kala-chana-chaat.jpg"
     },
     {
         "food_name": "Stuffed Tomatoes with 50g Paneer",
-        "meal_type": "m5"
+        "meal_type": "m5",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/stuffed-paneer-tomatoes.jpg"
     },
     {
         "food_name": "Chapati",

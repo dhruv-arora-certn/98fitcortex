@@ -1,66 +1,75 @@
 [
     {
         "food_name": "Herbal Drink",
-        "meal_type": "m0"
+        "meal_type": "m0",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/herbal-drink.jpg"
     },
     {
-        "food_name": "Assorted Nuts and Seeds",
-        "meal_type": "m0"
+        "food_name": "Assorted Nuts",
+        "meal_type": "m0",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
     },
     {
-        "food_name": "Pumpkin Seeds",
-        "meal_type": "m0"
-    },
-    {
-        "food_name": "Flax Seeds",
-        "meal_type": "m0"
+        "food_name": "Assorted Seeds like Pumpkin Seeds & Flax Seeds",
+        "meal_type": "m0",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/flax-seeds.jpg"
     },
     {
         "food_name": "Milk without Sugar",
         "meal_type": "m1",
         "quantiy": 250,
-        "unit": "ml"
+        "unit": "ml",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1498302256_436.jpg"
     },
     {
         "food_name": "Veg Sandwich with Multigrain Bread",
-        "meal_type": "m1"
+        "meal_type": "m1",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/230.jpg"
     },
     {
         "food_name": "Strawberry Raita (100g Curd)",
-        "meal_type": "m2"
+        "meal_type": "m2",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/strawberry-raita.jpg"
     },
     {
         "food_name": "Malka Dal",
-        "meal_type": "m3"
+        "meal_type": "m3",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/malka-dal.jpg"
     },
     {
         "food_name": "Mix Veg",
-        "meal_type": "m3"
+        "meal_type": "m3",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/mix-vegetables-paneer.jpg"
     },
     {
         "food_name": "Brown Rice",
         "meal_type": "m3",
         "quantity": -1,
-        "size": "1 Katori"
+        "size": "1 Katori",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/177.jpg"
     },
     {
         "food_name": "Boiled Kala Chana Chaat",
-        "meal_type": "m4"
+        "meal_type": "m4",
+        "iamge": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/boiled-kala-chana-chaat.jpg"
     },
     {
         "food_name": "Stuffed Tomatoes with 50g Paneer",
-        "meal_type": "m5"
+        "meal_type": "m5",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/stuffed-paneer-tomatoes.jpg"
     },
     {
         "food_name": "Chapati",
         "meal_type": "m5",
         "quantity": -1,
-        "size": "1 Small"
+        "size": "1 Small",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
     },
     {
         "food_name": "Custard with 250ml Milk and Without Sugar ",
         "meal_type": "m6",
         "quantity": 1,
-        "size": "Katori"
+        "size": "Katori",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1779.jpg"
     }
 ]
