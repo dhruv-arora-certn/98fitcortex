@@ -5,8 +5,14 @@
         "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479224957_815.jpg"
     },
     {
-        "food_name": "Assorted Nuts and Seeds like Almonds + Walnuts + Flax Seeds",
-        "meal_type": "m0"
+        "food_name": "Assorted Nutslike Almonds & Walnuts",
+        "meal_type": "m0",
+        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
+    },
+    {
+        "food_name": "Assorted Seeds like Flax Seeds",
+        "meal_type": "m0",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/flax-seeds.jpg"
     },
     {
         "food_name": "Milk Without Sugar",
@@ -31,11 +37,13 @@
         "food_name": "Soya Daal",
         "meal_type": "m3",
         "quantity": -1,
-        "size": "1 Katori"
+        "size": "1 Katori",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/soya-dal.jpg"
     },
     {
         "food_name": "Cabbage Peas Sabzi",
-        "meal_type": "m3"
+        "meal_type": "m3",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/cabbage-peas-sabzi.jpg"
     },
     {
         "food_name": "Chapati",
@@ -67,7 +75,8 @@
     },
     {
         "food_name": "Mint Amla Chutney",
-        "meal_type": "m5"
+        "meal_type": "m5",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/mint-amla-chutney.jpg"
     },
     {
         "food_name": "Milk",

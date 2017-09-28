@@ -5,7 +5,12 @@
         "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1483771779_707.jpg"
     },
     {
-        "food_name": "Assorted Nuts like Almonds + Walnuts + Pumpkin Seeds",
+        "food_name": "Assorted Nuts like Almonds & Walnuts",
+        "meal_type": "m0",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
+    },
+    {
+        "food_name": "Assorted Seeds like Pumpkin Seeds",
         "meal_type": "m0"
     },
     {
@@ -67,7 +72,8 @@
     },
     {
         "food_name": "Shahi Paneer(50g Paneer)",
-        "meal_type": "m5"
+        "meal_type": "m5",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/shahi-paneer.jpg"
     },
     {
         "food_name": "Brown Rice",
@@ -82,6 +88,7 @@
         "quantity": 1,
         "size": "Glass",
         "unit": "ml",
-        "weight": 250
+        "weight": 250,
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1498302256_436.jpg"
     }
 ]

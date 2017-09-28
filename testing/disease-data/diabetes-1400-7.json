@@ -6,7 +6,8 @@
 },
 {
 	"food_name" : "4-5 Almonds/Walnuts",
-	"meal_type" : "m0"
+	"meal_type" : "m0",
+	"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
 },
 {
 	"food_name" : "Elaichi Milk without Sugar",
@@ -37,13 +38,15 @@
 },
 {
 	"food_name" : "Grilled Paneer(50gm Paneer)",
-	"meal_type" : "m3"
+	"meal_type" : "m3",
+	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/grilled-paneer.jpg"
 },
 {
 	"food_name" : "Stir Fried Bell Peppers",
 	"meal_type" : "m3",
 	"quantity" : 1,
-	"size" : "Katori"
+	"size" : "Katori",
+	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/stir-fried-bell-peppers.jpg"
 },
 {
 	 "food_name" : "Chapati",
@@ -59,13 +62,15 @@
 },
 {
 	"food_name" : "Mix Veg with less oil",
-	"meal_type" : "m5" 
+	"meal_type" : "m5",
+	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/mix-vegetables-paneer.jpg"
 },
 {
 	"food_name" : "Chana Daal with Lauki",
 	"meal_type" : "m5",
 	"quantity" : "1",
-	"size" : "Katori" 
+	"size" : "Katori",
+	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/chana-lauki-dal.jpg"
 },
 {
 	 "food_name" : "Chapati",

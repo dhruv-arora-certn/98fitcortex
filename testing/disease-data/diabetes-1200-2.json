@@ -6,7 +6,8 @@
     },
     {
         "food_name": "Assorted Nuts and Seeds like Almonds + Walnuts + Flax Seeds",
-        "meal_type": "m0"
+        "meal_type": "m0",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
     },
     {
         "food_name": "Elaichi Milk Without Sugar",
@@ -14,7 +15,8 @@
         "quantity": 1,
         "size": "Glass",
         "unit": "ml",
-        "weight": "250"
+        "weight": "250",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/kesar-milk.jpg"
     },
     {
         "food_name": "Veg Parantha( With 1 Tbsp Oil)",
@@ -39,7 +41,8 @@
     },
     {
         "food_name": "Baked Capsicum",
-        "meal_type": "m3"
+        "meal_type": "m3",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/baked-capsicum.jpg"
     },
     {
         "food_name": "Chapati",
