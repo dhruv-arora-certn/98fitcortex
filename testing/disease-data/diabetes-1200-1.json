@@ -13,7 +13,7 @@
 	"food_name" : "Kesar Milk without Sugar",
 	"meal_type" : "m1",
 	"quantiy" : 250,
-	"unit" : "ml"
+	"unit" : "ml",
 	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/kesar-milk.jpg"
 },
 {
