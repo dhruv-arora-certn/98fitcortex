@@ -4,6 +4,7 @@ from django.db.models.expressions import RawSQL
 from functools import partial
 from weasyprint import HTML
 from django.template.loader import render_to_string
+import json
 
 def get_week(date = datetime.now()):
 	return date.isocalendar()[1]
@@ -59,8 +60,11 @@ def countBottles(queryset):
 		)
 		return queryset
 
-def diabetes_pdf():
-	pass	
+def diabetes_pdf(cals , day):
+	with open("disease-data/pdf-list.json" , "r") as f:
+		a = json.load(f)
+	return a.get("%s-%s"%(cals,day))
+
 class BulkDifferential:
 
 	def getToDelete(self , old , new):

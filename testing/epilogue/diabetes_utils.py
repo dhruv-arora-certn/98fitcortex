@@ -42,11 +42,11 @@ def render_pdf_string(cals = 0 , day = 0 , user = None):
 		**meal_data , 
 		"user" : user,
 		"intake" : cals,
-		"date" : custom_strftime(localdate())
 	}
 
 	return render_to_string("guest-diet-diabetes.html" , data)
 
 def get_pdf(cals = 0 , day = 0 , user = None):
 	string = render_pdf_string(cals = cals , day = day , user = user)
-	return HTML(string = string).write_pdf()
+	html = HTML(string = string).write_pdf()
+	return GuestPDFView.upload_to_s3(html)

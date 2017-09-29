@@ -28,7 +28,7 @@ from epilogue.models import *
 from epilogue.serializers import *
 from epilogue.authentication import CustomerAuthentication
 from epilogue.mixins import* 
-from epilogue.utils import get_day , get_week , BulkDifferential
+from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf
 from epilogue.replacement import *
 
 from weasyprint import HTML
@@ -151,7 +151,7 @@ class DietPlanView(GenericAPIView):
 					"calories" :  cals ,
 					"allow-replace" : False,
 					"user_id": request.user.id,
-					"pdf" : "http://www.example.com",
+					"pdf" : diabetes_pdf(cals , kwargs['day']),
 					"user_week" : request.user.user_week
 				},
 				"data" : data
