@@ -14,7 +14,7 @@
 {
 	"food_name" : "Kesar Milk without Sugar",
 	"meal_type" : "m1",
-	"quantiy" : 250,
+	"weight" : 250,
 	"unit" : "ml"
 },
 {

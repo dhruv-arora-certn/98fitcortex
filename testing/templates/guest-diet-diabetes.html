@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- <link rel="stylesheet" href="circle.css"> -->
+  <meta charset="UTF-8">
+  <style>
+  .stat .circle {
+    height: 90px;
+    width: 90px;
+    border-radius: 50%;
+    border: 4px solid #2dc9d7;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat .circle .amount {
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1.6rem;
+    color: #2dc9d7;
+  }
+
+  .stat .circle .unit {
+    color: #2dc9d7;
+    margin-top: -6px;
+  }
+  </style>
+  <style type="text/css">
+  /*@page {
+        size: A4;
+        margin: 0;
+    }*/
+
+  * {
+    box-sizing: border-box;
+  }
+  /*
+    @media print {
+        html,
+        body {
+            width: 210mm;
+            height: 297mm;
+        }
+    }*/
+
+  @font-face {
+    font-family: 'fontello';
+    src: url('fonts/fontello.eot?#iefix');
+    src: url('fonts/fontello.eot?#iefix') format('embedded-opentype'), url('fonts/fontello.woff') format('woff'), url('fonts/fontello.ttf') format('truetype'), url('fonts/fontello.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'HelveticaNeueLTStd-Th';
+    src: url('fonts/HelveticaNeueLTStd-Th.eot?#iefix') format('embedded-opentype'), url('fonts/HelveticaNeueLTStd-Th.otf') format('opentype'), url('fonts/HelveticaNeueLTStd-Th.woff') format('woff'), url('fonts/HelveticaNeueLTStd-Th.ttf') format('truetype'), url('fonts/HelveticaNeueLTStd-Th.svg#HelveticaNeueLTStd-Th') format('svg');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'HelveticaNeueLTStd-Hv';
+    src: url('fonts/HelveticaNeueLTStd-Hv.eot?#iefix') format('embedded-opentype'), url('fonts/HelveticaNeueLTStd-Hv.otf') format('opentype'), url('fonts/HelveticaNeueLTStd-Hv.woff') format('woff'), url('fonts/HelveticaNeueLTStd-Hv.ttf') format('truetype'), url('fonts/HelveticaNeueLTStd-Hv.svg#HelveticaNeueLTStd-Hv') format('svg');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'HelveticaNeueLTStd-Bd';
+    src: url('fonts/HelveticaNeueLTStd-Bd.eot?#iefix') format('embedded-opentype'), url('fonts/HelveticaNeueLTStd-Bd.otf') format('opentype'), url('fonts/HelveticaNeueLTStd-Bd.woff') format('woff'), url('fonts/HelveticaNeueLTStd-Bd.ttf') format('truetype'), url('fonts/HelveticaNeueLTStd-Bd.svg#HelveticaNeueLTStd-Bd') format('svg');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Lato Black";
+    src: url("fonts/Lato-Black.eot?") format("eot"), url("fonts/Lato-Black.woff") format("woff"), url("fonts/Lato-Black.ttf") format("truetype"), url("fonts/Lato-Black.svg#Lato-Black") format("svg");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'HelveticaNeueLTStd-Lt';
+    src: url('fonts/HelveticaNeueLTStd-Lt.eot?#iefix') format('embedded-opentype'), url('fonts/HelveticaNeueLTStd-Lt.otf') format('opentype'), url('fonts/HelveticaNeueLTStd-Lt.woff') format('woff'), url('fonts/HelveticaNeueLTStd-Lt.ttf') format('truetype'), url('fonts/HelveticaNeueLTStd-Lt.svg#HelveticaNeueLTStd-Lt') format('svg');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Lato Italic";
+    src: url("fonts/Lato-Italic.eot?") format("eot"), url("fonts/Lato-Italic.woff") format("woff"), url("fonts/Lato-Italic.ttf") format("truetype"), url("fonts/Lato-Italic.svg#Lato-Italic") format("svg");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'HelveticaNeueLTStd-Roman';
+    src: url('fonts/HelveticaNeueLTStd-Roman.eot?#iefix') format('embedded-opentype'), url('fonts/HelveticaNeueLTStd-Roman.otf') format('opentype'), url('HelveticaNeueLTStd-Roman.woff') format('woff'), url('fonts/HelveticaNeueLTStd-Roman.ttf') format('truetype'), url('fonts/HelveticaNeueLTStd-Roman.svg#HelveticaNeueLTStd-Roman') format('svg');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'HelveticaNeueLTStd-Md';
+    src: url('fonts/HelveticaNeueLTStd-Md.eot?#iefix') format('embedded-opentype'), url('fonts/HelveticaNeueLTStd-Md.otf') format('opentype'), url('fonts/HelveticaNeueLTStd-Md.woff') format('woff'), url('fonts/HelveticaNeueLTStd-Md.ttf') format('truetype'), url('fonts/HelveticaNeueLTStd-Md.svg#HelveticaNeueLTStd-Md') format('svg');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  body {
+    table-layout: fixed;
+  }
+
+  html,
+  body {
+    font-family: 'HelveticaNeueLTStd-Md';
+    font-size: 16px;
+  }
+
+  div.text {
+    padding: 0.8em;
+    margin-bottom: 0.7em;
+  }
+
+  p {
+    margin: 0.25em 0;
+  }
+
+  .css {
+    font-family: arial;
+    font-style: italic;
+    color: #000088;
+  }
+
+  .dotborder {
+    border-bottom: solid 0.5px #0f80e5;
+    padding-bottom: 6px;
+    margin-bottom: 6px;
+  }
+
+  .alignleft {
+    text-align: left;
+  }
+
+  .aligncenter {
+    text-align: center;
+  }
+
+  .list {
+    list-style-type: circle !important;
+    list-style: circle !important;
+  }
+
+  .watermark {
+    position: fixed;
+    top: 45%;
+    left: 20%;
+    right: 0;
+    margin: 0 auto;
+    opacity: 0.1;
+    font-size: 200px;
+    transform: rotate(-45deg);
+    font-weight: 700;
+  }
+  </style>
+  <!-- <link rel="stylesheet" href="main.css"> -->
+  <style>
+  .food-item {
+    padding: 0 14px;
+    vertical-align: top;
+  }
+
+  .food-item:first-child {
+    padding-left: 0;
+  }
+
+  .food-item:last-child {
+    padding-left: 0;
+  }
+
+  .grid {
+    width: 100%;
+    position: relative;
+  }
+
+  .grid .info-section {
+    width: 100%;
+    padding-right: 16px;
+  }
+
+  .grid .header .row {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  .grid .data-section {
+    /*padding-left: 4px;*/
+    /*padding-right: 4px;*/
+    /*width: 20%;*/
+    vertical-align: top;
+    padding-top: 40px;
+  }
+  /*.purple {
+        background-color: rgba(74, 41, 86, 1);
+    }
+    
+    .green {
+        background-color: #8be87c;
+    }
+    
+    .blue {
+        background-color: #2dc9d7;
+    }
+    
+    .yellow {
+        background-color: #ffb636;
+    }
+    
+    .red {
+        background-color: #ef5f31;
+    }
+    
+    .red-txt {
+        color: #ef5f31;
+        border-bottom: 2px solid #ef5f31;
+    }
+    
+    .purple-txt {
+        color: rgba(74, 41, 86, 1);
+        border-bottom: 2px solid rgba(74, 41, 86, 1);
+    }
+    
+    .green-txt {
+        color: #8be87c;
+        border-bottom: 2px solid #8be87c;
+    }
+    
+    .blue-txt {
+        color: #2dc9d7;
+        border-bottom: 2px solid #2dc9d7;
+    }
+    
+    .yellow-txt {
+        color: #ffb636;
+        border-bottom: 2px solid #ffb636;
+    }*/
+
+  .row {
+    width: 100%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.4rem;
+    padding-left: 0.4rem;
+  }
+
+  .header .row:not(.stat) {
+    margin-left: 10px;
+  }
+
+  .header .row.stat span {
+    margin: 0 auto;
+  }
+
+  .row [class*='col-'] {
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+
+  .row:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .col-8 {
+    width: 66.66%;
+  }
+
+  .col-2 {
+    width: 16.66%;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .col-3 {
+    width: 25%;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .right.user-actions {
+    margin-bottom: 2rem;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+  }
+
+  .label {
+    margin-bottom: 1rem;
+  }
+
+  .right.user-actions a {
+    text-decoration: none !important;
+  }
+
+  .view-online {
+    border: 2px solid #F00;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-radius: 4px;
+    color: #F00;
+    max-width: 150px;
+    margin: 0 auto
+  }
+
+  .category .content {
+    font-family: HelveticaNeueLTStd-Lt;
+  }
+
+  .statistics {
+    text-align: center;
+    box-sizing: border-box !important;
+    width: 100%;
+    height: 100%;
+  }
+
+  .stat .label {
+    text-transform: uppercase;
+    color: #2dc9d7;
+    font-size: 18px;
+  }
+
+  .category-name {
+    font-size: 1.2rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.2rem;
+    margin: 0;
+    padding-left: 0.4rem;
+    font-family: HelveticaNeueLTStd-Bd;
+    text-transform: uppercase;
+    /*text-align: center;*/
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.87);
+    position: relative;
+  }
+
+  .column-names {
+    font-family: HelveticaNeueLTStd-Md;
+  }
+
+  .heading {
+    text-align: center;
+    font-size: 1.8rem;
+    font-family: HelveticaNeueLTStd-Lt;
+  }
+
+  .category table {
+    width: 100%;
+  }
+
+  .category td {
+    padding: 0.4rem;
+  }
+
+  .header.row td {
+    font-family: HelveticaNeueLTStd-Md;
+    padding-top: 12.8px;
+    padding-bottom: 2px;
+  }
+
+  .statistics {
+    margin-top: 0;
+  }
+
+  .grid,
+  .grid table {
+    table-layout: fixed !important;
+  }
+
+  .mark-as-done {
+    position: absolute;
+    right: 0;
+    bottom: 0.65rem;
+    font-size: 0.7rem;
+    color: rgba(0, 0, 0, 0.6);
+    text-transform: none;
+  }
+
+  .mark-as-done .checkbox {
+    display: inline-block;
+    width: 21px;
+    height: 21px;
+    border: 0.5px solid rgba(0, 0, 0, 0.6);
+    position: relative;
+    top: 7px;
+    margin-right: 0.2rem;
+    border-radius: 50%;
+  }
+  </style>
+</head>
+
+<body>
+  <div style="text-align: center; position: fixed; margin: 0 auto 0 auto; left: 0;right: 0;"><img src="http://www.98fit.com/img/Frontend/logo_home.png"></div>
+  <div class="watermark"> 98fit </div>
+  <table width="100%" cellpadding="3" cellspacing="3" style="margin: -50px 0 80px 0;">
+    <tr>
+      <td colspan="9" style="line-height: 2;">
+        <br>
+        <br> Hi Guest,
+      </td>
+    </tr>
+    <tr>
+      <td colspan="9">&nbsp;</td>
+    </tr>
+    <tr>
+      <td colspan="9"><b>Diet Plan</b> : {{date}} </td>
+    </tr>
+    <tr>
+      <td colspan="9"> </td>
+    </tr>
+    <tr>
+      <td colspan="9" width="100%" class="dotborder"> </td>
+    </tr>
+    <tr>
+      <td colspan="9"> </td>
+    </tr>
+    <tr>
+      <td colspan="9" style="font-size: 15px;"><b>Parameters selected : </b></td>
+    </tr>
+    <tr style="font-size: 15px;">
+      <td width="13%"><b>Age</b></td>
+      <td width="1%"><b>:</b></td>
+      <td width="12%" style="text-align: left;">{{user.age}}</td>
+      <td width="12%"><b>Gender</b></td>
+      <td width="1%"><b>:</b></td>
+      <td style="text-align: left !important;">{{user.gender}}</td>
+      <td width="10%"><b>Height</b></td>
+      <td width="1%"><b>:</b></td>
+      <td width="40%">{{user.h}} {{user.height_type}}</td>
+    </tr>
+    <tr style="font-size: 15px;">
+      <td width="12%"><b>Weight</b></td>
+      <td width="1%"><b>:</b></td>
+      <td width="12%">{{user.w}} {{user.weight_type}}</td>
+      <td width="10%"><b>Objective</b></td>
+      <td width="1%"><b>:</b></td>
+      <td width="13%">{{user.objective.name}}</td>
+      <td width="10%"><b>Lifestyle</b></td>
+      <td width="1%"><b>:</b></td>
+      <td width="40%">{{user.lifestyle_string}}</td>
+    </tr>
+    <tr style="font-size: 15px;">
+      <td width="12%"><b>Diet Type</b></td>
+      <td width="1%"><b>:</b></td>
+      <td width="20%">{{user.food_cat}}</td>
+      <td width="13%"><b>Body Type</b></td>
+      <td width="1%"><b>:</b></td>
+      <td width="15%">{{user.body_type}}</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr style="font-size: 15px;">
+      <td width="23%"><b>Medical Conditions</b></td>
+      <td width="1%"><b>:</b></td>
+      <td width="60%" colspan="5">{{user.medical_conditions_string}}</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr style="font-size: 15px;">
+      <td width="23%" colspan=""><b>Food Exclusions</b></td>
+      <td width="1%"><b>:<b></td>
+            <td width="60%" colspan="5">{{user.food_exclusions_string}}</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr> 
+            <td width="100%" colspan="9" class="dotborder"> </td>
+        </tr>
+
+        <tr>
+            <td width="100%" class="aligncenter" colspan="9"><div style="font-size:19px; font-weight: 700;margin: 25px 0 15px 0;">No fitness regime is complete without adapting healthy<br>lifestyle.</div></td>
+        </tr>
+        <tr> 
+            <td  width="100%"  colspan="9" class="dotborder"></td>
+        </tr>
+        <tr> 
+            <td  width="100%"  colspan="9" class="alignleft" style="font-size:14px ! important;">
+            <br>While we will take care of your Diet and Workout, just keep these points in mind:</td>
+        </tr>
+        <tr> 
+            <td  width="100%"  colspan="9" class="alignleft">
+                <ul style="font-size: 14px;">
+                  
+                <li>  The diet plan has five meals spread across the day so that you never complain of being hungry.
+                <br><br>
+                <li>  Make sure there is a gap of 2-3 hours in between two meals.<br><br>
+                <li>  Drink 10 to 12 glasses of water every day.<br><br>
+                <li>  Always use less amount of salt while cooking.<br><br>
+                <li>  Try to prepare all these dishes with minimum oil.<br><br>
+                <li>  Give yourself enough sleep to be rejuvenated the next day.<br><br>
+                <li>  Don’t stress too much about your fitness goal.<br><br>
+                <li>  Don’t expect results to start happening from day one.<br><br>
+                <li>  While working, get up after every 1-hour and walk around and stretch if possible.<br><br>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="1"></td>
+            <td colspan="1" style="border-right: 0.5px solid black;padding:0 5px 0 0;"><b style="font-size:16px;font-weight:700;text-align:center;">Special Focus</b></td>
+      <td colspan="6" style="font-size:16px;text-align: left;padding: 0 0 0 5px;">Remember, right food in the right quantity, taken at the right time, promotes good health.</td>
+    </tr>
+  </table>
+  <table class="aligncenter" width="100%">
+    <tr>
+      <td colspan="9" style="font-weight:bold; font-size: 14px; position: fixed; bottom: -35px; left: 0; right: 0; margin: 0 auto;">
+        <b>Disclaimer: You must agree to review this meal plan with your physician before using it and agree to use this meal plan for your personal use only.</b>
+      </td>
+    </tr>
+  </table>
+  <table>
+    <tr>
+      <td>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+      </td>
+    </tr>
+  </table>
+  Total Calorie Intake : <span>{{intake}}</span>
+  <br>
+  <table>
+    <tr>
+      <td>
+        <br>
+      </td>
+    </tr>
+  </table>
+  <table class="grid">
+    <tr>
+      <td class="info-section">
+        <div class="category">
+          <div class='content'>
+            <p class="category-name">Wake Up<span class="mark-as-done"><span class="checkbox"></span>Mark as Done</span>
+            </p>
+            <table>
+              <tr class="header row">
+                <td class="col-7"> <b>Item Name</b> </td>
+                <td class="col-3"> <b>Portion</b> </td>
+                <td class="col-2"> <b>Quantity</b> </td>
+              </tr>
+            </table>
+            {% for item in m0 %}
+            <table>
+              <tr class="row" style="font-size: 15px;">
+                <td class="col-7"> {{item.food_name}} </td>
+                <td class="col-3"> {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} </td>
+                <td class="col-2"> {% if item.weight %}{{item.weight}} {{item.food_item.unit}}{% endif %} </td>
+              </tr>
+            </table>
+            {% endfor %}
+          </div>
+        </div>
+    </td>
+</tr>
+<tr>
+      <td class="info-section">
+        <div class="category">
+          <div class='content'>
+            <p class="category-name">Breakfast <span class="mark-as-done"><span class="checkbox"></span>Mark as Done</span>
+            </p>
+            <table>
+              <tr class="header row">
+                <td class="col-7"> <b>Item Name</b> </td>
+                <td class="col-3"> <b>Portion</b> </td>
+                <td class="col-2"> <b>Quantity</b> </td>
+              </tr>
+            </table>
+            {% for item in m1 %}
+            <table>
+              <tr class="row" style="font-size: 15px;">
+                <td class="col-7"> {{item.food_name}} </td>
+                 <td class="col-3"> {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} </td>
+                <td class="col-2"> {% if item.weight %}{{item.weight}} {{item.food_item.unit}}{% endif %} </td>
+              </tr>
+            </table>
+            {% endfor %}
+          </div>
+        </div>
+    </td>
+</tr>
+        <tr>
+      <td class="info-section">
+        <div class="category">
+          <div class='content'>
+            <p class="category-name">Mid Day Snack<span class="mark-as-done"><span class="checkbox"></span>Mark as Done</span>
+            </p>
+            <table>
+              <tr class="header row">
+                <td class="col-7"> <b>Item Name</b> </td>
+                <td class="col-3"> <b>Portion</b> </td>
+                <td class="col-2"> <b>Quantity</b> </td>
+              </tr>
+            </table>
+            {% for item in m2 %}
+            <table>
+              <tr class="row" style="font-size: 15px;">
+                <td class="col-7"> {{item.food_name}} </td>
+                 <td class="col-3"> {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} </td>
+                <td class="col-2"> {% if item.weight %}{{item.weight}} {{item.food_item.unit}}{% endif %} </td>
+              </tr>
+            </table>
+            {% endfor %}
+          </div>
+        </div>
+    </td>
+</tr>
+<tr>
+      <td class="info-section">
+        <div class="category">
+          <div class='content'>
+            <p class="category-name">Lunch<span class="mark-as-done"><span class="checkbox"></span>Mark as Done</span>
+            </p>
+            <table>
+              <tr class="header row">
+                <td class="col-7"> <b>Item Name</b> </td>
+                <td class="col-3"> <b>Portion</b> </td>
+                <td class="col-2"> <b>Quantity</b> </td>
+              </tr>
+            </table>
+            {% for item in m3 %}
+            <table>
+              <tr class="row" style="font-size: 15px;">
+                <td class="col-7"> {{item.food_name}} </td>
+                 <td class="col-3"> {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} </td>
+                <td class="col-2"> {% if item.weight %}{{item.weight}} {{item.food_item.unit}}{% endif %} </td>
+              </tr>
+            </table>
+            {% endfor %}
+          </div>
+        </div>
+    </td>
+</tr>
+<tr>
+      <td class="info-section">
+        <div class="category">
+          <div class='content'>
+            <p class="category-name">Evening Snack<span class="mark-as-done"><span class="checkbox"></span>Mark as Done</span>
+            </p>
+            <table>
+              <tr class="header row">
+                <td class="col-7"> <b>Item Name</b> </td>
+                <td class="col-3"> <b>Portion</b> </td>
+                <td class="col-2"> <b>Quantity</b> </td>
+              </tr>
+            </table>
+            {% for item in m4 %}
+            <table>
+              <tr class="row" style="font-size: 15px;">
+                <td class="col-7"> {{item.food_name}} </td>
+                <td class="col-3"> {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} </td>
+                <td class="col-2"> {% if item.weight %}{{item.weight}} {{item.food_item.unit}}{% endif %} </td>
+              </tr>
+            </table>
+            {% endfor %}
+          </div>
+        </div>
+    </td>
+</tr>
+<tr>
+      <td class="info-section">
+        <div class="category">
+          <div class='content'>
+            <p class="category-name"> Dinner <span class="mark-as-done"><span class="checkbox"></span>Mark as Done</span>
+            </p>
+            <table>
+              <tr class="header row">
+                <td class="col-7"> <b>Item Name</b> </td>
+                <td class="col-3"> <b>Portion</b> </td>
+                <td class="col-2"> <b>Quantity</b> </td>
+              </tr>
+            </table>
+            {% for item in m5 %}
+            <table>
+              <tr class="row" style="font-size: 15px;">
+                <td class="col-7"> {{item.food_name}} </td>
+                 <td class="col-3"> {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} </td>
+                <td class="col-2"> {% if item.weight %}{{item.weight}} {{item.food_item.unit}}{% endif %} </td>
+              </tr>
+            </table>
+            {% endfor %}
+          </div>
+        </div>
+    </td>
+</tr>
+<tr>
+      <td class="info-section">
+        <div class="category">
+          <div class='content'>
+            <p class="category-name"> Bed Time <span class="mark-as-done"><span class="checkbox"></span>Mark as Done</span>
+            </p>
+            <table>
+              <tr class="header row">
+                <td class="col-7"> <b>Item Name</b> </td>
+                <td class="col-3"> <b>Portion</b> </td>
+                <td class="col-2"> <b>Quantity</b> </td>
+              </tr>
+            </table>
+            {% for item in m6 %}
+            <table>
+              <tr class="row" style="font-size: 15px;">
+                <td class="col-7"> {{item.food_name}} </td>
+                 <td class="col-3"> {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} </td>
+                <td class="col-2"> {% if item.weight %}{{item.weight}} {{item.food_item.unit}}{% endif %} </td>
+              </tr>
+            </table>
+            {% endfor %}
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>

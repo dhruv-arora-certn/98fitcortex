@@ -2,6 +2,8 @@ from datetime import datetime,timedelta
 from django.db import models 
 from django.db.models.expressions import RawSQL 
 from functools import partial
+from weasyprint import HTML
+from django.template.loader import render_to_string
 
 def get_week(date = datetime.now()):
 	return date.isocalendar()[1]
@@ -57,7 +59,8 @@ def countBottles(queryset):
 		)
 		return queryset
 
-
+def diabetes_pdf():
+	pass	
 class BulkDifferential:
 
 	def getToDelete(self , old , new):
@@ -79,3 +82,5 @@ class BulkDifferential:
 			if not getattr(e , self.BulkMeta.attr_name) in old_names:
 				common.append(e)
 		return common	
+
+

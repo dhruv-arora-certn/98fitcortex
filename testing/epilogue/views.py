@@ -275,7 +275,10 @@ def custom_strftime( t  , format = DATE_FORMAT):
 
 
 class GuestPDFView(GenericAPIView):
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [IsAuthenticated]
 
+	@classmethod
 	def upload_to_s3(self , data):
 		import uuid
 		session = boto3.Session(
