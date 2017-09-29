@@ -25,7 +25,8 @@
         "food_name": "Veg Dalia",
         "meal_type": "m1",
         "quantity": -1,
-        "size": "1 Katori"
+        "size": "1 Katori",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/vegetable-dalia.jpg"
     },
     {
         "food_name": "Fruit Raita Without Sugar with 100gm Curd",
@@ -62,7 +63,8 @@
         "food_name": "Vegetable Pulao with 50g Paneer",
         "meal_type": "m5",
         "quantity": -1,
-        "size": "1 Quarter Plate"
+        "size": "1 Quarter Plate",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/vegetable-paneer-pulao.jpg"
     },
     {
         "food_name": "Mint Amla Chutney",

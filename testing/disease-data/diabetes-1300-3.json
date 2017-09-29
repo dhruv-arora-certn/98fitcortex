@@ -1,82 +1,85 @@
 [
     {
         "food_name": "Tulsi Tea",
-        "meal_type": "m0",
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/2059.jpg"
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/2059.jpg",
+        "meal_type": "m0"
     },
     {
         "food_name": "Assorted Nuts like Walnuts + Almonds",
-        "meal_type": "m0",
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg",
+        "meal_type": "m0"
     },
     {
         "food_name": "Milk Without Sugar",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479237010_1436.jpg",
         "meal_type": "m1",
+        "quantity": 1,
+        "size": "Glass",
         "unit": "ml",
-        "weight": 250,
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479237010_1436.jpg"
+        "weight": 250
     },
     {
         "food_name": "Veg Oats Porridge",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479214035_1100.jpg",
         "meal_type": "m1",
         "quantity": -1,
-        "size": "1 Katori",
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479214035_1100.jpg"
+        "size": "1 Katori"
     },
     {
         "food_name": "Papaya",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479213739_1057.jpg",
         "meal_type": "m2",
         "unit": "g",
-        "weight": 100,
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479213739_1057.jpg"
+        "weight": 100
     },
     {
         "food_name": "Tadka Chaach",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/294.jpg",
         "meal_type": "m2",
         "unit": "ml",
-        "weight": 200,
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/294.jpg"
+        "weight": 200
     },
     {
         "food_name": "Lobia",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1483948476_162.jpg",
         "meal_type": "m3",
         "quantity": -1,
-        "size": "1 Katori",
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1483948476_162.jpg"
+        "size": "1 Katori"
     },
     {
         "food_name": "Mix Veg",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479212017_888.jpg",
         "meal_type": "m3",
         "quantity": -1,
-        "size": "1 Katori",
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479212017_888.jpg"
+        "size": "1 Katori"
     },
     {
         "food_name": "Brown Rice",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/177.jpg",
         "meal_type": "m3",
         "quantity": -1,
-        "size": "1 Katori",
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/177.jpg"
+        "size": "1 Katori"
     },
     {
         "food_name": "Roasted Chana Chaat",
-        "meal_type": "m4",
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/chola-chaat.jpg"
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/roasted-chana-chaat.jpg",
+        "meal_type": "m4"
     },
     {
-	"food_name" : "Stir Fried Broccolli and Bell Peppers with 50g Paneer",
-	"meal_type" : "m5",
-	"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1897.jpg"
-},
-{
-	"food_name" : "Chapati",
-	"quantity" : 1,
-	"size" : "Small",
-	"meal_type" : "m5",
-	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
-},
+        "food_name": "Stir Fried Broccolli and Bell Peppers with 50g Paneer",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1897.jpg",
+        "meal_type": "m5"
+    },
+    {
+        "food_name": "Chapati",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg",
+        "meal_type": "m5",
+        "quantity": 1,
+        "size": "Small Piece"
+    },
     {
         "food_name": "Flavoured Milk",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/flavored-milk.jpg",
         "meal_type": "m6",
         "unit": "ml",
         "weight": "100"

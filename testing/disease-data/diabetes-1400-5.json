@@ -12,7 +12,7 @@
     {
         "food_name": "Milk without Sugar",
         "meal_type": "m1",
-        "quantiy": 250,
+        "quantity": 250,
         "unit": "ml",
         "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479237010_1436.jpg"
     },
@@ -45,7 +45,8 @@
     },
     {
         "food_name": "Boiled Kala Chana Chaat",
-        "meal_type": "m4"
+        "meal_type": "m4",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/boiled-kala-chana-chaat.jpg"
     },
     {
         "food_name": "Stuffed Tomatoes with 50g Paneer",

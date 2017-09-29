@@ -25,7 +25,8 @@
         "food_name": "Veg Dalia",
         "meal_type": "m1",
         "quantity": -1,
-        "size": "1 Big Katori"
+        "size": "1 Big Katori",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/vegetable-dalia.jpg"
     },
     {
         "food_name": "Fruit Raita Without Sugar with 100gm Curd",
@@ -48,7 +49,7 @@
         "food_name": "Chapati",
         "meal_type": "m3",
         "quantity": -1,
-        "size": "1 Small",
+        "size": "1 Small Piece",
         "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
     },
     {
@@ -62,13 +63,15 @@
         "food_name": "Weak Tea",
         "meal_type": "m4",
         "quantity": 1,
-        "size": "Cup"
+        "size": "Cup",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/weak-tea.jpg"
     },
     {
         "food_name": "Vegetable Pulao with 50g Paneer",
         "meal_type": "m5",
         "quantity": -1,
-        "size": "1 Quarter Plate"
+        "size": "1 Quarter Plate",
+        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/vegetable-paneer-pulao.jpg"
     },
     {
         "food_name": "Mint Amla Chutney",

@@ -12,8 +12,8 @@
 {
 	"food_name" : "Kesar Milk without Sugar",
 	"meal_type" : "m1",
-	"quantiy" : 250,
-	"unit" : "ml"
+	"weight" : 250,
+	"unit" : "ml",
 	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/kesar-milk.jpg"
 },
 {
@@ -25,6 +25,7 @@
 	"food_name" : "Guava",
 	"meal_type" : "m2",
 	"quantity" : 1,
+	"size": "Piece",
 	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/guava.jpg"
 },
 {
@@ -50,7 +51,8 @@
 },
 {
 	"food_name" : "Boiled Chola Chaat with Added Cucumber",
-	"meal_type" : "m4"
+	"meal_type" : "m4",
+	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/boiled-chole-chaat.jpg"
 },
 {
 	"food_name" : "Pumpkin Sabji",

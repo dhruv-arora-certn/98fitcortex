@@ -1,26 +1,25 @@
 [
-
 {
 	"food_name" : "Herbal Tea",
 	"meal_type" : "m0",
 	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/herbal-tea.jpg"
 },
 {
-	"food_name" : "Assorted Seeds like Flax Seeds & Pumpkin Seeds",
+	"food_name" : "Assorted seeds like Flax Seeds & Pumpkin Seeds",
 	"meal_type" : "m0",
 	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/flax-seeds.jpg"
 },
 {
-	"food_name" : "Kesar Milk Without Sugar",
+	"food_name" : "Kesar Milk without Sugar",
+	"meal_type" : "m1",
+	"quantity" : 1,
+	"size" : "Glass",
 	"weight" : 250,
 	"unit" : "ml",
-	"quantity": 1,
-	"size" : "Glass",
-	"meal_type" : "m1",
 	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/kesar-milk.jpg"
 },
 {
-	"food_name" : "Veg Sandwich with 2 Multigrain bread",
+	"food_name" : "Veg Sandwich with 1 Multigrain Bread",
 	"meal_type" : "m1",
 	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/230.jpg"
 },
@@ -28,6 +27,7 @@
 	"food_name" : "Guava",
 	"meal_type" : "m2",
 	"quantity" : 1,
+	"size": "Piece",
 	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/guava.jpg"
 },
 {
@@ -45,25 +45,25 @@
 	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/mix-vegetables-paneer.jpg"
 },
 {
+    "food_name": "Sabut Moong Dal",
+    "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/302.jpg",
+    "meal_type": "m3",
+    "quantity": 1,
+    "size": "Katori"
+},
+{
 	 "food_name" : "Chapati",
 	 "meal_type" : "m3",
 	 "quantity" : -1,
-	 "size" : "2 Small",
-	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
+	 "size" : "1 Small Piece",
+	 "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
 },
 {
-	"food_name" : "Boiled Chola Chaat with Added Cucumber",
+	"food_name" : "Boiled Egg Whites",
 	"meal_type" : "m4",
-	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/boiled-chole-chaat.jpg"
-},
-{
-	"food_name" : "Milk Without Sugar",
-	"meal_type" : "m4",
-	"quantity" : 1,
-	"size" : "Cup",
-	"weight" : 100,
-	"unit" : "ml",
-	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1498302256_436.jpg"
+	"quantity": "2",
+	"size": "Pieces",
+	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/184.jpg"
 },
 {
 	"food_name" : "Pumpkin Sabji",
@@ -71,16 +71,17 @@
 	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/pumpkin-sabzi.jpg"
 },
 {
-	"food_name" : "Sabut Masoor Dal",
+	"food_name" : "Gricken Chicken",
 	"meal_type" : "m5",
 	"quantity" : -1,
-	"size" : "1 Katori",
+	"size" : "2 Medium Boneless Pieces",
 	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/sabut-masoor-dal.jpg"
 },
 {
 	"food_name" : "Chapati",
 	"meal_type" : "m5",
-	"quantity" : 1,
+	"quantity" : -1,
+	"size": "1 Small Piece",
 	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
 },
 {

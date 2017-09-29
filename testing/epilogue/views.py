@@ -148,7 +148,10 @@ class DietPlanView(GenericAPIView):
 			return Response({
 				"meta" : {
 					"disease" : "diabetes",
-					"calories" :  cals 
+					"calories" :  cals ,
+					"allow-replace" : False,
+					"user_id": request.user.id,
+					"pdf" : "http://www.example.com"
 				},
 				"data" : data
 			})
@@ -367,7 +370,10 @@ class DietPlanRegenerationView(GenericAPIView):
 			return Response({
 				"meta" : {
 					"disease" : "diabetes",
-					"calories" :  cals 
+					"calories" :  cals ,
+					"allow-replace" : False,
+					"user_id": request.user.id,
+					"pdf" : "http://www.example.com"
 				},
 				"data" : data
 			})

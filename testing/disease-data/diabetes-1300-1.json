@@ -5,7 +5,7 @@
 	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/herbal-tea.jpg"
 },
 {
-	"food_name" : "Assorted Seeds like Flax Seeds + Pumpkin Seeds",
+	"food_name" : "Assorted Seeds like Flax Seeds & Pumpkin Seeds",
 	"meal_type" : "m0",
 	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/flax-seeds.jpg"
 },
@@ -52,7 +52,8 @@
 },
 {
 	"food_name" : "Boiled Chola Chaat with Added Cucumber",
-	"meal_type" : "m4"
+	"meal_type" : "m4",
+	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/boiled-chole-chaat.jpg"
 },
 {
 	"food_name" : "Milk Without Sugar",
@@ -85,6 +86,8 @@
 {
 	"food_name" : "Plain Custard without Sugar",
 	"meal_type" : "m6",
+	"quantity": 1,
+	"size": "Kathori",
 	"weight" : 250,
 	"unit" : "ml",
 	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1779.jpg"

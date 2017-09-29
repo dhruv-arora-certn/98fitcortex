@@ -27,7 +27,7 @@
         "food_name": "Veg Parantha( With 1 Tbsp Oil)",
         "meal_type": "m1",
         "quantity": -1,
-        "size": "1 Small",
+        "size": "1 Small Piece",
         "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479212036_890.jpg"
     },
     {
@@ -57,16 +57,16 @@
         "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
     },
     {
-        "food_name": "Dhokla",
+        "food_name": "Egg White Salad",
         "meal_type": "m4",
         "quantity": -1,
-        "size": "2 Pieces",
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/535.jpg"
+        "size": "2 Eggs",
+        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/egg-white-salad.jpg"
     },
     {
-        "food_name": "Palak Paneer with 50g Paneer",
+        "food_name": "Chicken Palak with 60g Chicken",
         "meal_type": "m5",
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479213235_1003.jpg"
+        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/chicken-palak.jpg"
     },
     {
         "food_name": "Brown Rice",
