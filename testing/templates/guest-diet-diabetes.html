@@ -688,7 +688,7 @@
             {% for item in m6 %}
             <table>
               <tr class="row" style="font-size: 15px;">
-                 <td> {{item.food_name}} {% if item.quantity > 0 || item.size %} - {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} {% endif $}{% if item.weight %}({{item.weight}} {{item.unit}}){% endif %} </td>
+                 <td> {{item.food_name}} {% if item.quantity > 0 or item.size %} - {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} {% endif $}{% if item.weight %}({{item.weight}} {{item.unit}}){% endif %} </td>
               </tr>
             </table>
             {% endfor %}
