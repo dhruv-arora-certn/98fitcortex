@@ -151,7 +151,8 @@ class DietPlanView(GenericAPIView):
 					"calories" :  cals ,
 					"allow-replace" : False,
 					"user_id": request.user.id,
-					"pdf" : "http://www.example.com"
+					"pdf" : "http://www.example.com",
+					"user_week" : request.user.user_week
 				},
 				"data" : data
 			})
@@ -373,7 +374,8 @@ class DietPlanRegenerationView(GenericAPIView):
 					"calories" :  cals ,
 					"allow-replace" : False,
 					"user_id": request.user.id,
-					"pdf" : "http://www.example.com"
+					"pdf" : "http://www.example.com",
+					"user_week" : request.user.user_week
 				},
 				"data" : data
 			})
