@@ -279,13 +279,15 @@
   .col-2 {
     width: 16.66%;
     text-align: center;
-    white-space: nowrap;
+    white-space: normal;
+    word-wrap:break-word;
   }
 
   .col-3 {
     width: 25%;
     text-align: center;
-    white-space: nowrap;
+    white-space: normal;
+    word-wrap:break-word;
   }
 
   .right.user-actions {
@@ -548,17 +550,13 @@
             </p>
             <table>
               <tr class="header row">
-                <td class="col-7"> <b>Item Name</b> </td>
-                <td class="col-3"> <b>Portion</b> </td>
-                <td class="col-2"> <b>Quantity</b> </td>
+                <td class="col-7"> <b>Item</b> </td>
               </tr>
             </table>
             {% for item in m0 %}
             <table>
               <tr class="row" style="font-size: 15px;">
-                <td class="col-7"> {{item.food_name}} </td>
-                <td class="col-3"> {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} </td>
-                <td class="col-2"> {% if item.weight %}{{item.weight}} {{item.food_item.unit}}{% endif %} </td>
+                <td> {{item.food_name}} {% if item.quantity > 0 || item.size %} - {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} {% endif $}{% if item.weight %}({{item.weight}} {{item.unit}}){% endif %} </td>
               </tr>
             </table>
             {% endfor %}
@@ -575,16 +573,12 @@
             <table>
               <tr class="header row">
                 <td class="col-7"> <b>Item Name</b> </td>
-                <td class="col-3"> <b>Portion</b> </td>
-                <td class="col-2"> <b>Quantity</b> </td>
               </tr>
             </table>
             {% for item in m1 %}
             <table>
               <tr class="row" style="font-size: 15px;">
-                <td class="col-7"> {{item.food_name}} </td>
-                 <td class="col-3"> {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} </td>
-                <td class="col-2"> {% if item.weight %}{{item.weight}} {{item.food_item.unit}}{% endif %} </td>
+                 <td> {{item.food_name}} {% if item.quantity > 0 || item.size %} - {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} {% endif $}{% if item.weight %}({{item.weight}} {{item.unit}}){% endif %} </td>
               </tr>
             </table>
             {% endfor %}
@@ -601,16 +595,12 @@
             <table>
               <tr class="header row">
                 <td class="col-7"> <b>Item Name</b> </td>
-                <td class="col-3"> <b>Portion</b> </td>
-                <td class="col-2"> <b>Quantity</b> </td>
               </tr>
             </table>
             {% for item in m2 %}
             <table>
               <tr class="row" style="font-size: 15px;">
-                <td class="col-7"> {{item.food_name}} </td>
-                 <td class="col-3"> {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} </td>
-                <td class="col-2"> {% if item.weight %}{{item.weight}} {{item.food_item.unit}}{% endif %} </td>
+                 <td> {{item.food_name}} {% if item.quantity > 0 || item.size %} - {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} {% endif $}{% if item.weight %}({{item.weight}} {{item.unit}}){% endif %} </td>
               </tr>
             </table>
             {% endfor %}
@@ -627,16 +617,12 @@
             <table>
               <tr class="header row">
                 <td class="col-7"> <b>Item Name</b> </td>
-                <td class="col-3"> <b>Portion</b> </td>
-                <td class="col-2"> <b>Quantity</b> </td>
               </tr>
             </table>
             {% for item in m3 %}
             <table>
               <tr class="row" style="font-size: 15px;">
-                <td class="col-7"> {{item.food_name}} </td>
-                 <td class="col-3"> {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} </td>
-                <td class="col-2"> {% if item.weight %}{{item.weight}} {{item.food_item.unit}}{% endif %} </td>
+                 <td> {{item.food_name}} {% if item.quantity > 0 || item.size %} - {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} {% endif $}{% if item.weight %}({{item.weight}} {{item.unit}}){% endif %} </td>
               </tr>
             </table>
             {% endfor %}
@@ -653,16 +639,12 @@
             <table>
               <tr class="header row">
                 <td class="col-7"> <b>Item Name</b> </td>
-                <td class="col-3"> <b>Portion</b> </td>
-                <td class="col-2"> <b>Quantity</b> </td>
               </tr>
             </table>
             {% for item in m4 %}
             <table>
               <tr class="row" style="font-size: 15px;">
-                <td class="col-7"> {{item.food_name}} </td>
-                <td class="col-3"> {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} </td>
-                <td class="col-2"> {% if item.weight %}{{item.weight}} {{item.food_item.unit}}{% endif %} </td>
+                 <td> {{item.food_name}} {% if item.quantity > 0 || item.size %} - {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} {% endif $}{% if item.weight %}({{item.weight}} {{item.unit}}){% endif %} </td>
               </tr>
             </table>
             {% endfor %}
@@ -679,16 +661,12 @@
             <table>
               <tr class="header row">
                 <td class="col-7"> <b>Item Name</b> </td>
-                <td class="col-3"> <b>Portion</b> </td>
-                <td class="col-2"> <b>Quantity</b> </td>
               </tr>
             </table>
             {% for item in m5 %}
             <table>
               <tr class="row" style="font-size: 15px;">
-                <td class="col-7"> {{item.food_name}} </td>
-                 <td class="col-3"> {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} </td>
-                <td class="col-2"> {% if item.weight %}{{item.weight}} {{item.food_item.unit}}{% endif %} </td>
+                 <td> {{item.food_name}} {% if item.quantity > 0 || item.size %} - {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} {% endif $}{% if item.weight %}({{item.weight}} {{item.unit}}){% endif %} </td>
               </tr>
             </table>
             {% endfor %}
@@ -705,16 +683,12 @@
             <table>
               <tr class="header row">
                 <td class="col-7"> <b>Item Name</b> </td>
-                <td class="col-3"> <b>Portion</b> </td>
-                <td class="col-2"> <b>Quantity</b> </td>
               </tr>
             </table>
             {% for item in m6 %}
             <table>
               <tr class="row" style="font-size: 15px;">
-                <td class="col-7"> {{item.food_name}} </td>
-                 <td class="col-3"> {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} </td>
-                <td class="col-2"> {% if item.weight %}{{item.weight}} {{item.food_item.unit}}{% endif %} </td>
+                 <td> {{item.food_name}} {% if item.quantity > 0 || item.size %} - {% if item.quantity > 0 %}{{item.quantity}}{% endif %} {% if item.size %}{{item.size}}{% elif item.quantity == 1 %}Portion{% elif item.quantity %}Portions{% endif %} {% endif $}{% if item.weight %}({{item.weight}} {{item.unit}}){% endif %} </td>
               </tr>
             </table>
             {% endfor %}
@@ -725,4 +699,4 @@
   </table>
 </body>
 
-</html>
+  </html>
