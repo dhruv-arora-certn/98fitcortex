@@ -295,6 +295,10 @@ class Customer(models.Model):
 			return "Very Active"
 		if self.lifestyle == 1.9:
 			return "Extra Active"
+
+	@property
+	def user_week(self):
+		return get_week() - get_week(self.create_on) + 1
 			
 
 
