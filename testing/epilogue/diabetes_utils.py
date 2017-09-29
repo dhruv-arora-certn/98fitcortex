@@ -1,6 +1,7 @@
 from weasyprint import HTML
-from .views import GuestPDFView
+from .views import GuestPDFView , custom_strftime
 from django.template.loader import render_to_string
+from django.utils.timezone import localdate 
 import json
 
 
@@ -37,7 +38,12 @@ def render_pdf_string(cals = 0 , day = 0 , user = None):
 	assert user is not None
 
 	meal_data = load_file(cals , day)
-	data = {**meal_data , "user" : user}
+	data = {
+		**meal_data , 
+		"user" : user,
+		"intake" : cals,
+		"date" : custom_strftime(localdate())
+	}
 
 	return render_to_string("guest-diet-diabetes.html" , data)
 
