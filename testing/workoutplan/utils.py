@@ -17,16 +17,16 @@ MaintainWeight = namedtuple("MaintainWeight" , ["days"])
 
 NoviceDays = Novice(
 	WeightLoss(
-		days(5,None,5)
+		days(5,0,5)
 	),
 	WeightGain(
-		days(3,None,3)
+		days(3,0,3)
 	),
 	MuscleGain(
-		days(4,None,4)
+		days(4,0,4)
 	),
 	MaintainWeight(
-		days(4,None,4)
+		days(4,0,4)
 	)
 )
 

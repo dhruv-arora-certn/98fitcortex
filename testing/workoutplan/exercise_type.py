@@ -1,6 +1,6 @@
 from workoutplan import exercise
 from workoutplan import utils
-
+from workout.models import FloorBasedCardio
 class Base():
 	
 	def __init__(self):
@@ -45,10 +45,18 @@ class Warmup(Base):
 
 class Main(Base):
 	_type = "main"
-
-	def __init__(self , user , makeCardio = False , makeCoreStrengthening = True):
+	
+	def __init__(self , user , makeCardio = False , makeCoreStrengthening = True , cardioDays = [] , rtDays = []):
 		self.user = user
+		self.makeCardio = makeCardio
+		self.makeCoreStrengthening = makeCoreStrengthening
+		self.cardioDays = cardioDays
+		self.rtDays = rtDays
 
+	def buildCardio(self):
+		duration = 900
+		#Queries
+		return  
 class CoolDown(Base):
 	_type = "cooldown"
 	def __init__(self):
