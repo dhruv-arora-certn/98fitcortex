@@ -1,12 +1,13 @@
 from . import levels
 from .goals import Goals
-from .utils import NoviceDays , BeginnerDays , IntermediateDays
+from .utils import NoviceDays , BeginnerDays , IntermediateDays , days as namedDays
 import random
 
 class Generator():
 
 	def __init__(self, user):
 		self.user =  user 
+		self.conditional_days = self.get_conditional_days()
 
 	def _get_novice_days(self):	
 
@@ -43,10 +44,29 @@ class Generator():
 		elif goal == Goals.MuscleGain:
 			return IntermediateDays.MuscleGain.days
 
+	@classmethod
+	def _get_days_distribution(self, days):
+		'''
+		@days is a namedtuple instance with cardio , rt and total.
+		#Notes
+		Ideally should be a utility function, but i realized that after writing it and as of right now, too lazy to move it out. Hence
+		a classmethod
+		'''
+		day_range =  {1,2,3,4,5,6,7}
+		cardio_days = set(random.sample(
+			day_range,
+			days.cardio
+		))
+		if days.total <= days.cardio + days.rt:
+			rt_days = random.sample(day_range , days.rt)
+		else:
+			rt_days = random.sample(day_range.difference(cardio_days) , days.rt)
+
+		return cardio_days , rt_days
 
 	def get_conditional_days(self):
 		'''
-		Number of Cardio Days for the user
+		Returns a namedtuple with a list of cardio days and list of rt days
 		'''
 		if self.user.level_obj == levels.Novice:
 			days = self._get_novice_days()
@@ -55,8 +75,5 @@ class Generator():
 		elif self.user.level_obj == levels.Intermediate:
 			days = self._get_intermediate_days()
 
-		cardio = random.sample(
-			[1,2,3,4,5,6,7],
-			days.cardio
-		)
-		return cardio
+		cardio_days , rt_days = self._get_days_distribution(days)
+		return namedDays(cardio_days , rt_days , days.total)
