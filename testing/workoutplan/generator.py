@@ -7,7 +7,10 @@ class Generator():
 
 	def __init__(self, user):
 		self.user =  user 
+<<<<<<< HEAD
 		self.conditional_days = self.get_conditional_days()
+=======
+>>>>>>> 44e56182666838d67e55723fda63e47c251764cc
 
 	def _get_novice_days(self):	
 
@@ -44,6 +47,7 @@ class Generator():
 		elif goal == Goals.MuscleGain:
 			return IntermediateDays.MuscleGain.days
 
+<<<<<<< HEAD
 	@classmethod
 	def _get_days_distribution(self, days):
 		'''
@@ -64,9 +68,10 @@ class Generator():
 
 		return cardio_days , rt_days
 
+
 	def get_conditional_days(self):
 		'''
-		Returns a namedtuple with a list of cardio days and list of rt days
+		Number of Cardio Days for the user
 		'''
 		if self.user.level_obj == levels.Novice:
 			days = self._get_novice_days()
