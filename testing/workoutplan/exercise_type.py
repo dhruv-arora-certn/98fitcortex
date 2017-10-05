@@ -1,11 +1,14 @@
 from workoutplan import exercise
 from workoutplan import utils
-from workout.models import FloorBasedCardio
+from workout import models
+from django.core.cache import cache
+from workoutplan import exercise
+import random
+
 class Base():
-	
+
 	def __init__(self):
 		pass
-
 
 class Warmup(Base):
 	_type = "warmup"
@@ -15,7 +18,7 @@ class Warmup(Base):
 		self.user = user
 		self.duration = duration
 		self.mainExercise = mainExercise
-	
+
 	def decideWarmup(self):
 		'''
 		Decide Which Function is to be called For generating the Warmup
@@ -45,18 +48,49 @@ class Warmup(Base):
 
 class Main(Base):
 	_type = "main"
-	
-	def __init__(self , user , makeCardio = False , makeCoreStrengthening = True , cardioDays = [] , rtDays = []):
+
+	def __init__(self , user , cardioType = random.choice([exercise.FloorBasedCardio , exercise.TimeBasedCardio]) , makeCoreStrengthening = True , cardioDays = [] , rtDays = []):
 		self.user = user
-		self.makeCardio = makeCardio
+		self.cardioType = cardioType
 		self.makeCoreStrengthening = makeCoreStrengthening
 		self.cardioDays = cardioDays
 		self.rtDays = rtDays
 
 	def buildCardio(self):
 		duration = 900
-		#Queries
-		return  
+		cardio = self.cardioType(
+			self.user,
+			duration
+		)
+		cardio.build()
+		return cardio.selected
+
+	def buildResistanceTraining(self):
+		pass
+
+	def buildCoreStrengthening(self):
+		core = CoreStrengthening(
+			user = self.user,
+			duration = self.duration,
+		)
+		core.build()
+		return core.selected
+
+	def buildRT(self):
+		if self.user.is_novice():
+			buildCoreStrengthening()
+		else:
+			buildResistanceTraining()
+
+	def build(self):
+		'''
+		Build exercises after assembly
+		'''
+		self.buildCardio()
+		self.buildRT()
+
+
+
 class CoolDown(Base):
 	_type = "cooldown"
 	def __init__(self):

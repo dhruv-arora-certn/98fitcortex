@@ -1,6 +1,7 @@
 from workoutplan import levels
 from dietplan.goals import Goals
 from collections import namedtuple
+import random
 
 type_list = ["WeightLoss" , "WeightGain" , "MuscleGain" , "MaintainWeight"]
 
@@ -69,3 +70,27 @@ ConditionalTrainingDays = ct(
 )
 
 
+class Luggage:
+
+	def __init__(self , weight , items , key , randomize = True , batchSize = 5):
+		self.weight = weight
+		self.items = items
+		self.key = key
+		self.randomize = randomize
+		self.packed = set() 
+		self.batchSize = batchSize
+
+	def pickAndPack(self):
+		selectedWeight = sum(getattr(e , self.key) for e in self.packed)
+		while selectedWeight < self.weight:
+			batch = random.sample(self.items , self.batchSize)
+
+			for e in batch:
+				if selectedWeight + getattr(e , self.key) <= self.weight :
+					selectedWeight += getattr(e , self.key)
+					self.packed.add(e)
+		return self
+
+
+ResistanceFilter = namedtuple("ResistanceFilters" , ["filters"])
+ResistanceFilterContainer = namedtuple("ResistanceFilterContainer" , ["day" , "filters"])
