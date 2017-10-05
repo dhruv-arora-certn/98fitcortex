@@ -448,6 +448,21 @@ class Customer(models.Model):
 			return levels.Intermediate
 		return levels.Novice
 
+	def is_novice(self):
+		if self.level == 1:
+			return True
+		return False
+
+	def is_intermediate(self):
+		if self.level == 2:
+			return True
+		return False
+
+	def is_beginner(self):
+		if self.level == 2:
+			return True
+		return False
+
 	def has_diabetes(self):
 		return bool(self.customermedicalconditions_set.filter(condition_name = "diabetes"))
 
