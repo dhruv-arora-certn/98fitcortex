@@ -1,5 +1,6 @@
 from . import levels
 from .goals import Goals
+<<<<<<< HEAD
 from .utils import NoviceDays , BeginnerDays , IntermediateDays , days as namedDays , ResistanceFilterContainer , ResistanceFilter , get_resistance_filter
 import random
 
@@ -18,6 +19,17 @@ class Generator():
 		self.conditional_days = self.get_conditional_days()
 
 	def _get_novice_days(self):
+=======
+from .utils import NoviceDays , BeginnerDays , IntermediateDays , days as namedDays
+import random
+
+class Generator():
+
+	def __init__(self, user):
+		self.user =  user 
+		self.conditional_days = self.get_conditional_days()
+
+	def _get_novice_days(self):	
 
 		goal = self.user.goal
 		if goal == Goals.WeightLoss:
@@ -52,6 +64,10 @@ class Generator():
 		elif goal == Goals.MuscleGain:
 			return IntermediateDays.MuscleGain.days
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 1f1a621578ff8fcfdd7ede4cfcc91f9254c0e278
 	@classmethod
 	def _get_days_distribution(self, days):
 		'''
@@ -72,6 +88,7 @@ class Generator():
 
 		return cardio_days , rt_days
 
+<<<<<<< HEAD
 	def get_resistance_distribution(self):
 		rt_days = self.conditional_days.rt
 
@@ -81,6 +98,12 @@ class Generator():
 	def get_conditional_days(self):
 		'''
 		Returns a namedtuple with a list of cardio days and list of rt days
+=======
+
+	def get_conditional_days(self):
+		'''
+		Number of Cardio Days for the user
+>>>>>>> 1f1a621578ff8fcfdd7ede4cfcc91f9254c0e278
 		'''
 		if self.user.level_obj == levels.Novice:
 			days = self._get_novice_days()
@@ -88,5 +111,9 @@ class Generator():
 			days = self._get_beginner_days()
 		elif self.user.level_obj == levels.Intermediate:
 			days = self._get_intermediate_days()
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1f1a621578ff8fcfdd7ede4cfcc91f9254c0e278
 		cardio_days , rt_days = self._get_days_distribution(days)
 		return namedDays(cardio_days , rt_days , days.total)

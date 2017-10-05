@@ -1,10 +1,14 @@
 from workoutplan import exercise
 from workoutplan import utils
+<<<<<<< HEAD
 from workout import models
 from django.core.cache import cache
 from workoutplan import exercise
 import random
 
+=======
+from workout.models import FloorBasedCardio
+>>>>>>> 1f1a621578ff8fcfdd7ede4cfcc91f9254c0e278
 class Base():
 
 	def __init__(self):
@@ -90,7 +94,10 @@ class Main(Base):
 		self.buildRT()
 
 
-
+	def buildCardio(self):
+		duration = 900
+		#Queries
+		return  
 class CoolDown(Base):
 	_type = "cooldown"
 	def __init__(self):
