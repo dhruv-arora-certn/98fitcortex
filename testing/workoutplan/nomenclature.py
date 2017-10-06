@@ -9,7 +9,7 @@ class BodyBase:
 	def isolated(self):
 		self.filter = Q(exercise_type = "Isolated")
 
-class UpperBody(BodyBase):
+class _UpperBody(BodyBase):
 
 	def __init__(self):
 		self.filter = Q()
@@ -53,7 +53,7 @@ class UpperBody(BodyBase):
 		return self.baseQ & self.filter & Q(muscle_group_name = "Chest, Tricep & Back")
 
 
-class LowerBod(BodyBase):
+class _LowerBody(BodyBase):
 
 	def __init__(self):
 		self.baseQ = Q(body_part = "Lower")
@@ -78,3 +78,8 @@ class LowerBod(BodyBase):
 	@property
 	def legs(self):
 		return self.baseQ & self.filter & Q(muscle_group_name = "legs")
+
+
+
+UpperBody = _UpperBody()
+LowerBody = _LowerBody()
