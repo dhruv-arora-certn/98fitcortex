@@ -8,7 +8,7 @@ from epilogue.models import *
 class BaseExercise():
 	
 	def __repr__(self):
-		return self.workout_name
+		return str(self.workout_name)
 
 	def __str__(self):
 		return self.workout_name
