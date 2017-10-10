@@ -1,9 +1,13 @@
-from workoutplan import exercise
-from workoutplan import utils
-from workout import models
-from django.core.cache import cache
-from workoutplan import exercise
 import random
+import operator
+
+from workout import models
+from workoutplan import exercise
+from .utils import Luggage
+from .resistance_data import UpperBodyIdentifier , LowerBodyIdentifier
+
+from django.core.cache import cache
+from django.db.models import Q
 
 class Base():
 
@@ -14,11 +18,47 @@ class Warmup(Base):
 	_type = "warmup"
 	duration = 300
 
-	def __init__(self , user , duration = 300 , mainExercise = None):
+	def __init__(self , user , mainExercise = None):
 		self.user = user
-		self.duration = duration
 		self.mainExercise = mainExercise
 
+	def get_body_part_filter(self):
+		if isinstance(self.mainExercise.conditionalType , exercise.ResistanceTraining):
+			return Q()
+
+
+	def get_intensity_filter(self):
+		if self.user.is_novice():
+			return [{
+				"filter" : Q(exercise_level = "Low"),
+				"duration" : 300
+			}]
+		elif self.user.is_intermediate():
+			return [
+				{
+					"filter" : Q(exercise_level = "Low"),
+					"duration" : 150
+				},
+				{
+					"filter" : Q(exercise_level = "Moderate"),
+					"duration" : 150
+				}
+			]
+		elif self.user.is_intermediate():
+			return [
+				{
+					"filter" : Q(exercise_level = "Low"),
+					"duration" : 60 
+				},
+				{
+					"filter" : Q(exercise_level = "Moderate"),
+					"duration" : 60
+				},
+				{
+					"filter" : Q(exercise_level = "High"),
+					"duration" : 180
+				}
+			]
 	def decideWarmup(self):
 		'''
 		Decide Which Function is to be called For generating the Warmup
@@ -26,8 +66,8 @@ class Warmup(Base):
 		Self is returned instead
 		This will enable me to perform chaining and allow subsequent functions to use the attribute
 		'''
-		if isinstance(self.mainExercise , exercise.FloorBasedCardio):
-			self.__funcToCall = self.floor_based_cardio	
+		if isinstance(self.mainExercise.cardioType, exercise.FloorBasedCardio):
+			self.__funcToCall = self.floor_based_cardio
 		return self
 
 	def floor_based_cardio(self):
@@ -40,7 +80,20 @@ class Warmup(Base):
 		'''
 		To be used in the case where a normal Warm Up and Cool Down is to be generated
 		'''
-		pass
+		filters = self.get_intensity_filter()
+		modelToUse = models.WarmupCoolDownTimeBasedExercise
+		l = []
+
+		for e in self.get_intensity_filter():
+			warmup = exercise.Warmup(
+				self.user,
+				duration = e.get('duration'),
+				modelToUse = modelToUse,
+				filterToUse = e.get('filter') & self.get_body_part_filter()
+			).build()
+			l.extend(*warmup.selected)
+
+		return  l
 
 	def time_based_cardio(self):
 		pass
@@ -49,12 +102,9 @@ class Warmup(Base):
 class Main(Base):
 	_type = "main"
 
-	def __init__(self , user , cardioType = random.choice([exercise.FloorBasedCardio , exercise.TimeBasedCardio]) , makeCoreStrengthening = True , cardioDays = [] , rtDays = []):
+	def __init__(self , user , cardioType = random.choice([exercise.FloorBasedCardio , exercise.TimeBasedCardio]) ):
 		self.user = user
 		self.cardioType = cardioType
-		self.makeCoreStrengthening = makeCoreStrengthening
-		self.cardioDays = cardioDays
-		self.rtDays = rtDays
 
 	def buildCardio(self):
 		duration = 900
@@ -66,10 +116,12 @@ class Main(Base):
 		return cardio.selected
 
 	def buildResistanceTraining(self):
+		self.conditionalType = exercise.ResistanceTraining
 		pass
 
 	def buildCoreStrengthening(self):
-		core = CoreStrengthening(
+		self.conditionalType = exercise.CoreStrengthening
+		core = exercise.CoreStrengthening(
 			user = self.user,
 			duration = self.duration,
 		)
@@ -88,7 +140,6 @@ class Main(Base):
 		'''
 		self.buildCardio()
 		self.buildRT()
-
 
 
 class CoolDown(Base):

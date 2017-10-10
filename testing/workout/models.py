@@ -6,9 +6,9 @@ from epilogue.models import *
 # Create your models here.
 
 class BaseExercise():
-	
+
 	def __repr__(self):
-		return str(self.workout_name)
+		return "%s : %s"%(str(self.workout_name) , getattr(self  , "exercise_level" , "None"))
 
 	def __str__(self):
 		return self.workout_name

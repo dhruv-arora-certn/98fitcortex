@@ -1,19 +1,76 @@
-from collections import namedtuple
 from .nomenclature import UpperBody , LowerBody
-day = namedtuple("Day" , ["number" , "filter"])
 
-class Day(namedtuple("Day" , ["d"+str(e) for e in range(1,8)])):
-	def __new__(cls , *args , **kwargs):
-		print(*args)
-		print(kwargs)
-		d = kwargs.pop('day')
-		return super().__new__(cls , str(d))
+class UpperBodyIdentifier:
+	pass
 
-class Novice:
-	class WeightGain:
-		class D1:
-			filter = UpperBody.compound().baseQ | LowerBody.compound().baseQ
-			count = 5
+class LowerBodyIdentifier:
+	pass
 
-		class D2:
-			pass
+class ChestAndBackFilter():
+	filters = [
+				{
+					"filter" : UpperBody.chest(),
+					"count" : 5,
+					"part" : UpperBodyIdentifier,
+				},
+				{
+					"filter" : UpperBody.back(),
+					"count" : 5,
+					"part" : UpperBodyIdentifier
+				}
+			]
+
+class ShouldersAndArmsFilter():
+	filters = [
+				{
+					"filter" : UpperBody.shoulder(),
+					"part" : UpperBodyIdentifier,
+					"count" : 5
+				},
+				{
+					"filter" : UpperBody.biceps(),
+					"part" : UpperBodyIdentifier,
+					"count" : 3
+				},
+				{
+					"filter" : UpperBody.triceps(),
+					"part" : UpperBodyIdentifier,
+					"count" : 2
+				}
+			]
+
+class AbdomenAndLegsFilter():
+	filters = [
+				{
+					"filter" : UpperBody.abdomen(),
+					"part" : UpperBodyIdentifier,
+					"count" : 5
+				},
+				{
+					"filter" : LowerBody.legs(),
+					"part" : LowerBodyIdentifier,
+					"count" : 5
+				}
+			]
+
+class UpperBodyFilter():
+	filters = [
+
+					{
+						"filter" : i(),
+						"part" : UpperBodyIdentifier,
+						"count" : e
+					}
+					for i,e in UpperBody.groups()
+
+			]
+
+class LowerBodyFilter():
+	filters = [
+				{
+					"filter" : i,
+					"count" : e
+				}
+				for i,e in LowerBody.groups()
+			]
+
