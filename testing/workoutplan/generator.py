@@ -1,73 +1,35 @@
 from . import levels
 from .goals import Goals
-<<<<<<< HEAD
-from .utils import NoviceDays , BeginnerDays , IntermediateDays , days as namedDays , ResistanceFilterContainer , ResistanceFilter , get_resistance_filter
+from .utils import NoviceDays , BeginnerDays , IntermediateDays , days as namedDays ,  get_resistance_filter , get_category_decorator
+from .day import ExerciseDay
 import random
 
 class ResistanceDistribution:
-    
+
     def __init__(self , user , day , day_number):
         self.user = user
         self.day = day
         self.day_number = day_number
-
 
 class Generator():
 
 	def __init__(self, user):
 		self.user =  user
 		self.conditional_days = self.get_conditional_days()
+		self.get_resistance_distribution()
 
+	@get_category_decorator(NoviceDays)
 	def _get_novice_days(self):
-=======
-from .utils import NoviceDays , BeginnerDays , IntermediateDays , days as namedDays
-import random
+		pass
 
-class Generator():
-
-	def __init__(self, user):
-		self.user =  user 
-		self.conditional_days = self.get_conditional_days()
-
-	def _get_novice_days(self):	
-
-		goal = self.user.goal
-		if goal == Goals.WeightLoss:
-			return NoviceDays.WeightLoss.days
-		elif goal == Goals.WeightGain:
-			return NoviceDays.WeightGain.days
-		elif goal == Goals.MuscleGain:
-			return NoviceDays.MuscleGain.days
-
+	@get_category_decorator(BeginnerDays)
 	def _get_beginner_days(self):
+		pass
 
-		goal = self.user.goal
-		if goal == Goals.WeightLoss:
-			return BeginnerDays.WeightLoss.days
-
-		elif goal == Goals.WeightGain:
-			return BeginnerDays.WeightGain.days
-
-		elif goal == Goals.MuscleGain:
-			return BeginnerDays.MuscleGain.days
-
-
+	@get_category_decorator(IntermediateDays)
 	def _get_intermediate_days(self):
+		pass
 
-		goal = self.user.goal
-		if goal == Goals.WeightLoss:
-			return IntermediateDays.WeightLoss.days
-
-		elif goal == Goals.WeightGain:
-			return IntermediateDays.WeightGain.days
-
-		elif goal == Goals.MuscleGain:
-			return IntermediateDays.MuscleGain.days
-
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 1f1a621578ff8fcfdd7ede4cfcc91f9254c0e278
 	@classmethod
 	def _get_days_distribution(self, days):
 		'''
@@ -86,24 +48,24 @@ class Generator():
 		else:
 			rt_days = random.sample(day_range.difference(cardio_days) , days.rt)
 
-		return cardio_days , rt_days
+		return cardio_days , set(rt_days)
 
-<<<<<<< HEAD
 	def get_resistance_distribution(self):
+
 		rt_days = self.conditional_days.rt
+		dist = {}
 
 		if rt_days:
 			for i,e in enumerate(rt_days):
-				f = get_resistance_filter(user , i+1)
-	def get_conditional_days(self):
-		'''
-		Returns a namedtuple with a list of cardio days and list of rt days
-=======
+				f = get_resistance_filter(self.user , i+1)
+				dist[e] = f
+
+		self.resistance_distribution = dist
+		return dist
 
 	def get_conditional_days(self):
 		'''
 		Number of Cardio Days for the user
->>>>>>> 1f1a621578ff8fcfdd7ede4cfcc91f9254c0e278
 		'''
 		if self.user.level_obj == levels.Novice:
 			days = self._get_novice_days()
@@ -111,9 +73,21 @@ class Generator():
 			days = self._get_beginner_days()
 		elif self.user.level_obj == levels.Intermediate:
 			days = self._get_intermediate_days()
-<<<<<<< HEAD
-=======
-
->>>>>>> 1f1a621578ff8fcfdd7ede4cfcc91f9254c0e278
 		cardio_days , rt_days = self._get_days_distribution(days)
 		return namedDays(cardio_days , rt_days , days.total)
+
+	def get_resistance_filter_for_day(self , day):
+		return self.resistance_distribution.get(day)
+
+	def should_make_cardio(self , day):
+		return day in self.conditional_days.cardio
+
+	def generate(self):
+		days = {1,2,3,4,5,6,7}
+
+		for e in days:
+			resistance_filter = self.get_resistance_filter_for_day(e)
+			make_cardio = self.should_make_cardio(e)
+			d = ExerciseDay(e , make_cardio = make_cardio , resistance_filter = resistance_filter)
+			setattr(self , "d%s"%e , d)
+

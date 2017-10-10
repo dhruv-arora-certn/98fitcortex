@@ -1,7 +1,10 @@
 from workoutplan import levels
-from dietplan.goals import Goals
+from workoutplan.goals import Goals
 from collections import namedtuple
+from workoutplan import resistance_data
+
 import random
+import ipdb
 
 type_list = ["WeightLoss" , "WeightGain" , "MuscleGain" , "MaintainWeight"]
 
@@ -92,5 +95,26 @@ class Luggage:
 		return self
 
 
-ResistanceFilter = namedtuple("ResistanceFilters" , ["filters"])
-ResistanceFilterContainer = namedtuple("ResistanceFilterContainer" , ["day" , "filters"])
+def get_resistance_filter( user , day_number):
+	assert user.level_obj is not levels.Novice
+
+	r =  getattr(user.level_obj.Resistance , user.goal.__name__)
+	return getattr(r , "D%s"%(day_number))
+
+def get_days(cls_obj , category):
+		goal = cls_obj.user.goal
+		if goal == Goals.WeightLoss:
+			return getattr(category,"WeightLoss").days
+
+		elif goal == Goals.WeightGain:
+			return getattr(category,"WeightGain").days
+
+		elif goal == Goals.MuscleGain:
+			return getattr(category,"MuscleGain").days
+
+def get_category_decorator(category):
+	def decorator(fn):
+		def applyCat(cls_obj):
+			return get_days(cls_obj , category)
+		return applyCat
+	return decorator
