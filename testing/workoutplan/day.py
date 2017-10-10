@@ -5,7 +5,7 @@ class ExerciseDay:
 
 	def __init__(self , day , user ,make_cardio = False , resistance_filter = Q()):
 		self.day = day
-		self.make_cardio = False
+		self.make_cardio = make_cardio
 		self.resistance_filter = resistance_filter
 		self.user = user
 
@@ -19,4 +19,5 @@ class ExerciseDay:
 		self.buildMain(self)
 
 	def buildMain(self):
-		self.main = exercise_type.Main(
+		self.main = exercise_type.Main(self.user) 
+		self.main.build()
