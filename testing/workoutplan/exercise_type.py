@@ -120,6 +120,7 @@ class Main(Base):
 		pass
 
 	def buildCoreStrengthening(self):
+		self.duration = 300
 		self.conditionalType = exercise.CoreStrengthening
 		core = exercise.CoreStrengthening(
 			user = self.user,
@@ -130,16 +131,15 @@ class Main(Base):
 
 	def buildRT(self):
 		if self.user.is_novice():
-			buildCoreStrengthening()
-		else:
-			buildResistanceTraining()
+			return self.buildCoreStrengthening()
+		return self.buildResistanceTraining()
 
 	def build(self):
 		'''
 		Build exercises after assembly
 		'''
-		self.buildCardio()
-		self.buildRT()
+		self.cardio = self.buildCardio()
+		self.rt = self.buildRT()
 
 
 class CoolDown(Base):
