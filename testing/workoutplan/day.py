@@ -21,3 +21,12 @@ class ExerciseDay:
 	def buildMain(self):
 		self.main = exercise_type.Main(self.user) 
 		self.main.build()
+
+	def buildWarmup(self):
+
+		self.warmup = exercise_type.Warmup(self.user)
+	
+	def buildStretching(self):
+		if self.resistance_filter:
+			self.rt_stretching = exercise_type.Stretching( self.user , self.resistance_filter)
+			self.rt_stretching.build()
