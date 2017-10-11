@@ -63,8 +63,28 @@ class Warmup(ExerciseBase):
 		super().__init__(user , duration)
 		self.model = modelToUse
 		self.filter = filterToUse
-		self.cache_key = "%s_%s"%(self.model.__name__ , str(filterToUse))
+		self.cache_key = "%s_%s"%(self.model.__name__ , "_".join("%s_%s"%(i,e) for i,e in filterToUse.children))
 
 	def get_items(self):
+		print(self.cache_key)
 		a =  cache.get_or_set(self.cache_key , list(self.model.objects.filter(self.filter)))
 		return a
+
+class Stretching(ExerciseBase):
+
+	def __init__(self , user , filterToUse = Q()):
+		self.user = user
+		self.filterToUse = filterToUse
+		self.model = models.StretchingExercise
+		self.cache_key = "%s_%s"%(self.model.__name__ , "_".join("%s_%s"%(i,e) for i,e in filterToUse.children))
+		self.selected = []
+
+	def get_items(self):
+		a = cache.get_or_set(self.cache_key , list(self.model.objects.filter(self.filterToUse)))
+		return a
+
+	def build(self):
+		items = self.get_items()
+		choice = random.choice(items)
+		self.selected.append(choice)
+		return self

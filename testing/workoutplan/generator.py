@@ -88,5 +88,5 @@ class Generator():
 			resistance_filter = self.get_resistance_filter_for_day(e)
 			make_cardio = self.should_make_cardio(e)
 			d = ExerciseDay(e , self.user , make_cardio = make_cardio , resistance_filter = resistance_filter)
-			setattr(self , "d%s"%e , d)
+			setattr(self , "D%s"%e , d)
 

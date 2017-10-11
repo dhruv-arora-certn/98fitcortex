@@ -4,7 +4,6 @@ import operator
 from workout import models
 from workoutplan import exercise
 from .utils import Luggage
-from .resistance_data import UpperBodyIdentifier , LowerBodyIdentifier
 
 from django.core.cache import cache
 from django.db.models import Q
@@ -18,13 +17,10 @@ class Warmup(Base):
 	_type = "warmup"
 	duration = 300
 
-	def __init__(self , user , mainExercise = None):
+	def __init__(self , user , mainExercise = None , bodyPartInFocus = Q()):
 		self.user = user
 		self.mainExercise = mainExercise
-
-	def get_body_part_filter(self):
-		if isinstance(self.mainExercise.conditionalType , exercise.ResistanceTraining):
-			return Q()
+		self.bodyPartInFocus = bodyPartInFocus
 
 
 	def get_intensity_filter(self):
@@ -89,9 +85,10 @@ class Warmup(Base):
 				self.user,
 				duration = e.get('duration'),
 				modelToUse = modelToUse,
-				filterToUse = e.get('filter') & self.get_body_part_filter()
+				filterToUse = e.get('filter') & self.bodyPartInFocus
 			).build()
 			l.extend(*warmup.selected)
+
 
 		return  l
 
@@ -149,5 +146,22 @@ class CoolDown(Base):
 
 class Stretching(Base):
 	_type = "stretching"
-	def __init__(self):
-		pass
+	def __init__(self , user , resistance_filter = None):
+		self.user = user
+		self.resistance_filter = resistance_filter
+
+	def build_rt(self):
+		l = []
+		for e in self.resistance_filter.filters:
+			stretching = exercise.Stretching(
+				user = self.user,
+				filterToUse = e.get('filter') 
+			)
+			stretching.build()
+			l.extend(stretching.selected)
+		return stretching.selected
+
+	def build(self):
+		self.rt_stretching = self.build_rt()
+
+
