@@ -78,7 +78,7 @@ class BaseSocialSerializer(serializers.Serializer):
 		return l
 
 
-class RegistrationSerializer(serializers.Serializer):
+class RegistrationSerializer(BaseRegistrationSerializer):
 	email = serializers.EmailField()
 	password = serializers.CharField()
 
