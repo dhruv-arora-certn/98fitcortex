@@ -19,6 +19,7 @@ from django.utils.translation import ugettext_lazy as _
 
 import binascii
 import os
+import datetime
 #Model Managers for Food Model
 
 	
@@ -378,37 +379,50 @@ class Customer(models.Model):
 		baseQ = self.sleep_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[])).values("week").annotate(total_minutes = models.Sum("minutes")).values("week","total_minutes")
 		baseQ = baseQ.filter(month = month)
 		return self.aggregate_sleep(baseQ)
-	
+
 	def weekly_sleep(self,week = None, mapped = False):
-		if not week:
-			week = get_week()
-		year = get_year()
-		baseQ = self.sleep_logs.annotate(year = RawSQL("Year(start)",[])).filter(year = year)
-		baseQ = self.sleep_logs.annotate(week = RawSQL("Week(start)",[])).filter(week = week).annotate(day = RawSQL("weekday(start)+1",[])).values("day").annotate(total_minutes = models.Sum("minutes")).values("day","total_minutes")
+		today_date = datetime.datetime.today().date()
+		baseQ = self.sleep_logs.annotate(day = RawSQL("Date(start)" , [])).filter(
+			day__lte = today_date , day__gte = today_date - datetime.timedelta(days = 7)
+		)
+		baseQ = baseQ.values("day").annotate(total_minutes = models.Sum("minutes")).values("day","total_minutes")
 		if mapped:
 			return self.map_aggregate(baseQ , SleepWeekly )
 		return baseQ
-		
+
 	def weekly_sleep_aggregated(self , week = None):
-		if not week:
-			week = get_week()
-		baseQ = self.sleep_logs.annotate(week = RawSQL("Week(start)",[])).annotate(day = RawSQL("weekday(start)+1",[])).values("day").annotate(total_minutes = models.Sum("minutes")).values("day", "total_minutes")
-		baseQ = baseQ.filter(week = week)
+		today_date = datetime.datetime.today().date()
+		baseQ = self.sleep_logs.annotate(day = RawSQL("Date(start)" , [])).filter(
+			day__lte = today_date,
+			day__gte = today_date - datetime.timedelta(days = 7)
+		)
+		baseQ = baseQ.annotate(total_minutes = models.Sum("minutes")).values("day", "total_minutes")
 		return self.aggregate_sleep(baseQ)
 
-	
 	def monthly_water(self,month = None):
-		if not month:
-			month = get_month()
-		baseQ = self.water_logs.annotate(month = RawSQL("Month(added)",[])).filter(month = month).annotate(week = RawSQL("Week(added)",[])).values("week").annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))	
+		today_date = datetime.datetime.today().date()
+		baseQ = self.water_logs.annotate(
+			day = RawSQL("Date(saved)",[])
+		)
+		baseQ = baseQ.filter(
+			day__lte = today_date,
+			day__gte = today_date - datetime.timedelta(days = 30)
+		)
+		baseQ = baseQ.annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))
 		baseQ = countBottles(baseQ)
 		baseQ = countGlasses(baseQ)
 		return baseQ
 
 	def weekly_water(self , week = None):
-		if not week:
-			week = get_week()
-		baseQ = self.water_logs.annotate(day = RawSQL("weekday(added)+1",[])).annotate(week = RawSQL("Week(added)",[])).filter(week = week).values("day").annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))
+		today_date = datetime.datetime.today().date()
+		baseQ = self.water_logs.annotate(
+			day = RawSQL("Date(saved)",[])
+		)
+		baseQ = baseQ.filter(
+			day__lte = today_date,
+			day__gte = today_date - datetime.timedelta(days = 7)
+		)
+		baseQ = baseQ.annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))
 		baseQ = countBottles(baseQ)
 		baseQ = countGlasses(baseQ)
 		return baseQ
@@ -419,23 +433,33 @@ class Customer(models.Model):
 		return baseQ
 
 	def weekly_activity(self,week = None):
-		if not week:
-			week =  get_week()
-		year = get_year()
-		baseQ = self.activity_logs.annotate(day = RawSQL("weekday(start)+1",[])).annotate(year = RawSQL("Year(start)",[])).filter(year = year).annotate(week = RawSQL("Week(start)",[])).filter(week = week)
-		
+		today_date = datetime.datetime.today().date()
+		baseQ = self.activity_logs.annotate(
+			day = RawSQL("Date(start)",[])
+		)
+		baseQ = baseQ.filter(
+			day__lte = today_date,
+			day__gte = today_date - datetime.timedelta(days = 7)
+		)
+		baseQ = baseQ.annotate(year = RawSQL("Year(start)",[])).filter(year = year).annotate(week = RawSQL("Week(start)",[])).filter(week = week)
+
 		baseQ = baseQ.values("day").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration"))
 		baseQ = baseQ.values("day" , "total_cals" , "total_steps" , "total_distance" , "total_duration")
 		return baseQ
 
 	def monthly_activity(self,month = None):
-		if not month:
-			month = get_month()
-		year = get_year()
+		today_date = datetime.datetime.today().date()
+		baseQ = self.activity_logs.annotate(
+			day = RawSQL("Date(start)",[])
+		)
+		baseQ = baseQ.filter(
+			day__lte = today_date,
+			day__gte = today_date - datetime.timedelta(days = 30)
+		)
+		baseQ = baseQ.annotate(year = RawSQL("Year(start)",[])).filter(year = year).annotate(week = RawSQL("Week(start)",[])).filter(week = week)
 
-		baseQ = self.activity_logs.annotate(month = RawSQL("Month(start)",[])).annotate(year = RawSQL("Year(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[])).filter(month = month)
-		baseQ = baseQ.values("week").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration"))
-		baseQ = baseQ.values("week" , "total_cals" , "total_steps" , "total_distance" , "total_duration")
+		baseQ = baseQ.values("day").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration"))
+		baseQ = baseQ.values("day" , "total_cals" , "total_steps" , "total_distance" , "total_duration")
 		return baseQ
 
 	@property
