@@ -155,7 +155,7 @@ class WaterLoggingMonthlySerializer(WaterLoggingSerializer):
 	week = serializers.IntegerField()
 	
 class SleepLoggingWeeklySerializer(serializers.Serializer):
-	day = serializers.IntegerField()
+	day = serializers.DateField()
 	total_minutes = serializers.IntegerField()
 
 class SleepAggregationSerializer(serializers.Serializer):
