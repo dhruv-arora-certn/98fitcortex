@@ -149,7 +149,12 @@ class WaterLoggingSerializer(serializers.Serializer):
 	bottles = serializers.IntegerField()
 
 class WaterLoggingWeeklySerializer(WaterLoggingSerializer ):
-	day = serializers.IntegerField()
+	date =  serializers.DateField()
+	day = serializers.SerializerMethodField()
+
+	def get_day(self , obj):
+		print(obj)
+		return obj['date'].strftime("%a")
 
 class WaterLoggingMonthlySerializer(WaterLoggingSerializer):
 	week = serializers.IntegerField()
