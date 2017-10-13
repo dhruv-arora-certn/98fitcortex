@@ -155,8 +155,11 @@ class WaterLoggingMonthlySerializer(WaterLoggingSerializer):
 	week = serializers.IntegerField()
 	
 class SleepLoggingWeeklySerializer(serializers.Serializer):
-	day = serializers.DateField()
+	day = serializers.SerializerMethodField()
 	total_minutes = serializers.IntegerField()
+
+	def get_day(self , obj):
+		return obj['day'].strftime("%a")
 
 class SleepAggregationSerializer(serializers.Serializer):
 	minimum = serializers.IntegerField()
