@@ -425,6 +425,8 @@ class Customer(models.Model):
 		baseQ = baseQ.annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))
 		baseQ = countBottles(baseQ)
 		baseQ = countGlasses(baseQ)
+
+		baseQ  = baseQ.values("day" , "total_quantity" , "bottles" , "glasses")
 		return baseQ
 
 	def last_day_sleep(self):
