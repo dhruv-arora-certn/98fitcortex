@@ -382,10 +382,10 @@ class Customer(models.Model):
 
 	def weekly_sleep(self,week = None, mapped = False):
 		today_date = datetime.datetime.today().date()
-		baseQ = self.sleep_logs.annotate(day = RawSQL("Date(start)" , [])).filter(
-			day__lte = today_date , day__gte = today_date - datetime.timedelta(days = 7)
+		baseQ = self.sleep_logs.annotate(date = RawSQL("Date(start)" , [])).filter(
+			date__lte = today_date , date__gte = today_date - datetime.timedelta(days = 7)
 		)
-		baseQ = baseQ.values("day").annotate(total_minutes = models.Sum("minutes")).values("day","total_minutes")
+		baseQ = baseQ.values("date").annotate(total_minutes = models.Sum("minutes")).values("date","total_minutes")
 		if mapped:
 			return self.map_aggregate(baseQ , SleepWeekly )
 		return baseQ
