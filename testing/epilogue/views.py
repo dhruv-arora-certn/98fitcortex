@@ -537,7 +537,7 @@ class SleepMonthlyAggregatedView(GenericAPIView):
 		return list(monthly_logs)
 
 	def serializeMonthlyAggregatedLogs(self,user,month = None):
-		aggregated_logs = user.monthly_sleep_aggregate(month)
+		aggregated_logs = user.monthly_sleep_aggregate()
 		data = SleepAggregationSerializer(data = aggregated_logs)
 		if data.is_valid():
 			return data.data

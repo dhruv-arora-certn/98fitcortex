@@ -11,6 +11,7 @@ from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , agg
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.cache import cache
 from workoutplan import levels
 
 
@@ -23,7 +24,7 @@ import os
 import datetime
 #Model Managers for Food Model
 
-	
+
 class Food(models.Model):
 	name = models.TextField()
 	quantity = models.IntegerField()
@@ -362,35 +363,61 @@ class Customer(models.Model):
 		d = aggregate_sum(queryset , field)
 		return {**a, **b,**c ,**d}
 
-	def monthly_sleep(self , month = None , mapped = False , **kwargs):
+	def monthly_sleep(self , month = None):
+		'''
+		Find Monthly Data for sleep aggregated as weekly average
+		'''
 		today_date = datetime.datetime.today().date()
 		baseQ = self.sleep_logs.annotate(
 			date = RawSQL("Date(start)",  [])
 		)
+		baseQ = baseQ.filter(
+			date__lte = today_date,
+			date__gt = today_date - datetime.timedelta(days = 30)
+		)
+		baseQ = baseQ.values("date").annotate(
+			total_minutes = models.Sum("minutes")
+		)
 
-		baseQ = baseQ.a
-	def monthly_sleep(self , month = None , mapped = False):
-		if not month:
-			month = get_month()
-		year = get_year()
-		baseQ = self.sleep_logs.annotate(year = RawSQL("Year(start)",[])).filter(year = year)
-		baseQ = baseQ.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[])).values("week").annotate(total_minutes = models.Sum("minutes")).values("week","total_minutes")
-		baseQ = baseQ.filter(month = month)
-		if mapped :
-			return self.map_aggregate(baseQ , SleepMonthly)
-		return baseQ
+		baseQ = baseQ.annotate(
+			week = RawSQL("Week(start)",[])
+		)
 
-	def monthly_sleep_aggregate(self, month = None):
-		if not month:
-			month = get_month()
-		baseQ = self.sleep_logs.annotate(month = RawSQL("Month(start)",[])).annotate(week = RawSQL("FLOOR((DayOfMonth(start)-1)/7)+1",[])).values("week").annotate(total_minutes = models.Sum("minutes")).values("week","total_minutes")
-		baseQ = baseQ.filter(month = month)
+		vals = baseQ.values("date" , "week", "total_minutes")
+
+		weeks = set(vals.values_list("week" , flat = True))
+
+		data = []
+		for  e in weeks:
+			avg = vals.filter(week = e).aggregate(avg = models.Avg("total_minutes"))
+			d = {
+				"week" : e,
+				"avg" : avg['avg']
+			}
+			data.append(d)
+		return data
+
+	def monthly_sleep_aggregate(self):
+		today_date = datetime.datetime.today().date()
+		baseQ = self.sleep_logs.annotate(
+			date = RawSQL("Date(start)",[])
+		)
+		baseQ = baseQ.filter(
+			date__lte = today_date,
+			date__gt = today_date - datetime.timedelta(days = 7)
+		)
+		baseQ = baseQ.annotate(
+			week = RawSQL("Week(start)" , [])
+		)
+		baseQ = baseQ.values("date").annotate(
+			total_minutes = models.Sum("minutes")
+		)
 		return self.aggregate_sleep(baseQ)
 
 	def weekly_sleep(self,week = None, mapped = False):
 		today_date = datetime.datetime.today().date()
 		baseQ = self.sleep_logs.annotate(date = RawSQL("Date(start)" , [])).filter(
-			date__lte = today_date , date__gte = today_date - datetime.timedelta(days = 7)
+			date__lte = today_date , date__gt = today_date - datetime.timedelta(days = 7)
 		)
 		baseQ = baseQ.values("date").annotate(total_minutes = models.Sum("minutes")).values("date","total_minutes")
 		if mapped:
@@ -401,7 +428,7 @@ class Customer(models.Model):
 		today_date = datetime.datetime.today().date()
 		baseQ = self.sleep_logs.annotate(day = RawSQL("Date(start)" , [])).filter(
 			day__lte = today_date,
-			day__gte = today_date - datetime.timedelta(days = 7)
+			day__gt = today_date - datetime.timedelta(days = 7)
 		)
 		baseQ = baseQ.annotate(total_minutes = models.Sum("minutes")).values("day", "total_minutes")
 		return self.aggregate_sleep(baseQ)
@@ -411,9 +438,12 @@ class Customer(models.Model):
 		baseQ = self.water_logs.annotate(
 			day = RawSQL("Date(saved)",[])
 		)
+		baseQ = baseQ.annotate(
+			week = RawSQL("Week(saved)",[])
+		)
 		baseQ = baseQ.filter(
 			day__lte = today_date,
-			day__gte = today_date - datetime.timedelta(days = 30)
+			day__gt = today_date - datetime.timedelta(days = 30)
 		)
 		baseQ = baseQ.annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))
 		baseQ = countBottles(baseQ)
@@ -427,7 +457,7 @@ class Customer(models.Model):
 		)
 		baseQ = baseQ.filter(
 			date__lte = today_date,
-			date__gte = today_date - datetime.timedelta(days = 7)
+			date__gt = today_date - datetime.timedelta(days = 7)
 		)
 		baseQ = baseQ.annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))
 		baseQ = countBottles(baseQ)
@@ -448,7 +478,7 @@ class Customer(models.Model):
 		)
 		baseQ = baseQ.filter(
 			date__lte = today_date,
-			date__gte = today_date - datetime.timedelta(days = 7)
+			date__gt = today_date - datetime.timedelta(days = 7)
 		)
 
 		baseQ = baseQ.values("date").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration"))
@@ -462,7 +492,7 @@ class Customer(models.Model):
 		)
 		baseQ = baseQ.filter(
 			day__lte = today_date,
-			day__gte = today_date - datetime.timedelta(days = 30)
+			day__gt = today_date - datetime.timedelta(days = 30)
 		)
 		baseQ = baseQ.annotate(year = RawSQL("Year(start)",[])).filter(year = year).annotate(week = RawSQL("Week(start)",[])).filter(week = week)
 
