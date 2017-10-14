@@ -16,7 +16,7 @@ def weekly_average(field):
 			vals = f(*args , **kwargs)
 			weeks = set(vals.values_list("week" , flat = True) )
 			data = []
-			for e in weeks:
+			for e in reversed(weeks):
 				avg = vals.filter(
 					week = e
 				).aggregate(
@@ -38,7 +38,7 @@ def monthly_average(field):
 			vals = f(self)
 			months = set(vals.values_list("month" , flat = True) )
 			data = []
-			for e in months:
+			for e in reversed(months):
 				avg = vals.filter(
 					month = e
 				).aggregate(
