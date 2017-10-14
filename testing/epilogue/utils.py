@@ -4,6 +4,7 @@ from django.db.models.expressions import RawSQL
 from functools import partial
 from weasyprint import HTML
 from django.template.loader import render_to_string
+import functools
 import json
 
 def get_week(date = datetime.now()):
@@ -85,6 +86,6 @@ class BulkDifferential:
 		for e in new:
 			if not getattr(e , self.BulkMeta.attr_name) in old_names:
 				common.append(e)
-		return common	
+		return common
 
 

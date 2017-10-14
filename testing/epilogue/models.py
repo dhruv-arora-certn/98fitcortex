@@ -7,7 +7,7 @@ from django.db.models.expressions import RawSQL
 from .mappers import *
 from epilogue.dummyModels import *
 from rest_framework import exceptions
-from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day
+from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day 
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -363,6 +363,7 @@ class Customer(models.Model):
 		d = aggregate_sum(queryset , field)
 		return {**a, **b,**c ,**d}
 
+	@decorators.weekly_average("total_minutes")
 	def monthly_sleep(self , month = None):
 		'''
 		Find Monthly Data for sleep aggregated as weekly average
@@ -383,19 +384,7 @@ class Customer(models.Model):
 			week = RawSQL("Week(start)",[])
 		)
 
-		vals = baseQ.values("date" , "week", "total_minutes")
-
-		weeks = set(vals.values_list("week" , flat = True))
-
-		data = []
-		for  e in weeks:
-			avg = vals.filter(week = e).aggregate(avg = models.Avg("total_minutes"))
-			d = {
-				"week" : e,
-				"avg" : avg['avg']
-			}
-			data.append(d)
-		return data
+		return baseQ.values("date" , "week", "total_minutes")
 
 	def monthly_sleep_aggregate(self):
 		today_date = datetime.datetime.today().date()
@@ -433,22 +422,47 @@ class Customer(models.Model):
 		baseQ = baseQ.values("day").annotate(total_minutes = models.Sum("minutes")).values("day", "total_minutes")
 		return self.aggregate_sleep(baseQ)
 
+	@decorators.weekly_average("total_quantity")
 	def monthly_water(self,month = None):
 		today_date = datetime.datetime.today().date()
 		baseQ = self.water_logs.annotate(
 			day = RawSQL("Date(saved)",[])
-		)
-		baseQ = baseQ.annotate(
-			week = RawSQL("Week(saved)",[])
 		)
 		baseQ = baseQ.filter(
 			day__lte = today_date,
 			day__gt = today_date - datetime.timedelta(days = 30)
 		)
 		baseQ = baseQ.values("day").annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))
+		baseQ = baseQ.annotate(
+			week = RawSQL("Week(saved)",[])
+		)
 		baseQ = countBottles(baseQ)
 		baseQ = countGlasses(baseQ)
-		return baseQ
+		return baseQ.values("day" , "week" , "total_quantity" , "bottles" , "glasses")
+
+	def monthly_water_aggregated(self):
+		today_date = datetime.datetime.today().date()
+		baseQ = self.water_logs.annotate(
+			day = RawSQL("Date(saved)",[])
+		)
+		baseQ = baseQ.filter(
+			day__lte = today_date,
+			day__gt = today_date - datetime.timedelta(days = 30)
+		)
+		baseQ = baseQ.values("day").annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))
+		baseQ = baseQ.annotate(
+			week = RawSQL("Week(saved)",[])
+		)
+		logs = baseQ.values("week" , "total_quantity")
+		def transform(field = "total_quantity"):
+			a = aggregate_avg(logs , field )
+			b = aggregate_sum(logs , field)
+			c = aggregate_min(logs , field)
+			d = aggregate_max(logs , field)
+			return { **a , **b , **c , **d}
+		return transform()
+
+		return logs
 
 	def weekly_water(self , week = None):
 		today_date = datetime.datetime.today().date()
@@ -462,9 +476,19 @@ class Customer(models.Model):
 		baseQ = baseQ.annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))
 		baseQ = countBottles(baseQ)
 		baseQ = countGlasses(baseQ)
-
-		baseQ  = baseQ.values("date" , "total_quantity" , "bottles" , "glasses")
+		baseQ = baseQ.values("date" , "total_quantity" , "bottles" , "glasses")
 		return baseQ
+
+	def weekly_water_aggregate(self):
+		weekly_logs = self.weekly_water()
+
+		def transform(field = "total_quantity"):
+			a = aggregate_avg(weekly_logs , field )
+			b = aggregate_sum(weekly_logs , field)
+			c = aggregate_min(weekly_logs , field)
+			d = aggregate_max(weekly_logs , field)
+			return { **a , **b , **c , **d}
+		return transform()
 
 	def last_day_sleep(self):
 		day = previous_day()

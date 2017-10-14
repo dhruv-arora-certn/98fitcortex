@@ -542,7 +542,7 @@ class SleepMonthlyAggregatedView(GenericAPIView):
 		if data.is_valid():
 			return data.data
 		return data.errors
-	
+
 	def get(self,request,*args ,**kwargs):
 		user = request.user
 		month = int(kwargs['month'])
@@ -558,19 +558,63 @@ class WaterWeeklyAggregateView(ListAPIView):
 	authentication_classes = [CustomerAuthentication]
 	permission_classes = [IsAuthenticated]
 	serializer_class = WaterLoggingWeeklySerializer
-	lookup_field = "week"	
+	lookup_field = "week"
 
-	def get_queryset(self):
-		return self.request.user.weekly_water(week = self.kwargs.get("week"))
+	def serializeWeeklyLogs(self , user):
+		weekly_logs = user.weekly_water()
+		data = WaterLoggingWeeklySerializer(
+			data = list(weekly_logs),
+			many = True
+		)
+		if data.is_valid():
+			return data.data
+		return data.errors
+
+	def serializeWeeklyAggregatedLogs(self , user):
+		weekly_aggregated_logs = user.weekly_water_aggregate()
+		data = WaterAggregationSerializer(data = weekly_aggregated_logs )
+		if data.is_valid():
+			return data.data
+		return data.errors
+
+	def get(self , request , *args , **kwargs):
+		user = request.user
+		weekly_logs = self.serializeWeeklyLogs(user)
+		weekly_aggregated_logs = self.serializeWeeklyAggregatedLogs(user)
+		return Response({
+			"logs" : weekly_logs,
+			"data" : weekly_aggregated_logs
+		})
 
 class WaterMonthlyAggregateView(ListAPIView):
 	authentication_classes = [CustomerAuthentication]
 	permission_classes = [IsAuthenticated]
 	serializer_class = WaterLoggingMonthlySerializer
-	lookup_field = "month"	
+	lookup_field = "month"
 
-	def get_queryset(self):
-		return self.request.user.monthly_water(month = self.kwargs.get("month"))
+	def serializeMonthlyLogs(self , user):
+		monthly_logs = user.monthly_water()
+		data = self.serializer_class(data = list(monthly_logs) , many = True)
+		if data.is_valid():
+			return data.data
+		return data.errors
+
+	def serializerMonthlyAggregatedLogs(self,user):
+		monthly_aggregated_logs = user.monthly_water_aggregated()
+		data  =  WaterAggregationSerializer(data = monthly_aggregated_logs)
+		if data.is_valid():
+			return data.data
+		return data.errors
+
+	def get(self , request , *args, **kwargs):
+		user = request.user
+		monthly_logs = self.serializeMonthlyLogs(user)
+		monthly_aggregated_logs = self.serializerMonthlyAggregatedLogs(user)
+
+		return Response({
+			"data" : monthly_aggregated_logs,
+			"logs" : monthly_logs
+		})
 
 class LastDaySleepView(GenericAPIView):
 	authentication_classes = [CustomerAuthentication]

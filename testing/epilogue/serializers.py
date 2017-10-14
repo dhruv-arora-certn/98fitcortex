@@ -144,13 +144,12 @@ class WaterLoggingModelSerializer(serializers.ModelSerializer):
 		fields = "__all__"
 
 class WaterLoggingSerializer(serializers.Serializer):
-	total_quantity = serializers.IntegerField()
-	glasses = serializers.IntegerField()
-	bottles = serializers.IntegerField()
+	avg  = serializers.FloatField()
 
-class WaterLoggingWeeklySerializer(WaterLoggingSerializer ):
+class WaterLoggingWeeklySerializer(serializers.Serializer ):
 	date =  serializers.DateField()
 	day = serializers.SerializerMethodField()
+	total_quantity = serializers.IntegerField()
 
 	def get_day(self , obj):
 		print(obj)
@@ -158,7 +157,7 @@ class WaterLoggingWeeklySerializer(WaterLoggingSerializer ):
 
 class WaterLoggingMonthlySerializer(WaterLoggingSerializer):
 	week = serializers.IntegerField()
-	
+
 class SleepLoggingWeeklySerializer(serializers.Serializer):
 	day = serializers.SerializerMethodField()
 	date = serializers.DateField()
@@ -173,6 +172,10 @@ class SleepAggregationSerializer(serializers.Serializer):
 	maximum = serializers.IntegerField()
 	average = serializers.FloatField()
 	total = serializers.IntegerField()
+
+class WaterAggregationSerializer(SleepAggregationSerializer):
+	#while this does not add any functionality , it keeps the namespacing good
+	pass
 
 class SleepLoggingMonthlySerializer(serializers.Serializer):
 	week = models.IntegerField()
