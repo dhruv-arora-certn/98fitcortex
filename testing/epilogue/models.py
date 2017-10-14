@@ -430,7 +430,7 @@ class Customer(models.Model):
 			day__lte = today_date,
 			day__gt = today_date - datetime.timedelta(days = 7)
 		)
-		baseQ = baseQ.annotate(total_minutes = models.Sum("minutes")).values("day", "total_minutes")
+		baseQ = baseQ.values("day").annotate(total_minutes = models.Sum("minutes")).values("day", "total_minutes")
 		return self.aggregate_sleep(baseQ)
 
 	def monthly_water(self,month = None):
