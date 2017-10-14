@@ -445,7 +445,7 @@ class Customer(models.Model):
 			day__lte = today_date,
 			day__gt = today_date - datetime.timedelta(days = 30)
 		)
-		baseQ = baseQ.annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))
+		baseQ = baseQ.values("day").annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))
 		baseQ = countBottles(baseQ)
 		baseQ = countGlasses(baseQ)
 		return baseQ
