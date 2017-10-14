@@ -16,7 +16,7 @@ def weekly_average(field):
 			vals = f(*args , **kwargs)
 			weeks = set(vals.values_list("week" , flat = True) )
 			data = []
-			for e in weeks:
+			for e in sorted(weeks):
 				avg = vals.filter(
 					week = e
 				).aggregate(
