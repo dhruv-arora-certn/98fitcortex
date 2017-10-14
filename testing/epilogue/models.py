@@ -355,14 +355,6 @@ class Customer(models.Model):
 	def map_aggregate(self , qs , obj):
 		return map( lambda x : obj(**x) , qs)
 
-	def aggregate_sleep(self,queryset):
-		field = "total_minutes"
-		a = aggregate_avg(queryset , field)
-		b = aggregate_min(queryset , field)
-		c = aggregate_max(queryset , field)
-		d = aggregate_sum(queryset , field)
-		return {**a, **b,**c ,**d}
-
 	@decorators.weekly_average("total_minutes")
 	def monthly_sleep(self , month = None):
 		'''
@@ -387,6 +379,7 @@ class Customer(models.Model):
 
 		return baseQ.values("date" , "week", "total_minutes")
 
+	@decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_minutes")
 	def monthly_sleep_aggregate(self):
 		today_date = datetime.datetime.today().date()
 		baseQ = self.sleep_logs.annotate(
@@ -402,7 +395,7 @@ class Customer(models.Model):
 		baseQ = baseQ.values("date").annotate(
 			total_minutes = models.Sum("minutes")
 		)
-		return self.aggregate_sleep(baseQ)
+		return baseQ
 
 	def weekly_sleep(self,week = None, mapped = False):
 		today_date = datetime.datetime.today().date()
@@ -414,6 +407,7 @@ class Customer(models.Model):
 			return self.map_aggregate(baseQ , SleepWeekly )
 		return baseQ
 
+	@decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_minutes")
 	def weekly_sleep_aggregated(self , week = None):
 		today_date = datetime.datetime.today().date()
 		baseQ = self.sleep_logs.annotate(day = RawSQL("Date(start)" , [])).filter(
@@ -421,7 +415,7 @@ class Customer(models.Model):
 			day__gt = today_date - datetime.timedelta(days = 7)
 		)
 		baseQ = baseQ.values("day").annotate(total_minutes = models.Sum("minutes")).values("day", "total_minutes")
-		return self.aggregate_sleep(baseQ)
+		return baseQ
 
 	@decorators.weekly_average("total_quantity")
 	def monthly_water(self,month = None):
@@ -442,6 +436,7 @@ class Customer(models.Model):
 		baseQ = baseQ.order_by("-week")
 		return baseQ.values("day" , "week" , "total_quantity" , "bottles" , "glasses")
 
+	@decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_quantity")
 	def monthly_water_aggregated(self):
 		today_date = datetime.datetime.today().date()
 		baseQ = self.water_logs.annotate(
@@ -456,14 +451,6 @@ class Customer(models.Model):
 			week = RawSQL("Week(saved)",[])
 		)
 		logs = baseQ.values("week" , "total_quantity")
-		def transform(field = "total_quantity"):
-			a = aggregate_avg(logs , field )
-			b = aggregate_sum(logs , field)
-			c = aggregate_min(logs , field)
-			d = aggregate_max(logs , field)
-			return { **a , **b , **c , **d}
-		return transform()
-
 		return logs
 
 	def weekly_water(self , week = None):
@@ -481,16 +468,11 @@ class Customer(models.Model):
 		baseQ = baseQ.values("date" , "total_quantity" , "bottles" , "glasses")
 		return baseQ
 
+	@decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_quantity")
 	def weekly_water_aggregate(self):
 		weekly_logs = self.weekly_water()
+		return weekly_logs
 
-		def transform(field = "total_quantity"):
-			a = aggregate_avg(weekly_logs , field )
-			b = aggregate_sum(weekly_logs , field)
-			c = aggregate_min(weekly_logs , field)
-			d = aggregate_max(weekly_logs , field)
-			return { **a , **b , **c , **d}
-		return transform()
 
 	def last_day_sleep(self):
 		day = previous_day()
@@ -553,7 +535,7 @@ class BusinessCustomer(models.Model):
 	mobile_number = models.CharField(max_length = 11)
 	created_on = models.DateTimeField()
 	signup_completed = models.CharField( max_length = 10)
-	
+
 	@property
 	def name(self):
 		return self.business_owner_first_name

@@ -19,16 +19,16 @@ def get_year(date = datetime.now()):
 def get_month(date = datetime.now()):
 	return date.month
 
-def aggregate_avg(qs,field):
+def aggregate_avg(field , qs):
 	return qs.aggregate(average =  models.Avg(field))
 
-def aggregate_min(qs,field):
+def aggregate_min(field,qs):
 	return qs.aggregate( minimum =  models.Min(field))
 
-def aggregate_max(qs,field):
+def aggregate_max(field,qs):
 	return qs.aggregate( maximum = models.Max(field))
 
-def aggregate_sum(qs,field):
+def aggregate_sum(field,qs):
 	return qs.aggregate(total = models.Sum(field))
 
 def previous_day():

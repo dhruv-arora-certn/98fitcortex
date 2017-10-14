@@ -53,3 +53,15 @@ def monthly_average(field):
 		return wrapper
 	return decorator
 
+def map_transform_queryset(iterable , *fields):
+	def decorator(f):
+		@functools.wraps(f)
+		def mapper(*args , **kwargs):
+			l = map(lambda x : functools.partial(x , *fields) , iterable)
+			val = f(*args , **kwargs)
+			d = {}
+			for e in l:
+				d.update(**e(val))
+			return d
+		return mapper
+	return decorator
