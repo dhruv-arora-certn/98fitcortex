@@ -383,6 +383,7 @@ class Customer(models.Model):
 		baseQ = baseQ.annotate(
 			week = RawSQL("Week(start)",[])
 		)
+		baseQ = baseQ.order_by("week")
 
 		return baseQ.values("date" , "week", "total_minutes")
 
@@ -438,6 +439,7 @@ class Customer(models.Model):
 		)
 		baseQ = countBottles(baseQ)
 		baseQ = countGlasses(baseQ)
+		baseQ = baseQ.order_by("week")
 		return baseQ.values("day" , "week" , "total_quantity" , "bottles" , "glasses")
 
 	def monthly_water_aggregated(self):
