@@ -490,9 +490,15 @@ class Customer(models.Model):
 		)
 
 		baseQ = baseQ.values("date").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration"))
-		baseQ = baseQ.values("date" , "total_cals" , "total_steps" , "total_distance" , "total_duration")
+		baseQ = baseQ.values("date" , "total_steps" )
 		return baseQ
 
+	@decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_steps")
+	def weekly_activity_aggregate(self):
+		weekly_logs = self.weekly_activity()
+		return weekly_logs
+
+	@decorators.weekly_average("total_steps")
 	def monthly_activity(self,month = None):
 		today_date = datetime.datetime.today().date()
 		baseQ = self.activity_logs.annotate(
@@ -502,10 +508,28 @@ class Customer(models.Model):
 			day__lte = today_date,
 			day__gt = today_date - datetime.timedelta(days = 30)
 		)
-		baseQ = baseQ.annotate(year = RawSQL("Year(start)",[])).filter(year = year).annotate(week = RawSQL("Week(start)",[])).filter(week = week)
 
 		baseQ = baseQ.values("day").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration"))
-		baseQ = baseQ.values("day" , "total_cals" , "total_steps" , "total_distance" , "total_duration")
+		baseQ = baseQ.annotate(week = RawSQL("Week(start)",[]))
+		baseQ = baseQ.values("day" , "week" ,"total_steps")
+		return baseQ
+
+	@decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_steps")
+	def monthly_activity_aggregate(self):
+		today_date = datetime.datetime.today().date()
+		baseQ = self.activity_logs.annotate(
+			date = RawSQL("Date(start)",[])
+		)
+		baseQ = baseQ.filter(
+			date__lte = today_date,
+			date__gt = today_date - datetime.timedelta(days = 7)
+		)
+		baseQ = baseQ.annotate(
+			week = RawSQL("Week(start)" , [])
+		)
+		baseQ = baseQ.values("date").annotate(
+			total_steps = models.Sum("steps")
+		)
 		return baseQ
 
 	@property
