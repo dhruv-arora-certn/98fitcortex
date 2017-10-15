@@ -197,7 +197,11 @@ class MonthlyActivitySerializer(ActivitySerializer):
 	week = serializers.IntegerField()
 
 class WeeklyActivitySerializer(ActivitySerializer):
-	day = serializers.IntegerField()
+	date = serializers.IntegerField()
+	day = serializers.SerializerMethodField()
+
+	def get_day(self , obj):
+		return obj['date'].strftime("%a")
 
 class SleepLogginSerializer(serializers.ModelSerializer):
 	class Meta:
