@@ -189,9 +189,9 @@ class SleepPreviousDaySerializer(serializers.Serializer):
 
 class ActivitySerializer(serializers.Serializer):
 	total_steps = serializers.IntegerField()
-	total_cals = serializers.IntegerField()
-	total_distance = serializers.IntegerField()
-	total_duration = serializers.IntegerField()
+	#total_cals = serializers.IntegerField()
+	#total_distance = serializers.IntegerField()
+	#total_duration = serializers.IntegerField()
 
 class MonthlyActivitySerializer(ActivitySerializer):
 	week = serializers.IntegerField()
