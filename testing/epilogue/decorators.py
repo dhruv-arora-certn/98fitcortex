@@ -2,6 +2,14 @@ import functools
 import datetime
 
 from django.db import models 
+
+def last_days(days = 7):
+	today = datetime.datetime.today().date()
+	while days >= 0:
+		val =  today - datetime.timedelta(days = days)
+		days -= 1
+		yield val
+
 def add_today(f):
 	@functools.wraps(f)
 	def wrapper(*args , **kwargs):
@@ -16,7 +24,17 @@ def add_empty_day_in_week(defaults):
 			vals = f(*args , **kwargs)
 			days = set(vals.values_list("date" , flat = True))
 			data = []
-			pass	
+			for e in last_days():
+				if e not in days:
+					d = {
+						"date" : e,
+						**defaults,
+					}
+					data.append(d)
+			return data + list(vals)
+		return wrapper
+	return decorator
+
 def weekly_average(field):
 	def decorator(f):
 		@functools.wraps(f)

@@ -397,6 +397,7 @@ class Customer(models.Model):
 		)
 		return baseQ
 
+	@decorators.add_empty_day_in_week({"total_minutes" : 0})
 	def weekly_sleep(self,week = None, mapped = False):
 		today_date = datetime.datetime.today().date()
 		baseQ = self.sleep_logs.annotate(date = RawSQL("Date(start)" , [])).filter(
@@ -453,7 +454,11 @@ class Customer(models.Model):
 		logs = baseQ.values("week" , "total_quantity")
 		return logs
 
-	def weekly_water(self , week = None):
+	@decorators.add_empty_day_in_week({"total_quantity" : 0})
+	def weekly_water(self):
+		return self._weekly_water()
+
+	def _weekly_water(self , week = None):
 		today_date = datetime.datetime.today().date()
 		baseQ = self.water_logs.annotate(
 			date = RawSQL("Date(saved)",[])
@@ -470,7 +475,7 @@ class Customer(models.Model):
 
 	@decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_quantity")
 	def weekly_water_aggregate(self):
-		weekly_logs = self.weekly_water()
+		weekly_logs = self._weekly_water()
 		return weekly_logs
 
 
@@ -479,7 +484,11 @@ class Customer(models.Model):
 		baseQ = self.sleep_logs.last()
 		return baseQ
 
-	def weekly_activity(self,week = None):
+	@decorators.add_empty_day_in_week({"total_steps" : 0})
+	def weekly_activity(self):
+		return self._weekly_activity()
+
+	def _weekly_activity(self,week = None):
 		today_date = datetime.datetime.today().date()
 		baseQ = self.activity_logs.annotate(
 			date = RawSQL("Date(start)",[])
@@ -495,7 +504,7 @@ class Customer(models.Model):
 
 	@decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_steps")
 	def weekly_activity_aggregate(self):
-		weekly_logs = self.weekly_activity()
+		weekly_logs = self._weekly_activity()
 		return weekly_logs
 
 	@decorators.weekly_average("total_steps")
