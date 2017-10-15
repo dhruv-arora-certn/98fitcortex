@@ -177,6 +177,10 @@ class WaterAggregationSerializer(SleepAggregationSerializer):
 	#while this does not add any functionality , it keeps the namespacing good
 	pass
 
+class ActivityAggregationSerializer(SleepAggregationSerializer):
+	#while this does not add any functionality , it keeps the namespacing good
+	pass
+
 class SleepLoggingMonthlySerializer(serializers.Serializer):
 	week = models.IntegerField()
 	total_minutes = models.IntegerField()
@@ -193,7 +197,8 @@ class ActivitySerializer(serializers.Serializer):
 	#total_distance = serializers.IntegerField()
 	#total_duration = serializers.IntegerField()
 
-class MonthlyActivitySerializer(ActivitySerializer):
+class MonthlyActivitySerializer(serializers.Serializer):
+	avg = serializers.FloatField()
 	week = serializers.IntegerField()
 
 class WeeklyActivitySerializer(ActivitySerializer):

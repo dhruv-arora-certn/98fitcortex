@@ -620,10 +620,10 @@ class LastDaySleepView(GenericAPIView):
 	authentication_classes = [CustomerAuthentication]
 	permission_classes = [IsAuthenticated]
 	serializer_class = SleepLogginSerializer
-	
+
 	def get_queryset(self):
 		return self.request.user.last_day_sleep()
-	
+
 	def get(self,request):
 		data = self.get_queryset()
 		s = self.serializer_class(data)
@@ -635,14 +635,57 @@ class WeeklyActivityView(ListAPIView):
 	serializer_class = WeeklyActivitySerializer
 	lookup_field = "week"
 
-	def get_queryset(self):
-		return self.request.user.weekly_activity(week = self.kwargs.get("week"))
+	def serializeWeeklyLogs(self , user):
+		logs = user.weekly_activity()
+		data = self.serializer_class(data = list(logs) ,many = True)
+		if data.is_valid():
+			return data.data
+		return data.errors
+
+	def serializerAggregatedLogs(self , user):
+		aggregated_logs = user.weekly_activity_aggregate()
+		data = ActivityAggregationSerializer(data = aggregated_logs)
+		if data.is_valid():
+			return data.data
+		return data.errors
+
+	def get(self , request , *args , **kwargs):
+		user = request.user
+		weekly_logs = self.serializeWeeklyLogs(user)
+		aggregated_logs = self.serializerAggregatedLogs(user)
+		return Response({
+			"logs" : weekly_logs,
+			"data" : aggregated_logs
+		})
 
 class MonthlyActivityView(ListAPIView):
 	authentication_classes = [CustomerAuthentication]
 	permission_classes = [IsAuthenticated]
 	serializer_class = MonthlyActivitySerializer
 	lookup_field = "month"
+
+	def serializeWeeklyLogs(self , user):
+		logs = user.monthly_activity()
+		data = self.serializer_class(data = list(logs) ,many = True)
+		if data.is_valid():
+			return data.data
+		return data.errors
+
+	def serializerAggregatedLogs(self , user):
+		aggregated_logs = user.monthly_activity_aggregate()
+		data = ActivityAggregationSerializer(data = aggregated_logs)
+		if data.is_valid():
+			return data.data
+		return data.errors
+
+	def get(self , request , *args , **kwargs):
+		user = request.user
+		weekly_logs = self.serializeWeeklyLogs(user)
+		aggregated_logs = self.serializerAggregatedLogs(user)
+		return Response({
+			"logs" : weekly_logs,
+			"data" : aggregated_logs
+		})
 	
 	def get_queryset(self):
 		return self.request.user.monthly_activity(month = self.kwargs.get("month"))
