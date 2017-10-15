@@ -197,7 +197,7 @@ class MonthlyActivitySerializer(ActivitySerializer):
 	week = serializers.IntegerField()
 
 class WeeklyActivitySerializer(ActivitySerializer):
-	date = serializers.IntegerField()
+	date = serializers.DateField()
 	day = serializers.SerializerMethodField()
 
 	def get_day(self , obj):
