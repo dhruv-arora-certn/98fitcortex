@@ -9,6 +9,14 @@ def add_today(f):
 		return f(*args , **kwargs)
 	return wrapper
 
+def add_empty_day_in_week(defaults):
+	def decorator(f):
+		@functools.wraps(f)
+		def wrapper(*args , **kwargs):
+			vals = f(*args , **kwargs)
+			days = set(vals.values_list("date" , flat = True))
+			data = []
+			pass	
 def weekly_average(field):
 	def decorator(f):
 		@functools.wraps(f)
@@ -16,7 +24,14 @@ def weekly_average(field):
 			vals = f(*args , **kwargs)
 			weeks = set(vals.values_list("week" , flat = True) )
 			data = []
-			for e in sorted(weeks):
+			curr_week = datetime.datetime.now().isocalendar()[1]
+			for e in range(curr_week - 6 , curr_week +1):
+				if e not in weeks:
+					data.append({
+						"week" : e,
+						"avg" : 0
+					})
+					continue
 				avg = vals.filter(
 					week = e
 				).aggregate(
