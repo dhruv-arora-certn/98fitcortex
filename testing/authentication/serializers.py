@@ -147,9 +147,9 @@ class BatraGoogleSerializer(BaseSocialSerializer):
 	email = serializers.EmailField()
 	name = serializers.CharField()
 	picture = serializers.CharField()
-	url = serializers.URLField()
+	url = serializers.URLField(required = False)
 	source = serializers.CharField(required = False)
-	language = serializers.CharField()
+	language = serializers.CharField(required = False , default = "en")
 
 	def validate_language(self , lang):
 		if lang not in ("en" , "hi"):
@@ -162,7 +162,6 @@ class BatraGoogleSerializer(BaseSocialSerializer):
 	def create(self,validated_data):
 		created = super().create(validated_data)
 		email = validated_data['email']
-		url = validated_data['url']
 		language = validated_data['language']
 
 		created.customer.first_name = validated_data['name']
@@ -173,5 +172,6 @@ class BatraGoogleSerializer(BaseSocialSerializer):
 			campaign = "navratri",
 			language = language
 		)
-		navratri_signup.send(sender = LoginCustomer , email = email , url = url , lang = language)
+		#if url:
+		#	navratri_signup.send(sender = LoginCustomer , email = email , url = url , lang = language)
 		return created
