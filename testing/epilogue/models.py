@@ -484,7 +484,7 @@ class Customer(models.Model):
 		baseQ = self.sleep_logs.last()
 		return baseQ
 
-	@decorators.add_empty_day_in_week({"total_steps" : 0})
+	@decorators.add_empty_day_in_week({"total_steps" : 0 , "total_distance" : 0 , "total_cals" : 0 , "total_duration" : 0})
 	def weekly_activity(self):
 		return self._weekly_activity()
 
@@ -499,7 +499,7 @@ class Customer(models.Model):
 		)
 
 		baseQ = baseQ.values("date").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration"))
-		baseQ = baseQ.values("date" , "total_steps" )
+		baseQ = baseQ.values("date" , "total_steps"  , "total_cals" , "total_distance" , "total_duration")
 		return baseQ
 
 	@decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_steps")
