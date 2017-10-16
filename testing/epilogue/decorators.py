@@ -3,7 +3,7 @@ import datetime
 
 from django.db import models 
 
-def last_days(days = 7):
+def last_days(days = 6):
 	today = datetime.datetime.today().date()
 	while days >= 0:
 		val =  today - datetime.timedelta(days = days)
