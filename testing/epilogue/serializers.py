@@ -162,6 +162,7 @@ class SleepLoggingWeeklySerializer(serializers.Serializer):
 	day = serializers.SerializerMethodField()
 	date = serializers.DateField()
 	total_minutes = serializers.IntegerField()
+	plotting_value = serializers.FloatField()
 
 	def get_day(self , obj):
 		print(obj)
@@ -191,19 +192,25 @@ class SleepPreviousDaySerializer(serializers.Serializer):
 	end = serializers.DateTimeField()
 	total_minutes = serializers.IntegerField()
 
-class ActivitySerializer(serializers.Serializer):
+class PlottingSerializer(serializers.Serializer):
+	plotting_value = serializers.FloatField()
+
+class ActivitySerializer(serializers.Serializer ):
 	total_steps = serializers.IntegerField()
 	total_cals = serializers.IntegerField()
 	total_distance = serializers.IntegerField()
 	total_duration = serializers.IntegerField()
+	plotting_value = serializers.FloatField()
 
 class MonthlyActivitySerializer(serializers.Serializer):
 	avg = serializers.FloatField()
 	week = serializers.IntegerField()
+	plotting_value = serializers.FloatField()
 
 class WeeklyActivitySerializer(ActivitySerializer):
 	date = serializers.DateField()
 	day = serializers.SerializerMethodField()
+	plotting_value = serializers.FloatField()
 
 	def get_day(self , obj):
 		return obj['date'].strftime("%a")

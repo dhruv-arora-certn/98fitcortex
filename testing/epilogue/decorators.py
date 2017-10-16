@@ -35,6 +35,19 @@ def add_empty_day_in_week(defaults):
 		return wrapper
 	return decorator
 
+def scale_field(field):
+	def decorator(fn):
+		@functools.wraps(fn)
+		def wrapper(*args , **kwargs):
+			returned_value = fn(*args , **kwargs)
+			field_values = (e.get(field) for e in returned_value)
+			scaling_factor = 100/(max(100 ,max(field_values)))
+			for e in returned_value:
+				e['plotting_value'] = e.get(field , 0) * scaling_factor
+			return returned_value
+		return wrapper
+	return decorator
+
 def weekly_average(field):
 	def decorator(f):
 		@functools.wraps(f)
