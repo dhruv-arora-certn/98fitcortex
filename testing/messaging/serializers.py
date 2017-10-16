@@ -14,8 +14,9 @@ class PhoneSerializer(serializers.Serializer):
 
 class SMSSerializer(PhoneSerializer):
 	phone = serializers.CharField()
-	url = serializers.URLField()
-	lang = serializers.CharField()
+	url = serializers.URLField(required = False , default = None)
+	lang = serializers.CharField(required = False , default = "")
+	source = serializers.CharField(required = False , default = "mars")
 
 	def validate_lang(self , lang):
 		if lang not in ("en" , "hi"):
@@ -36,19 +37,25 @@ class SMSSerializer(PhoneSerializer):
 		return "Thank you for subscribing for the 9 day Navratri Diet Plan on 98Fit.com. Check & follow your plan anytime at: %s"%s_url
 
 	def save(self ):
-		url = self.shorten_url(self.validated_data['url'])
+		url = ""
 		message = self.get_message(url)
-		sms = SMS(number = self.validated_data['phone'] , message = message)
+
+		if self.validated_data.get("url" , None):
+			url = self.shorten_url(self.validated_data['url'])
+			#sms = SMS(number = self.validated_data['phone'] , message = message)
+
 		s = SMSTrackingSerializer(data = {
 			'phone' : self.validated_data['phone'],
-			'message' : message 
+			'message' : message,
+			'source' : self.validated_data.get("source" , "mars")
 		})
 		s.is_valid(raise_exception = True)
-		s.save()
-		sms.send()
+		return s.save()
+		#if url:
+		#	sms.send()
 
 class SMSTrackingSerializer(PhoneSerializer , serializers.ModelSerializer):
 	class Meta:
 		fields = "__all__"
 		model = SMSTracking
-	
+
