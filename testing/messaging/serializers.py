@@ -15,7 +15,7 @@ class PhoneSerializer(serializers.Serializer):
 class SMSSerializer(PhoneSerializer):
 	phone = serializers.CharField()
 	url = serializers.URLField(required = False , default = None)
-	lang = serializers.CharField(required = False , default = "")
+	lang = serializers.CharField(required = False , default = "en")
 	source = serializers.CharField(required = False , default = "mars")
 
 	def validate_lang(self , lang):

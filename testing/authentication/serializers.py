@@ -147,7 +147,7 @@ class BatraGoogleSerializer(BaseSocialSerializer):
 	email = serializers.EmailField()
 	name = serializers.CharField()
 	picture = serializers.CharField()
-	url = serializers.URLField(required = False)
+	url = serializers.URLField(required = False , default = "")
 	source = serializers.CharField(required = False)
 	language = serializers.CharField(required = False , default = "en")
 
