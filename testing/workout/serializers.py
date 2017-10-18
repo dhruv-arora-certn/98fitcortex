@@ -33,6 +33,10 @@ class ExerciseSerialzier(serializers.Serializer):
 	description = serializers.CharField()
 	duration = serializers.IntegerField()
 	duration_unit = serializers.IntegerField()
+	equipment = serializers.CharField()
+	image = serializers.URLField()
+	sets = serializers.IntegerField()
+	reps = serializers.IntegerField()
 
 	def get_name(self ,obj):
 		pass
@@ -44,6 +48,18 @@ class ExerciseSerialzier(serializers.Serializer):
 		pass
 
 	def get_duration_unit(self ,obj):
+		pass
+
+	def get_equipment(self ,obj):
+		pass
+
+	def get_image(self , obj):
+		pass
+
+	def get_sets(self , obj):
+		pass
+
+	def get_reps(self , obj):
 		pass
 
 class WorkoutSerializer(serializers.Serializer):
