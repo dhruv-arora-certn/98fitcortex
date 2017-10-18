@@ -6,6 +6,7 @@ from rest_framework import permissions
 from epilogue.authentication import CustomerAuthentication
 from workout.models import *
 from workout.serializers import *
+from epilogue.utils import get_week , get_day
 import random
 
 def shuffle(qs):
@@ -52,3 +53,12 @@ class CoolDownView(generics.ListAPIView):
 
 	def get_queryset(self):
 		return shuffle(WarmupCoolDownMobilityDrillExercise.objects.all())
+
+class WorkoutView(generics.GenericAPIView):
+	serializer_class = WorkoutSerializer
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [permissions.IsAuthenticated]
+
+	def get_queryset(self):
+		week_id = self.kwargs('week_id' , get_week())
+		day = self.kwargs('day',get_day() )

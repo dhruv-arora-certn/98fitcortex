@@ -9,7 +9,7 @@ class WarmupSerializer(serializers.ModelSerializer):
 
 class CardioTimeBasedSerializer(serializers.ModelSerializer):
 	class Meta:
-		model = CardioTimeBasedExercise 
+		model = CardioTimeBasedExercise
 		fields = "__all__"
 
 class NoviceCoreStrengthiningExerciseSerializer(serializers.ModelSerializer):
@@ -26,3 +26,30 @@ class CoolDownSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = WarmupCoolDownMobilityDrillExercise
 		fields = "__all__"
+
+
+class ExerciseSerialzier(serializers.Serializer):
+	name = serializers.CharField()
+	description = serializers.CharField()
+	duration = serializers.IntegerField()
+	duration_unit = serializers.IntegerField()
+
+	def get_name(self ,obj):
+		pass
+
+	def get_description(self ,obj):
+		pass
+
+	def get_duration(self ,obj):
+		pass
+
+	def get_duration_unit(self ,obj):
+		pass
+
+class WorkoutSerializer(serializers.Serializer):
+	warmup = ExerciseSerialzier(many = True , read_only = True)
+	cardio = ExerciseSerialzier(many = True , read_only = True)
+	corestrenghtening = ExerciseSerialzier(many = True , read_only = True)
+	resistance_training = ExerciseSerialzier(many = True , read_only = True)
+	cooldown = ExerciseSerialzier(many = True , read_only = True)
+	stretching = ExerciseSerialzier(many = True , read_only = True)

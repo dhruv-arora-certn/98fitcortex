@@ -302,7 +302,7 @@ class Customer(models.Model):
 	@property
 	def user_week(self):
 		return get_week() - get_week(self.create_on) + 1
-			
+
 
 
 	@property
@@ -355,7 +355,6 @@ class Customer(models.Model):
 	def map_aggregate(self , qs , obj):
 		return map( lambda x : obj(**x) , qs)
 
-	@decorators.scale_field("avg")
 	@decorators.weekly_average("total_minutes")
 	def monthly_sleep(self , month = None):
 		'''
@@ -398,7 +397,6 @@ class Customer(models.Model):
 		)
 		return baseQ
 
-	@decorators.scale_field("total_minutes")
 	@decorators.add_empty_day_in_week({"total_minutes" : 0})
 	def weekly_sleep(self,week = None, mapped = False):
 		today_date = datetime.datetime.today().date()
@@ -406,6 +404,7 @@ class Customer(models.Model):
 			date__lte = today_date , date__gt = today_date - datetime.timedelta(days = 7)
 		)
 		baseQ = baseQ.values("date").annotate(total_minutes = models.Sum("minutes")).values("date","total_minutes")
+		baseQ = baseQ.order_by("date")
 		if mapped:
 			return self.map_aggregate(baseQ , SleepWeekly )
 		return baseQ
@@ -420,7 +419,6 @@ class Customer(models.Model):
 		baseQ = baseQ.values("day").annotate(total_minutes = models.Sum("minutes")).values("day", "total_minutes")
 		return baseQ
 
-	@decorators.scale_field("avg")
 	@decorators.weekly_average("total_quantity")
 	def monthly_water(self,month = None):
 		today_date = datetime.datetime.today().date()
@@ -456,8 +454,7 @@ class Customer(models.Model):
 		)
 		logs = baseQ.values("week" , "total_quantity")
 		return logs
-	
-	@decorators.scale_field("total_quantity")
+
 	@decorators.add_empty_day_in_week({"total_quantity" : 0})
 	def weekly_water(self):
 		return self._weekly_water()
@@ -488,7 +485,6 @@ class Customer(models.Model):
 		baseQ = self.sleep_logs.last()
 		return baseQ
 
-	@decorators.scale_field("total_steps")
 	@decorators.add_empty_day_in_week({"total_steps" : 0 , "total_distance" : 0 , "total_cals" : 0 , "total_duration" : 0})
 	def weekly_activity(self):
 		return self._weekly_activity()
@@ -512,7 +508,6 @@ class Customer(models.Model):
 		weekly_logs = self._weekly_activity()
 		return weekly_logs
 
-	@decorators.scale_field("avg")
 	@decorators.weekly_average("total_steps")
 	def monthly_activity(self,month = None):
 		today_date = datetime.datetime.today().date()
