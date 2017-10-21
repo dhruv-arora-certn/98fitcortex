@@ -20,6 +20,7 @@ class Generator():
 
 	@get_category_decorator(NoviceDays)
 	def _get_novice_days(self):
+		pass
 
 	@get_category_decorator(BeginnerDays)
 	def _get_beginner_days(self):

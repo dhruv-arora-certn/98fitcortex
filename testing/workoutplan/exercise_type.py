@@ -21,7 +21,7 @@ class Warmup(Base):
 		self.user = user
 		self.mainExercise = mainExercise
 		self.bodyPartInFocus = bodyPartInFocus
-
+		self.selected = []
 
 	def get_intensity_filter(self):
 		if self.user.is_novice():
@@ -94,6 +94,10 @@ class Warmup(Base):
 
 	def time_based_cardio(self):
 		pass
+
+	def build(self):
+		self.selected = self.normal_warmup_cooldown()
+		return self
 
 
 class Main(Base):
