@@ -28,8 +28,12 @@ class ExerciseDay:
 
 	def buildStretching(self):
 		if self.resistance_filter:
-			self.rt_stretching = exercise_type.Stretching( self.user , self.resistance_filter)
+			self.rt_stretching = exercise_type.Stretching( self.user , resistance_filter = self.resistance_filter)
 			self.rt_stretching.build()
+
+		if self.make_cardio:
+			self.cardio_stretching = exercise_type.Stretching(self.user , cardio = True)
+			self.cardio_stretching.build()
 
 	def build(self):
 		self.buildMain()

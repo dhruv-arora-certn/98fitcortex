@@ -11,6 +11,10 @@ class ChestAndBackFilter():
 					"count" : 5,
 				}
 			]
+	chest = {
+					"filter" : UpperBody.chest(),
+					"count" : 5,
+			}
 
 class ShouldersAndArmsFilter():
 	filters = [

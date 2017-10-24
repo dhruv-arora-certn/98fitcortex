@@ -1,5 +1,8 @@
 import random
 import operator
+import itertools
+import enum
+import collections
 
 from workout import models
 from workoutplan import exercise
@@ -142,6 +145,10 @@ class Main(Base):
 		self.cardio = self.buildCardio()
 		self.rt = self.buildRT()
 
+	@property
+	def selected(self):
+		return itertools.chain([self.cardio] ,  self.rt)
+
 
 class CoolDown(Base):
 	_type = "cooldown"
@@ -150,9 +157,10 @@ class CoolDown(Base):
 
 class Stretching(Base):
 	_type = "stretching"
-	def __init__(self , user , resistance_filter = None):
+	def __init__(self , user , resistance_filter = None , cardio = False):
 		self.user = user
 		self.resistance_filter = resistance_filter
+		self.cardio = cardio
 
 	def build_rt(self):
 		l = []
@@ -163,9 +171,46 @@ class Stretching(Base):
 			)
 			stretching.build()
 			l.extend(stretching.selected)
-		return stretching.selected
+		return l
+
+	def build_cardio(self):
+		filter_tuple = collections.namedtuple("filter_" , ["filter" , "count"])
+
+		class CardioStretchingFilter(enum.Enum):
+			QUADS = filter_tuple(
+				filter = Q(muscle_group_name = "Quadriceps"),
+				count = 1
+			)
+			CHEST = filter_tuple(
+				filter = Q(muscle_group_name  = "Chest"),
+				count = 1
+			)
+			GLUTES = filter_tuple(
+				filter = Q(muscle_group_name = "Glutes"),
+				count = 1
+			)
+			BACK = filter_tuple(
+				filter = Q(muscle_group_name = "Back"),
+				count = 1
+			)
+		#return CardioStretchingFilter
+		for e in CardioStretchingFilter:
+			l = []
+			stretching = exercise.Stretching(
+				user = self.user,
+				filterToUse = e.value.filter
+			)
+			stretching.build()
+			print(l)
+			l.extend(stretching.selected)
+		return l
+
 
 	def build(self):
-		self.rt_stretching = self.build_rt()
+		if self.resistance_filter:
+			self.rt_stretching = self.build_rt()
+
+		if self.cardio:
+			self.cardio_stretching = self.build_cardio()
 
 
