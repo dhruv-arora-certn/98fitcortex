@@ -5,6 +5,8 @@ from django.db.models import Q
 from workout import models
 from workoutplan.utils import Luggage
 
+random.seed()
+
 class ExerciseBase:
 
 	def __init__(self , user , duration):
@@ -39,7 +41,7 @@ class TimeBasedCardio(ExerciseBase):
 		self.model = models.CardioTimeBasedExercise
 
 	def build(self):
-		self.selected = random.choice(self.get_items())
+		self.selected.append(random.choice(self.get_items()))
 		return self
 
 class ResistanceTraining(ExerciseBase):

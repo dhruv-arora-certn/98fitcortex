@@ -20,9 +20,9 @@ class Warmup(Base):
 	_type = "warmup"
 	duration = 300
 
-	def __init__(self , user , mainExercise = None , bodyPartInFocus = Q()):
+	def __init__(self , user , mainCardioType = None , bodyPartInFocus = Q()):
 		self.user = user
-		self.mainExercise = mainExercise
+		self.mainCardioType = mainCardioType
 		self.bodyPartInFocus = bodyPartInFocus
 		self.selected = []
 
@@ -65,9 +65,10 @@ class Warmup(Base):
 		Self is returned instead
 		This will enable me to perform chaining and allow subsequent functions to use the attribute
 		'''
-		if isinstance(self.mainExercise.cardioType, exercise.FloorBasedCardio):
-			self.__funcToCall = self.floor_based_cardio
-		return self
+		if isinstance(self.mainCardioType, exercise.FloorBasedCardio):
+			return self.floor_based_cardio
+		elif isinstance(self.mainCardioType , exercise.TimeBasedCardio):
+			return self.time_based_cardio
 
 	def floor_based_cardio(self):
 		'''

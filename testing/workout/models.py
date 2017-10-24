@@ -16,7 +16,7 @@ class BaseExercise():
 class CardioFloorExercise(BaseExercise,models.Model):
 	workout_name = models.CharField(max_length=250, blank=True, null=True)
 	reps = models.IntegerField(blank=True, null=True)
-	duration = models.IntegerField(max_length=100, blank=True, null=True)
+	duration = models.IntegerField( blank=True, null=True)
 	swing1 = models.BooleanField(default = True)
 	home = models.BooleanField(default = True)
 	gym = models.BooleanField(default = True)
@@ -29,7 +29,7 @@ class CardioFloorExercise(BaseExercise,models.Model):
 	
 class CardioTimeBasedExercise(BaseExercise,models.Model):
 	workout_name = models.CharField(max_length=250, blank=True, null=True)
-	duration = models.CharField(max_length=250, blank=True, null=True)
+	duration = models.IntegerField( blank=True, null=True)
 	home = models.BooleanField(default = True)
 	gym = models.BooleanField(default = True)
 	machine_required = models.BooleanField(default = True)

@@ -38,7 +38,7 @@ class Generator():
 		Ideally should be a utility function, but i realized that after writing it and as of right now, too lazy to move it out. Hence
 		a classmethod
 		'''
-		day_range =  {1,2,3,4,5,6,7}
+		day_range =  {1,2,3,4,5}
 		cardio_days = set(random.sample(
 			day_range,
 			days.cardio
@@ -83,7 +83,7 @@ class Generator():
 		return day in self.conditional_days.cardio
 
 	def generate(self):
-		days = {1,2,3,4,5,6,7}
+		days = {1,2,3,4,5}
 
 		for e in days:
 			resistance_filter = self.get_resistance_filter_for_day(e)
