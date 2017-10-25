@@ -93,6 +93,8 @@ class Generator():
 		return self
 
 	def generate(self):
+		self._generate()
+		return self
 		try:
 			self._generate()
 		except Exception as e:
