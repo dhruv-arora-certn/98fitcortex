@@ -133,6 +133,7 @@ class Main(Base):
 
 	def buildCardio(self):
 		duration = 900
+		print("^"*30 , self.cardioType)
 		cardio = self.cardioType(
 			self.user,
 			duration
