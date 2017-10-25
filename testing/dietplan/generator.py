@@ -24,7 +24,7 @@ class Day:
 	@lego.assemble
 	def __init__(self , calculations , day = None , persist = False , dietplan = None , comboDays = None):
 		pass
-	
+
 	def makeMeals(self):
 		self.calculations.makeMeals()
 		self.persist_db()
@@ -37,8 +37,8 @@ class Day:
 		print("&&&&&& "  ,self.persist , self.day , self.dietplan)
 		if self.persist and self.day and self.dietplan:
 			self.generated = []
-			for m,v in self.calculations._selected.items():	
-				for t,e in v.items(): 
+			for m,v in self.calculations._selected.items():
+				for t,e in v.items():
 					obj = GeneratedDietPlanFoodDetails.objects.create(
 						dietplan = self.dietplan ,
 						food_item_id = e.id ,
@@ -59,8 +59,8 @@ class Pipeline:
 		if self.week is None:
 			week = get_week(datetime.today())
 		user_week = 1
-		self.excluded2 = None	
-		self.exclusion_conditions = Q()	
+		self.excluded2 = None
+		self.exclusion_conditions = Q()
 		if self.user:
 			user_week = week - get_week(user.create_on) + 1
 			self.excluded = [self.get_initial_exclude()]
@@ -79,9 +79,9 @@ class Pipeline:
 
 	def daysForCombinations(self):
 		l = [e for e in range(1,8)]
-		m3 = random.sample( l , 2 ) 
+		m3 = random.sample( l , 2 )
 		#Remove elements from list
-		try: 
+		try:
 			print("M3" , m3)
 			[l.remove(e) for e in m3]
 			print("L" , l)
@@ -118,8 +118,8 @@ class Pipeline:
 		if last_plan:
 			items = last_plan.get_last_days(days)
 
-		return items 
-	
+		return items
+
 	def Day1(self):
 		print("Day 1 Exclude ," , self.exclude)
 		self.day1 = Day(
@@ -137,8 +137,8 @@ class Pipeline:
 			 	'm5' : 1 in self.comboDays.get('5')
 			 },
 			 dessertDays = 1 in self.dessertDays
-			 ), 
-			persist = self.persist, 
+			 ),
+			persist = self.persist,
 			dietplan = self.dietplan,
 			day = "1")
 		self.day1.makeMeals()

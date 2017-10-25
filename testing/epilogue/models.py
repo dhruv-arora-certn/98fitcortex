@@ -337,7 +337,7 @@ class Customer(models.Model):
 				print("New Activity ======>" , relation.new_activity)
 				return relation.new_activity
 		return float(self.lifestyle)
-	
+
 	@property
 	def weight_type(self):
 		if self.w_type == 2:

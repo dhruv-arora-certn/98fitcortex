@@ -129,3 +129,30 @@ class WarmupCoolDownTimeBasedExercise(BaseExercise,models.Model):
 	status = models.IntegerField()
 	home  = models.BooleanField()
 	gym  = models.BooleanField()
+
+
+class GeneratedExercisePlan(models.Model):
+	class Meta:
+		managed = False
+		db_table = "erp_exercise_plan"
+	
+	created_on = models.DateTimeField(auto_now_add = True)
+	year = models.IntegerField()
+	customer = models.ForeignKey(Customer , related_name = "workouts", db_column = "erp_customer_id")
+	user_week_id = models.IntegerField()
+	week_id = models.IntegerField()
+
+class GeneratedExercisePlanDetails(models.Model):
+	class Meta:
+		managed = False
+		db_table = "erp_exercise_plan_detail"
+	workoutplan = models.ForeignKey(GeneratedExercisePlan , related_name = "exercises", db_column = "erp_exercise_plan_id")
+	day = models.IntegerField()
+	exercise_type = models.IntegerField()
+	workout_name = models.CharField(max_length = 100)
+	time = models.CharField(max_length = 50)
+	reps = models.CharField(max_length=50)
+	sets = models.CharField(max_length=50)
+	machine_name = models.CharField(max_length=50)
+	equipment_name = models.CharField(max_length=50)
+	image_name = models.CharField(max_length = 100)

@@ -24,20 +24,26 @@ class ExerciseDay:
 		self.main.build()
 
 	def buildWarmup(self):
-		if self.main.cardioType == exercise.TimeBasedCardio:
-			self.warmup = [e.functional_warmup for e in self.main.cardio]
-			return 
-		self.warmup = exercise_type.Warmup(self.user , mainCardioType = self.get_main_cardio())
+		self.warmup = exercise_type.Warmup(self.user , mainCardio = self.main)
 		self.warmup.build()
+		return self
 
 	def buildStretching(self):
+
+		class Stretching:
+			selected = {"stretching" : []}
+
+		self.stretching = Stretching()
+
 		if self.resistance_filter:
 			self.rt_stretching = exercise_type.Stretching( self.user , resistance_filter = self.resistance_filter)
 			self.rt_stretching.build()
+			self.stretching.selected.get('stretching').extend(self.rt_stretching.selected.get("stretching"))
 
 		if self.make_cardio:
 			self.cardio_stretching = exercise_type.Stretching(self.user , cardio = True)
 			self.cardio_stretching.build()
+			self.stretching.selected.get('stretching').extend(self.cardio_stretching.selected.get("stretching"))
 
 	def get_main_cardio(self):
 		return self.main.cardio
@@ -47,3 +53,17 @@ class ExerciseDay:
 		self.buildWarmup()
 		self.buildStretching()
 		return self
+
+	def save(self):
+		'''
+		Persist the workout of the user to database;
+		Use workout.models.ExercisePlanDetail;
+		
+		'''
+		return
+	def serialize(self):
+		return {
+			**self.warmup.selected,
+			**self.main.selected,
+			**self.stretching.selected
+		}

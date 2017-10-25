@@ -2,9 +2,12 @@ from workoutplan import levels
 from workoutplan.goals import Goals
 from collections import namedtuple
 from workoutplan import resistance_data
+from django.db.models import Q
 
 import random
 import ipdb
+import collections
+import enum
 
 type_list = ["WeightLoss" , "WeightGain" , "MuscleGain" , "MaintainWeight"]
 
@@ -80,7 +83,7 @@ class Luggage:
 		self.items = items
 		self.key = key
 		self.randomize = randomize
-		self.packed = set() 
+		self.packed = set()
 		self.batchSize = batchSize
 
 	def pickAndPack(self):
@@ -118,3 +121,23 @@ def get_category_decorator(category):
 			return get_days(cls_obj , category)
 		return applyCat
 	return decorator
+
+filter_tuple = collections.namedtuple("filter_" , ["filter" , "count"])
+
+class CardioStretchingFilter(enum.Enum):
+	QUADS = filter_tuple(
+		filter = Q(muscle_group_name = "Quadriceps"),
+		count = 1
+	)
+	CHEST = filter_tuple(
+		filter = Q(muscle_group_name  = "Chest"),
+		count = 1
+	)
+	GLUTES = filter_tuple(
+		filter = Q(muscle_group_name = "Glutes"),
+		count = 1
+	)
+	BACK = filter_tuple(
+		filter = Q(muscle_group_name = "Back"),
+		count = 1
+	)

@@ -22,7 +22,7 @@ class ExerciseBase:
 			items,
 			"duration"
 		).pickAndPack()
-		self.selected.append(l.packed)
+		self.selected.extend(l.packed)
 		return self
 
 	def get_items(self):

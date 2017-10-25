@@ -6,7 +6,7 @@ import collections
 
 from workout import models
 from workoutplan import exercise
-from .utils import Luggage
+from .utils import Luggage , CardioStretchingFilter
 
 from django.core.cache import cache
 from django.db.models import Q
@@ -20,9 +20,9 @@ class Warmup(Base):
 	_type = "warmup"
 	duration = 300
 
-	def __init__(self , user , mainCardioType = None , bodyPartInFocus = Q()):
+	def __init__(self , user , mainCardio = None , bodyPartInFocus = Q()):
 		self.user = user
-		self.mainCardioType = mainCardioType
+		self.mainCardio = mainCardio
 		self.bodyPartInFocus = bodyPartInFocus
 		self.selected = []
 
@@ -65,16 +65,19 @@ class Warmup(Base):
 		Self is returned instead
 		This will enable me to perform chaining and allow subsequent functions to use the attribute
 		'''
-		if isinstance(self.mainCardioType, exercise.FloorBasedCardio):
-			return self.floor_based_cardio
-		elif isinstance(self.mainCardioType , exercise.TimeBasedCardio):
-			return self.time_based_cardio
+		print("Warmup ",self.mainCardio.cardioType)
+		if self.mainCardio.cardioType== exercise.FloorBasedCardio:
+			print("Warmup Floor Based")
+			return self.floor_based_cardio()
+		elif self.mainCardio.cardioType == exercise.TimeBasedCardio:
+			print("Warmup Time Based")
+			return self.time_based_cardio()
 
 	def floor_based_cardio(self):
 		'''
 		To be used in the case where main exercise is Floor Based Cardio
 		'''
-		self.normal_warmup_cooldown()
+		return self.normal_warmup_cooldown()
 
 	def normal_warmup_cooldown(self):
 		'''
@@ -85,23 +88,40 @@ class Warmup(Base):
 		l = []
 
 		for e in self.get_intensity_filter():
+			print(e.get('filter') & self.bodyPartInFocus)
 			warmup = exercise.Warmup(
 				self.user,
 				duration = e.get('duration'),
 				modelToUse = modelToUse,
 				filterToUse = e.get('filter') & self.bodyPartInFocus
 			).build()
-			l.extend(*warmup.selected)
-
-
+			l.extend(warmup.selected)
 		return  l
 
 	def time_based_cardio(self):
-		pass
+		class Warmup:
+			duration = 300
+			def __str__(self):
+				return self.workout_name
+			def __repr__(self):
+				return self.workout_name
+			def __init__(self,name):
+				self.workout_name = name
+
+		return list(map(lambda x : Warmup(x) , [
+			e.functional_warmup for e in self.mainCardio.cardio
+		]))
 
 	def build(self):
-		self.selected = self.normal_warmup_cooldown()
+		self.selected = {
+			"warmup" : self.decideWarmup()
+		}
 		return self
+
+	def as_dict(self):
+		return {
+			"warmup" : self.selected
+		}
 
 
 class Main(Base):
@@ -145,10 +165,17 @@ class Main(Base):
 		'''
 		self.cardio = self.buildCardio()
 		self.rt = self.buildRT()
+		self.selected = {
+			"cardio" : self.cardio ,
+			"resistancetraining" : self.rt
+		}
+		return self
 
-	@property
-	def selected(self):
-		return itertools.chain([self.cardio] ,  self.rt)
+	def as_dict(self):
+		return {
+			"cardio" : self.cardio,
+			"resistance_training" : self.rt
+		}
 
 
 class CoolDown(Base):
@@ -175,28 +202,9 @@ class Stretching(Base):
 		return l
 
 	def build_cardio(self):
-		filter_tuple = collections.namedtuple("filter_" , ["filter" , "count"])
-
-		class CardioStretchingFilter(enum.Enum):
-			QUADS = filter_tuple(
-				filter = Q(muscle_group_name = "Quadriceps"),
-				count = 1
-			)
-			CHEST = filter_tuple(
-				filter = Q(muscle_group_name  = "Chest"),
-				count = 1
-			)
-			GLUTES = filter_tuple(
-				filter = Q(muscle_group_name = "Glutes"),
-				count = 1
-			)
-			BACK = filter_tuple(
-				filter = Q(muscle_group_name = "Back"),
-				count = 1
-			)
 		#return CardioStretchingFilter
+		l = []
 		for e in CardioStretchingFilter:
-			l = []
 			stretching = exercise.Stretching(
 				user = self.user,
 				filterToUse = e.value.filter
@@ -208,10 +216,13 @@ class Stretching(Base):
 
 
 	def build(self):
+		l = {"stretching" : []}
 		if self.resistance_filter:
 			self.rt_stretching = self.build_rt()
+			l['stretching'].extend(self.rt_stretching)
 
 		if self.cardio:
 			self.cardio_stretching = self.build_cardio()
-
-
+			l['stretching'].extend(self.cardio_stretching)
+		self.selected = l
+		return self
