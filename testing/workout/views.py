@@ -14,6 +14,7 @@ from workout.serializers import *
 from workoutplan.generator import Generator
 
 import random
+import json
 
 def shuffle(qs):
 	l = list(qs)
@@ -102,4 +103,6 @@ class WorkoutView(generics.GenericAPIView):
 
 		}
 	def get(self , request , *args , **kwargs):
-		return Response(self.get_object())
+		with open("workout/data.json") as f:
+			a = json.load(f)
+		return Response(a)

@@ -1,0 +1,69 @@
+{
+	    "warmup": [
+			        {
+						            "name": "Slow walk",
+									            "description": null,
+												            "duration": 300,
+															            "duration_unit": "Seconds",
+																		            "equipment": "None",
+																					            "image": "http://www.98fit.com//webroot/workout_images/workout_blank.jpg",
+																								            "sets": 0,
+																											            "reps": 0
+																														        }
+																																    ],
+																																	    "stretching": [
+																																			        {
+																																						            "name": "Hip Flexor - Quadracep Stretch- Bench",
+																																									            "description": null,
+																																												            "duration": 0,
+																																															            "duration_unit": "Seconds",
+																																																		            "equipment": "None",
+																																																					            "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/exercise/Stratching1480201650_32.jpg",
+																																																								            "sets": 0,
+																																																											            "reps": 0
+																																																														        },
+																																																																        {
+																																																																			            "name": "Chest stretch child pose on the finger tips",
+																																																																						            "description": null,
+																																																																									            "duration": 0,
+																																																																												            "duration_unit": "Seconds",
+																																																																															            "equipment": "None",
+																																																																																		            "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/exercise/Stratching1482289873_14.jpg",
+																																																																																					            "sets": 0,
+																																																																																								            "reps": 0
+																																																																																											        },
+																																																																																													        {
+																																																																																																            "name": "Glute stretch seated tight hug",
+																																																																																																			            "description": null,
+																																																																																																						            "duration": 0,
+																																																																																																									            "duration_unit": "Seconds",
+																																																																																																												            "equipment": "None",
+																																																																																																															            "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/exercise/Stratching1482289938_18.jpg",
+																																																																																																																		            "sets": 0,
+																																																																																																																					            "reps": 0
+																																																																																																																								        },
+																																																																																																																										        {
+																																																																																																																													            "name": "Neck and Arm Stretch Neural",
+																																																																																																																																            "description": null,
+																																																																																																																																			            "duration": 0,
+																																																																																																																																						            "duration_unit": "Seconds",
+																																																																																																																																									            "equipment": "None",
+																																																																																																																																												            "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/exercise/Stratching1480201319_51.jpg",
+																																																																																																																																															            "sets": 0,
+																																																																																																																																																		            "reps": 0
+																																																																																																																																																					        }
+																																																																																																																																																							    ],
+																																																																																																																																																								    "resistance_training": [],
+																																																																																																																																																									    "cardio": [
+																																																																																																																																																											        {
+																																																																																																																																																														            "name": "Slow jog",
+																																																																																																																																																																	            "description": null,
+																																																																																																																																																																				            "duration": 30,
+																																																																																																																																																																							            "duration_unit": "Seconds",
+																																																																																																																																																																										            "equipment": "None",
+																																																																																																																																																																													            "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/exercise/CardioTimeBased2.jpg",
+																																																																																																																																																																																            "sets": 0,
+																																																																																																																																																																																			            "reps": 0
+																																																																																																																																																																																						        }
+																																																																																																																																																																																								    ]
+}
