@@ -3,6 +3,7 @@ import operator
 import itertools
 import enum
 import collections
+import logging
 
 from workout import models
 from workoutplan import exercise
@@ -133,7 +134,7 @@ class Main(Base):
 
 	def buildCardio(self):
 		duration = 900
-		print("="*30 , self.cardioType)
+		logging.info("="*30 + str(self.cardioType))
 		cardio = self.cardioType(
 			self.user,
 			duration
