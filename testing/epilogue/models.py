@@ -558,7 +558,7 @@ class Customer(models.Model):
 		return False
 
 	def is_intermediate(self):
-		if self.level == 2:
+		if self.level == 3:
 			return True
 		return False
 
@@ -978,3 +978,4 @@ class CustomerActivityLogs(models.Model):
 	start = models.DateTimeField(auto_now = False)
 	end = models.DateTimeField(auto_now = False)
 	distance = models.IntegerField()
+
