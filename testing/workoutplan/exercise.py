@@ -2,6 +2,8 @@ import random
 
 from django.core.cache import cache
 from django.db.models import Q
+from django.conf import settings
+
 from workout import models
 from workoutplan.utils import Luggage
 
@@ -26,7 +28,11 @@ class ExerciseBase:
 		return self
 
 	def get_items(self):
-		return list(cache.get_or_set(self.cache_key , self.model.objects.all()))
+		model_list = self.model.objects.all()
+		if settings.CACHE_WORKOUT:
+			print("Using Cache")
+			return list(cache.get_or_set(self.cache_key , model_list))
+		return list(model_list)
 
 class FloorBasedCardio(ExerciseBase):
 	def __init__(self , user , duration):
@@ -68,9 +74,12 @@ class Warmup(ExerciseBase):
 		self.cache_key = "%s_%s"%(self.model.__name__ , "_".join("%s_%s"%(i,e) for i,e in filterToUse.children))
 
 	def get_items(self):
+		model_list = list(self.model.objects.filter(self.filter))
 		print(self.cache_key)
-		a =  cache.get_or_set(self.cache_key , list(self.model.objects.filter(self.filter)))
-		return a
+		if settings.CACHE_WORKOUT:
+			return  cache.get_or_set(self.cache_key ,model_list )
+		return model_list
+
 
 class Stretching(ExerciseBase):
 
@@ -82,8 +91,10 @@ class Stretching(ExerciseBase):
 		self.selected = []
 
 	def get_items(self):
-		a = cache.get_or_set(self.cache_key , list(self.model.objects.filter(self.filterToUse)))
-		return a
+		model_list =  list(self.model.objects.filter(self.filterToUse))
+		if settings.CACHE_WORKOUT:
+			return cache.get_or_set(self.cache_key , model_list)
+		return model_list
 
 	def build(self):
 		items = self.get_items()
