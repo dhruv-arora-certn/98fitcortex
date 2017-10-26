@@ -19,7 +19,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Customer
-		fields = ["email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender" , "body_type" , "food_cat" ,"weight_type" , "height_type"]
+		fields = ["email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender" , "body_type" , "food_cat" ,"weight_type" , "height_type" , "level"]
 
 
 class FoodSerializer(serializers.ModelSerializer):
