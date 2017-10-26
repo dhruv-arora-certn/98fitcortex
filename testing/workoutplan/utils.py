@@ -92,6 +92,7 @@ class Luggage:
 			batch = random.sample(self.items , self.batchSize)
 
 			for e in batch:
+				assert isinstance(getattr(e,self.key) , int) , "Not an integer %s - %s"%(getattr(e , self.key) , type(getattr(e , self.key)))
 				if selectedWeight + getattr(e , self.key) <= self.weight :
 					selectedWeight += getattr(e , self.key)
 					self.packed.add(e)
