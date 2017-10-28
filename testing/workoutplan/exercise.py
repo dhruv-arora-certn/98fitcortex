@@ -1,5 +1,4 @@
-import random
-import logging
+import random import logging
 
 from django.core.cache import cache
 from django.db.models import Q
@@ -20,6 +19,7 @@ class ExerciseBase:
 		self.selected = []
 
 	def build(self):
+		self.logger.info("State of %s : %s"%(self.__class__.__name__ , self.__dict__))
 		items = self.get_items()
 		self.logger.debug("Items Length  in %s %d"%(self.__class__.__name__ ,  len(items)))
 		l = Luggage(
@@ -78,7 +78,7 @@ class Warmup(ExerciseBase):
 
 	def get_items(self):
 		model_list = list(self.model.objects.filter(self.filter))
-		if settings.CACHE_WORKOUT:
+		settings.CACHE_WORKOUT:
 			return  cache.get_or_set(self.cache_key ,model_list )
 		return model_list
 
