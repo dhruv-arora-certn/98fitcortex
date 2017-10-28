@@ -21,7 +21,7 @@ class ExerciseBase:
 
 	def build(self):
 		items = self.get_items()
-		self.logger.debug("Items Length %d"% len(items))
+		self.logger.debug("Items Length  in %s %d"%(self.__class__.__name__ ,  len(items)))
 		l = Luggage(
 			self.duration,
 			items,
