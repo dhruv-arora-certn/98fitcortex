@@ -1,4 +1,5 @@
-import random import logging
+import random 
+import logging
 
 from django.core.cache import cache
 from django.db.models import Q
@@ -78,7 +79,7 @@ class Warmup(ExerciseBase):
 
 	def get_items(self):
 		model_list = list(self.model.objects.filter(self.filter))
-		settings.CACHE_WORKOUT:
+		if settings.CACHE_WORKOUT:
 			return  cache.get_or_set(self.cache_key ,model_list )
 		return model_list
 
