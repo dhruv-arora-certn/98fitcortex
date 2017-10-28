@@ -1,3 +1,8 @@
 __pycache__/
 env/
 testing/testing/.env
+*.log
+
+# swap
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]

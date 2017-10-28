@@ -15,6 +15,7 @@ from django.db.models import Q
 class Base():
 
 	def __init__(self):
+		self.logger = logging.getLogger(__name__)
 		pass
 
 class Warmup(Base):
@@ -22,6 +23,7 @@ class Warmup(Base):
 	duration = 300
 
 	def __init__(self , user , mainCardio = None , bodyPartInFocus = Q()):
+		super().__init__()
 		self.user = user
 		self.mainCardio = mainCardio
 		self.bodyPartInFocus = bodyPartInFocus
@@ -66,12 +68,11 @@ class Warmup(Base):
 		Self is returned instead
 		This will enable me to perform chaining and allow subsequent functions to use the attribute
 		'''
-		print("Warmup ",self.mainCardio.cardioType)
 		if self.mainCardio.cardioType== exercise.FloorBasedCardio:
-			print("Warmup Floor Based")
+			self.logger.info("Decided Warmup Floor Based")
 			return self.floor_based_cardio()
 		elif self.mainCardio.cardioType == exercise.TimeBasedCardio:
-			print("Warmup Time Based")
+			self.logger.info("Decided Warmup Time Based")
 			return self.time_based_cardio()
 
 	def floor_based_cardio(self):
@@ -89,7 +90,7 @@ class Warmup(Base):
 		l = []
 
 		for e in self.get_intensity_filter():
-			print(e.get('filter') & self.bodyPartInFocus)
+			self.logger.debug(e.get('filter') & self.bodyPartInFocus)
 			warmup = exercise.Warmup(
 				self.user,
 				duration = e.get('duration'),
@@ -129,12 +130,14 @@ class Main(Base):
 	_type = "main"
 
 	def __init__(self , user , cardioType = random.choice([exercise.FloorBasedCardio , exercise.TimeBasedCardio]) ):
+		super().__init__()
 		self.user = user
 		self.cardioType = cardioType
+		self.logger.debug("Cardio Type %s"%(self.cardioType))
+		self.logger.info("Cardio Type %s"%(self.cardioType))
 
 	def buildCardio(self):
 		duration = 900
-		logging.info("="*30 + str(self.cardioType))
 		cardio = self.cardioType(
 			self.user,
 			duration
@@ -183,11 +186,13 @@ class Main(Base):
 class CoolDown(Base):
 	_type = "cooldown"
 	def __init__(self):
+		super().__init__()
 		pass
 
 class Stretching(Base):
 	_type = "stretching"
 	def __init__(self , user , resistance_filter = None , cardio = False):
+		super().__init__()
 		self.user = user
 		self.resistance_filter = resistance_filter
 		self.cardio = cardio
@@ -212,7 +217,6 @@ class Stretching(Base):
 				filterToUse = e.value.filter
 			)
 			stretching.build()
-			print(l)
 			l.extend(stretching.selected)
 		return l
 

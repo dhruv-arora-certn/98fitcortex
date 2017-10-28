@@ -4,6 +4,7 @@ from .utils import NoviceDays , BeginnerDays , IntermediateDays , days as namedD
 from .day import ExerciseDay
 
 import random
+import logging
 
 class ResistanceDistribution:
 
@@ -15,9 +16,11 @@ class ResistanceDistribution:
 class Generator():
 
 	def __init__(self, user):
+		self.logger = logging.getLogger('workoutplan.generator')
 		self.user =  user
 		self.conditional_days = self.get_conditional_days()
 		self.get_resistance_distribution()
+		self.logger.info("Starting Workout Generator for user %s-%d"%(self.user.email , self.user.id))
 
 	@get_category_decorator(NoviceDays)
 	def _get_novice_days(self):
@@ -93,10 +96,10 @@ class Generator():
 		return self
 
 	def generate(self):
-		self._generate()
-		return self
 		try:
 			self._generate()
 		except Exception as e:
-			print("Error Generating Diet Plan",e)
+			self.logger.info("Error Generating Workout Plan",e)
+		else:
+			self.logger.info("Workout Successfully Generated for user")
 		return self
