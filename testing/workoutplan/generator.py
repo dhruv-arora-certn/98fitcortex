@@ -5,6 +5,7 @@ from .day import ExerciseDay
 
 import random
 import logging
+import sys, os
 
 class ResistanceDistribution:
 
@@ -99,7 +100,9 @@ class Generator():
 		try:
 			self._generate()
 		except Exception as e:
-			self.logger.info("Error Generating Workout Plan",e)
+			exc_type , exc_obj , exc_tb = sys.exc_info()
+			fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+			self.logger.info("Error Generating Workout Plan: %s %s %s"%(exc_type , fname , exc_tb.tb_lineno))
 		else:
 			self.logger.info("Workout Successfully Generated for user")
 		return self
