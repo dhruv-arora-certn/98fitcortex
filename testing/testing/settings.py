@@ -152,7 +152,7 @@ REST_FRAMEWORK = {
 	'DEFAULT_THROTTLE_RATES' : {
 		'navratri-sms' : '10/day',
 		'anon' : '100/hour',
-		'user' : '200/hour'
+		'user' : '400/hour'
 	}
 }
 
