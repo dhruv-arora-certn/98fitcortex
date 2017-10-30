@@ -1,0 +1,107 @@
+[
+{
+  "food_name": "Green Tea",
+  "meal_type": "m0",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479224957_815.jpg"
+},
+{
+  "food_name": "4-5 Almonds/Walnuts",
+  "meal_type": "m0",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
+},
+{
+  "food_name": "Elaichi Milk without Sugar",
+  "meal_type": "m1",
+  "quantity": 1,
+  "size": "Glass",
+  "weight": 250,
+  "unit": "ml",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/elaichi-milk.jpg"
+},
+{
+  "food_name": "Oats Porridge",
+  "meal_type": "m1",
+  "quantity": 1,
+  "size": "Big Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479212775_965.jpg"
+},
+{
+  "food_name": "Apple",
+  "meal_type": "m2",
+  "quantity": 1,
+  "size": "Big Piece",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/70.jpg"
+
+},
+{
+  "food_name": "Curd/Yogurt",
+  "meal_type": "m2",
+  "quantity": 1,
+  "size": "Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/483.jpg"
+},
+{
+  "food_name": "Chicken Curry (with less oil)",
+  "quantity": -1,
+  "size": "3 Small Boneless Pieces",
+  "weight": 75,
+  "unit": "gm",
+  "meal_type": "m3",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479210776_734.jpg"
+},
+{
+  "food_name": "Stir Fried Bell Peppers",
+  "meal_type": "m3",
+  "quantity": 1,
+  "size": "Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/stir-fried-bell-peppers.jpg"
+},
+{
+  "food_name": "Chapati",
+  "meal_type": "m3",
+  "quantity": -1,
+  "size": "2 Small Pieces",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
+},
+{
+  "food_name": "Boiled Egg Whites",
+  "meal_type": "m4",
+  "quantity": "2",
+  "size": "Pieces",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/184.jpg"
+},
+{
+  "food_name": "Cold Kesar Milk",
+  "meal_type": "m4",
+  "quantity": 1,
+  "size": "Cup",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/kesar-milk.jpg"
+},
+{
+  "food_name": "Mix Veg with less oil",
+  "meal_type": "m5",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/mix-vegetables-paneer.jpg"
+},
+{
+  "food_name": "Chana Daal with Lauki",
+  "meal_type": "m5",
+  "quantity": "1",
+  "size": "Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/chana-lauki-dal.jpg"
+},
+{
+  "food_name": "Chapati",
+  "meal_type": "m5",
+  "quantity": -1,
+  "size": "1 Piece",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
+},
+{
+  "food_name": "Milk without Sugar",
+  "meal_type": "m6",
+  "quantity": 1,
+  "size": "Glass",
+  "weight": 250,
+  "unit": "ml",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1498302256_436.jpg"
+}]

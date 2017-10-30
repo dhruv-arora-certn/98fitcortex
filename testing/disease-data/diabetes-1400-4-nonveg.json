@@ -1,0 +1,98 @@
+[
+{
+  "food_name": "Green Tea",
+  "meal_type": "m0",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479224957_815.jpg"
+},
+{
+  "food_name": "Assorted Nuts like Almonds & Walnuts",
+  "meal_type": "m0",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
+},
+{
+  "food_name": "Assorted Seeds like Flax Seeds",
+  "meal_type": "m0",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/flax-seeds.jpg"
+},
+{
+  "food_name": "Milk Without Sugar",
+  "meal_type": "m1",
+  "unit": "ml",
+  "weight": 250,
+  "quantity": 1,
+  "size": "Glass",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1498302256_436.jpg"
+},
+{
+  "food_name": "Veg Dalia",
+  "meal_type": "m1",
+  "quantity": -1,
+  "size": "1 Big Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/vegetable-dalia.jpg"
+},
+{
+  "food_name": "Fruit Raita Without Sugar",
+  "meal_type": "m2",
+  "quantity": -1,
+  "size": "100gm Curd",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479199327_601.jpg"
+},
+{
+  "food_name": "Soya Daal",
+  "meal_type": "m3",
+  "quantity": -1,
+  "size": "1 Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/soya-dal.jpg"
+},
+{
+  "food_name": "Cabbage Peas Sabzi",
+  "meal_type": "m3",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/cabbage-peas-sabzi.jpg"
+},
+{
+  "food_name": "Chapati",
+  "meal_type": "m3",
+  "quantity": -1,
+  "size": "2 Small Pieces",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
+},
+{
+  "food_name": "Kala Chana Chaat",
+  "meal_type": "m4",
+  "quantity": 1.5,
+  "size": "Kathori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/boiled-kala-chana-chaat.jpg"
+},
+{
+  "food_name": "Cold Cocoa Milk",
+  "meal_type": "m4",
+  "quantity": 1,
+  "size": "Cup",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/cold-cocoa-milk.jpg"
+},
+{
+  "food_name": "Bhindi Masala",
+  "meal_type": "m5",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/154.jpg"
+},
+{
+  "food_name": "Paneer Tikka (50 gm Paneer)",
+  "meal_type": "m5",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479231854_1051.jpg"
+},
+{
+  "food_name": "Chapati",
+  "meal_type": "m5",
+  "quantity": -1,
+  "size": "1 Small Piece",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
+},
+{
+  "food_name": "Milk Without Sugar",
+  "meal_type": "m6",
+  "quantity": 1,
+  "size": "Glass",
+  "unit": "ml",
+  "weight": 250,
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1498302256_436.jpg"
+}]
