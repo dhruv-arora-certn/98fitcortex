@@ -89,7 +89,7 @@
   "meal_type": "m5",
   "quantity": -1,
   "size": "1 Quarter Plate (2 Medium Boneless Pieces)",
-  "image": ""
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/chicken-pulao.jpg"
 },
 {
   "food_name": "Milk Without Sugar",

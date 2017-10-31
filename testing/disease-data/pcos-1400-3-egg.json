@@ -1,0 +1,91 @@
+[
+{
+  "food_name": "Green Tea",
+  "meal_type": "m0",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479224957_815.jpg"
+},
+{
+  "food_name": "Assorted Nuts like Almonds & Walnuts",
+  "meal_type": "m0",
+  "quantity": -1,
+  "size": "4-5 Pieces",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
+},
+{
+  "food_name": "Veg Sprouts Quinoa",
+  "meal_type": "m1",
+  "quantity": 1,
+  "size": "Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/veg-sprouts-quinoa.jpg"
+},
+{
+  "food_name": "Boiled Egg Whites",
+  "meal_type": "m1",
+  "quantity": "3",
+  "size": "Pieces",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/184.jpg"
+},
+{
+  "food_name": "Papaya",
+  "meal_type": "m2",
+  "unit": "gm",
+  "weight": 100,
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479213739_1057.jpg"
+},
+{
+  "food_name": "Paneer Sauté",
+  "meal_type": "m2",
+  "unit": "gm",
+  "weight": 50,
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/paneer-saute.jpg"
+},
+{
+  "food_name": "Lobia",
+  "meal_type": "m3",
+  "quantity": -1,
+  "size": "1 Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1483948476_162.jpg"
+},
+{
+  "food_name": "Mix Veg",
+  "meal_type": "m3",
+  "quantity": -1,
+  "size": "1 Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479212017_888.jpg"
+},
+{
+  "food_name": "Brown Rice",
+  "meal_type": "m3",
+  "quantity": -1,
+  "size": "2 Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/177.jpg"
+},
+{
+  "food_name": "Steamed Idli with Mint Chutney",
+  "meal_type": "m4",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1483770300_605.jpg"
+},
+{
+  "food_name": "Jal Jeera",
+  "meal_type": "m4",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479210581_711.jpg"
+},
+{
+  "food_name": "Mix Dal",
+  "meal_type": "m5",
+  "quantity": -1,
+  "size": "1 Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/mix-dal.jpg"
+},
+{
+  "food_name": "Cabbage and Peas Sabzi",
+  "meal_type": "m5",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/cabbage-peas-sabzi.jpg"
+},
+{
+  "food_name": "Chapati",
+  "meal_type": "m5",
+  "quantity": -1,
+  "size": "2 Small Pieces",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
+}]

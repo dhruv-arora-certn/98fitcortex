@@ -1,0 +1,85 @@
+[
+{
+  "food_name": "Herbal Tea",
+  "meal_type": "m0",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/herbal-tea.jpg"
+},
+{
+  "food_name": "Assorted Nuts like Almonds & Walnuts",
+  "meal_type": "m0",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
+},
+{
+  "food_name": "Assorted Seeds like Flax Seeds",
+  "meal_type": "m0",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/flax-seeds.jpg"
+},
+{
+  "food_name": "Vegetable Egg White Omelette with 2 Multigrain Bread",
+  "meal_type": "m1",
+  "quantity": 2,
+  "size": "Eggs",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/egg-white-omellete.jpg"
+},
+{
+  "food_name": "Mint Lemonade",
+  "meal_type": "m1",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/mint-lemonade.jpg"
+},
+{
+  "food_name": "Fruit Lassi Without Sugar",
+  "meal_type": "m2",
+  "unit": "ml",
+  "weight": 200,
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479199307_599.jpg"
+},
+{
+  "food_name": "Sabut Moong Dal",
+  "meal_type": "m3",
+  "quantity": 1,
+  "size": "Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/302.jpg"
+},
+{
+  "food_name": "Paneer Capsicum Sabzi (50 gm paneer)",
+  "meal_type": "m5",
+  "quantity": -1,
+  "size": "1 Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/paneer-capsicum.jpg"
+},
+{
+  "food_name": "Chapati",
+  "meal_type": "m3",
+  "quantity": -1,
+  "size": "2 Small Pieces",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
+},
+{
+  "food_name": "Roasted Chana Chaat",
+  "meal_type": "m4",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/roasted-chana-chaat.jpg"
+},
+{
+  "food_name": "Coconut Water",
+  "meal_type": "m4",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/coconut-water.jpg"
+},
+{
+  "food_name": "Arhar Spinach Dal",
+  "meal_type": "m5",
+  "quantity": 1,
+  "size": "Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/arhar-palakh-dal.jpg"
+},
+{
+  "food_name": "Brown Rice",
+  "meal_type": "m5",
+  "quantity": -1,
+  "size": "1 Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/177.jpg"
+},
+{
+  "food_name": "Mix Veg Soup",
+  "meal_type": "m5",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1483774684_1062.jpg"
+}]

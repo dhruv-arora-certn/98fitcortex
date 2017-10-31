@@ -1,0 +1,96 @@
+[
+{
+  "food_name": "Green Tea",
+  "meal_type": "m0",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479224957_815.jpg"
+},
+{
+  "food_name": "Assorted seeds like Flax Seeds & Pumpkin Seeds",
+  "meal_type": "m0",
+  "quantity": 1,
+  "size": "Handful",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/flax-seeds.jpg"
+},
+{
+  "food_name": "Raisins",
+  "meal_type": "m0",
+  "quantity": -1,
+  "size": "2-3 Pieces",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479214646_1155.jpg"
+},
+{
+  "food_name": "Egg White Roll with added veggies (wheat flour only)",
+  "meal_type": "m1",
+  "quantity": -1,
+  "size": "2 eggs",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/egg-white-roll.jpg"
+},
+{
+  "food_name": "Coconut Water",
+  "meal_type": "m1",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/coconut-water.jpg"
+},
+{
+  "food_name": "Guava",
+  "meal_type": "m2",
+  "quantity": 1,
+  "size": "Piece",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/guava.jpg"
+},
+{
+  "food_name": "Roasted Paneer",
+  "meal_type": "m2",
+  "weight": 50,
+  "unit": "gms",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/grilled-paneer.jpg"
+},
+{
+  "food_name": "Kala Chana Curry",
+  "meal_type": "m3",
+  "size": "Katori",
+  "quantity": 1,
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/kala-chana-curry.jpg"
+},
+{
+  "food_name": "Mix Veg (with 25gm Paneer)",
+  "meal_type": "m3",
+  "quantity": 1,
+  "size": "Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479212017_888.jpg"
+},
+{
+  "food_name": "Chapati",
+  "meal_type": "m3",
+  "quantity": -1,
+  "size": "2 Small Pieces",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
+},
+{
+  "food_name": "Boiled Chola Chaat",
+  "meal_type": "m4",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/boiled-chole-chaat.jpg"
+},
+{
+  "food_name": "Mint Lemonade",
+  "meal_type": "m4",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/mint-lemonade.jpg"
+},
+{
+  "food_name": "Pumpkin Sabji",
+  "meal_type": "m5",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/pumpkin-sabzi.jpg"
+},
+{
+  "food_name": "Sabut Masoor Dal",
+  "meal_type": "m5",
+  "quantity": 1,
+  "size": "Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/sabut-masoor-dal.jpg"
+},
+{
+  "food_name": "Chapati",
+  "meal_type": "m5",
+  "quantity": 1,
+  "size": "Piece",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
+}]

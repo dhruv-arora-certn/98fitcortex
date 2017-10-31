@@ -1,89 +1,88 @@
 [
-    {
-        "food_name": "Tulsi Tea",
-        "meal_type": "m0",
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/2059.jpg"
-    },
-    {
-        "food_name": "Assorted Nuts like Walnuts + Almonds",
-        "meal_type": "m0",
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
-    },
-    {
-        "food_name": "Milk Without Sugar",
-        "meal_type": "m1",
-        "quantity": 1,
-        "size": "Glass",
-        "unit": "ml",
-        "weight": 250,
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479237010_1436.jpg"
-    },
-    {
-        "food_name": "Veg Oats Porridge",
-        "meal_type": "m1",
-        "quantity": -1,
-        "size": "1 Katori",
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479214035_1100.jpg"
-    },
-    {
-        "food_name": "Papaya",
-        "meal_type": "m2",
-        "unit": "g",
-        "weight": 100,
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479213739_1057.jpg"
-    },
-    {
-        "food_name": "Tadka Chaach",
-        "meal_type": "m2",
-        "unit": "ml",
-        "weight": 200,
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/294.jpg"
-    },
-    {
-        "food_name": "Shahi Paneer (50gm Paneer)",
-        "meal_type": "m3",
-        "quantity": -1,
-        "size": "1 Katori",
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/shahi-paneer.jpg"
-    },
-    {
-        "food_name": "Brown Rice",
-        "meal_type": "m3",
-        "quantity": -1,
-        "size": "2 Katori",
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/177.jpg"
-    },
-    {
-        "food_name": "Sprouts Chaat",
-        "meal_type": "m4",
-        "quantity": 1,
-        "size": "Katori",
-        "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1878.jpg"
-    },
-    {
-        "food_name": "Cold Elaichi Milk",
-        "meal_type": "m4",
-        "quantity": 1,
-        "size": "Glass",
-        "image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/elaichi-milk.jpg"
-    },
-    {
-	"food_name" : "Stir Fried Broccolli and Bell Peppers with 50g Paneer",
-	"meal_type" : "m5",
-	"image" : "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1897.jpg"
-    },
-    {
-	"food_name" : "Chapati",
-	"quantity" : 1,
-	"size" : "Small Piece",
-	"meal_type" : "m5",
-	"image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
-    },
-    {
-    "food_name": "Kulfi with 250ml milk (Can use Sugar Free 1 Tablet)",
-    "meal_type": "m6",
-    "quantity": 1,
-    "size": "Kathori",
-    "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1927.jpg"
-    }
-]
+{
+  "food_name": "Tulsi Tea",
+  "meal_type": "m0",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/2059.jpg"
+},
+{
+  "food_name": "Assorted Nuts like Walnuts + Almonds",
+  "meal_type": "m0",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
+},
+{
+  "food_name": "Milk Without Sugar",
+  "meal_type": "m1",
+  "quantity": 1,
+  "size": "Glass",
+  "unit": "ml",
+  "weight": 250,
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479237010_1436.jpg"
+},
+{
+  "food_name": "Veg Oats Porridge",
+  "meal_type": "m1",
+  "quantity": -1,
+  "size": "1 Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479214035_1100.jpg"
+},
+{
+  "food_name": "Papaya",
+  "meal_type": "m2",
+  "unit": "g",
+  "weight": 100,
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479213739_1057.jpg"
+},
+{
+  "food_name": "Tadka Chaach",
+  "meal_type": "m2",
+  "unit": "ml",
+  "weight": 200,
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/294.jpg"
+},
+{
+  "food_name": "Shahi Paneer (50gm Paneer)",
+  "meal_type": "m3",
+  "quantity": -1,
+  "size": "1 Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/shahi-paneer.jpg"
+},
+{
+  "food_name": "Brown Rice",
+  "meal_type": "m3",
+  "quantity": -1,
+  "size": "2 Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/177.jpg"
+},
+{
+  "food_name": "Sprouts Chaat",
+  "meal_type": "m4",
+  "quantity": 1,
+  "size": "Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1878.jpg"
+},
+{
+  "food_name": "Cold Elaichi Milk",
+  "meal_type": "m4",
+  "quantity": 1,
+  "size": "Glass",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/elaichi-milk.jpg"
+},
+{
+  "food_name": "Stir Fried Broccolli and Bell Peppers with 50g Paneer",
+  "meal_type": "m5",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1897.jpg"
+},
+{
+  "food_name": "Chapati",
+  "quantity": 1,
+  "size": "Small Piece",
+  "meal_type": "m5",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
+},
+{
+  "food_name": "Kulfi with 250ml milk (Can use Sugar Free 1 Tablet)",
+  "meal_type": "m6",
+  "quantity": 1,
+  "size": "Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1927.jpg"
+}]

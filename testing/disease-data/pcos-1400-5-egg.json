@@ -1,0 +1,88 @@
+[
+{
+  "food_name": "Green Tea",
+  "meal_type": "m0",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479224957_815.jpg"
+},
+{
+  "food_name": "Dried Apricots",
+  "meal_type": "m0",
+  "quantity": 2,
+  "size": "Pieces",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/dried-apricots.jpg"
+},
+{
+  "food_name": "Assorted Seeds like Pumpkin Seeds & Flax Seeds",
+  "meal_type": "m0",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/flax-seeds.jpg"
+},
+{
+  "food_name": "Boiled Egg White Vegetable Sandwich with 2 Brown Bread",
+  "meal_type": "m1",
+  "quantity": -1,
+  "size": "3 eggs",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/paneer-sandwich.jpg"
+},
+{
+  "food_name": "Lemonade",
+  "meal_type": "m1",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479211541_830.jpg"
+},
+{
+  "food_name": "Apple",
+  "meal_type": "m2",
+  "weight": 100,
+  "unit": "gm",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/70.jpg"
+},
+{
+  "food_name": "Roasted Paneer",
+  "meal_type": "m2",
+  "weight": 50,
+  "unit": "gms",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/grilled-paneer.jpg"
+},
+{
+  "food_name": "Malka Dal",
+  "meal_type": "m3",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/malka-dal.jpg"
+},
+{
+  "food_name": "Beans Capsicum Sabzi",
+  "meal_type": "m3",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/beans-capsicum-sabzi.jpg"
+},
+{
+  "food_name": "Brown Rice",
+  "meal_type": "m3",
+  "quantity": -1,
+  "size": "2 Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/177.jpg"
+},
+{
+  "food_name": "Boiled Kala Chana Chaat",
+  "meal_type": "m4",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/boiled-kala-chana-chaat.jpg"
+},
+{
+  "food_name": "Mint Lemonade",
+  "meal_type": "m4",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/mint-lemonade.jpg"
+},
+{
+  "food_name": "Chana Dal",
+  "meal_type": "m5",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/chana-dal.jpg"
+},
+{
+  "food_name": "Baingan Bharta",
+  "meal_type": "m3",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1483791917_83.jpg"
+},
+{
+  "food_name": "Chapati",
+  "meal_type": "m5",
+  "quantity": -1,
+  "size": "2 Small Pieces",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
+}]
