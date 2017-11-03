@@ -57,13 +57,13 @@ class ExerciseSerialzier(serializers.Serializer):
 		base = "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/exercise/"
 		if hasattr(obj , "image_name"):
 			return "%s%s"%(base,getattr(obj , "image_name" , "http://www.98fit.com//webroot/workout_images/workout_blank.jpg"))
-		return "http://www.98fit.com//webroot/workout_images/workout_blank.jpg" 
+		return "http://www.98fit.com//webroot/workout_images/workout_blank.jpg"
 
 	def get_sets(self , obj):
-		return 0
+		return  getattr(obj , "sets" , 0)
 
 	def get_reps(self , obj):
-		return 0
+		return  getattr(obj , "sets" , 0)
 
 class WorkoutSerializer(serializers.Serializer):
 	warmup = ExerciseSerialzier(many = True , read_only = True)

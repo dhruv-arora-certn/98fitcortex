@@ -1,4 +1,4 @@
-import random 
+import random
 import logging
 
 from django.core.cache import cache
@@ -6,7 +6,8 @@ from django.db.models import Q
 from django.conf import settings
 
 from workout import models
-from workoutplan.utils import Luggage
+from workoutplan.utils import Luggage , get_cardio_sets_reps_duration 
+from workoutplan import shared_globals
 
 random.seed()
 
@@ -18,6 +19,7 @@ class ExerciseBase:
 		self.duration = duration
 		self.cache_key = self.__class__.__name__
 		self.selected = []
+		self.multiplier = 1
 
 	def build(self):
 		self.logger.info("State of %s : %s"%(self.__class__.__name__ , self.__dict__))
@@ -26,7 +28,8 @@ class ExerciseBase:
 		l = Luggage(
 			self.duration,
 			items,
-			"duration"
+			"duration",
+			self.multiplier
 		).pickAndPack()
 		self.selected.extend(l.packed)
 		return self
@@ -39,10 +42,25 @@ class ExerciseBase:
 		return list(model_list)
 
 class FloorBasedCardio(ExerciseBase):
+
 	def __init__(self , user , duration):
 		super().__init__(user , duration)
 		self.model = models.CardioFloorExercise
 
+	def build(self):
+		self.srd_container = get_cardio_sets_reps_duration(self.user.level_obj , self.user.goal , self.user.user_workout_week)
+		self.multiplier = self.srd_container.sets
+		super().build()
+
+		def add_sets_reps(x):
+			setattr(x , "sets" , self.srd_container.sets)
+			setattr(x , "reps" , self.srd_container.reps)
+			return x
+
+		#self.selected = list(map(
+		#	add_sets_reps , self.selected
+		#))
+		return self
 
 class TimeBasedCardio(ExerciseBase):
 
@@ -61,12 +79,16 @@ class ResistanceTraining(ExerciseBase):
 		self.filters = filters
 		self.model = models.ResistanceTrainingExercise
 
+	def get_items(self):
+		return self.model.objects.filter(self.filter)
+
 
 class CoreStrengthening(ExerciseBase):
 
 	def __init__(self , user , duration = 0, **kwargs):
 		super().__init__(user , duration)
 		self.model = models.NoviceCoreStrengthiningExercise
+		self.multiplier = 2
 
 class Warmup(ExerciseBase):
 

@@ -2,6 +2,7 @@ from . import levels
 from .goals import Goals
 from .utils import NoviceDays , BeginnerDays , IntermediateDays , days as namedDays ,  get_resistance_filter , get_category_decorator
 from .day import ExerciseDay
+from . import shared_globals
 
 import random
 import logging
@@ -79,7 +80,9 @@ class Generator():
 		elif self.user.level_obj == levels.Intermediate:
 			days = self._get_intermediate_days()
 		cardio_days , rt_days = self._get_days_distribution(days)
-		return namedDays(cardio_days , rt_days , days.total)
+		data = namedDays(cardio_days , rt_days , days.total)
+		shared_globals.conditional_days = data
+		return data
 
 	def get_resistance_filter_for_day(self , day):
 		return self.resistance_distribution.get(day)
@@ -97,6 +100,8 @@ class Generator():
 		return self
 
 	def generate(self):
+		self._generate()
+		return self
 		try:
 			self._generate()
 		except Exception as e:

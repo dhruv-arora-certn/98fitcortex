@@ -81,11 +81,22 @@ class WorkoutView(generics.GenericAPIView):
 	def get_main(self,gen):
 		main = gen.D1.main.selected
 		c = ExerciseSerialzier(main['cardio'], many = True)
-		rt = ExerciseSerialzier(main['resistancetraining'] , many = True)
-		return {
-			"cardio" : c.data,
-			"resistance_training" : rt.data
+		data = {
+			"cardio" : c.data
 		}
+		if main.get('resistance_training'):
+			rt = ExerciseSerialzier(main.get('resistance_training') , many = True)
+			rt_key = "resistance_training"
+			data.update({
+				rt_key : rt.data
+			})
+		elif main.get('core_strengthening'):
+			rt = ExerciseSerialzier(main.get('core_strengthening') , many = True)
+			rt_key = "core_strengthening"
+			data.update({
+				rt_key : rt.data
+			})
+		return data
 
 	def get_stretching(self,gen):
 		s = gen.D1.stretching.selected
@@ -107,6 +118,7 @@ class WorkoutView(generics.GenericAPIView):
 		logger = logging.getLogger(__name__)
 		logger.info("Workout GET")
 		gen = Generator(request.user)
+		return Response(self.get_object())
 		with open("workout/data.json") as f:
 			a = json.load(f)
 		return Response(a)
