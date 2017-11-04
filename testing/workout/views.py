@@ -104,6 +104,12 @@ class WorkoutView(generics.GenericAPIView):
 		return {
 			"stretching" : sw.data
 		}
+	def get_cooldown(self , gen):
+		cooldown = gen.D1.cooldown.selected['cooldown']
+		cooldown_serializer = ExerciseSerialzier(cooldown , many = True)
+		return {
+			"cooldown": cooldown_serializer.data
+		}
 
 	def get_object(self):
 		gen = Generator(self.request.user)
@@ -111,7 +117,8 @@ class WorkoutView(generics.GenericAPIView):
 		return {
 			**self.get_warmup(gen),
 			**self.get_main(gen),
-			**self.get_stretching(gen)
+			**self.get_stretching(gen),
+			**self.get_cooldown(gen)
 
 		}
 	def get(self , request , *args , **kwargs):

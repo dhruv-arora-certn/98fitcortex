@@ -41,7 +41,7 @@ NoviceDays = Novice(
 
 BeginnerDays = Beginner(
 	WeightLoss(
-		days(5,2,5)		
+		days(5,2,5)
 	),
 	WeightGain(
 		days(2,3,5)
