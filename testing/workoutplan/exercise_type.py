@@ -128,14 +128,16 @@ class Main(Base):
 
 	def buildResistanceTraining(self):
 		self.conditionalType = exercise.ResistanceTraining
-		return self
+		l = []
 		for e in self.resistance_filter.filters:
 			rt = exercise.ResistanceTraining(
 				user = self.user,
-				duration = self.duration,
-				filters = e.get('filter') 
+				count = e.get('count' , 1),
+				filters = e.get('filter')
 			)
-		pass
+			rt.build()
+			l.extend(rt.selected)
+		return l
 
 	def buildCoreStrengthening(self):
 		self.duration = 300

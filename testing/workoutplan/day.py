@@ -30,12 +30,18 @@ class ExerciseDay:
 		self.warmup = exercise_type.Warmup(self.user , mainCardio = self.main)
 		self.warmup.build()
 		return self
-	
+
 	def buildCoolDown(self):
 		self.cooldown = exercise_type.Warmup(self.user , mainCardio = self.main)
 		self.cooldown.build()
 		self.cooldown.selected['cooldown'] = self.cooldown.selected['warmup']
 		del self.cooldown.selected['warmup']
+		self.cooldown.selected['cooldown'].append(
+			type("CoolDown" , () , {
+				"duration" : 900,
+				"workout_name" : "Slow Walk"
+			})
+		)
 		return self
 
 	def buildStretching(self):

@@ -74,13 +74,20 @@ class TimeBasedCardio(ExerciseBase):
 
 class ResistanceTraining(ExerciseBase):
 
-	def __init__( self , user , duration , filters):
-		super().__init__( user , duration)
-		self.filters = filters
+	def __init__( self , user , count , filters):
+		self.filter = filters
 		self.model = models.ResistanceTrainingExercise
+		self.count = count
+		self.selected = []
 
 	def get_items(self):
-		return self.model.objects.filter(self.filter)
+		return list(self.model.objects.filter(self.filter))
+
+	def build(self):
+		items = self.get_items()
+		selected_items = random.sample(items , self.count)
+		self.selected.extend(selected_items)
+		return self
 
 
 class CoreStrengthening(ExerciseBase):

@@ -90,6 +90,9 @@ class Luggage:
 		self.batchSize = batchSize
 		self.max_iterations = 20
 
+		if not isinstance(self.items , list):
+			raise TypeError("%s is not a list"%self.items)
+
 	def pickAndPack(self):
 		selectedWeight = sum(getattr(e , self.key)*self.multiplier for e in self.packed)
 		counter = 0
@@ -242,7 +245,7 @@ def get_cardio_intensity_filter(user):
 		return [
 			{
 				"filter" : Q(exercise_level = "Low"),
-				"duration" : 60 
+				"duration" : 60
 			},
 			{
 				"filter" : Q(exercise_level = "Moderate"),
