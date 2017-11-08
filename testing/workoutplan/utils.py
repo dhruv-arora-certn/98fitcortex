@@ -10,6 +10,7 @@ import ipdb
 import collections
 import enum
 import functools
+import logging
 
 type_list = ["WeightLoss" , "WeightGain" , "MuscleGain" , "MaintainWeight"]
 
@@ -82,23 +83,23 @@ class Luggage:
 
 	def __init__(self , weight , items , key , multiplier = 1 ,randomize = True , batchSize = 5):
 		self.weight = weight
-		self.items = items
+		self.items = set(items)
 		self.key = key
 		self.multiplier = multiplier
 		self.randomize = randomize
 		self.packed = set()
 		self.batchSize = batchSize
 		self.max_iterations = 20
+		self.logger = logging.getLogger(__name__)
+		self.logger.debug("State of Luggage %s"%self.__dict__)
 
-		if not isinstance(self.items , list):
-			raise TypeError("%s is not a list"%self.items)
 
 	def pickAndPack(self):
 		selectedWeight = sum(getattr(e , self.key)*self.multiplier for e in self.packed)
 		counter = 0
 		while selectedWeight < self.weight and counter < self.max_iterations:
-			batch = random.sample(self.items , self.batchSize)
-
+			batch = random.sample(self.items.difference(self.packed) , self.batchSize)
+			self.logger.debug("Selected Weight :%s"%selectedWeight)
 			for e in batch:
 				assert isinstance(getattr(e,self.key) , int) , "Not an integer %s - %s"%(getattr(e , self.key) , type(getattr(e , self.key)))
 				if selectedWeight + getattr(e , self.key)*self.multiplier <= self.weight :
