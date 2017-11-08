@@ -25,6 +25,8 @@ class Beginner(Base):
 						"count" : 5
 					}
 				]
+				reps = 12
+				sets = 3
 
 			@decorators.body_part_decorator(body_part_focus.LowerBody)
 			class D2:
@@ -34,30 +36,37 @@ class Beginner(Base):
 					"count" : 5
 					}
 				]
+				reps = 12
+				sets = 3
 
 		class MaintainWeight(Goals.MaintainWeight):
 
 			@decorators.body_part_decorator(body_part_focus.UpperBody)
 			class D1(UpperBodyFilter):
-				pass
+				reps = 15
+				sets = 3
+
 			@decorators.body_part_decorator(body_part_focus.LowerBody)
 			class D2(LowerBodyFilter):
-				pass
+				reps = 15
+				sets = 3
 
 		class WeightGain(Goals.WeightGain):
 
 			@decorators.body_part_decorator(body_part_focus.UpperBody)
 			class D1(ChestAndBackFilter):
-				pass
+				reps = 12
+				sets = 3
 
 			@decorators.body_part_decorator(body_part_focus.LowerBody)
 			class D2(AbdomenAndLegsFilter):
-				pass
+				reps = 12
+				sets = 3
 
 			@decorators.body_part_decorator(body_part_focus.UpperBody)
 			class D3(ShouldersAndArmsFilter):
-				pass
-
+				reps = 12
+				sets = 3
 
 class Intermediate(Base):
 	name = "intermediate"
@@ -68,44 +77,54 @@ class Intermediate(Base):
 
 			@decorators.body_part_decorator(body_part_focus.UpperBody)
 			class D1(ChestAndBackFilter):
-				pass
+				reps = 10
+				sets = 3
 
 			@decorators.body_part_decorator(body_part_focus.UpperBody)
 			class D4(ChestAndBackFilter):
-				pass
+				reps = 10
+				sets = 3
 
 			@decorators.body_part_decorator(body_part_focus.UpperBody)
 			class D3(ShouldersAndArmsFilter):
-				pass
+				reps = 10
+				sets = 3
 
 			@decorators.body_part_decorator(body_part_focus.UpperBody)
 			class D6(ShouldersAndArmsFilter):
-				pass
+				reps = 10
+				sets = 3
 
 			@decorators.body_part_decorator(body_part_focus.LowerBody)
 			class D2(AbdomenAndLegsFilter):
-				pass
+				reps = 10
+				sets = 3
 
 			@decorators.body_part_decorator(body_part_focus.LowerBody)
 			class D5(AbdomenAndLegsFilter):
-				pass
+				reps = 10
+				sets = 3
 
 		class WeightLoss(Goals.WeightLoss):
 
 			@decorators.body_part_decorator(body_part_focus.UpperBody)
 			class D1(UpperBodyFilter):
-				pass
+				reps = 15
+				sets = 3
 
 			@decorators.body_part_decorator(body_part_focus.LowerBody)
 			class D2(LowerBodyFilter):
-				pass
+				reps = 15
+				sets = 3
 
 		class MaintainWeight(Goals.MaintainWeight):
 
 			@decorators.body_part_decorator(body_part_focus.UpperBody)
 			class D1(UpperBodyFilter):
-				pass
+				reps = 12
+				sets = 3
 
 			@decorators.body_part_decorator(body_part_focus.LowerBody)
 			class D2(LowerBodyFilter):
-				pass
+				reps = 12
+				sets = 3

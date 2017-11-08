@@ -8,7 +8,7 @@ import logging
 from workout import models
 from workoutplan import exercise
 from workoutplan import shared_globals
-from .utils import Luggage , CardioStretchingFilter , get_cardio_sets_reps_duration , get_cardio_intensity_filter
+from .utils import Luggage , CardioStretchingFilter , get_cardio_sets_reps_duration , get_cardio_intensity_filter , DummyWarmup
 
 
 from django.core.cache import cache
@@ -80,7 +80,7 @@ class Warmup(Base):
 			def __init__(self,name):
 				self.workout_name = name
 
-		return list(map(lambda x : Warmup(x) , [
+		return list(map(lambda x : DummyWarmup(x) , [
 			e.functional_warmup for e in self.mainCardio.cardio
 		]))
 
@@ -136,6 +136,9 @@ class Main(Base):
 				filters = e.get('filter')
 			)
 			rt.build()
+			for obj in rt.selected:
+				setattr(obj, "reps" , self.resistance_filter.reps)
+				setattr(obj , "sets" , self.resistance_filter.sets)
 			l.extend(rt.selected)
 		return l
 
@@ -220,14 +223,15 @@ class Stretching(Base):
 
 
 	def build(self):
-		l = {"stretching" : []}
+		l = {"stretching" : set()}
 		if self.resistance_filter:
 			self.rt_stretching = self.build_rt()
-			l['stretching'].extend(self.rt_stretching)
+			l['stretching'].update(self.rt_stretching)
 
 		if self.cardio:
 			self.cardio_stretching = self.build_cardio()
-			l['stretching'].extend(self.cardio_stretching)
+			l['stretching'].update(self.cardio_stretching)
+		l['stretching'] = list(l['stretching'])
 		self.selected = l
 		return self
 

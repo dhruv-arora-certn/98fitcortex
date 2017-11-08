@@ -131,5 +131,6 @@ class Stretching(ExerciseBase):
 	def build(self):
 		items = self.get_items()
 		choice = random.choice(items)
+		choice.duration = 15
 		self.selected.append(choice)
 		return self

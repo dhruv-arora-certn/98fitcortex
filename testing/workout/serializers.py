@@ -63,7 +63,7 @@ class ExerciseSerialzier(serializers.Serializer):
 		return  getattr(obj , "sets" , 0)
 
 	def get_reps(self , obj):
-		return  getattr(obj , "sets" , 0)
+		return  getattr(obj , "reps" , 0)
 
 class WorkoutSerializer(serializers.Serializer):
 	warmup = ExerciseSerialzier(many = True , read_only = True)

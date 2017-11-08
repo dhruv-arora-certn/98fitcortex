@@ -6,7 +6,9 @@ from . import shared_globals
 
 import random
 import logging
-import sys, os
+import sys
+import os
+import itertools
 
 class ResistanceDistribution:
 
@@ -99,7 +101,18 @@ class Generator():
 			setattr(self , "D%s"%e , d)
 		return self
 
-	def generate(self):
+	def weekly_as_dict(self):
+		days = [1,2,3,4,5]
+		lists = ["warmup" , "main" , "stretching" , "cooldown"]
+		data = {}
+		for d,l in zip(days , itertools.repeat(lists)):
+			data[d] = {}
+			day_obj = getattr(self , "D%d"%d)
+			day_data = (getattr(day_obj , e) for e in l)
+			[data[d].update(**getattr(o , "selected")) for o in day_data]
+		return data
+
+	def generate(self ):
 		self._generate()
 		return self
 		try:

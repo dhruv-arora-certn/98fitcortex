@@ -256,3 +256,18 @@ def get_cardio_intensity_filter(user):
 				"duration" : 180
 			}
 			]
+
+
+class DummyWarmup:
+	duration = 300
+	def __str__(self):
+		return self.workout_name
+	def __repr__(self):
+		return self.workout_name
+	def __init__(self,name):
+		self.workout_name = name
+
+class DummyCoolDown:
+	def __init__(self , duration, workout_name):
+		self.duration = duration
+		self.workout_name = workout_name

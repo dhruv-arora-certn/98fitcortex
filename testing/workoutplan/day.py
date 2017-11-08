@@ -3,6 +3,7 @@ from . import exercise
 from . import shared_globals
 
 from django.db.models import Q
+from .utils import DummyCoolDown
 
 class ExerciseDay:
 
@@ -37,10 +38,7 @@ class ExerciseDay:
 		self.cooldown.selected['cooldown'] = self.cooldown.selected['warmup']
 		del self.cooldown.selected['warmup']
 		self.cooldown.selected['cooldown'].append(
-			type("CoolDown" , () , {
-				"duration" : 900,
-				"workout_name" : "Slow Walk"
-			})
+			DummyCoolDown(900 , "Slow Walk")
 		)
 		return self
 
