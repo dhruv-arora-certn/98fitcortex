@@ -24,10 +24,10 @@
   "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1498302256_436.jpg"
 },
 {
-  "food_name": "Veg Parantha( With 1 Tbsp Oil)",
-  "meal_type": "m1",
+  "food_name": "Veg Parantha (With 1 Tbsp Oil)",
   "quantity": -1,
-  "size": "1 Small Piece",
+  "size": "1 Medium Piece",
+  "meal_type": "m1",
   "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479212036_890.jpg"
 },
 {
@@ -38,8 +38,10 @@
   "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/70.jpg"
 },
 {
-  "food_name": "Curd Lassi with 100g curd",
+  "food_name": "Curd Lassi",
   "meal_type": "m2",
+  "quantity": -1,
+  "size": "with 100g curd",
   "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479211250_801.jpg"
 },
 {
@@ -56,15 +58,24 @@
 },
 {
   "food_name": "Chapati",
-  "meal_type": "m3",
   "quantity": -1,
-  "size": "1 Small Piece",
+  "size": "2 Small Pieces",
+  "meal_type": "m3",
   "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
 },
 {
   "food_name": "Sprouts Cheela",
   "meal_type": "m4",
+  "quantity": 2,
+  "size": "Pieces",
   "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/sprouts-cheela.jpg"
+},
+{
+  "food_name": "Masala Chai",
+  "meal_type": "m4",
+  "quantity": 1,
+  "size": "Cup",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479211772_857.jpg"
 },
 {
   "food_name": "Mix Veg",
@@ -79,13 +90,13 @@
   "quantity": -1,
   "size": "1 Quarter Plate (2 Medium Boneless Pieces)",
   "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/chicken-pulao.jpg"
-}
+},
 {
   "food_name": "Milk Without Sugar",
-  "meal_type": "m6",
+  "weight": 250,
+  "unit": "ml",
   "quantity": 1,
   "size": "Glass",
-  "unit": "ml",
-  "weight": 250,
+  "meal_type": "m6",
   "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1498302256_436.jpg"
 }]

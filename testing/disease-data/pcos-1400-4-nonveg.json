@@ -1,0 +1,85 @@
+[
+{
+  "food_name": "Herbal Drink",
+  "meal_type": "m0",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/herbal-drink.jpg"
+},
+{
+  "food_name": "Assorted Nuts like Almonds & Walnuts",
+  "meal_type": "m0",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
+},
+{
+  "food_name": "Assorted Seeds like Flax Seeds",
+  "meal_type": "m0",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/flax-seeds.jpg"
+},
+{
+  "food_name": "Baked Egg Whites",
+  "meal_type": "m1",
+  "quantity": 2,
+  "size": "Pieces",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/baked-egg-whites.jpg"
+},
+{
+  "food_name": "Oats Porridge",
+  "meal_type": "m1",
+  "quantity": 1,
+  "size": "Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479212775_965.jpg"
+},
+{
+  "food_name": "Fruit Yoghurt Without Sugar",
+  "meal_type": "m2",
+  "unit": "ml",
+  "weight": 200,
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479199327_601.jpg"
+},
+{
+  "food_name": "Urad Dal",
+  "meal_type": "m3",
+  "quantity": -1,
+  "size": "1 Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479214073_1107.jpg"
+},
+{
+  "food_name": "Sautéed Chicken and Bell Peppers",
+  "meal_type": "m3",
+  "quantity": -1,
+  "size": "4 Chicken Pieces",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/sauteed-chicken-bell-peppers.jpg"
+},
+{
+  "food_name": "Chapati",
+  "meal_type": "m3",
+  "quantity": -1,
+  "size": "2 Small Pieces",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
+},
+{
+  "food_name": "Sprouts Chaat",
+  "meal_type": "m4",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1878.jpg"
+},
+{
+  "food_name": "Coconut Water",
+  "meal_type": "m4",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/coconut-water.jpg"
+},
+{
+  "food_name": "Vegetable Pulao (with 25gm Paneer)",
+  "meal_type": "m5",
+  "quantity": -1,
+  "size": "1 Small Plate",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/vegetable-paneer-pulao.jpg"
+},
+{
+  "food_name": "Mint Amla Chutney",
+  "meal_type": "m5",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/mint-amla-chutney.jpg"
+},
+{
+  "food_name": "Arhar Dal",
+  "meal_type": "m5",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/arhar-dal.jpg"
+}]

@@ -1,40 +1,45 @@
 [
 {
-  "food_name": "Lemon Tea",
+  "food_name": "Herbal Drink",
   "meal_type": "m0",
-  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1483771779_707.jpg"
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/herbal-drink.jpg"
 },
 {
   "food_name": "Assorted Nuts like Almonds & Walnuts",
   "meal_type": "m0",
+  "quantity": 1,
+  "size": "Handful",
   "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
 },
 {
   "food_name": "Assorted Seeds like Pumpkin Seeds",
   "meal_type": "m0",
+  "quantity": 1,
+  "size": "Handful",
   "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/pumpkin-seeds.jpg"
 },
 {
-  "food_name": "Milk without Sugar",
+  "food_name": "Paneer Parantha with 1 tsp oil",
   "meal_type": "m1",
-  "quantity": 1,
-  "size": "Glass",
-  "weight": 250,
-  "unit": "ml",
-  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1498302256_436.jpg"
-},
-{
-  "food_name": "Veg Parantha (With 1 Tbsp Oil)",
   "quantity": -1,
-  "size": "1 Small Piece",
-  "meal_type": "m1",
-  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479212036_890.jpg"
+  "size": "25 gm paneer",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/paneer-parantha.jpg"
 },
 {
-  "food_name": "Big Apple",
+  "food_name": "Mint Amla Chutney",
+  "meal_type": "m1",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/mint-amla-chutney.jpg"
+},
+{
+  "food_name": "Coconut Water",
+  "meal_type": "m1",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/coconut-water.jpg"
+},
+{
+  "food_name": "Apple",
   "meal_type": "m2",
-  "quantity": 1,
-  "size": "Piece",
+  "weight": 100,
+  "unit": "gm",
   "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/70.jpg"
 },
 {
@@ -58,43 +63,39 @@
 },
 {
   "food_name": "Chapati",
-  "quantity": -1,
-  "size": "2 Small Pieces",
   "meal_type": "m3",
+  "quantity": -1,
+  "size": "1 Small Piece",
   "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
 },
 {
-  "food_name": "Sprouts Cheela",
+  "food_name": "Sprouts Cheela with 1 Tbsp Oil",
   "meal_type": "m4",
   "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/sprouts-cheela.jpg"
 },
 {
-  "food_name": "Masala Chai",
+  "food_name": "Mint Lemonade",
   "meal_type": "m4",
-  "quantity": 1,
-  "size": "Cup",
-  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479211772_857.jpg"
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/mint-lemonade.jpg"
 },
 {
-  "food_name": "Mix Veg",
+  "food_name": "Paneer Capsicum Sabzi",
   "meal_type": "m5",
   "quantity": -1,
-  "size": "1 Katori",
-  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479212017_888.jpg"
+  "size": "25 gm paneer",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/paneer-capsicum.jpg"
 },
 {
-  "food_name": "Chicken Pulao with Brown Rice",
+  "food_name": "Sabut Moong Dal",
   "meal_type": "m5",
-  "quantity": -1,
-  "size": "1 Quarter Plate (2 Medium Boneless Pieces)",
-  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/chicken-pulao.jpg"
+  "quantity": 1,
+  "size": "Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/302.jpg"
 },
 {
-  "food_name": "Milk Without Sugar",
-  "weight": 250,
-  "unit": "ml",
+  "food_name": "Brown Rice",
+  "meal_type": "m5",
   "quantity": 1,
-  "size": "Glass",
-  "meal_type": "m6",
-  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1498302256_436.jpg"
+  "size": "Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/177.jpg"
 }]

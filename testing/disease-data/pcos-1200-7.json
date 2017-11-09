@@ -1,29 +1,32 @@
 [
 {
-  "food_name": "Green Tea",
+  "food_name": "Herbal Drink",
   "meal_type": "m0",
-  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479224957_815.jpg"
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/herbal-drink.jpg"
 },
 {
-  "food_name": "4-5 Almonds/Walnuts",
+  "food_name": "Assorted Nuts like Almonds & Walnuts",
   "meal_type": "m0",
+  "quantity": 1,
+  "size": "Handful",
   "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
 },
 {
-  "food_name": "Elaichi Milk without Sugar",
+  "food_name": "Roasted Paneer (low fat)",
   "meal_type": "m1",
-  "quantity": 1,
-  "size": "Glass",
-  "weight": 250,
-  "unit": "ml",
-  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/elaichi-milk.jpg"
+  "weight": 50,
+  "unit": "gm",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/grilled-paneer.jpg"
 },
 {
-  "food_name": "Oats Porridge",
+  "food_name": "Besan Roti with 1/2 tsp oil",
   "meal_type": "m1",
-  "quantity": 1,
-  "size": "Katori",
-  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479212775_965.jpg"
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/besan-roti.jpg"
+},
+{
+  "food_name": "Mint Amla Chutney",
+  "meal_type": "m1",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/mint-amla-chutney.jpg"
 },
 {
   "food_name": "Apple",
@@ -33,16 +36,18 @@
   "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/70.jpg"
 },
 {
-  "food_name": "Curd/Yogurt",
+  "food_name": "Low Fat Yogurt",
   "meal_type": "m2",
-  "quantity": 1,
-  "size": "Katori",
+  "weight": 100,
+  "unit": "gm",
   "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/483.jpg"
 },
 {
-  "food_name": "Grilled Paneer(50gm Paneer)",
+  "food_name": "Arhar Dal",
   "meal_type": "m3",
-  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/grilled-paneer.jpg"
+  "quantity": 1,
+  "size": "Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/arhar-dal.jpg"
 },
 {
   "food_name": "Stir Fried Bell Peppers",
@@ -59,17 +64,22 @@
   "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
 },
 {
-  "food_name": "Sprouts Chaat",
+  "food_name": "Sprouts & Corn Chaat",
   "meal_type": "m4",
   "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1878.jpg"
 },
 {
-  "food_name": "Mix Veg with less oil",
-  "meal_type": "m5",
-  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/mix-vegetables-paneer.jpg"
+  "food_name": "Coconut Water",
+  "meal_type": "m4",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/coconut-water.jpg"
 },
 {
-  "food_name": "Chana Daal with Lauki",
+  "food_name": "Veg Soup",
+  "meal_type": "m5",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/veg-soup.jpg"
+},
+{
+  "food_name": "Chana Dal with Lauki",
   "meal_type": "m5",
   "quantity": "1",
   "size": "Katori",
@@ -79,15 +89,6 @@
   "food_name": "Chapati",
   "meal_type": "m5",
   "quantity": -1,
-  "size": "1 Small Piece",
+  "size": "1 Piece",
   "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
-},
-{
-  "food_name": "Milk without Sugar",
-  "meal_type": "m6",
-  "quantity": 1,
-  "size": "Glass",
-  "weight": 250,
-  "unit": "ml",
-  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1498302256_436.jpg"
 }]

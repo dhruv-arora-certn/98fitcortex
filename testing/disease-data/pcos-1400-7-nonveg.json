@@ -1,0 +1,87 @@
+[
+{
+  "food_name": "Herbal Drink",
+  "meal_type": "m0",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/herbal-drink.jpg"
+},
+{
+  "food_name": "Assorted Nuts like Almonds & Walnuts",
+  "meal_type": "m0",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/almond-walnuts.jpg"
+},
+{
+  "food_name": "Boiled Egg Whites",
+  "meal_type": "m1",
+  "quantity": "2",
+  "size": "Pieces",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/184.jpg"
+},
+{
+  "food_name": "Besan Roti with 1/2 tsp oil",
+  "meal_type": "m1",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/besan-roti.jpg"
+},
+{
+  "food_name": "Amla Chutney",
+  "meal_type": "m1",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/diabetes/mint-amla-chutney.jpg"
+},
+{
+  "food_name": "Apple",
+  "meal_type": "m2",
+  "quantity": 1,
+  "size": "Big Piece",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/70.jpg"
+},
+{
+  "food_name": "Arhar Dal",
+  "meal_type": "m3",
+  "quantity": 1,
+  "size": "Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/arhar-dal.jpg"
+},
+{
+  "food_name": "Palak Paneer with 50g Paneer",
+  "meal_type": "m3",
+  "quantity": 1,
+  "size": "Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479213235_1003.jpg"
+},
+{
+  "food_name": "Chapati",
+  "meal_type": "m3",
+  "quantity": -1,
+  "size": "2 Small Pieces",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
+},
+{
+  "food_name": "Sprouts & Corn Chaat",
+  "meal_type": "m4",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1878.jpg"
+},
+{
+  "food_name": "Coconut Water",
+  "meal_type": "m4",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/coconut-water.jpg"
+},
+{
+  "food_name": "Mix Veg Sabzi",
+  "meal_type": "m5",
+  "quantity": -1,
+  "size": "1 Katori",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479212017_888.jpg"
+},
+{
+  "food_name": "Grilled Chicken",
+  "meal_type": "m5",
+  "quantity": 4,
+  "size": "Pieces",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/pcos/grilled-chicken.jpg"
+},
+{
+  "food_name": "Chapati",
+  "meal_type": "m5",
+  "quantity": -1,
+  "size": "2 Small Pieces",
+  "image": "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/diet/1479233095_1227.jpg"
+}]
