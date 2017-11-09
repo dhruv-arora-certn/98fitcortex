@@ -1,12 +1,8 @@
 import pytest
 import functools
 
+from .fixtures import workout
 from django.core.cache import cache
-
-
-@pytest.fixture
-def workout():
-	return cache.get("workout_8_45_1")
 
 def get_low_intensity_workouts(workouts):
 	return filter(
@@ -60,3 +56,7 @@ def test_weightloss_cardio_duration(workout):
 		duration = sum(e.duration*e.sets for e in v['cardio'])
 		assert duration == 1500 , "Beginner WeightLoss Cardio to be suggested for 25 minutes"
 
+
+def test_static_stretching_individual_exercise_duration(workout):
+	for k,v in workout.items():
+		assert all(e.duration == 15 for e in v['stretching']) , "All exercises are not of 15 seconds"
