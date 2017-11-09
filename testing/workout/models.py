@@ -6,9 +6,9 @@ from epilogue.models import *
 # Create your models here.
 
 class BaseExercise():
-	
+
 	def __repr__(self):
-		return self.workout_name
+		return "%s : %s"%(str(self.workout_name) , getattr(self  , "exercise_level" , "None"))
 
 	def __str__(self):
 		return self.workout_name
@@ -16,7 +16,7 @@ class BaseExercise():
 class CardioFloorExercise(BaseExercise,models.Model):
 	workout_name = models.CharField(max_length=250, blank=True, null=True)
 	reps = models.IntegerField(blank=True, null=True)
-	duration = models.CharField(max_length=100, blank=True, null=True)
+	duration = models.IntegerField( blank=True, null=True)
 	swing1 = models.BooleanField(default = True)
 	home = models.BooleanField(default = True)
 	gym = models.BooleanField(default = True)
@@ -29,7 +29,7 @@ class CardioFloorExercise(BaseExercise,models.Model):
 	
 class CardioTimeBasedExercise(BaseExercise,models.Model):
 	workout_name = models.CharField(max_length=250, blank=True, null=True)
-	duration = models.CharField(max_length=250, blank=True, null=True)
+	duration = models.IntegerField( blank=True, null=True)
 	home = models.BooleanField(default = True)
 	gym = models.BooleanField(default = True)
 	machine_required = models.BooleanField(default = True)
@@ -129,3 +129,30 @@ class WarmupCoolDownTimeBasedExercise(BaseExercise,models.Model):
 	status = models.IntegerField()
 	home  = models.BooleanField()
 	gym  = models.BooleanField()
+
+
+class GeneratedExercisePlan(models.Model):
+	class Meta:
+		managed = False
+		db_table = "erp_exercise_plan"
+	
+	created_on = models.DateTimeField(auto_now_add = True)
+	year = models.IntegerField()
+	customer = models.ForeignKey(Customer , related_name = "workouts", db_column = "erp_customer_id")
+	user_week_id = models.IntegerField()
+	week_id = models.IntegerField()
+
+class GeneratedExercisePlanDetails(models.Model):
+	class Meta:
+		managed = False
+		db_table = "erp_exercise_plan_detail"
+	workoutplan = models.ForeignKey(GeneratedExercisePlan , related_name = "exercises", db_column = "erp_exercise_plan_id")
+	day = models.IntegerField()
+	exercise_type = models.IntegerField()
+	workout_name = models.CharField(max_length = 100)
+	time = models.CharField(max_length = 50)
+	reps = models.CharField(max_length=50)
+	sets = models.CharField(max_length=50)
+	machine_name = models.CharField(max_length=50)
+	equipment_name = models.CharField(max_length=50)
+	image_name = models.CharField(max_length = 100)

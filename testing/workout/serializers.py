@@ -29,38 +29,41 @@ class CoolDownSerializer(serializers.ModelSerializer):
 
 
 class ExerciseSerialzier(serializers.Serializer):
-	name = serializers.CharField()
-	description = serializers.CharField()
-	duration = serializers.IntegerField()
-	duration_unit = serializers.IntegerField()
-	equipment = serializers.CharField()
-	image = serializers.URLField()
-	sets = serializers.IntegerField()
-	reps = serializers.IntegerField()
+	name = serializers.SerializerMethodField()
+	description = serializers.SerializerMethodField()
+	duration = serializers.SerializerMethodField()
+	duration_unit = serializers.SerializerMethodField()
+	equipment = serializers.SerializerMethodField()
+	image = serializers.SerializerMethodField()
+	sets = serializers.SerializerMethodField()
+	reps = serializers.SerializerMethodField()
 
 	def get_name(self ,obj):
-		pass
+		return obj.workout_name
 
 	def get_description(self ,obj):
 		pass
 
 	def get_duration(self ,obj):
-		pass
+		return getattr(obj,"duration" , 0)
 
 	def get_duration_unit(self ,obj):
-		pass
+		return "Seconds"
 
 	def get_equipment(self ,obj):
-		pass
+		return "None"
 
 	def get_image(self , obj):
-		pass
+		base = "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/exercise/"
+		if hasattr(obj , "image_name"):
+			return "%s%s"%(base,getattr(obj , "image_name" , "http://www.98fit.com//webroot/workout_images/workout_blank.jpg"))
+		return "http://www.98fit.com//webroot/workout_images/workout_blank.jpg" 
 
 	def get_sets(self , obj):
-		pass
+		return 0
 
 	def get_reps(self , obj):
-		pass
+		return 0
 
 class WorkoutSerializer(serializers.Serializer):
 	warmup = ExerciseSerialzier(many = True , read_only = True)

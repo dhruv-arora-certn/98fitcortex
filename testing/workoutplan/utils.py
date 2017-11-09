@@ -1,6 +1,13 @@
 from workoutplan import levels
-from dietplan.goals import Goals
+from workoutplan.goals import Goals
 from collections import namedtuple
+from workoutplan import resistance_data
+from django.db.models import Q
+
+import random
+import ipdb
+import collections
+import enum
 
 type_list = ["WeightLoss" , "WeightGain" , "MuscleGain" , "MaintainWeight"]
 
@@ -17,16 +24,16 @@ MaintainWeight = namedtuple("MaintainWeight" , ["days"])
 
 NoviceDays = Novice(
 	WeightLoss(
-		days(5,None,5)
+		days(5,0,5)
 	),
 	WeightGain(
-		days(3,None,3)
+		days(3,0,3)
 	),
 	MuscleGain(
-		days(4,None,4)
+		days(4,0,4)
 	),
 	MaintainWeight(
-		days(4,None,4)
+		days(4,0,4)
 	)
 )
 
@@ -69,3 +76,69 @@ ConditionalTrainingDays = ct(
 )
 
 
+class Luggage:
+
+	def __init__(self , weight , items , key , randomize = True , batchSize = 5):
+		self.weight = weight
+		self.items = items
+		self.key = key
+		self.randomize = randomize
+		self.packed = set()
+		self.batchSize = batchSize
+
+	def pickAndPack(self):
+		selectedWeight = sum(getattr(e , self.key) for e in self.packed)
+		while selectedWeight < self.weight:
+			batch = random.sample(self.items , self.batchSize)
+
+			for e in batch:
+				assert isinstance(getattr(e,self.key) , int) , "Not an integer %s - %s"%(getattr(e , self.key) , type(getattr(e , self.key)))
+				if selectedWeight + getattr(e , self.key) <= self.weight :
+					selectedWeight += getattr(e , self.key)
+					self.packed.add(e)
+		return self
+
+
+def get_resistance_filter( user , day_number):
+	assert user.level_obj is not levels.Novice
+
+	r =  getattr(user.level_obj.Resistance , user.goal.__name__)
+	return getattr(r , "D%s"%(day_number))
+
+def get_days(cls_obj , category):
+		goal = cls_obj.user.goal
+		if goal == Goals.WeightLoss:
+			return getattr(category,"WeightLoss").days
+
+		elif goal == Goals.WeightGain:
+			return getattr(category,"WeightGain").days
+
+		elif goal == Goals.MuscleGain:
+			return getattr(category,"MuscleGain").days
+
+def get_category_decorator(category):
+	def decorator(fn):
+		def applyCat(cls_obj):
+			return get_days(cls_obj , category)
+		return applyCat
+	return decorator
+
+filter_tuple = collections.namedtuple("filter_" , ["filter" , "count"])
+
+class CardioStretchingFilter(enum.Enum):
+	QUADS = filter_tuple(
+		filter = Q(muscle_group_name = "Quadriceps"),
+		count = 1
+	)
+	CHEST = filter_tuple(
+		filter = Q(muscle_group_name  = "Chest"),
+		count = 1
+	)
+	GLUTES = filter_tuple(
+		filter = Q(muscle_group_name = "Glutes"),
+		count = 1
+	)
+	BACK = filter_tuple(
+		filter = Q(muscle_group_name = "Back"),
+		count = 1
+	)

@@ -201,4 +201,12 @@ EMAIL_HOST_PASSWORD="AqJF54BZeSJofQ+di5r3p4L5yV23JXTWLMib7BcAqO7y"
 email_user_name="Ghost"
 DEFAULT_FROM_USER="info@98Fit"
 
+CACHES = {
+	'default': {
+				'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+				'LOCATION': '/var/tmp/django_cache',
+				'TIMEOUT' : None
+			}
+}
 
+CACHE_WORKOUT=False

@@ -338,7 +338,7 @@ class Customer(models.Model):
 				print("New Activity ======>" , relation.new_activity)
 				return relation.new_activity
 		return float(self.lifestyle)
-	
+
 	@property
 	def weight_type(self):
 		if self.w_type == 2:
@@ -552,6 +552,21 @@ class Customer(models.Model):
 		elif self.level == 3:
 			return levels.Intermediate
 		return levels.Novice
+
+	def is_novice(self):
+		if self.level == 1:
+			return True
+		return False
+
+	def is_intermediate(self):
+		if self.level == 3:
+			return True
+		return False
+
+	def is_beginner(self):
+		if self.level == 2:
+			return True
+		return False
 
 	def has_diabetes(self):
 		return bool(self.customermedicalconditions_set.filter(condition_name = "diabetes"))
@@ -964,3 +979,4 @@ class CustomerActivityLogs(models.Model):
 	start = models.DateTimeField(auto_now = False)
 	end = models.DateTimeField(auto_now = False)
 	distance = models.IntegerField()
+
