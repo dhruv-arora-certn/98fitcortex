@@ -89,7 +89,7 @@ class Luggage:
 		self.randomize = randomize
 		self.packed = set()
 		self.batchSize = batchSize
-		self.max_iterations = 20
+		self.max_iterations = 50
 		self.logger = logging.getLogger(__name__)
 		self.logger.debug("State of Luggage %s"%self.__dict__)
 

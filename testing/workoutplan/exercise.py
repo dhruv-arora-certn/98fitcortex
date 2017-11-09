@@ -57,9 +57,9 @@ class FloorBasedCardio(ExerciseBase):
 			setattr(x , "reps" , self.srd_container.reps)
 			return x
 
-		#self.selected = list(map(
-		#	add_sets_reps , self.selected
-		#))
+		self.selected = list(map(
+			add_sets_reps , self.selected
+		))
 		return self
 
 class TimeBasedCardio(ExerciseBase):
@@ -69,7 +69,20 @@ class TimeBasedCardio(ExerciseBase):
 		self.model = models.CardioTimeBasedExercise
 
 	def build(self):
+		self.srd_container = get_cardio_sets_reps_duration(self.user.level_obj , self.user.goal , self.user.user_workout_week)
 		self.selected.append(random.choice(self.get_items()))
+
+		def add_sets_reps(x):
+			setattr(x , "sets" , 1)
+			setattr(x , "reps" , 1)
+			setattr(x , "duration" , self.srd_container.duration)
+			return x
+
+		self.selected = list(
+			map(
+				add_sets_reps , self.selected
+			)
+		)
 		return self
 
 class ResistanceTraining(ExerciseBase):
