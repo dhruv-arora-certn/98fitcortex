@@ -35,6 +35,17 @@ def add_empty_day_in_week(defaults):
 		return wrapper
 	return decorator
 
+def sorter(key , reverse = False):
+	def decorator(f):
+		@functools.wraps(f)
+		def wrapper(*args , **kwargs):
+			vals = f(*args , **kwargs)
+			return sorted(vals , key = key , reverse = reverse)
+		return wrapper
+	return decorator
+
+
+
 def scale_field(field):
 	def decorator(fn):
 		@functools.wraps(fn)

@@ -15,6 +15,7 @@ from workoutplan.generator import Generator
 
 import random
 import json
+import logging
 
 def shuffle(qs):
 	l = list(qs)
@@ -103,6 +104,9 @@ class WorkoutView(generics.GenericAPIView):
 
 		}
 	def get(self , request , *args , **kwargs):
+		logger = logging.getLogger(__name__)
+		logger.info("Workout GET")
+		gen = Generator(request.user)
 		with open("workout/data.json") as f:
 			a = json.load(f)
 		return Response(a)

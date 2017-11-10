@@ -152,7 +152,7 @@ REST_FRAMEWORK = {
 	'DEFAULT_THROTTLE_RATES' : {
 		'navratri-sms' : '10/day',
 		'anon' : '100/hour',
-		'user' : '200/hour'
+		'user' : '400/hour'
 	}
 }
 
@@ -168,19 +168,44 @@ CORS_ORIGIN_ALLOW_ALL =  True
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+	'formatters' : {
+		'verbose' : {
+			'format' : '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+		},
+		'simple' : {
+			'format' : '%(levelname)s %(asctime)s %(module)s %(message)s'
+		}
+	},
     'handlers': {
-        'file': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'debug': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': 'shikhar.log',
+            'formatter': 'simple',
+			'filename' : 'debug.log'
         },
+        'error': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'error.log',
+		}
     },
     'loggers': {
         'django': {
-            'handlers': ['file'],
-            'level': 'INFO',
+			'handlers' : [ 'debug' ],
+			'formatter' : 'verbose',
             'propagate': True,
         },
+		'workoutplan' : {
+			'handlers' : [ 'debug' ],
+			'formatter' : 'verbose',
+			'level' : 'DEBUG',
+			'propagate' :  True
+		}
     },
 }
 
