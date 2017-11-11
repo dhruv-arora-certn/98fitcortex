@@ -225,7 +225,7 @@ def get_cardio_sets_reps_duration( level , goal , user_workout_week, cardio = Tr
 	container = collections.namedtuple("container" , ["sets" , "reps" , "duration"])
 	return container(*val)
 
-def get_cardio_intensity_filter(user):
+def get_cardio_intensity_filter_for_warmup(user):
 	if user.is_novice():
 		return [{
 			"filter" : Q(exercise_level = "Low"),

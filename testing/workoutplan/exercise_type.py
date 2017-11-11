@@ -55,7 +55,7 @@ class Warmup(Base):
 		'''
 		To be used in the case where a normal Warm Up and Cool Down is to be generated
 		'''
-		filters = get_cardio_intensity_filter(self.user)
+		filters = get_cardio_intensity_filter_for_warmup(self.user)
 		modelToUse = models.WarmupCoolDownTimeBasedExercise
 		l = []
 
