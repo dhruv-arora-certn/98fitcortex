@@ -8,6 +8,7 @@ from django.conf import settings
 from workout import models
 from workoutplan.utils import Luggage , get_cardio_sets_reps_duration 
 from workoutplan import shared_globals
+from workoutplan import periodization
 
 random.seed()
 
@@ -50,7 +51,19 @@ class FloorBasedCardio(ExerciseBase):
 	def build(self):
 		self.srd_container = get_cardio_sets_reps_duration(self.user.level_obj , self.user.goal , self.user.user_workout_week)
 		self.multiplier = self.srd_container.sets
-		super().build()
+		self.periodised_filters = periodization.get_cardio_periodized(self.user.level_obj , self.user.user_workout_week)
+		self.selected = []
+
+		for e in self.periodised_filters:
+			items = self.model.objects.filter(e.get("filter"))
+			duration = self.srd_container.duration * e.get("ratio")
+			l = Luggage(
+				duration,
+				items,
+				"duration",
+				self.multiplier
+			).pickAndPack()
+			self.selected.extend(l.packed)
 
 		def add_sets_reps(x):
 			setattr(x , "sets" , self.srd_container.sets)

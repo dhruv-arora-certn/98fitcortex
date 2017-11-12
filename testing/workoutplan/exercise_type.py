@@ -8,7 +8,7 @@ import logging
 from workout import models
 from workoutplan import exercise
 from workoutplan import shared_globals
-from .utils import Luggage , CardioStretchingFilter , get_cardio_sets_reps_duration , get_cardio_intensity_filter , DummyWarmup
+from .utils import Luggage , CardioStretchingFilter , get_cardio_sets_reps_duration , get_cardio_intensity_filter_for_warmup , DummyWarmup
 
 
 from django.core.cache import cache
@@ -59,7 +59,7 @@ class Warmup(Base):
 		modelToUse = models.WarmupCoolDownTimeBasedExercise
 		l = []
 
-		for e in get_cardio_intensity_filter(self.user):
+		for e in get_cardio_intensity_filter_for_warmup(self.user):
 			self.logger.debug(e.get('filter') & self.bodyPartInFocus)
 			warmup = exercise.Warmup(
 				self.user,
