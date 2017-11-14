@@ -1,6 +1,7 @@
 from datetime import datetime,timedelta
 from django.db import models 
 from django.db.models.expressions import RawSQL 
+from django.db.models.functions import Coalesce
 from functools import partial
 from weasyprint import HTML
 from django.template.loader import render_to_string
@@ -20,16 +21,16 @@ def get_month(date = datetime.now()):
 	return date.month
 
 def aggregate_avg(field , qs):
-	return qs.aggregate(average =  models.Avg(field))
+	return qs.aggregate(average =  Coalesce(models.Avg(field) , 0))
 
 def aggregate_min(field,qs):
-	return qs.aggregate( minimum =  models.Min(field))
+	return qs.aggregate( minimum =  Coalesce(models.Min(field) , 0))
 
 def aggregate_max(field,qs):
-	return qs.aggregate( maximum = models.Max(field))
+	return qs.aggregate( maximum = Coalesce(models.Max(field) , 0))
 
 def aggregate_sum(field,qs):
-	return qs.aggregate(total = models.Sum(field))
+	return qs.aggregate(total = Coalesce(models.Sum(field) , 0))
 
 def previous_day():
 	today = datetime.now().date()
