@@ -170,10 +170,10 @@ class SleepLoggingWeeklySerializer(serializers.Serializer):
 		return obj['date'].strftime("%a")
 
 class SleepAggregationSerializer(serializers.Serializer):
-	minimum = serializers.IntegerField()
-	maximum = serializers.IntegerField()
-	average = serializers.FloatField()
-	total = serializers.IntegerField()
+	minimum = serializers.IntegerField(default = 0)
+	maximum = serializers.IntegerField(default = 0)
+	average = serializers.FloatField(default = 0)
+	total = serializers.IntegerField(default = 0)
 
 class WaterAggregationSerializer(SleepAggregationSerializer):
 	#while this does not add any functionality , it keeps the namespacing good
