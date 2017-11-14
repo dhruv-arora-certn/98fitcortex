@@ -28,7 +28,7 @@ class ExerciseDay:
 		self.main.build()
 
 	def buildWarmup(self):
-		self.warmup = exercise_type.Warmup(self.user , mainCardio = self.main)
+		self.warmup = exercise_type.Warmup(self.user , mainCardio = self.main )
 		self.warmup.build()
 		return self
 

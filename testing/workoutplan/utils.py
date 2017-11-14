@@ -98,7 +98,7 @@ class Luggage:
 		selectedWeight = sum(getattr(e , self.key)*self.multiplier for e in self.packed)
 		counter = 0
 		while selectedWeight < self.weight and counter < self.max_iterations:
-			batch = random.sample(self.items.difference(self.packed) , self.batchSize)
+			batch = random.sample(self.items.difference(self.packed) , min(self.batchSize , len(self.items.difference(self.packed))))
 			self.logger.debug("Selected Weight :%s"%selectedWeight)
 			for e in batch:
 				assert isinstance(getattr(e,self.key) , int) , "Not an integer %s - %s"%(getattr(e , self.key) , type(getattr(e , self.key)))

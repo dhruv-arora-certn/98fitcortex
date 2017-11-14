@@ -20,7 +20,7 @@ def get_moderate_intensity_workouts(workouts):
 def test_total_warmup_duration(workout):
 	for i,e in workout.items():
 		duration = sum(obj.duration for obj in e['warmup'])
-		assert duration == 300 , "Warmup Duration is not 300 on Day %d"%e
+		assert duration == 300 , "Warmup Duration is not 300 on Day %d"%i
 
 def test_beginner_warmup_duration(workout):
 

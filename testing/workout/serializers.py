@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from workout.models import WarmupCoolDownMobilityDrillExercise, CardioTimeBasedExercise , NoviceCoreStrengthiningExercise , StretchingExercise
+import logging
 
+logger = logging.getLogger(__name__)
 
 class WarmupSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -42,16 +44,34 @@ class ExerciseSerialzier(serializers.Serializer):
 		return obj.workout_name
 
 	def get_description(self ,obj):
-		pass
+		description = getattr(obj , "description" , None)
+		if description and description.lower().strip() == "na":
+			return None
+		return description
 
-	def get_duration(self ,obj):
-		return getattr(obj,"duration" , 0)
+	def get_duration(self , obj):
+		duration =  getattr(obj ,"duration" , None)
+		logger.debug("Duration is %s"%duration)
+		if duration:
+			if int(duration) > 60:
+				return int(duration)/60
+		return duration
 
-	def get_duration_unit(self ,obj):
-		return "Seconds"
+	def get_duration_unit(self , obj):
+		duration =  getattr(obj ,"duration" , None)
+		if duration:
+			if duration > 60:
+				return "Minutes"
+			else:
+				return "Seconds"
+		return duration
+
 
 	def get_equipment(self ,obj):
-		return "None"
+		equipment = getattr(obj , "machine_name" , None)
+		if isinstance(equipment , str) and equipment.lower().strip() == "na":
+			return None
+		return equipment
 
 	def get_image(self , obj):
 		base = "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/exercise/"
@@ -60,10 +80,10 @@ class ExerciseSerialzier(serializers.Serializer):
 		return "http://www.98fit.com//webroot/workout_images/workout_blank.jpg"
 
 	def get_sets(self , obj):
-		return  getattr(obj , "sets" , 0)
+		return  getattr(obj , "sets" , None)
 
 	def get_reps(self , obj):
-		return  getattr(obj , "reps" , 0)
+		return  getattr(obj , "reps" , None)
 
 class WorkoutSerializer(serializers.Serializer):
 	warmup = ExerciseSerialzier(many = True , read_only = True)

@@ -28,7 +28,10 @@ class Warmup(Base):
 		super().__init__()
 		self.user = user
 		self.mainCardio = mainCardio
-		self.bodyPartInFocus = bodyPartInFocus
+		if hasattr(mainCardio.resistance_filter , "bodyPartInFocus"):
+			self.bodyPartInFocus = mainCardio.resistance_filter.bodyPartInFocus.filter
+		else:
+			self.bodyPartInFocus = Q()
 		self.selected = []
 
 	def decideWarmup(self):
@@ -56,7 +59,7 @@ class Warmup(Base):
 		To be used in the case where a normal Warm Up and Cool Down is to be generated
 		'''
 		filters = get_cardio_intensity_filter_for_warmup(self.user)
-		modelToUse = models.WarmupCoolDownTimeBasedExercise
+		modelToUse = models.WarmupCoolDownMobilityDrillExercise
 		l = []
 
 		for e in get_cardio_intensity_filter_for_warmup(self.user):
