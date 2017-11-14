@@ -307,7 +307,9 @@ class Customer(models.Model):
 	@property
 	@functools.lru_cache(maxsize = 32)
 	def user_workout_week(self):
-		return  (self.workouts.last().week_id - self.workouts.first().week_id) + 1 or 1
+		if self.workouts.count():
+			return  (self.workouts.last().week_id - self.workouts.first().week_id) + 1 or 1
+		return 1
 
 	@property
 	def is_active(self):

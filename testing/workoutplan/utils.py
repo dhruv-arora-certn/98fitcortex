@@ -126,6 +126,10 @@ def get_days(cls_obj , category):
 		elif goal == Goals.MuscleGain:
 			return getattr(category,"MuscleGain").days
 
+		elif goal == Goals.MaintainWeight:
+			return getattr(category,"MaintainWeight").days
+
+
 def get_category_decorator(category):
 	def decorator(fn):
 		def applyCat(cls_obj):
