@@ -276,3 +276,18 @@ class DummyCoolDown:
 	def __init__(self , duration, workout_name):
 		self.duration = duration
 		self.workout_name = workout_name
+
+
+def filter_key_from_q(q_obj , key_to_escape):
+	new_children = []
+
+	for e in q_obj.children:
+		#e is a tuple
+		if isinstance(e , Q):
+			e = filter_key_from_q(e , key_to_escape)
+			new_children.append(e)
+		elif e[0] != key_to_escape:
+			new_children.append(e)
+
+	q_obj.children = new_children
+	return q_obj

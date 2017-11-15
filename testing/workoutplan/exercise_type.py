@@ -8,7 +8,7 @@ import logging
 from workout import models
 from workoutplan import exercise
 from workoutplan import shared_globals
-from .utils import Luggage , CardioStretchingFilter , get_cardio_sets_reps_duration , get_cardio_intensity_filter_for_warmup , DummyWarmup
+from .utils import Luggage , CardioStretchingFilter , get_cardio_sets_reps_duration , get_cardio_intensity_filter_for_warmup , DummyWarmup , filter_key_from_q
 
 
 from django.core.cache import cache
@@ -206,7 +206,7 @@ class Stretching(Base):
 		for e in self.resistance_filter.filters:
 			stretching = exercise.Stretching(
 				user = self.user,
-				filterToUse = e.get('filter') 
+				filterToUse = e.get('filter')
 			)
 			stretching.build()
 			l.extend(stretching.selected)

@@ -97,8 +97,9 @@ class Generator():
 		for e in days:
 			resistance_filter = self.get_resistance_filter_for_day(e)
 			make_cardio = self.should_make_cardio(e)
-			d = ExerciseDay(e , self.user , make_cardio = make_cardio , resistance_filter = resistance_filter).build()
+			d = ExerciseDay(e , self.user , make_cardio = make_cardio , resistance_filter = resistance_filter)
 			setattr(self , "D%s"%e , d)
+			d.build()
 		return self
 
 	def weekly_as_dict(self):

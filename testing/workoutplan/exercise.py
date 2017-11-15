@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.conf import settings
 
 from workout import models
-from workoutplan.utils import Luggage , get_cardio_sets_reps_duration 
+from workoutplan.utils import Luggage , get_cardio_sets_reps_duration  , filter_key_from_q
 from workoutplan import shared_globals
 from workoutplan import periodization
 
@@ -143,7 +143,7 @@ class Stretching(ExerciseBase):
 
 	def __init__(self , user , filterToUse = Q()):
 		self.user = user
-		self.filterToUse = filterToUse
+		self.filterToUse = filter_key_from_q(filterToUse , "exercise_type")
 		self.model = models.StretchingExercise
 		#self.cache_key = "%s_%s"%(self.model.__name__ , "_".join("%s_%s"%(i,e) for i,e in filterToUse.children))
 		self.selected = []

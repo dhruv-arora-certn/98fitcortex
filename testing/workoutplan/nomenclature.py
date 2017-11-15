@@ -53,7 +53,7 @@ class UpperBody(BodyBase):
 
 	@classmethod
 	def shoulder(self):
-		return self.baseQ & self.filter & Q(muscle_group_name = "Shoulder") | Q(muscle_group_name = "Shoulders")
+		return self.baseQ & self.filter & Q(muscle_group_name__icontains = "shoulder") 
 
 	@classmethod
 	def chest_tricep(self):
@@ -77,12 +77,12 @@ class LowerBody(BodyBase):
 			(l.quadriceps(),1),
 			(l.hamstrings() ,1),
 			(l.glutes() , 1),
-			(l.legs() ,1),
+			(l.calves() ,1),
 			(l.isolated().calves() , 1),
 			(l.quadriceps(),1),
 			(l.hamstrings() ,1),
 			(l.glutes() , 1),
-			(l.legs() ,1),
+			(l.calves() ,1),
 		]
 	@classmethod
 	def calves(self):
