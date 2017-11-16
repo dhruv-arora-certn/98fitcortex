@@ -7,6 +7,7 @@ from django.core.cache import cache
 import random
 import itertools
 import logging
+import ipdb
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.FileHandler("info.log"))
@@ -41,10 +42,16 @@ def dummy_customer(level , goal , user_workout_week):
 def novice_week():
 	return range(1,7)
 
+def beginner_week():
+	return range(8,24)
+
+def intermediate_week():
+	return range(25, 40)
+
 def generate_random_diet_plan():
 	goals = [Goals.WeightLoss , Goals.WeightGain , Goals.MaintainWeight , Goals.MuscleGain]
-	lvls = [levels.Novice ]
-	weeks = novice_week()
+	lvls = [levels.Beginner ]
+	weeks = beginner_week()
 
 	generated = []
 	for e in itertools.product(lvls , goals , weeks):
@@ -59,5 +66,6 @@ def generate_random_diet_plan():
 			logger.info("="*30)
 			logger.info("Error for params %s : %s : %s"%(e[0].__name__ , e[1].__name__ , e[2]))
 			logger.info("Error is %s"%err)
+			ipdb.set_trace()
 			raise err
 	return generated

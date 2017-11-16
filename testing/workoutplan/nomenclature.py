@@ -19,9 +19,10 @@ class UpperBody(BodyBase):
 
 	@classmethod
 	def groups(self):
+		self.isolated()
 		return  [
-		(self.chest,2),
-		(self.back,2),
+		(self.chest,1),
+		(self.back,1),
 		(self.abdomen,1),
 		(self.biceps,1),
 		(self.triceps,1),
@@ -41,7 +42,7 @@ class UpperBody(BodyBase):
 
 	@classmethod
 	def abdomen(self):
-		return self.baseQ & self.filter & Q(muscle_group_name = "Abdominals") | Q(muscle_group_name = "Abs") | Q(muscle_group_name = "Abdomen")
+		return self.baseQ & self.filter & ( Q(muscle_group_name = "Abdominals") | Q(muscle_group_name = "Abs") | Q(muscle_group_name = "Abdomen"))
 
 	@classmethod
 	def biceps(self):
@@ -73,16 +74,12 @@ class LowerBody(BodyBase):
 	def groups(self):
 		l = self()
 		return [
-			(l.compound().calves() , 1),
-			(l.quadriceps(),1),
-			(l.hamstrings() ,1),
-			(l.glutes() , 1),
-			(l.calves() ,1),
 			(l.isolated().calves() , 1),
 			(l.quadriceps(),1),
 			(l.hamstrings() ,1),
 			(l.glutes() , 1),
 			(l.calves() ,1),
+			(Q(body_part = "Lower") & Q(exercise_type = "Compound") , 2)
 		]
 	@classmethod
 	def calves(self):

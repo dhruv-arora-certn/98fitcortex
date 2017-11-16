@@ -132,6 +132,10 @@ class WorkoutView(generics.GenericAPIView):
 			return weekly_data[int(self.kwargs['day'])]
 
 	def get(self , request , *args , **kwargs):
+
+		if kwargs['day'] in ('6' , '7'):
+			return Response([])
+
 		data = self.get_object()
 		print(data)
 		serialized_data = {}

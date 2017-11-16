@@ -39,9 +39,21 @@ class AbdomenAndLegsFilter():
 					"count" : 5
 				},
 				{
-					"filter" : LowerBody.legs(),
-					"count" : 5
-				}
+					"filter" : LowerBody.hamstrings(),
+					"count" : 1
+				},
+				{
+					"filter" : LowerBody.glutes(),
+					"count" : 1
+				},
+				{
+					"filter" : LowerBody.calves(),
+					"count" : 1
+				},
+				{
+					"filter" : LowerBody.quadriceps(),
+					"count" : 1
+				},
 			]
 
 class UpperBodyFilter():

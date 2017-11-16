@@ -191,7 +191,7 @@ def get_beginner_cardio_sets_reps_duration(level , goal , user_workout_week, car
 
 	if goal == Goals.MaintainWeight:
 		sets = 3
-		duratiohn = 1200
+		duration = 1200
 
 	reps = None
 	return sets , reps  ,duration
