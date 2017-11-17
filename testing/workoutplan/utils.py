@@ -60,13 +60,13 @@ IntermediateDays = Intermediate(
 		days(5,2,5)
 	),
 	WeightGain(
-		days(2,6,6)
+		days(2,5,5)
 	),
 	MuscleGain(
-		days(2,6,6)
+		days(2,5,5)
 	),
 	MaintainWeight(
-		days(3,3,5)
+		days(3,2,5)
 	)
 )
 
