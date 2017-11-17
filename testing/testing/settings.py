@@ -205,6 +205,12 @@ LOGGING = {
 			'formatter' : 'verbose',
 			'level' : 'DEBUG',
 			'propagate' :  True
+		},
+		'workout' : {
+			'handlers' : [ 'debug' ],
+			'formatter' : 'verbose',
+			'level' : 'DEBUG',
+			'propagate' :  True
 		}
     },
 }

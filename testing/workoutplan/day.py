@@ -1,12 +1,16 @@
 from . import exercise_type
 from . import exercise
+from . import shared_globals
+
 from django.db.models import Q
+from .utils import DummyCoolDown
 
 class ExerciseDay:
 
 	def __init__(self , day , user ,make_cardio = False , resistance_filter = Q()):
 		self.day = day
 		self.make_cardio = make_cardio
+		self.make_rt = bool(resistance_filter)
 		self.resistance_filter = resistance_filter
 		self.user = user
 
@@ -20,12 +24,22 @@ class ExerciseDay:
 		self.buildMain(self)
 
 	def buildMain(self):
-		self.main = exercise_type.Main(self.user)
+		self.main = exercise_type.Main(self.user ,resistance_filter =  self.resistance_filter)
 		self.main.build()
 
 	def buildWarmup(self):
-		self.warmup = exercise_type.Warmup(self.user , mainCardio = self.main)
+		self.warmup = exercise_type.Warmup(self.user , mainCardio = self.main )
 		self.warmup.build()
+		return self
+
+	def buildCoolDown(self):
+		self.cooldown = exercise_type.Warmup(self.user , mainCardio = self.main)
+		self.cooldown.build()
+		self.cooldown.selected['cooldown'] = self.cooldown.selected['warmup']
+		del self.cooldown.selected['warmup']
+		self.cooldown.selected['cooldown'].append(
+			DummyCoolDown(900 , "Slow Walk")
+		)
 		return self
 
 	def buildStretching(self):
@@ -49,9 +63,11 @@ class ExerciseDay:
 		return self.main.cardio
 
 	def build(self):
+		shared_globals.day_in_progress = self.day
 		self.buildMain()
 		self.buildWarmup()
 		self.buildStretching()
+		self.buildCoolDown()
 		return self
 
 	def save(self):
@@ -61,6 +77,7 @@ class ExerciseDay:
 		
 		'''
 		return
+
 	def serialize(self):
 		return {
 			**self.warmup.selected,

@@ -7,7 +7,9 @@ import logging
 
 from workout import models
 from workoutplan import exercise
-from .utils import Luggage , CardioStretchingFilter
+from workoutplan import shared_globals
+from .utils import Luggage , CardioStretchingFilter , get_cardio_sets_reps_duration , get_cardio_intensity_filter_for_warmup , DummyWarmup , filter_key_from_q
+
 
 from django.core.cache import cache
 from django.db.models import Q
@@ -26,41 +28,12 @@ class Warmup(Base):
 		super().__init__()
 		self.user = user
 		self.mainCardio = mainCardio
-		self.bodyPartInFocus = bodyPartInFocus
+		if hasattr(mainCardio.resistance_filter , "bodyPartInFocus"):
+			self.bodyPartInFocus = mainCardio.resistance_filter.bodyPartInFocus.filter
+		else:
+			self.bodyPartInFocus = Q()
 		self.selected = []
 
-	def get_intensity_filter(self):
-		if self.user.is_novice():
-			return [{
-				"filter" : Q(exercise_level = "Low"),
-				"duration" : 300
-			}]
-		elif self.user.is_intermediate():
-			return [
-				{
-					"filter" : Q(exercise_level = "Low"),
-					"duration" : 150
-				},
-				{
-					"filter" : Q(exercise_level = "Moderate"),
-					"duration" : 150
-				}
-			]
-		elif self.user.is_intermediate():
-			return [
-				{
-					"filter" : Q(exercise_level = "Low"),
-					"duration" : 60 
-				},
-				{
-					"filter" : Q(exercise_level = "Moderate"),
-					"duration" : 60
-				},
-				{
-					"filter" : Q(exercise_level = "High"),
-					"duration" : 180
-				}
-			]
 	def decideWarmup(self):
 		'''
 		Decide Which Function is to be called For generating the Warmup
@@ -85,11 +58,11 @@ class Warmup(Base):
 		'''
 		To be used in the case where a normal Warm Up and Cool Down is to be generated
 		'''
-		filters = self.get_intensity_filter()
-		modelToUse = models.WarmupCoolDownTimeBasedExercise
+		filters = get_cardio_intensity_filter_for_warmup(self.user)
+		modelToUse = models.WarmupCoolDownMobilityDrillExercise
 		l = []
 
-		for e in self.get_intensity_filter():
+		for e in get_cardio_intensity_filter_for_warmup(self.user):
 			self.logger.debug(e.get('filter') & self.bodyPartInFocus)
 			warmup = exercise.Warmup(
 				self.user,
@@ -110,7 +83,7 @@ class Warmup(Base):
 			def __init__(self,name):
 				self.workout_name = name
 
-		return list(map(lambda x : Warmup(x) , [
+		return list(map(lambda x : DummyWarmup(x) , [
 			e.functional_warmup for e in self.mainCardio.cardio
 		]))
 
@@ -129,25 +102,48 @@ class Warmup(Base):
 class Main(Base):
 	_type = "main"
 
-	def __init__(self , user , cardioType = random.choice([exercise.FloorBasedCardio , exercise.TimeBasedCardio]) ):
+	def __init__(self , user , resistance_filter = None , cardioType = random.choice([exercise.FloorBasedCardio , exercise.TimeBasedCardio]) ):
 		super().__init__()
 		self.user = user
 		self.cardioType = cardioType
+		self.resistance_filter = resistance_filter
+
+		if resistance_filter:
+			self.conditionalType = exercise.ResistanceTraining
+		else:
+			self.conditionalType = exercise.CoreStrengthening
+
+		if self.cardioType == exercise.FloorBasedCardio and not self.user.is_novice():
+			self.duration = get_cardio_sets_reps_duration(user.level_obj , user.goal , user.user_workout_week).duration
+		else:
+			self.duration = 900
 		self.logger.debug("Cardio Type %s"%(self.cardioType))
-		self.logger.info("Cardio Type %s"%(self.cardioType))
 
 	def buildCardio(self):
-		duration = 900
+		self.logger.debug("Duration is %s"%self.duration)
+		self.logger.debug("CardioType is %s"%self.cardioType)
 		cardio = self.cardioType(
 			self.user,
-			duration
+			self.duration
 		)
 		cardio.build()
 		return cardio.selected
 
 	def buildResistanceTraining(self):
 		self.conditionalType = exercise.ResistanceTraining
-		pass
+		l = []
+		for e in self.resistance_filter.filters:
+			rt = exercise.ResistanceTraining(
+				user = self.user,
+				count = e.get('count' , 1),
+				filters = e.get('filter')
+			)
+			rt.build()
+			for obj in rt.selected:
+				setattr(obj, "reps" , self.resistance_filter.reps)
+				setattr(obj , "sets" , self.resistance_filter.sets)
+			l.extend(rt.selected)
+		return l
 
 	def buildCoreStrengthening(self):
 		self.duration = 300
@@ -160,21 +156,29 @@ class Main(Base):
 		return core.selected
 
 	def buildRT(self):
-		if self.user.is_novice():
-			return self.buildCoreStrengthening()
-		return self.buildResistanceTraining()
+		if self.conditionalType == exercise.ResistanceTraining:
+			return self.buildResistanceTraining()
+		return self.buildCoreStrengthening()
 
 	def build(self):
 		'''
 		Build exercises after assembly
 		'''
 		self.cardio = self.buildCardio()
-		self.rt = self.buildRT()
 		self.selected = {
 			"cardio" : self.cardio ,
-			"resistancetraining" : self.rt
 		}
-		return self
+
+		self.rt = self.buildRT()
+		if self.conditionalType == exercise.ResistanceTraining:
+			self.selected.update({
+				"resistance_training" : self.rt
+			})
+		else:
+			self.selected.update({
+				"core_strengthening" : self.rt
+			})
+		return self.selected
 
 	def as_dict(self):
 		return {
@@ -202,7 +206,7 @@ class Stretching(Base):
 		for e in self.resistance_filter.filters:
 			stretching = exercise.Stretching(
 				user = self.user,
-				filterToUse = e.get('filter') 
+				filterToUse = e.get('filter')
 			)
 			stretching.build()
 			l.extend(stretching.selected)
@@ -222,13 +226,17 @@ class Stretching(Base):
 
 
 	def build(self):
-		l = {"stretching" : []}
+		l = {"stretching" : set()}
 		if self.resistance_filter:
 			self.rt_stretching = self.build_rt()
-			l['stretching'].extend(self.rt_stretching)
+			l['stretching'].update(self.rt_stretching)
 
 		if self.cardio:
 			self.cardio_stretching = self.build_cardio()
-			l['stretching'].extend(self.cardio_stretching)
+			l['stretching'].update(self.cardio_stretching)
+		l['stretching'] = list(l['stretching'])
 		self.selected = l
 		return self
+
+class CoolDown(Base):
+	pass

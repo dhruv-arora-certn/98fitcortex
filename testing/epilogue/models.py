@@ -22,6 +22,7 @@ from django.utils.translation import ugettext_lazy as _
 import binascii
 import os
 import datetime
+import functools
 #Model Managers for Food Model
 
 
@@ -304,7 +305,12 @@ class Customer(models.Model):
 	def user_week(self):
 		return get_week() - get_week(self.create_on) + 1
 
-
+	@property
+	@functools.lru_cache(maxsize = 32)
+	def user_workout_week(self):
+		if self.workouts.count():
+			return  (self.workouts.last().week_id - self.workouts.first().week_id) + 1 or 1
+		return 1
 
 	@property
 	def is_active(self):
@@ -487,7 +493,7 @@ class Customer(models.Model):
 		day = previous_day()
 		baseQ = self.sleep_logs.last()
 		return baseQ
-	
+
 	@decorators.sorter(key = lambda x: x['date'] )
 	@decorators.add_empty_day_in_week({"total_steps" : 0 , "total_distance" : 0 , "total_cals" : 0 , "total_duration" : 0})
 	def weekly_activity(self):

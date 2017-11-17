@@ -1,26 +1,29 @@
 from workoutplan import levels
 from workoutplan.goals import Goals
-from collections import namedtuple
 from workoutplan import resistance_data
+from workoutplan import shared_globals
+
 from django.db.models import Q
 
 import random
 import ipdb
 import collections
 import enum
+import functools
+import logging
 
 type_list = ["WeightLoss" , "WeightGain" , "MuscleGain" , "MaintainWeight"]
 
-days = namedtuple("Days" , ["cardio","rt","total"])
+days = collections.namedtuple("Days" , ["cardio","rt","total"])
 
-Novice = namedtuple("Novice" , type_list)
-Beginner = namedtuple("Beginner" , type_list)
-Intermediate = namedtuple("Intermediate" , type_list)
+Novice = collections.namedtuple("Novice" , type_list)
+Beginner = collections.namedtuple("Beginner" , type_list)
+Intermediate = collections.namedtuple("Intermediate" , type_list)
 
-WeightGain = namedtuple("WeightGain" , ["days"])
-WeightLoss = namedtuple("WeightLoss" , ["days"])
-MuscleGain = namedtuple("MuscleGain" , ["days"])
-MaintainWeight = namedtuple("MaintainWeight" , ["days"])
+WeightGain = collections.namedtuple("WeightGain" , ["days"])
+WeightLoss = collections.namedtuple("WeightLoss" , ["days"])
+MuscleGain = collections.namedtuple("MuscleGain" , ["days"])
+MaintainWeight = collections.namedtuple("MaintainWeight" , ["days"])
 
 NoviceDays = Novice(
 	WeightLoss(
@@ -39,7 +42,7 @@ NoviceDays = Novice(
 
 BeginnerDays = Beginner(
 	WeightLoss(
-		days(5,2,5)		
+		days(5,2,5)
 	),
 	WeightGain(
 		days(2,3,5)
@@ -57,17 +60,17 @@ IntermediateDays = Intermediate(
 		days(5,2,5)
 	),
 	WeightGain(
-		days(2,6,6)
+		days(2,5,5)
 	),
 	MuscleGain(
-		days(2,6,6)
+		days(2,5,5)
 	),
 	MaintainWeight(
-		days(3,3,5)
+		days(3,2,5)
 	)
 )
 
-ct = namedtuple(
+ct = collections.namedtuple(
 	"ConditionalTraining" , ["novice" , "beginner" , "intermediate"]
 )
 
@@ -78,24 +81,31 @@ ConditionalTrainingDays = ct(
 
 class Luggage:
 
-	def __init__(self , weight , items , key , randomize = True , batchSize = 5):
+	def __init__(self , weight , items , key , multiplier = 1 ,randomize = True , batchSize = 5):
 		self.weight = weight
-		self.items = items
+		self.items = set(items)
 		self.key = key
+		self.multiplier = multiplier
 		self.randomize = randomize
 		self.packed = set()
 		self.batchSize = batchSize
+		self.max_iterations = 50
+		self.logger = logging.getLogger(__name__)
+		self.logger.debug("State of Luggage %s"%self.__dict__)
+
 
 	def pickAndPack(self):
-		selectedWeight = sum(getattr(e , self.key) for e in self.packed)
-		while selectedWeight < self.weight:
-			batch = random.sample(self.items , self.batchSize)
-
+		selectedWeight = sum(getattr(e , self.key)*self.multiplier for e in self.packed)
+		counter = 0
+		while selectedWeight < self.weight and counter < self.max_iterations:
+			batch = random.sample(self.items.difference(self.packed) , min(self.batchSize , len(self.items.difference(self.packed))))
+			self.logger.debug("Selected Weight :%s"%selectedWeight)
 			for e in batch:
 				assert isinstance(getattr(e,self.key) , int) , "Not an integer %s - %s"%(getattr(e , self.key) , type(getattr(e , self.key)))
-				if selectedWeight + getattr(e , self.key) <= self.weight :
-					selectedWeight += getattr(e , self.key)
+				if selectedWeight + getattr(e , self.key)*self.multiplier <= self.weight :
+					selectedWeight += getattr(e , self.key)*self.multiplier
 					self.packed.add(e)
+			counter += 1
 		return self
 
 
@@ -115,6 +125,10 @@ def get_days(cls_obj , category):
 
 		elif goal == Goals.MuscleGain:
 			return getattr(category,"MuscleGain").days
+
+		elif goal == Goals.MaintainWeight:
+			return getattr(category,"MaintainWeight").days
+
 
 def get_category_decorator(category):
 	def decorator(fn):
@@ -142,3 +156,138 @@ class CardioStretchingFilter(enum.Enum):
 		filter = Q(muscle_group_name = "Back"),
 		count = 1
 	)
+
+def get_novice_cardio_sets_reps_duration(level , goal , user_workout_week, cardio = True , rt = False):
+	'''
+	Return the sets and reps for cardio exercises of a cardio user
+	'''
+	assert level == levels.Novice , "User should be novice"
+	sets = 2
+	week = user_workout_week
+	if 1 <= week <= 2:
+		reps = 8
+	elif 3 <= week <= 5:
+		reps = 10
+	elif week >= 6:
+		reps = 12
+	duration = 0
+	return sets , reps , duration
+
+def get_beginner_cardio_sets_reps_duration(level , goal , user_workout_week, cardio = True , rt = False):
+
+	assert level == levels.Beginner , "User should be beginner"
+
+	if goal == Goals.WeightLoss:
+		if cardio and rt:
+			sets = 2
+			duration = 900
+		else:
+			sets = 4
+			duration = 1500
+
+	if goal == Goals.WeightGain or goal == Goals.MuscleGain:
+		sets = 2
+		duration = 900
+
+	if goal == Goals.MaintainWeight:
+		sets = 3
+		duration = 1200
+
+	reps = None
+	return sets , reps  ,duration
+
+def get_intermediate_cardio_sets_reps_duration(level , goal , user_workout_week, cardio = True , rt = False):
+
+	assert level == levels.Intermediate , "User should be of intermediate level"
+
+	if goal == Goals.WeightLoss:
+		if cardio and rt:
+			sets = 2
+			duration = 300
+		else:
+			sets = 4
+			duration = 1800
+
+	elif goal == Goals.WeightGain or Goals.MuscleGain:
+		sets = 2
+		duration = 1200
+
+	elif goal == Goals.MaintainWeight:
+		sets = 3
+		duration = 1500
+
+	return sets , None ,duration
+
+@functools.lru_cache()
+def get_cardio_sets_reps_duration( level , goal , user_workout_week, cardio = True , rt = False):
+	if level == levels.Novice:
+		val =  get_novice_cardio_sets_reps_duration(level,goal , user_workout_week, cardio , rt)
+	elif level == levels.Beginner:
+		val =  get_beginner_cardio_sets_reps_duration(level,goal , user_workout_week, cardio ,rt)
+	elif level == levels.Intermediate:
+		val = get_intermediate_cardio_sets_reps_duration(level,goal , user_workout_week, cardio , rt)
+	container = collections.namedtuple("container" , ["sets" , "reps" , "duration"])
+	return container(*val)
+
+def get_cardio_intensity_filter_for_warmup(user):
+	if user.is_novice():
+		return [{
+			"filter" : Q(exercise_level = "Low"),
+			"duration" : 300
+		}]
+	elif user.is_beginner():
+		return [
+			{
+				"filter" : Q(exercise_level = "Low"),
+				"duration" : 150
+			},
+			{
+				"filter" : Q(exercise_level = "Moderate"),
+				"duration" : 150
+			}
+		]
+	elif user.is_intermediate():
+		return [
+			{
+				"filter" : Q(exercise_level = "Low"),
+				"duration" : 60
+			},
+			{
+				"filter" : Q(exercise_level = "Moderate"),
+				"duration" : 60
+			},
+			{
+				"filter" : Q(exercise_level = "High"),
+				"duration" : 180
+			}
+			]
+
+
+class DummyWarmup:
+	duration = 300
+	def __str__(self):
+		return self.workout_name
+	def __repr__(self):
+		return self.workout_name
+	def __init__(self,name):
+		self.workout_name = name
+
+class DummyCoolDown:
+	def __init__(self , duration, workout_name):
+		self.duration = duration
+		self.workout_name = workout_name
+
+
+def filter_key_from_q(q_obj , key_to_escape):
+	new_children = []
+
+	for e in q_obj.children:
+		#e is a tuple
+		if isinstance(e , Q):
+			e = filter_key_from_q(e , key_to_escape)
+			new_children.append(e)
+		elif e[0] != key_to_escape:
+			new_children.append(e)
+
+	q_obj.children = new_children
+	return q_obj

@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.core.cache import cache
 
 # Create your views here.
 from rest_framework import generics
@@ -10,6 +11,7 @@ from epilogue.utils import get_week , get_day
 
 from workout.models import *
 from workout.serializers import *
+from workout.utils import get_day_from_generator
 
 from workoutplan.generator import Generator
 
@@ -72,41 +74,75 @@ class WorkoutView(generics.GenericAPIView):
 		day = self.kwargs('day',get_day() )
 
 	def get_warmup(self , gen):
-		warmup = gen.D1.warmup.selected['warmup']
+		warmup = get_day_from_generator(gen , self.kwargs.get('day',1)).warmup.selected['warmup']
 		warmup_s = ExerciseSerialzier(warmup , many = True)
 		return {
 			"warmup" : warmup_s.data
 		}
 
 	def get_main(self,gen):
-		main = gen.D1.main.selected
+		main = get_day_from_generator(gen , self.kwargs.get('day',1)).main.selected
 		c = ExerciseSerialzier(main['cardio'], many = True)
-		rt = ExerciseSerialzier(main['resistancetraining'] , many = True)
-		return {
-			"cardio" : c.data,
-			"resistance_training" : rt.data
+		data = {
+			"cardio" : c.data
 		}
+		if main.get('resistance_training'):
+			rt = ExerciseSerialzier(main.get('resistance_training') , many = True)
+			rt_key = "resistance_training"
+			data.update({
+				rt_key : rt.data
+			})
+		elif main.get('core_strengthening'):
+			rt = ExerciseSerialzier(main.get('core_strengthening') , many = True)
+			rt_key = "core_strengthening"
+			data.update({
+				rt_key : rt.data
+			})
+		return data
 
 	def get_stretching(self,gen):
-		s = gen.D1.stretching.selected
+		s = get_day_from_generator(gen , self.kwargs.get('day',1)).stretching.selected
 		sw = ExerciseSerialzier(s['stretching'] , many = True)
 		return {
 			"stretching" : sw.data
 		}
 
-	def get_object(self):
-		gen = Generator(self.request.user)
-		gen.generate()
+	def get_cooldown(self , gen):
+		cooldown = get_day_from_generator(gen , self.kwargs.get('day',1)).cooldown.selected['cooldown']
+		cooldown_serializer = ExerciseSerialzier(cooldown , many = True)
 		return {
-			**self.get_warmup(gen),
-			**self.get_main(gen),
-			**self.get_stretching(gen)
-
+			"cooldown": cooldown_serializer.data
 		}
-	def get(self , request , *args , **kwargs):
+
+	def get_object(self):
+		key = "workout_%d_%s"%(self.request.user.id , self.kwargs['week_id'])
+		cached_data = cache.get(key)
 		logger = logging.getLogger(__name__)
-		logger.info("Workout GET")
-		gen = Generator(request.user)
-		with open("workout/data.json") as f:
-			a = json.load(f)
-		return Response(a)
+		print(logger.name)
+		if cached_data:
+			logger.debug("Returning Workout from cache")
+			logger.debug(cached_data.get(self.kwargs['day']))
+			return cached_data.get(int(self.kwargs['day']))
+		else:
+			logger.debug("Generating Workout")
+			gen = Generator(self.request.user)
+			gen.generate()
+			weekly_data = gen.weekly_as_dict()
+			cache.set(key , weekly_data)
+			return weekly_data[int(self.kwargs['day'])]
+
+	def get(self , request , *args , **kwargs):
+
+		if kwargs['day'] in ('6' , '7'):
+			return Response([])
+
+		data = self.get_object()
+		print(data)
+		serialized_data = {}
+		for k,v in data.items():
+			serialized_data[k] = ExerciseSerialzier(
+				v , many = True
+			).data
+		return Response(
+			serialized_data
+		)
