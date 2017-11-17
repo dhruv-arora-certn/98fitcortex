@@ -147,6 +147,7 @@ class Stretching(ExerciseBase):
 		self.model = models.StretchingExercise
 		#self.cache_key = "%s_%s"%(self.model.__name__ , "_".join("%s_%s"%(i,e) for i,e in filterToUse.children))
 		self.selected = []
+		self.multiplier = 2
 
 	def get_items(self):
 		model_list =  list(self.model.objects.filter(self.filterToUse))
@@ -157,6 +158,6 @@ class Stretching(ExerciseBase):
 	def build(self):
 		items = self.get_items()
 		choice = random.choice(items)
-		choice.duration = 15
+		choice.duration = 15 * self.multiplier
 		self.selected.append(choice)
 		return self
