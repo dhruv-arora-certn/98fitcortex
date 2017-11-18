@@ -13,7 +13,7 @@ def get_week(date = datetime.now()):
 
 def get_day(date = datetime.now()):
 	return date.isocalendar()[2]
-	
+
 def get_year(date = datetime.now()):
 	return date.isocalendar()[0]
 
@@ -89,4 +89,8 @@ class BulkDifferential:
 				common.append(e)
 		return common
 
-
+def get_count_post_date(date , iterable , key):
+	return filter(
+		lambda x : getattr(x , key) > date,
+		iterable
+	)

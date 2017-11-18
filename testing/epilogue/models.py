@@ -554,13 +554,45 @@ class Customer(models.Model):
 
 	@property
 	def level_obj(self):
-		if self.level == 1:
+		last_level_record = self.level_logs.last()
+
+		if last_level_record:
+			level = last_level_record.level
+		else:
+			level = self.level
+
+		if level == 1:
 			return levels.Novice
-		elif self.level == 2:
+		elif level == 2:
 			return levels.Beginner
-		elif self.level == 3:
+		elif level == 3:
 			return levels.Intermediate
 		return levels.Novice
+
+	def get_last_level_day(self):
+		last_level_record = self.level_logs.last()
+
+		if last_level_record:
+			return last_level_record.date
+		return self.create_on
+
+	@property
+	def user_relative_workout_week(self):
+		level_obj = self.level_obj
+		last_date = self.get_last_level_day()
+
+		workouts_after = self.workouts.filter(created_on__gt = last_date).count()
+
+		if workouts_after >= 1:
+			return workouts_after
+		return 1
+
+	@property
+	def user_absolute_workout_week(self):
+		count = self.workouts.count()
+		if count >= 1:
+			return count
+		return 1
 
 	def is_novice(self):
 		if self.level == 1:
@@ -996,4 +1028,4 @@ class CustomerLevelLog(models.Model):
 		managed = False
 	level = models.IntegerField()
 	date = models.DateTimeField(auto_now_add = True)
-	customer = models.ForeignKey(Customer , db_column = "erp_customer_id")
+	customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "level_logs")
