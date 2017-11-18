@@ -5,7 +5,7 @@ from django.db.models import Q
 @functools.lru_cache()
 def get_novice_cardio_periodized(user_week_no):
 
-	assert 1 <= user_week_no <= 6 , "Novie Week no is between 1 and 6"
+	#assert 1 <= user_week_no <= 6 , "Novie Week no is between 1 and 6"
 
 	data = {
 		1 : [

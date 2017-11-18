@@ -10,7 +10,7 @@ filter_tuple = collections.namedtuple("filter_tuple" , ["filter" , "ratio"])
 @functools.lru_cache()
 def get_beginner_cardio_periodized(user_week_no ):
 
-	assert user_week_no >= 7 and user_week_no <= 24 , "Beginner week no is between 7 and 24"
+	#assert user_week_no >= 7 and user_week_no <= 24 , "Beginner week no is between 7 and 24"
 
 	relative_week = user_week_no -  7 + 1
 
