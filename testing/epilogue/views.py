@@ -378,7 +378,7 @@ class DietPlanRegenerationView(GenericAPIView):
 					"allow-replace" : False,
 					"user_id": request.user.id,
 					"pdf" : "http://www.example.com",
-					"user_week" : request.user.user_week
+					"user_week" : request.user.user_week if request.user.user_week > 0 else 1
 				},
 				"data" : data
 			})
