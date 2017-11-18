@@ -779,7 +779,7 @@ class ActivityLevelLog(models.Model):
 	class Meta:
 		managed = False
 		db_table = "relation_log"
-	customer = models.ForeignKey(Customer , db_column = "erp_customer_id")
+	customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "")
 	lifestyle = models.CharField(max_length = 50)	
 	
 	@property
@@ -988,3 +988,11 @@ class CustomerActivityLogs(models.Model):
 	end = models.DateTimeField(auto_now = False)
 	distance = models.IntegerField()
 
+
+class CustomerLevelLog(models.Model):
+	class Meta:
+		db_table = "erp_customer_level_log"
+		managed = False
+	level = models.IntegerField()
+	date = models.DateTimeField(auto_now_add = True)
+	customer = models.ForeignKey(Customer , db_column = "erp_customer_id")
