@@ -9,6 +9,7 @@ from workout import models
 from workoutplan import exercise
 from workoutplan import shared_globals
 from .utils import Luggage , CardioStretchingFilter , get_cardio_sets_reps_duration , get_cardio_intensity_filter_for_warmup , DummyWarmup , filter_key_from_q
+from .alternator import alternate_gen
 
 
 from django.core.cache import cache
@@ -101,11 +102,12 @@ class Warmup(Base):
 
 class Main(Base):
 	_type = "main"
+	cardioTypeGen = alternate_gen([exercise.FloorBasedCardio , exercise.TimeBasedCardio])
 
-	def __init__(self , user , resistance_filter = None , cardioType = random.choice([exercise.FloorBasedCardio , exercise.TimeBasedCardio]) ):
+	def __init__(self , user , resistance_filter = None):
 		super().__init__()
 		self.user = user
-		self.cardioType = cardioType
+		self.cardioType = next(Main.cardioTypeGen)
 		self.resistance_filter = resistance_filter
 
 		if resistance_filter:
