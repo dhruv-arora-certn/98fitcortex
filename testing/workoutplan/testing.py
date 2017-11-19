@@ -43,10 +43,10 @@ def novice_week():
 	return range(1,7)
 
 def beginner_week():
-	return range(8,24)
+	return range(1,17)
 
 def intermediate_week():
-	return range(25, 40)
+	return range(1, 20)
 
 def generate_random_diet_plan():
 	goals = [Goals.WeightLoss , Goals.WeightGain , Goals.MaintainWeight , Goals.MuscleGain]
