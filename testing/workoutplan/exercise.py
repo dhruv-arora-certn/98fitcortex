@@ -49,9 +49,9 @@ class FloorBasedCardio(ExerciseBase):
 		self.model = models.CardioFloorExercise
 
 	def build(self):
-		self.srd_container = get_cardio_sets_reps_duration(self.user.level_obj , self.user.goal , self.user.user_workout_week)
+		self.srd_container = get_cardio_sets_reps_duration(self.user.level_obj , self.user.goal , self.user.user_relative_workout_week)
 		self.multiplier = self.srd_container.sets
-		self.periodised_filters = periodization.get_cardio_periodized(self.user.level_obj , self.user.user_workout_week)
+		self.periodised_filters = periodization.get_cardio_periodized(self.user.level_obj , self.user.user_relative_workout_week)
 		self.selected = []
 
 		for e in self.periodised_filters:
@@ -82,7 +82,7 @@ class TimeBasedCardio(ExerciseBase):
 		self.model = models.CardioTimeBasedExercise
 
 	def build(self):
-		self.srd_container = get_cardio_sets_reps_duration(self.user.level_obj , self.user.goal , self.user.user_workout_week)
+		self.srd_container = get_cardio_sets_reps_duration(self.user.level_obj , self.user.goal , self.user.user_relative_workout_week)
 		self.selected.append(random.choice(self.get_items()))
 
 		def add_sets_reps(x):
