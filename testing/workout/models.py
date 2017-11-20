@@ -98,7 +98,7 @@ class StretchingExercise(BaseExercise,models.Model):
 
 class WarmupCoolDownMobilityDrillExercise(BaseExercise,models.Model):
 	workout_name = models.CharField(max_length = 100)
-	duration = models.IntegerField(default = 0)
+	_duration = models.IntegerField(default = 0 , db_column = "duration")
 	reps = models.IntegerField(default = 0)
 	swing1 = models.BooleanField(default = False)
 	rotation = models.BooleanField(default = False)
@@ -114,6 +114,20 @@ class WarmupCoolDownMobilityDrillExercise(BaseExercise,models.Model):
 	description = models.CharField(max_length = 255, blank=True, null=True)
 	status = models.IntegerField(default = 0)
 	image_name = models.CharField(max_length = 50, blank=True, null=True)
+
+	@property
+	def duration(self):
+		multiplier = 0
+		if self.swing1 == 1:
+			multiplier += 1
+		if self.swing2 == 1:
+			multiplier += 1
+		if self.rotation == 1:
+			multiplier += 1
+
+		if multiplier == 0:
+			return self._duration
+		return self._duration * multiplier
 
 
 class WarmupCoolDownTimeBasedExercise(BaseExercise,models.Model):	
