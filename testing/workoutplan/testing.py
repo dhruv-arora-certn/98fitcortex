@@ -32,7 +32,7 @@ def dummy_customer(level , goal , user_workout_week):
 		{
 			"level_obj" : level,
 			"goal" : goal,
-			"user_workout_week" : user_workout_week,
+			"user_relative_workout_week" : user_workout_week,
 			"id" : random.randint(9,100),
 			"email" : "test@98fit.com"
 

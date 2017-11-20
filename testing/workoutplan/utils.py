@@ -170,7 +170,7 @@ def get_novice_cardio_sets_reps_duration(level , goal , user_workout_week, cardi
 		reps = 10
 	elif week >= 6:
 		reps = 12
-	duration = 0
+	duration = 900
 	return sets , reps , duration
 
 def get_beginner_cardio_sets_reps_duration(level , goal , user_workout_week, cardio = True , rt = False):
