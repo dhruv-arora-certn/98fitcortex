@@ -111,6 +111,24 @@ class DietPlanView(GenericAPIView):
 		with open(file_to_read , "r") as f:
 			return json.load(f) , cals
 
+	def get_pcos(self , user):
+		c = Calculations(*user.args_attrs)
+		rounded_cals = round(c.calories/100)*100
+
+		if rounded_cals <= 1200:
+			cals = 1200
+		elif rounded_cals == 1300:
+			cals = 1300
+		else:
+			cals = 1400
+
+		food_cat = self.request.user.food_cat
+
+		file_to_read = "disease-data/pcos-%s-%s-%s.json"%(cals , self.kwargs['day'] , food_cat)
+		print("File" , file_to_read)
+		with open(file_to_read , "r") as f:
+			return json.load(f) , cals
+
 	def get_object(self):
 		qs = self.get_queryset()
 		user = self.request.user
@@ -155,6 +173,29 @@ class DietPlanView(GenericAPIView):
 					"user_week" : request.user.user_week
 				},
 				"data" : data
+			})
+
+		if request.user.has_pcod():
+			data , cals = self.get_pcos(request.user)
+			for e in data:
+				if not e.get("image"):
+					e['image'] = "http://98fit.com//webroot/dietlist_images/images.jpg"
+			return Response({
+				"meta" : {
+					"disease" : "pcod",
+					"calories" :  cals ,
+					"allow-replace" : False,
+					"user_id": request.user.id,
+					"pdf" : "http://www.example.com",
+					"user_week" : request.user.user_week if request.user.user_week > 0 else 1
+				},
+				"data" : data
+			})
+		if request.user.customermedicalconditions_set.count() > 1:
+			return Response({
+				"errors" : [
+					"Multiple Diseases Found"
+				]
 			})
 
 		objs = self.get_object()
@@ -344,7 +385,7 @@ class GuestPDFView(GenericAPIView):
 
 class DietPlanRegenerationView(GenericAPIView):
 	serializer_class = DietPlanSerializer
-	authentication_classes = (CustomerAuthentication,) 
+	authentication_classes = (CustomerAuthentication,)
 	permission_classes = (IsAuthenticated,) #Add a class to authenticate the owner of the dietplan
 
 	def get_queryset(self):
@@ -353,6 +394,7 @@ class DietPlanRegenerationView(GenericAPIView):
 	def get_diabetes(self , user):
 		c = Calculations(*user.args_attrs)
 		rounded_cals = round(c.calories/100)*100
+
 		if rounded_cals <= 1200:
 			cals = 1200
 		elif rounded_cals == 1300:
@@ -365,7 +407,29 @@ class DietPlanRegenerationView(GenericAPIView):
 		with open(file_to_read , "r") as f:
 			return json.load(f) , cals
 
+	def get_pcos(self):
+		c = Calculations(*user.args_attrs)
+		rounded_cals = round(c.calories/100)*100
+
+		if rounded_cals <= 1200:
+			cals = 1200
+		elif rounded_cals == 1300:
+			cals = 1300
+		else:
+			cals = 1400
+
+		food_cat = self.request.user.food_cat
+		if food_cat == "veg":
+			food_cat = ""
+
+		file_to_read = "disease-data/diabetes-%s-%s-%s.json"%(cals , self.kwargs['id'] , food_cat)
+		prnt("File" , file_to_read)
+		with open(file_to_read , "r") as f:
+			return json.load(f) , cals
+
+
 	def get(self , request , *args , **kwargs):
+		print("PCOD" , request.user.has_pcod())
 		if request.user.has_diabetes():
 			data , cals = self.get_diabetes(request.user)
 			for e in data:
@@ -378,7 +442,23 @@ class DietPlanRegenerationView(GenericAPIView):
 					"allow-replace" : False,
 					"user_id": request.user.id,
 					"pdf" : "http://www.example.com",
-					"user_week" : request.user.user_week
+					"user_week" : request.user.user_week if request.user.user_week > 0 else 1
+				},
+				"data" : data
+			})
+		if request.user.has_pcod():
+			data , cals = self.get_pcos(request.user)
+			for e in data:
+				if not e.get("image"):
+					e['image'] = "http://98fit.com//webroot/dietlist_images/images.jpg"
+			return Response({
+				"meta" : {
+					"disease" : "pcod",
+					"calories" :  cals ,
+					"allow-replace" : False,
+					"user_id": request.user.id,
+					"pdf" : "http://www.example.com",
+					"user_week" : request.user.user_week if request.user.user_week > 0 else 1
 				},
 				"data" : data
 			})
