@@ -14,6 +14,7 @@ from workout.serializers import *
 from workout.utils import get_day_from_generator
 
 from workoutplan.generator import Generator
+from workoutplan.utils import get_cardio_sets_reps_duration
 
 import random
 import json
@@ -146,3 +147,11 @@ class WorkoutView(generics.GenericAPIView):
 		return Response(
 			serialized_data
 		)
+
+class DashboardWorkoutTextView(generics.GenericAPIView):
+    authentication_classes = [CustomerAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self , *args , **kwargs):
+        workout_string = "5 Minutes Warmup , %s"
+
