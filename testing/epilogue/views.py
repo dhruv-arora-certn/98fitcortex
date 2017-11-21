@@ -407,7 +407,7 @@ class DietPlanRegenerationView(GenericAPIView):
 		with open(file_to_read , "r") as f:
 			return json.load(f) , cals
 
-	def get_pcos(self):
+	def get_pcos(self,user):
 		c = Calculations(*user.args_attrs)
 		rounded_cals = round(c.calories/100)*100
 
