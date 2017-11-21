@@ -5,16 +5,17 @@ from django.db.models.functions import Coalesce
 from functools import partial
 from weasyprint import HTML
 from django.template.loader import render_to_string
+from django.utils import timezone
 import functools
 import json
 
-def get_week(date = datetime.now()):
+def get_week(date = datetime.now(tz = timezone.get_current_timezone())):
 	return date.isocalendar()[1]
 
-def get_day(date = datetime.now()):
+def get_day(date = datetime.now(tz = timezone.get_current_timezone())):
 	return date.isocalendar()[2]
 
-def get_year(date = datetime.now()):
+def get_year(date = datetime.now(tz = timezone.get_current_timezone())):
 	return date.isocalendar()[0]
 
 def get_month(date = datetime.now()):
