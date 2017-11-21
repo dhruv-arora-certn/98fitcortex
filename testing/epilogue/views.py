@@ -766,7 +766,7 @@ class MonthlyActivityView(ListAPIView):
 			"logs" : weekly_logs,
 			"data" : aggregated_logs
 		})
-	
+
 	def get_queryset(self):
 		return self.request.user.monthly_activity(month = self.kwargs.get("month"))
 
@@ -775,3 +775,35 @@ class CustomerSleepLoggingView(CreateAPIView):
 	permission_classes = [IsAuthenticated]
 	serializer_class = CustomerSleepLoggingSerializer
 	queryset = CustomerSleepLogs.objects
+
+class DashboardMealTextView(GenericAPIView):
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [IsAuthenticated]
+
+	def get(self , *args , **kwargs):
+		day = get_day()
+		week = get_week()
+		year = get_year()
+
+		week_diet_plan = GeneratedDietPlan.objects.filter(week_id = week , year = year).first()
+
+		if not week_diet_plan:
+			return Response(dict())
+
+		today_items = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = week_diet_plan.id , day = day)
+
+		if not today_items:
+			return Response(dict())
+
+		m1_string = ' + '.join([e.food_name for e in today_items.filter(meal_type = "m1")])
+		m2_string = ' + '.join([e.food_name for e in today_items.filter()])
+
+		meals = ["m%d"%i for i in range(1,6)]
+		string_dict = {
+			e : ' + '.join([
+				a.food_name for a in today_items.filter(meal_type = e)
+			])
+			for e in meals
+		}
+
+		return Response(string_dict)

@@ -2,7 +2,7 @@ from django.conf.urls import url
 from .views import get_analysis , UserView , DietPlanView , DishReplaceView , MealReplaceView , CustomerFoodExclusionView ,\
  					CustomerMedicalConditionsView , CreateCustomerView , GuestPDFView , DietPlanRegenerationView , UserDietPlanRegenerationView ,\
  					DietPlanMobileView , WaterBulkView  ,SleepWeeklyAggregationView,SleepMonthlyAggregatedView, WaterWeeklyAggregateView,WaterMonthlyAggregateView , \
-					LastDaySleepView, MonthlyActivityView , WeeklyActivityView, ActivityLogView , CustomerSleepLoggingView
+					LastDaySleepView, MonthlyActivityView , WeeklyActivityView, ActivityLogView , CustomerSleepLoggingView , DashboardMealTextView
 
 
 urlpatterns = [
@@ -28,5 +28,6 @@ urlpatterns = [
 	url(r'^logging/water/aggregate/monthly/(?P<month>[0-9]+)/$' ,WaterMonthlyAggregateView.as_view()),
 	url(r'^logging/activity/aggregate/monthly/(?P<month>[0-9]+)/$' ,MonthlyActivityView.as_view()),
 	url(r'^logging/activity/aggregate/weekly/(?P<week>[0-9]+)/$' ,WeeklyActivityView.as_view()),
+	url(r'^dashboard/strings/meal/$', DashboardMealTextView.as_view())
 
 ]
