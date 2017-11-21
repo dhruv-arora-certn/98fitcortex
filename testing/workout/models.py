@@ -1,7 +1,7 @@
 #Contains Exercise Tables
 
 from django.db import models
-from epilogue.models import *  
+from epilogue.models import *
 
 # Create your models here.
 
@@ -27,12 +27,15 @@ class CardioFloorExercise(BaseExercise,models.Model):
 	status = models.IntegerField(blank=True, null=True)
 	image_name = models.CharField(max_length=250, blank=True, null=True)
 
+<<<<<<< HEAD
 	@property
 	def duration(self):
 		if self.swing1:
 			return self._duration * 2
 		return self._duration
 
+=======
+>>>>>>> Exercise Duration based on swing/movement
 class CardioTimeBasedExercise(BaseExercise,models.Model):
 	workout_name = models.CharField(max_length=250, blank=True, null=True)
 	duration = models.IntegerField( blank=True, null=True)
@@ -49,7 +52,11 @@ class CardioTimeBasedExercise(BaseExercise,models.Model):
 class NoviceCoreStrengthiningExercise(BaseExercise,models.Model):
 	workout_name = models.CharField(max_length=250)
 	reps = models.CharField(max_length=50)
+<<<<<<< HEAD
 	_duration = models.IntegerField( db_column = "duration")
+=======
+	_duration = models.IntegerField()
+>>>>>>> Exercise Duration based on swing/movement
 	hold = models.BooleanField(default = False)
 	swing1 = models.BooleanField(default = False)
 	rotation = models.BooleanField()
@@ -67,6 +74,7 @@ class NoviceCoreStrengthiningExercise(BaseExercise,models.Model):
 	status = models.IntegerField(blank=True, null=True)
 	image_name = models.CharField(max_length=200, blank=True, null=True)
 
+<<<<<<< HEAD
 	@property
 	def duration(self):
 		multiplier = 0
@@ -83,6 +91,22 @@ class NoviceCoreStrengthiningExercise(BaseExercise,models.Model):
 		if multiplier == 0:
 			return self._duration
 		return self._duration * multiplier
+=======
+    @property
+    def duration(self):
+        multiplier = 0
+        if self.swing1 == 1:
+            multiplier += 1
+        if selff.swing2 == 1:
+            multiplier += 1
+        if self.rotation == 1:
+            multiplier += 2
+
+        if mulitplier == 0:
+            return self._duration
+        return self._duration * multiplier
+
+>>>>>>> Exercise Duration based on swing/movement
 
 
 class ResistanceTrainingExercise(BaseExercise,models.Model):
@@ -154,7 +178,7 @@ class WarmupCoolDownMobilityDrillExercise(BaseExercise,models.Model):
 		return self._duration * multiplier
 
 
-class WarmupCoolDownTimeBasedExercise(BaseExercise,models.Model):	
+class WarmupCoolDownTimeBasedExercise(BaseExercise,models.Model):
 	workout_name = models.CharField(max_length = 100)
 	duration = models.IntegerField()
 	total_time = models.IntegerField()
@@ -173,7 +197,7 @@ class GeneratedExercisePlan(models.Model):
 	class Meta:
 		managed = False
 		db_table = "erp_exercise_plan"
-	
+
 	created_on = models.DateTimeField(auto_now_add = True)
 	year = models.IntegerField()
 	customer = models.ForeignKey(Customer , related_name = "workouts", db_column = "erp_customer_id")
