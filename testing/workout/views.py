@@ -153,5 +153,14 @@ class DashboardWorkoutTextView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self , *args , **kwargs):
-        workout_string = "5 Minutes Warmup , %s"
+        user = self.request.user
+        string = "5 Minutes Warmup, %d Minutes Cardio"
+
+        cardio_duration = get_cardio_sets_reps_duration(user.level_obj , user.goal , user.user_relative_workout_week)
+
+        string = string%(cardio_duration.duration/60)
+
+        return Response({
+            "workout" : string
+        })
 

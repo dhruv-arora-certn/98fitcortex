@@ -785,7 +785,7 @@ class DashboardMealTextView(GenericAPIView):
 		week = get_week()
 		year = get_year()
 
-		week_diet_plan = GeneratedDietPlan.objects.filter(customer = self.request.user).filter(week_id = week , year = year).first()
+		week_diet_plan = GeneratedDietPlan.objects.filter(customer = self.request.user).filter(week_id = week , year = year).last()
 
 		if not week_diet_plan:
 			return Response(dict())
