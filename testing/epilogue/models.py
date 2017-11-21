@@ -572,8 +572,18 @@ class Customer(models.Model):
 		return False
 
 	def has_diabetes(self):
-		return bool(self.customermedicalconditions_set.filter(condition_name = "diabetes"))
+		return bool(
+			self.customermedicalconditions_set.filter(condition_name = "diabetes")
+		) and bool (
+			self.customermedicalconditions_set.count() == 1
+		)
 
+	def has_pcod(self):
+		return bool(
+			self.customermedicalconditions_set.filter(condition_name = "pcod")
+		) and bool(
+			self.customermedicalconditions_set.count() == 1
+		)
 	def __str__(self):
 		return self.first_name + " : " + self.email
 
