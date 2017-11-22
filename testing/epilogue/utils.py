@@ -99,7 +99,7 @@ def get_count_post_date(date , iterable , key):
 def get_food_cat_diabetes(user):
 	food_cat = user.food_cat
 	if food_cat in ("nonveg" , "egg"):
-		food_cat = "non_veg"
+		food_cat = "nonveg"
 	return food_cat
 
 def get_food_cat_pcod(user):
