@@ -105,7 +105,6 @@ class DietPlanView(GenericAPIView):
 			cals = 1300
 		else:
 			cals = 1400
-
         food_cat = user.request.food_cat
 
         if food_cat in ("egg" , "nonveg"):
