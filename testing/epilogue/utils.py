@@ -95,3 +95,12 @@ def get_count_post_date(date , iterable , key):
 		lambda x : getattr(x , key) > date,
 		iterable
 	)
+
+def get_food_cat_diabetes(user):
+	food_cat = user.food_cat
+	if food_cat in ("nonveg" , "egg"):
+		food_cat = "non_veg"
+	return food_cat
+
+def get_food_cat_pcod(user):
+	return user.food_cat
