@@ -106,7 +106,12 @@ class DietPlanView(GenericAPIView):
 		else:
 			cals = 1400
 
-		file_to_read = "disease-data/diabetes-%s-%s.json"%(cals,self.kwargs['day'])
+        food_cat = user.request.food_cat
+
+        if food_cat in ("egg" , "nonveg"):
+            food_cat = "nonveg"
+
+		file_to_read = "disease-data/diabetes-%s-%s-%s.json"%(cals,self.kwargs['day'],food_cat)
 		print("File" , file_to_read)
 		with open(file_to_read , "r") as f:
 			return json.load(f) , cals
