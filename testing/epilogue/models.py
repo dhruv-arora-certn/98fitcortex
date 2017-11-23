@@ -409,7 +409,7 @@ class Customer(models.Model):
 	def weekly_sleep(self,week = None, mapped = False):
 		today_date = datetime.datetime.today().date()
 		baseQ = self.sleep_logs.annotate(date = RawSQL("Date(start)" , [])).filter(
-			date__lte = today_date , date__gt = today_date - datetime.timedelta(days = 7)
+			date__lte = today_date , date__gt = today_date - datetime.timedelta(days = 6)
 		)
 		baseQ = baseQ.values("date" , "start").annotate(total_minutes = models.Sum("minutes")).values("date","total_minutes")
 		baseQ = baseQ.order_by("date")
