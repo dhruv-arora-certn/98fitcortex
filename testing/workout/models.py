@@ -16,7 +16,7 @@ class BaseExercise():
 class CardioFloorExercise(BaseExercise,models.Model):
 	workout_name = models.CharField(max_length=250, blank=True, null=True)
 	reps = models.IntegerField(blank=True, null=True)
-	duration = models.IntegerField( blank=True, null=True)
+	_duration = models.IntegerField( blank=True, null=True , db_column = "duration")
 	swing1 = models.BooleanField(default = True)
 	home = models.BooleanField(default = True)
 	gym = models.BooleanField(default = True)
@@ -26,7 +26,13 @@ class CardioFloorExercise(BaseExercise,models.Model):
 	description = models.CharField(max_length=255, blank=True, null=True)
 	status = models.IntegerField(blank=True, null=True)
 	image_name = models.CharField(max_length=250, blank=True, null=True)
-	
+
+	@property
+	def duration(self):
+		if self.swing1:
+			return self._duration * 2
+		return self._duration
+
 class CardioTimeBasedExercise(BaseExercise,models.Model):
 	workout_name = models.CharField(max_length=250, blank=True, null=True)
 	duration = models.IntegerField( blank=True, null=True)
@@ -43,7 +49,7 @@ class CardioTimeBasedExercise(BaseExercise,models.Model):
 class NoviceCoreStrengthiningExercise(BaseExercise,models.Model):
 	workout_name = models.CharField(max_length=250)
 	reps = models.CharField(max_length=50)
-	duration = models.IntegerField()
+	_duration = models.IntegerField( db_column = "duration")
 	hold = models.BooleanField(default = False)
 	swing1 = models.BooleanField(default = False)
 	rotation = models.BooleanField()
@@ -60,6 +66,24 @@ class NoviceCoreStrengthiningExercise(BaseExercise,models.Model):
 	description = models.CharField(max_length=255, blank=True, null=True)
 	status = models.IntegerField(blank=True, null=True)
 	image_name = models.CharField(max_length=200, blank=True, null=True)
+
+	@property
+	def duration(self):
+		multiplier = 0
+
+		if self.swing1:
+			multiplier += 1
+		if self.swing2:
+			multiplier += 1
+		if self.hold:
+			multiplier += 1
+		if self.rotation:
+			multiplier += 1
+
+		if multiplier == 0:
+			return self._duration
+		return self._duration * multiplier
+
 
 class ResistanceTrainingExercise(BaseExercise,models.Model):
 	workout_name = models.CharField(max_length = 100,blank=True, null=True)

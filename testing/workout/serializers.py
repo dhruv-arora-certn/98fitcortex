@@ -75,9 +75,9 @@ class ExerciseSerialzier(serializers.Serializer):
 
 	def get_image(self , obj):
 		base = "https://s3-ap-southeast-1.amazonaws.com/98fitasset/image/exercise/"
-		if hasattr(obj , "image_name"):
-			return "%s%s"%(base,getattr(obj , "image_name" , "http://www.98fit.com//webroot/workout_images/workout_blank.jpg"))
-		return "http://www.98fit.com//webroot/workout_images/workout_blank.jpg"
+		if hasattr(obj , "image_name") and getattr(obj , "image_name"):
+			return "%s%s"%(base,getattr(obj , "image_name" , "http:/www.98fit.com//webroot/workout_images/workout_blank.jpg"))
+		return "http://www.98fit.com/webroot/workout_images/workout_blank.jpg"
 
 	def get_sets(self , obj):
 		return  getattr(obj , "sets" , None)
