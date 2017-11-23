@@ -143,11 +143,11 @@ class WarmupCoolDownMobilityDrillExercise(BaseExercise,models.Model):
 	def duration(self):
 		multiplier = 0
 		if self.swing1 == 1:
-			multiplier += 1
+			multiplier += 2
 		if self.swing2 == 1:
-			multiplier += 1
+			multiplier += 2
 		if self.rotation == 1:
-			multiplier += 1
+			multiplier += 2
 
 		if multiplier == 0:
 			return self._duration
