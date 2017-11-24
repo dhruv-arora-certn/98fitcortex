@@ -1,13 +1,14 @@
 from .nomenclature import UpperBody , LowerBody
+from django.db.models import Q
 
 class ChestAndBackFilter():
 	filters = [
 				{
-					"filter" : UpperBody.chest(),
+					"filter" : UpperBody.chest() & Q(exercise_type = "Isolated"),
 					"count" : 3,
 				},
 				{
-					"filter" : UpperBody.back(),
+					"filter" : UpperBody.back() & Q(exercise_type = "Isolated"),
 					"count" : 3,
 				}
 			]
@@ -20,7 +21,7 @@ class ShouldersAndArmsFilter():
 	filters = [
 				{
 					"filter" : UpperBody.shoulder(),
-					"count" : 5
+					"count" : 3
 				},
 				{
 					"filter" : UpperBody.biceps(),

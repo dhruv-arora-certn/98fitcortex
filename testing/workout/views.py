@@ -181,7 +181,7 @@ class CustomerInjuryView(ListBulkCreateAPIView , BulkDifferential):
         6 : "wrist",
         7 : "shoulder"
     }
-    
+
     class BulkMeta:
         attr_name = "injury_name"
 
