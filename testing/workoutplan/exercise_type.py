@@ -116,7 +116,7 @@ class Main(Base):
 			self.conditionalType = exercise.CoreStrengthening
 
 		if self.cardioType == exercise.FloorBasedCardio and not self.user.is_novice():
-			self.duration = get_cardio_sets_reps_duration(user.level_obj , user.goal , user.user_workout_week).duration
+			self.duration = get_cardio_sets_reps_duration(user.level_obj , user.goal , user.user_relative_workout_week).duration
 		else:
 			self.duration = 900
 		self.logger.debug("Cardio Type %s"%(self.cardioType))
