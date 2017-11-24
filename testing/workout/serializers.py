@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from workout.models import WarmupCoolDownMobilityDrillExercise, CardioTimeBasedExercise , NoviceCoreStrengthiningExercise , StretchingExercise
+from workout.models import WarmupCoolDownMobilityDrillExercise, CardioTimeBasedExercise , NoviceCoreStrengthiningExercise , StretchingExercise , CustomerInjury
 import logging
 
 logger = logging.getLogger(__name__)
@@ -92,3 +92,8 @@ class WorkoutSerializer(serializers.Serializer):
 	resistance_training = ExerciseSerialzier(many = True , read_only = True)
 	cooldown = ExerciseSerialzier(many = True , read_only = True)
 	stretching = ExerciseSerialzier(many = True , read_only = True)
+
+class CustomerInjurySerializer(serializers.ModelSerializer):
+	class Meta:
+		model = CustomerInjury
+		fields = "__all__"

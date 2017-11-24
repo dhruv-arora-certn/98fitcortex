@@ -192,3 +192,10 @@ class GeneratedExercisePlanDetails(models.Model):
     machine_name = models.CharField(max_length=50)
     equipment_name = models.CharField(max_length=50)
     image_name = models.CharField(max_length = 100)
+
+class CustomerInjury(models.Model):
+	class Meta:
+		managed = False
+		db_table = "erp_customer_injury"
+	injury_name = models.CharField(max_length = 20)
+	customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "injuries")

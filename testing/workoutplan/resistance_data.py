@@ -4,11 +4,11 @@ class ChestAndBackFilter():
 	filters = [
 				{
 					"filter" : UpperBody.chest(),
-					"count" : 5,
+					"count" : 3,
 				},
 				{
 					"filter" : UpperBody.back(),
-					"count" : 5,
+					"count" : 3,
 				}
 			]
 	chest = {
