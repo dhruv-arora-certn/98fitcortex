@@ -37,9 +37,10 @@ class ExerciseDay:
 		self.cooldown.build()
 		self.cooldown.selected['cooldown'] = self.cooldown.selected['warmup']
 		del self.cooldown.selected['warmup']
-		self.cooldown.selected['cooldown'].append(
-			DummyCoolDown(900 , "Slow Walk")
-		)
+		if self.resistance_filter:
+			self.cooldown.selected['cooldown'].append(
+				DummyCoolDown(900 , "Slow Walk")
+			)
 		return self
 
 	def buildStretching(self):
