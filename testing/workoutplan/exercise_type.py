@@ -104,11 +104,12 @@ class Main(Base):
 	_type = "main"
 	cardioTypeGen = alternate_gen([exercise.FloorBasedCardio , exercise.TimeBasedCardio])
 
-	def __init__(self , user , resistance_filter = None):
+	def __init__(self , user , resistance_filter = None , make_cardio = False):
 		super().__init__()
 		self.user = user
 		self.cardioType = next(Main.cardioTypeGen)
 		self.resistance_filter = resistance_filter
+		self.make_cardio = make_cardio
 
 		if resistance_filter:
 			self.conditionalType = exercise.ResistanceTraining
@@ -166,10 +167,12 @@ class Main(Base):
 		'''
 		Build exercises after assembly
 		'''
-		self.cardio = self.buildCardio()
-		self.selected = {
-			"cardio" : self.cardio ,
-		}
+		self.selected = {}
+		if self.make_cardio:
+			self.cardio = self.buildCardio()
+			self.selected = {
+				"cardio" : self.cardio ,
+			}
 
 		self.rt = self.buildRT()
 		if self.conditionalType == exercise.ResistanceTraining:

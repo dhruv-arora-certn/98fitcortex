@@ -24,7 +24,7 @@ class ExerciseDay:
 		self.buildMain(self)
 
 	def buildMain(self):
-		self.main = exercise_type.Main(self.user ,resistance_filter =  self.resistance_filter)
+		self.main = exercise_type.Main(self.user ,resistance_filter =  self.resistance_filter , make_cardio = self.make_cardio)
 		self.main.build()
 
 	def buildWarmup(self):
