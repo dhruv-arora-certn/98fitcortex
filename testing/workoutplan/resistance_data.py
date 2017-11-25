@@ -25,36 +25,36 @@ class ShouldersAndArmsFilter():
 				},
 				{
 					"filter" : UpperBody.biceps(),
-					"count" : 3
+					"count" : 1
 				},
 				{
 					"filter" : UpperBody.triceps(),
-					"count" : 2
+					"count" : 1
+				},
+				{
+					"filter" : Q(exercise_type = "Compound") & Q(body_part = "Upper"),
+					"count" : 1
 				}
 			]
 
 class AbdomenAndLegsFilter():
 	filters = [
 				{
-					"filter" : UpperBody.abdomen(),
-					"count" : 5
+					"filter" : UpperBody.abdomen() & Q(exercise_type = "Isolated"),
+					"count" : 3
 				},
 				{
-					"filter" : LowerBody.hamstrings(),
-					"count" : 1
-				},
-				{
-					"filter" : LowerBody.glutes(),
-					"count" : 1
-				},
-				{
-					"filter" : LowerBody.calves(),
+					"filter" : LowerBody.hamstrings() & Q(exercise_type = "Isolated"),
 					"count" : 1
 				},
 				{
 					"filter" : LowerBody.quadriceps(),
 					"count" : 1
 				},
+				{
+					"filter" : Q(body_part = "Lower") & Q(exercise_type = "Compound") ,
+					"count" : 1
+				}
 			]
 
 class UpperBodyFilter():

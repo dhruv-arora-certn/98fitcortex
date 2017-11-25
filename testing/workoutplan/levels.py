@@ -101,12 +101,64 @@ class Intermediate(Base):
 				sets = 3
 
 			@decorators.body_part_decorator(body_part_focus.LowerBody)
-			class D2(AbdomenAndLegsFilter):
+			class D2():
+				filters = [
+					{
+						"filter" : UpperBody.abdomen(),
+						"count" : 5
+					},
+					{
+						"filter" : LowerBody.quadriceps() & Q(exercise_type = "Isolated"),
+						"count" : 1
+					},
+					{
+						"filter" : LowerBody.calves() & Q(exercise_type = "Isolated"),
+						"count" : 1
+					},
+					{
+						"filter" : LowerBody.glutes() & Q(exercise_type = "Isolated"),
+						"count" : 1
+					},
+					{
+						"filter" : LowerBody.hamstrings() & Q(exercise_type = "Isolated"),
+						"count" : 1
+					},
+					{
+						"filter" : Q(body_part = "Lower") & Q(exercise_type = "Compound"),
+						"count" : 1
+					}
+				]
 				reps = 10
 				sets = 3
 
 			@decorators.body_part_decorator(body_part_focus.LowerBody)
-			class D5(AbdomenAndLegsFilter):
+			class D5():
+				filters = [
+					{
+						"filter" : UpperBody.abdomen(),
+						"count" : 5
+					},
+					{
+						"filter" : LowerBody.quadriceps() & Q(exercise_type = "Isolated"),
+						"count" : 1
+					},
+					{
+						"filter" : LowerBody.calves() & Q(exercise_type = "Isolated"),
+						"count" : 1
+					},
+					{
+						"filter" : LowerBody.glutes() & Q(exercise_type = "Isolated"),
+						"count" : 1
+					},
+					{
+						"filter" : LowerBody.hamstrings() & Q(exercise_type = "Isolated"),
+						"count" : 1
+					},
+					{
+						"filter" : Q(body_part = "Lower") & Q(exercise_type = "Compound"),
+						"count" : 1
+					}
+				]
 				reps = 10
 				sets = 3
 
