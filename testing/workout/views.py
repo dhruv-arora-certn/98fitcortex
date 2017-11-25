@@ -172,13 +172,22 @@ class CustomerInjuryView(ListBulkCreateAPIView , BulkDifferential):
     authentication_classes = [CustomerAuthentication]
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = CustomerInjurySerializer
+    mapper = {
+        1 : "lower_back",
+        2 : "back",
+        3 : "knee",
+        4 : "ankle",
+        5 : "elbow",
+        6 : "wrist",
+        7 : "shoulder"
+    }
     
     class BulkMeta:
         attr_name = "injury_name"
 
     def getPartition(self , request):
         old = list(request.user.injuries.all())
-        new = [CustomerInjury(customer = request.user , injury_name = e.get("injury_name")) for e in request.data ]
+        new = [CustomerInjury(customer = request.user , injury_name = self.mapper.get(e,e)) for e in request.data ]
         return self.getToDelete( old , new) , self.getToAdd( old , new )
 
     def post(self , request , *args , **kwargs):

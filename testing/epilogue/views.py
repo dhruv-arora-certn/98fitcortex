@@ -809,3 +809,79 @@ class DashboardMealTextView(GenericAPIView):
         }
 
         return Response(string_dict)
+
+class CustomerMedicalConditionsMobileView(GenericAPIView , BulkDifferential):
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [IsAuthenticated]
+	serializer_class = CustomerMedicalConditionsSerializer
+
+	class BulkMeta:
+		attr_name = "condition_name"
+
+	mapper = {
+		1 : 'diabetes',
+		2 : 'pcod',
+		3 : 'thyroid',
+		4 : 'osteoporosis',
+		5 : 'anaemia',
+		6 : 'hyper_Tension',
+	}
+
+	def get_partition(self , request):
+		old = list(request.user.customermedicalconditions_set.all())
+		new = [CustomerMedicalConditions(customer = request.user , condition_name = self.mapper.get(e,e)) for e in request.data]
+		return self.getToDelete(old , new) , self.getToAdd(old , new)
+
+	def post(self , request , *args , **kwargs):
+		bulk = isinstance(request.data , list)
+
+		if bulk:
+			toDelete , toAdd  = self.get_partition(request)
+
+			for e in toDelete:
+				e.delete()
+
+			for a in toAdd:
+				a.save()
+
+		return Response([],status.HTTP_201_CREATED)
+
+class CustomerFoodExclusionsMobileView(GenericAPIView , BulkDifferential):
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [IsAuthenticated]
+	serializer_class = CustomerFoodExclusionSerializer
+
+	class BulkMeta:
+		attr_name = "food_type"
+
+	mapper = {
+		1 : 'egg',
+		2 : 'seafood',
+		3 : 'wheat',
+		4 : 'lamb',
+		5 : 'meat',
+		6 : 'beef',
+		7 : 'nuts',
+		8 : 'dairy',
+		9 : 'poultry',
+	}
+
+	def get_partition(self , request):
+		old = list(request.user.customerfoodexclusions_set.all())
+		new = [CustomerFoodExclusions(customer = request.user , food_type = self.mapper.get(e,e)) for e in request.data]
+		return self.getToDelete(old , new) , self.getToAdd(old , new)
+
+	def post(self , request , *args , **kwargs):
+		bulk = isinstance(request.data , list)
+
+		if bulk:
+			toDelete , toAdd  = self.get_partition(request)
+
+			for e in toDelete:
+				e.delete()
+
+			for a in toAdd:
+				a.save()
+		objs = request.user.customerfoodexclusions_set.all()
+		serialized = self.serializer_class(objs , many = True)
+		return Response(serialized.data , status.HTTP_201_CREATED)

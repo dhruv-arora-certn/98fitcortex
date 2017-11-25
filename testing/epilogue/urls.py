@@ -2,7 +2,7 @@ from django.conf.urls import url
 from .views import get_analysis , UserView , DietPlanView , DishReplaceView , MealReplaceView , CustomerFoodExclusionView ,\
  					CustomerMedicalConditionsView , CreateCustomerView , GuestPDFView , DietPlanRegenerationView , UserDietPlanRegenerationView ,\
  					DietPlanMobileView , WaterBulkView  ,SleepWeeklyAggregationView,SleepMonthlyAggregatedView, WaterWeeklyAggregateView,WaterMonthlyAggregateView , \
-					LastDaySleepView, MonthlyActivityView , WeeklyActivityView, ActivityLogView , CustomerSleepLoggingView , DashboardMealTextView
+					LastDaySleepView, MonthlyActivityView , WeeklyActivityView, ActivityLogView , CustomerSleepLoggingView , DashboardMealTextView , CustomerMedicalConditionsMobileView , CustomerFoodExclusionsMobileView
 
 
 urlpatterns = [
@@ -12,8 +12,10 @@ urlpatterns = [
 	url(r'^dietplans/(?P<week_id>[0-9]+)/day/(?P<day>[1-7])/$' , DietPlanView.as_view()),
 	url(r'^dish-replace/(?P<pk>[0-9]+)/$' , DishReplaceView.as_view()),
 	url(r'^meal-replace/(?P<week_id>\d{1,55})/(?P<day>[1-7])/(?P<meal>(m1|m2|m3|m4|m5))/$' , MealReplaceView.as_view()),
-	url(r'^food-exclusion/' , CustomerFoodExclusionView.as_view()),
+	url(r'^food-exclusion/$' , CustomerFoodExclusionView.as_view()),
 	url(r'^user/medical-condition/$' , CustomerMedicalConditionsView.as_view()),
+	url(r'^user/medical-condition/mobile/$' , CustomerMedicalConditionsMobileView.as_view()),
+	url(r'^user/food-exclusion/mobile/$' , CustomerFoodExclusionsMobileView.as_view()),
 	url(r'^guest-diet-pdf/$' , GuestPDFView.as_view()),
 	url(r'^dietplans/(?P<id>[0-9]+)/regenerate/$' , DietPlanRegenerationView.as_view()),
 	url(r'^user/regenerate' , UserDietPlanRegenerationView.as_view()),
