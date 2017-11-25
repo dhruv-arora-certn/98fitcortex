@@ -843,8 +843,10 @@ class CustomerMedicalConditionsMobileView(GenericAPIView , BulkDifferential):
 
 			for a in toAdd:
 				a.save()
+		objs = request.user.customermedicalconditions_set.all()
+		serialized = self.serializer_class(objs , many = True)
 
-		return Response([],status.HTTP_201_CREATED)
+		return Response(serialized.data,status.HTTP_201_CREATED)
 
 class CustomerFoodExclusionsMobileView(GenericAPIView , BulkDifferential):
 	authentication_classes = [CustomerAuthentication]
@@ -855,20 +857,21 @@ class CustomerFoodExclusionsMobileView(GenericAPIView , BulkDifferential):
 		attr_name = "food_type"
 
 	mapper = {
-		1 : 'egg',
-		2 : 'seafood',
-		3 : 'wheat',
-		4 : 'lamb',
-		5 : 'meat',
-		6 : 'beef',
-		7 : 'nuts',
-		8 : 'dairy',
-		9 : 'poultry',
+		1 : 'nuts',
+		2 : 'wheat',
+		3 : 'dairy',
+		4 : 'egg',
+		5 : 'seafood',
+		6 : 'lamb',
+		7 : 'meat',
+		8 : 'beef',
+		9 : 'nuts',
+		10 : 'poultry',
 	}
 
 	def get_partition(self , request):
 		old = list(request.user.customerfoodexclusions_set.all())
-		new = [CustomerFoodExclusions(customer = request.user , food_type = self.mapper.get(e,e)) for e in request.data]
+		new = [CustomerFoodExclusions(customer = request.user , food_type = self.mapper.get(e,e)) for e in request.data if e != 0 ]
 		return self.getToDelete(old , new) , self.getToAdd(old , new)
 
 	def post(self , request , *args , **kwargs):
