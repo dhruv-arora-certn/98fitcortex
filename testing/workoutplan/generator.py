@@ -57,6 +57,8 @@ class Generator():
 
 		if self.user.is_novice():
 			cs_days = cardio_days
+		elif self.user.is_intermediate() and self.user.goal == Goals.WeightGain:
+			cs_days = random.sample( day_range , 2)
 		else:
 			cs_days_count = day_range.difference(rt_days)
 			cs_days = random.sample(
