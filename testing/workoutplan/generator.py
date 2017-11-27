@@ -38,7 +38,6 @@ class Generator():
 	def _get_intermediate_days(self):
 		pass
 
-	@classmethod
 	def _get_days_distribution(self, days):
 		'''
 		@days is a namedtuple instance with cardio , rt and total.
@@ -56,7 +55,16 @@ class Generator():
 		else:
 			rt_days = random.sample(day_range.difference(cardio_days) , days.rt)
 
-		return cardio_days , set(rt_days)
+		if self.user.is_novice():
+			cs_days = cardio_days
+		else:
+			cs_days_count = day_range.difference(rt_days)
+			cs_days = random.sample(
+				day_range.difference(rt_days),
+				min(len(cs_days_count),2)
+			)
+
+		return cardio_days , set(rt_days) , set(cs_days)
 
 	def get_resistance_distribution(self):
 
@@ -81,8 +89,8 @@ class Generator():
 			days = self._get_beginner_days()
 		elif self.user.level_obj == levels.Intermediate:
 			days = self._get_intermediate_days()
-		cardio_days , rt_days = self._get_days_distribution(days)
-		data = namedDays(cardio_days , rt_days , days.total)
+		cardio_days , rt_days , cs_days = self._get_days_distribution(days)
+		data = namedDays(cardio_days , rt_days , cs_days ,days.total)
 		shared_globals.conditional_days = data
 		return data
 
@@ -92,12 +100,16 @@ class Generator():
 	def should_make_cardio(self , day):
 		return day in self.conditional_days.cardio
 
+	def should_make_cs(self , day):
+		return day in self.conditional_days.cs
+
 	def _generate(self):
 		days = {1,2,3,4,5}
 		for e in days:
 			resistance_filter = self.get_resistance_filter_for_day(e)
 			make_cardio = self.should_make_cardio(e)
-			d = ExerciseDay(e , self.user , make_cardio = make_cardio , resistance_filter = resistance_filter)
+			make_cs = self.should_make_cs(e)
+			d = ExerciseDay(e , self.user , make_cardio = make_cardio , resistance_filter = resistance_filter , make_cs = make_cs)
 			setattr(self , "D%s"%e , d)
 			d.build()
 		return self

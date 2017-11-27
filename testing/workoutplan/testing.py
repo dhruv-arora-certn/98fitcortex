@@ -52,7 +52,7 @@ def generate_random_diet_plan():
 	goals = [Goals.WeightLoss , Goals.WeightGain , Goals.MaintainWeight , Goals.MuscleGain]
 	lvls = [levels.Beginner ]
 	weeks = beginner_week()
-
+	return itertools.product(lvls , goals, [1])
 	generated = []
 	for e in itertools.product(lvls , goals , weeks):
 		try:

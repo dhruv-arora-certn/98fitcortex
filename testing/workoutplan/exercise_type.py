@@ -25,7 +25,7 @@ class Warmup(Base):
 	_type = "warmup"
 	duration = 300
 
-	def __init__(self , user , mainCardio = None , bodyPartInFocus = Q()):
+	def __init__(self , user , mainCardio = None , bodyPartInFocus = Q() , make_cardio = False):
 		super().__init__()
 		self.user = user
 		self.mainCardio = mainCardio
@@ -48,6 +48,8 @@ class Warmup(Base):
 		elif self.mainCardio.cardioType == exercise.TimeBasedCardio:
 			self.logger.info("Decided Warmup Time Based")
 			return self.time_based_cardio()
+		else:
+			return self.normal_warmup_cooldown()
 
 	def floor_based_cardio(self):
 		'''
@@ -73,6 +75,9 @@ class Warmup(Base):
 			).build()
 			l.extend(warmup.selected)
 		return  l
+
+	def rt_warmup(self):
+		pass
 
 	def time_based_cardio(self):
 		class Warmup:
@@ -104,16 +109,22 @@ class Main(Base):
 	_type = "main"
 	cardioTypeGen = alternate_gen([exercise.FloorBasedCardio , exercise.TimeBasedCardio])
 
-	def __init__(self , user , resistance_filter = None , make_cardio = False):
+	def __init__(self , user , resistance_filter = None , make_cardio = False , make_cs = False):
 		super().__init__()
 		self.user = user
-		self.cardioType = next(Main.cardioTypeGen)
-		self.resistance_filter = resistance_filter
 		self.make_cardio = make_cardio
+
+		if self.make_cardio:
+			self.cardioType = next(Main.cardioTypeGen)
+		else:
+			self.cardioType = None
+		self.resistance_filter = resistance_filter
+		self.make_cs = make_cs
+		self.conditionalType = None
 
 		if resistance_filter:
 			self.conditionalType = exercise.ResistanceTraining
-		else:
+		elif self.make_cs:
 			self.conditionalType = exercise.CoreStrengthening
 
 		if self.cardioType == exercise.FloorBasedCardio and not self.user.is_novice():
@@ -161,7 +172,8 @@ class Main(Base):
 	def buildRT(self):
 		if self.conditionalType == exercise.ResistanceTraining:
 			return self.buildResistanceTraining()
-		return self.buildCoreStrengthening()
+		elif self.conditionalType == exercise.CoreStrengthening:
+			return self.buildCoreStrengthening()
 
 	def build(self):
 		'''
@@ -179,7 +191,7 @@ class Main(Base):
 			self.selected.update({
 				"resistance_training" : self.rt
 			})
-		else:
+		elif self.conditionalType == exercise.CoreStrengthening:
 			self.selected.update({
 				"core_strengthening" : self.rt
 			})

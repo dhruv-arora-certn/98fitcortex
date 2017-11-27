@@ -7,9 +7,10 @@ from .utils import DummyCoolDown
 
 class ExerciseDay:
 
-	def __init__(self , day , user ,make_cardio = False , resistance_filter = Q()):
+	def __init__(self , day , user ,make_cardio = False , make_cs = False,resistance_filter = Q()):
 		self.day = day
 		self.make_cardio = make_cardio
+		self.make_cs = make_cs
 		self.make_rt = bool(resistance_filter)
 		self.resistance_filter = resistance_filter
 		self.user = user
@@ -24,7 +25,7 @@ class ExerciseDay:
 		self.buildMain(self)
 
 	def buildMain(self):
-		self.main = exercise_type.Main(self.user ,resistance_filter =  self.resistance_filter , make_cardio = self.make_cardio)
+		self.main = exercise_type.Main(self.user ,resistance_filter =  self.resistance_filter , make_cardio = self.make_cardio , make_cs = self.make_cs)
 		self.main.build()
 
 	def buildWarmup(self):

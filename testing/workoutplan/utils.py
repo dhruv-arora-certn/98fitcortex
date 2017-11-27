@@ -14,7 +14,7 @@ import logging
 
 type_list = ["WeightLoss" , "WeightGain" , "MuscleGain" , "MaintainWeight"]
 
-days = collections.namedtuple("Days" , ["cardio","rt","total"])
+days = collections.namedtuple("Days" , ["cardio","rt","cs" , "total"])
 
 Novice = collections.namedtuple("Novice" , type_list)
 Beginner = collections.namedtuple("Beginner" , type_list)
@@ -27,46 +27,46 @@ MaintainWeight = collections.namedtuple("MaintainWeight" , ["days"])
 
 NoviceDays = Novice(
 	WeightLoss(
-		days(5,0,5)
+		days(5,0,5,5)
 	),
 	WeightGain(
-		days(3,0,3)
+		days(3,0,3,3)
 	),
 	MuscleGain(
-		days(4,0,4)
+		days(4,0,4,4)
 	),
 	MaintainWeight(
-		days(4,0,4)
+		days(4,0,4,4)
 	)
 )
 
 BeginnerDays = Beginner(
 	WeightLoss(
-		days(5,2,5)
+		days(5,2,2,5)
 	),
 	WeightGain(
-		days(2,3,5)
+		days(2,3,2,5)
 	),
 	MuscleGain(
-		days(2,3,5)
+		days(2,3,2,5)
 	),
 	MaintainWeight(
-		days(3,2,5)
+		days(3,2,2,5)
 	)
 )
 
 IntermediateDays = Intermediate(
 	WeightLoss(
-		days(5,2,5)
+		days(5,2,2,5)
 	),
 	WeightGain(
-		days(2,5,5)
+		days(2,5,2,5)
 	),
 	MuscleGain(
-		days(2,5,5)
+		days(2,5,2,5)
 	),
 	MaintainWeight(
-		days(3,2,5)
+		days(3,2,2,5)
 	)
 )
 
