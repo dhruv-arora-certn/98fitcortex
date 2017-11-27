@@ -170,10 +170,11 @@ class Main(Base):
 		return core.selected
 
 	def buildRT(self):
-		if self.conditionalType == exercise.ResistanceTraining:
-			return self.buildResistanceTraining()
-		elif self.conditionalType == exercise.CoreStrengthening:
-			return self.buildCoreStrengthening()
+		if self.resistance_filter :
+			self.rt = self.buildResistanceTraining()
+		if self.make_cs:
+			self.cs =  self.buildCoreStrengthening()
+		return
 
 	def build(self):
 		'''
@@ -186,14 +187,14 @@ class Main(Base):
 				"cardio" : self.cardio ,
 			}
 
-		self.rt = self.buildRT()
-		if self.conditionalType == exercise.ResistanceTraining:
+		self.buildRT()
+		if self.resistance_filter:
 			self.selected.update({
 				"resistance_training" : self.rt
 			})
-		elif self.conditionalType == exercise.CoreStrengthening:
+		if self.make_cs:
 			self.selected.update({
-				"core_strengthening" : self.rt
+				"core_strengthening" : self.cs
 			})
 		return self.selected
 
