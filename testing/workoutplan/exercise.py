@@ -35,8 +35,13 @@ class ExerciseBase:
 		self.selected.extend(l.packed)
 		return self
 
+	def get_location_filter(self):
+		if hasattr(shared_globals , "location_pref"):
+			return getattr(shared_globals.location_pref , "filter" , Q())
+		return Q()
+
 	def get_items(self):
-		model_list = self.model.objects.all()
+		model_list = self.model.objects.filter(self.get_location_filter())
 		if settings.CACHE_WORKOUT:
 			logging.info("Using Cache")
 			return list(cache.get_or_set(self.cache_key , model_list))

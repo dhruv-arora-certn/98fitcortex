@@ -12,7 +12,9 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.cache import cache
+
 from workoutplan import levels
+from workoutplan import locations
 
 
 from django.conf import settings
@@ -304,6 +306,14 @@ class Customer(models.Model):
 	@property
 	def user_week(self):
 		return get_week() - get_week(self.create_on) + 1
+
+	@property
+	def workout_location(self):
+		if self.work_pref == '1':
+			return locations.Home
+		elif self.work_pref == '2':
+			return locations.FitnessCentre
+		return locations.Home
 
 	@property
 	@functools.lru_cache(maxsize = 32)

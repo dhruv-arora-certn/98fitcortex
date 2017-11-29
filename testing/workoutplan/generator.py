@@ -26,6 +26,8 @@ class Generator():
 		self.get_resistance_distribution()
 		self.logger.info("Starting Workout Generator for user %s-%d"%(self.user.email , self.user.id))
 
+		setattr(shared_globals , "location_pref" , self.user.workout_location)
+
 	@get_category_decorator(NoviceDays)
 	def _get_novice_days(self):
 		pass
