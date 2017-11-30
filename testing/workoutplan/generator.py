@@ -47,7 +47,7 @@ class Generator():
 		Ideally should be a utility function, but i realized that after writing it and as of right now, too lazy to move it out. Hence
 		a classmethod
 		'''
-		day_range =  {1,2,3,4,5}
+		day_range = set(range(1 , days.total + 1))
 		cardio_days = set(random.sample(
 			day_range,
 			days.cardio
@@ -108,25 +108,27 @@ class Generator():
 		return day in self.conditional_days.cs
 
 	def _generate(self):
-		days = {1,2,3,4,5}
+		days = range(1 , self.conditional_days.total + 1)
 		for e in days:
 			resistance_filter = self.get_resistance_filter_for_day(e)
 			make_cardio = self.should_make_cardio(e)
 			make_cs = self.should_make_cs(e)
-			d = ExerciseDay(e , self.user , make_cardio = make_cardio , resistance_filter = resistance_filter , make_cs = make_cs)
-			setattr(self , "D%s"%e , d)
-			d.build()
+			if resistance_filter or make_cardio or make_cs:
+				d = ExerciseDay(e , self.user , make_cardio = make_cardio , resistance_filter = resistance_filter , make_cs = make_cs)
+				setattr(self , "D%s"%e , d)
+				d.build()
 		return self
 
 	def weekly_as_dict(self):
-		days = [1,2,3,4,5]
+		days = set(range(1 , self.conditional_days.total + 1))
 		lists = ["warmup" , "main" , "stretching" , "cooldown"]
 		data = {}
 		for d,l in zip(days , itertools.repeat(lists)):
-			data[d] = {}
-			day_obj = getattr(self , "D%d"%d)
-			day_data = (getattr(day_obj , e) for e in l)
-			[data[d].update(**getattr(o , "selected")) for o in day_data]
+			if hasattr(self , "D%d"%d):
+				data[d] = {}
+				day_obj = getattr(self , "D%d"%d)
+				day_data = (getattr(day_obj , e) for e in l)
+				[data[d].update(**getattr(o , "selected")) for o in day_data]
 		return data
 
 	def generate(self ):

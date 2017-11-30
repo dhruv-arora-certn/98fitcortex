@@ -8,7 +8,6 @@ from django.core.cache import cache
 import random
 import itertools
 import logging
-import ipdb
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.FileHandler("info.log"))
@@ -26,17 +25,17 @@ class LevelTest:
 	def is_intermediate(self):
 		return self.level_obj == levels.Intermediate
 
-def dummy_customer(level , goal , user_workout_week , workout_location):
+def dummy_customer(level = None , goal = None , week = None , location = None):
 	return type(
 		"DummyCustomer",
 		(LevelTest,),
 		{
 			"level_obj" : level,
 			"goal" : goal,
-			"user_relative_workout_week" : user_workout_week,
+			"user_relative_workout_week" : week,
 			"id" : random.randint(9,100),
 			"email" : "test@98fit.com",
-			"workout_location" : workout_location 
+			"workout_location" : location
 
 		}
 	)()
@@ -68,6 +67,5 @@ def generate_random_diet_plan():
 			logger.info("="*30)
 			logger.info("Error for params %s : %s : %s"%(e[0].__name__ , e[1].__name__ , e[2]))
 			logger.info("Error is %s"%err)
-			ipdb.set_trace()
 			raise err
 	return generated

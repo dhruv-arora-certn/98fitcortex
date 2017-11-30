@@ -6,7 +6,6 @@ from workoutplan import shared_globals
 from django.db.models import Q
 
 import random
-import ipdb
 import collections
 import enum
 import functools
@@ -60,10 +59,10 @@ IntermediateDays = Intermediate(
 		days(5,2,2,5)
 	),
 	WeightGain(
-		days(2,5,2,5)
+		days(2,6,2,6)
 	),
 	MuscleGain(
-		days(2,5,2,5)
+		days(2,6,2,6)
 	),
 	MaintainWeight(
 		days(3,2,2,5)
