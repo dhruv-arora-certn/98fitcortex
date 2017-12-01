@@ -50,6 +50,7 @@ class DiabetesPDF(PDFBase):
 		self.cals = kwargs.pop('cals')
 		self.day = kwargs.pop('day')
 		self.food_cat = kwargs.pop('food_cat')
+		self.user = kwargs.pop('user')
 
 		kwargs['template'] = "guest-diet-diabetes.html"
 		super().__init__(*args , **kwargs)
@@ -74,4 +75,9 @@ class DiabetesPDF(PDFBase):
 			)
 		)
 		context = utils.mealwise(context , self.meals)
+		return {
+			**context,
+			"user" : self.user,
+			"intake" : self.cals
+		}
 
