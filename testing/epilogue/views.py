@@ -15,7 +15,7 @@ from dietplan.activity import ActivityLevel
 from dietplan.meals import M1 , M5 , M3
 from dietplan.generator import Pipeline
 from dietplan.medical_conditions import Osteoporosis , Anemia
- 
+
 from rest_framework.generics import RetrieveUpdateAPIView ,RetrieveAPIView , GenericAPIView , CreateAPIView,ListAPIView,RetrieveAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -27,9 +27,11 @@ from epilogue.forms import AnalysisForm
 from epilogue.models import *
 from epilogue.serializers import *
 from epilogue.authentication import CustomerAuthentication
-from epilogue.mixins import* 
-from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf , get_food_cat_diabetes
+from epilogue.mixins import*
+from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf , get_food_cat_diabetes , disease_cals
 from epilogue.replacement import *
+
+from pdfs import base, file_handlers
 
 from weasyprint import HTML
 
@@ -383,6 +385,54 @@ class GuestPDFView(GenericAPIView):
             "url" : url
         })
 
+class DiseasePDFView(GenericAPIView):
+    authentication_classes = [CustomerAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_cals(self):
+        c = Calculations(*self.request.user.args_attrs)
+        rounded_cals = round(c.calories/100)*100
+        if rounded_cals <= 1200:
+            cals = 1200
+        elif rounded_cals == 1300:
+            cals = 1300
+        else:
+            cals = 1400
+        return cals
+
+    def get_pdf_attrs(self):
+        day = self.kwargs.get('day')
+        cals = self.get_cals()
+        user = self.request.user
+        food_cat = user.food_cat
+        return day , cals , user , food_cat
+
+    def pcod_pdf(self):
+        d = bases.PcosPDF(*self.get_pdf_attrs())
+        pdf = d.get_pdf()
+        url = file_handlers.S3PDFHandler.upload(
+            pdf
+        )
+        return Response({
+            "url" : url
+        })
+
+    def diabetes_pdf(self):
+        d = bases.DiabetesPDF(*self.get_pdf_attrs())
+        pdf = d.get_pdf()
+        url = file_handlers.S3PDFHandler.upload(
+            pdf
+        )
+        return Response({
+            "url" : url
+        })
+
+    def get(self , request , *args , **kwargs):
+        if request.user.has_pcod():
+            return self.pcod_pdf()
+        elif request.user.has_diabetes():
+            return self.diabetes_pdf()
+
 class DietPlanRegenerationView(GenericAPIView):
     serializer_class = DietPlanSerializer
     authentication_classes = (CustomerAuthentication,)
@@ -390,7 +440,7 @@ class DietPlanRegenerationView(GenericAPIView):
 
     def get_queryset(self):
         return GeneratedDietPlan.objects.get(pk = self.kwargs.get("id"))
-    
+
     def get_food_cat(self):
         pass
 
@@ -811,80 +861,80 @@ class DashboardMealTextView(GenericAPIView):
         return Response(string_dict)
 
 class CustomerMedicalConditionsMobileView(GenericAPIView , BulkDifferential):
-	authentication_classes = [CustomerAuthentication]
-	permission_classes = [IsAuthenticated]
-	serializer_class = CustomerMedicalConditionsSerializer
+    authentication_classes = [CustomerAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = CustomerMedicalConditionsSerializer
 
-	class BulkMeta:
-		attr_name = "condition_name"
+    class BulkMeta:
+        attr_name = "condition_name"
 
-	mapper = {
-		1 : 'diabetes',
-		2 : 'pcod',
-		3 : 'thyroid',
-		4 : 'osteoporosis',
-		5 : 'anaemia',
-		6 : 'hyper_Tension',
-	}
+    mapper = {
+        1 : 'diabetes',
+        2 : 'pcod',
+        3 : 'thyroid',
+        4 : 'osteoporosis',
+        5 : 'anaemia',
+        6 : 'hyper_Tension',
+    }
 
-	def get_partition(self , request):
-		old = list(request.user.customermedicalconditions_set.all())
-		new = [CustomerMedicalConditions(customer = request.user , condition_name = self.mapper.get(e,e)) for e in request.data]
-		return self.getToDelete(old , new) , self.getToAdd(old , new)
+    def get_partition(self , request):
+        old = list(request.user.customermedicalconditions_set.all())
+        new = [CustomerMedicalConditions(customer = request.user , condition_name = self.mapper.get(e,e)) for e in request.data]
+        return self.getToDelete(old , new) , self.getToAdd(old , new)
 
-	def post(self , request , *args , **kwargs):
-		bulk = isinstance(request.data , list)
+    def post(self , request , *args , **kwargs):
+        bulk = isinstance(request.data , list)
 
-		if bulk:
-			toDelete , toAdd  = self.get_partition(request)
+        if bulk:
+            toDelete , toAdd  = self.get_partition(request)
 
-			for e in toDelete:
-				e.delete()
+            for e in toDelete:
+                e.delete()
 
-			for a in toAdd:
-				a.save()
-		objs = request.user.customermedicalconditions_set.all()
-		serialized = self.serializer_class(objs , many = True)
+            for a in toAdd:
+                a.save()
+        objs = request.user.customermedicalconditions_set.all()
+        serialized = self.serializer_class(objs , many = True)
 
-		return Response(serialized.data,status.HTTP_201_CREATED)
+        return Response(serialized.data,status.HTTP_201_CREATED)
 
 class CustomerFoodExclusionsMobileView(GenericAPIView , BulkDifferential):
-	authentication_classes = [CustomerAuthentication]
-	permission_classes = [IsAuthenticated]
-	serializer_class = CustomerFoodExclusionSerializer
+    authentication_classes = [CustomerAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = CustomerFoodExclusionSerializer
 
-	class BulkMeta:
-		attr_name = "food_type"
+    class BulkMeta:
+        attr_name = "food_type"
 
-	mapper = {
-		1 : 'nuts',
-		2 : 'wheat',
-		3 : 'dairy',
-		4 : 'egg',
-		5 : 'seafood',
-		6 : 'lamb',
-		7 : 'meat',
-		8 : 'beef',
-		9 : 'nuts',
-		10 : 'poultry',
-	}
+    mapper = {
+        1 : 'nuts',
+        2 : 'wheat',
+        3 : 'dairy',
+        4 : 'egg',
+        5 : 'seafood',
+        6 : 'lamb',
+        7 : 'meat',
+        8 : 'beef',
+        9 : 'nuts',
+        10 : 'poultry',
+    }
 
-	def get_partition(self , request):
-		old = list(request.user.customerfoodexclusions_set.all())
-		new = [CustomerFoodExclusions(customer = request.user , food_type = self.mapper.get(e,e)) for e in request.data if e != 0 ]
-		return self.getToDelete(old , new) , self.getToAdd(old , new)
+    def get_partition(self , request):
+        old = list(request.user.customerfoodexclusions_set.all())
+        new = [CustomerFoodExclusions(customer = request.user , food_type = self.mapper.get(e,e)) for e in request.data if e != 0 ]
+        return self.getToDelete(old , new) , self.getToAdd(old , new)
 
-	def post(self , request , *args , **kwargs):
-		bulk = isinstance(request.data , list)
+    def post(self , request , *args , **kwargs):
+        bulk = isinstance(request.data , list)
 
-		if bulk:
-			toDelete , toAdd  = self.get_partition(request)
+        if bulk:
+            toDelete , toAdd  = self.get_partition(request)
 
-			for e in toDelete:
-				e.delete()
+            for e in toDelete:
+                e.delete()
 
-			for a in toAdd:
-				a.save()
-		objs = request.user.customerfoodexclusions_set.all()
-		serialized = self.serializer_class(objs , many = True)
-		return Response(serialized.data , status.HTTP_201_CREATED)
+            for a in toAdd:
+                a.save()
+        objs = request.user.customerfoodexclusions_set.all()
+        serialized = self.serializer_class(objs , many = True)
+        return Response(serialized.data , status.HTTP_201_CREATED)

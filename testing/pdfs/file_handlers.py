@@ -30,7 +30,7 @@ class _S3PDFHandler(S3Handler):
             "98fit_Diet_Plan_%s.pdf" % (datetime.datetime.today().strftime("%Y-%m-%d")),
         ])
 
-    def upload(self , data , acl = "public-read" , expires = datetime.datetime.now() + datetime.timedelta(seconds = 60) , content_type = None , content_disposition = None):
+    def upload(self , data , acl = "public-read" , expires = datetime.datetime.now() + datetime.timedelta(seconds = 60) , content_type = "application/pdf" , content_disposition = "attachment"):
         key = self.get_filename()
         bucket = self.get_bucket()
 

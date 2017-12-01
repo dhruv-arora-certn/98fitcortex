@@ -6,6 +6,9 @@ from functools import partial
 from weasyprint import HTML
 from django.template.loader import render_to_string
 from django.utils import timezone
+
+#from dietplan.calculations import Calculations
+
 import functools
 import json
 
@@ -104,3 +107,14 @@ def get_food_cat_diabetes(user):
 
 def get_food_cat_pcod(user):
 	return user.food_cat
+
+def disease_cals(user):
+	c = Calculations(*user.args_attrs)
+	rounded_cals = round(c.calories/100)*100
+	if rounded_cals <= 1200:
+		cals = 1200
+	elif rounded_cals == 1300:
+		cals = 1300
+	else:
+		cals = 1400
+
