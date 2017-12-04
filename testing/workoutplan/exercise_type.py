@@ -90,7 +90,7 @@ class Warmup(Base):
 				self.workout_name = name
 
 		return list(map(lambda x : DummyWarmup(x) , [
-			e.functional_warmup for e in self.mainCardio.cardio
+			e for e in self.mainCardio.cardio
 		]))
 
 	def build(self):
@@ -128,9 +128,14 @@ class Main(Base):
 			self.conditionalType = exercise.CoreStrengthening
 
 		if self.cardioType == exercise.FloorBasedCardio and not self.user.is_novice():
-			self.duration = get_cardio_sets_reps_duration(user.level_obj , user.goal , user.user_relative_workout_week).duration
+			self.srd_container = get_cardio_sets_reps_duration(user.level_obj , user.goal , user.user_relative_workout_week , make_cardio , bool(resistance_filter))
+			self.duration = self.srd_container.duration
+			self.sets = self.srd_container.sets
+			self.reps = self.srd_container.reps
 		else:
 			self.duration = 900
+			self.sets = 0
+			self.reps = 0
 		self.logger.debug("Cardio Type %s"%(self.cardioType))
 
 	def buildCardio(self):
@@ -138,7 +143,9 @@ class Main(Base):
 		self.logger.debug("CardioType is %s"%self.cardioType)
 		cardio = self.cardioType(
 			self.user,
-			self.duration
+			self.duration,
+			self.sets,
+			self.reps
 		)
 		cardio.build()
 		return cardio.selected
@@ -224,7 +231,8 @@ class Stretching(Base):
 		for e in self.resistance_filter.filters:
 			stretching = exercise.Stretching(
 				user = self.user,
-				filterToUse = e.get('filter')
+				filterToUse = e.get('filter'),
+				count = e.get('stretching_count',1)
 			)
 			stretching.build()
 			l.extend(stretching.selected)

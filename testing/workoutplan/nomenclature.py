@@ -30,11 +30,11 @@ class UpperBody(BodyBase):
 	]
 	@classmethod
 	def chest(self):
-		return self.baseQ & self.filter & Q(muscle_group_name = "Chest")
+		return self.baseQ & Q(muscle_group_name = "Chest")
 
 	@classmethod
 	def back(self):
-		return self.baseQ & self.filter & Q(muscle_group_name = "Back")
+		return self.baseQ &  Q(muscle_group_name = "Back")
 
 	@classmethod
 	def back_biceps(self):

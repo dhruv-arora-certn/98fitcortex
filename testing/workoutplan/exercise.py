@@ -49,19 +49,20 @@ class ExerciseBase:
 
 class FloorBasedCardio(ExerciseBase):
 
-	def __init__(self , user , duration):
+	def __init__(self , user , duration , sets=0 , reps=0):
 		super().__init__(user , duration)
 		self.model = models.CardioFloorExercise
+		self.sets = sets
+		self.reps = reps
 
 	def build(self):
-		self.srd_container = get_cardio_sets_reps_duration(self.user.level_obj , self.user.goal , self.user.user_relative_workout_week)
-		self.multiplier = self.srd_container.sets
+		self.multiplier = self.sets
 		self.periodised_filters = periodization.get_cardio_periodized(self.user.level_obj , self.user.user_relative_workout_week)
 		self.selected = []
 
 		for e in self.periodised_filters:
 			items = self.model.objects.filter(e.get("filter"))
-			duration = self.srd_container.duration * e.get("ratio")
+			duration = self.duration * e.get("ratio")
 			l = Luggage(
 				duration,
 				items,
@@ -71,8 +72,8 @@ class FloorBasedCardio(ExerciseBase):
 			self.selected.extend(l.packed)
 
 		def add_sets_reps(x):
-			setattr(x , "sets" , self.srd_container.sets)
-			setattr(x , "reps" , self.srd_container.reps)
+			setattr(x , "sets" , self.sets)
+			setattr(x , "reps" , self.reps)
 			return x
 
 		self.selected = list(map(
@@ -82,7 +83,7 @@ class FloorBasedCardio(ExerciseBase):
 
 class TimeBasedCardio(ExerciseBase):
 
-	def __init__(self , user , duration):
+	def __init__(self , user , duration , sets , reps):
 		super().__init__( user , duration )
 		self.model = models.CardioTimeBasedExercise
 
@@ -146,23 +147,27 @@ class Warmup(ExerciseBase):
 
 class Stretching(ExerciseBase):
 
-	def __init__(self , user , filterToUse = Q()):
+	def __init__(self , user , filterToUse = Q() , count = 1):
 		self.user = user
 		self.filterToUse = filter_key_from_q(filterToUse , "exercise_type")
 		self.model = models.StretchingExercise
 		#self.cache_key = "%s_%s"%(self.model.__name__ , "_".join("%s_%s"%(i,e) for i,e in filterToUse.children))
 		self.selected = []
 		self.multiplier = 2
+		self.count = count
 
 	def get_items(self):
 		model_list =  list(self.model.objects.filter(self.filterToUse))
 		if settings.CACHE_WORKOUT:
-			return cache.get_or_set(self.cache_key , model_list)
-		return model_list
-
+			return cache.get_or_set(self.cache_key , model_list) 
+		return model_list 
 	def build(self):
 		items = self.get_items()
-		choice = random.choice(items)
-		choice.duration = 15 * self.multiplier
-		self.selected.append(choice)
+		if self.count == 1:
+			choice = random.choice(items)
+			self.selected.append(choice)
+		elif self.count > 1:
+			choice = random.sample(items , self.count)
+			self.selected.extend(choice)
+		[setattr(e,"duration" ,15 * self.multiplier) for e in self.selected]
 		return self

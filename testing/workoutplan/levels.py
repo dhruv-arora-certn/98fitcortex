@@ -80,12 +80,10 @@ class Intermediate(Base):
 
 		class WeightGain(Goals.WeightGain):
 
-			@decorators.body_part_decorator(body_part_focus.UpperBody)
 			class D1(ChestAndBackFilter):
 				reps = 10
 				sets = 3
 
-			@decorators.body_part_decorator(body_part_focus.UpperBody)
 			class D4(ChestAndBackFilter):
 				reps = 10
 				sets = 3

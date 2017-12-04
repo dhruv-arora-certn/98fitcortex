@@ -48,19 +48,40 @@ class Generator():
 		a classmethod
 		'''
 		day_range = set(range(1 , days.total + 1))
+
+		if not any([
+			days.cardio == days.total,
+			days.rt == days.total,
+			days.cs == days.total
+		]):
+			rt_days = random.sample(
+				day_range , days.rt
+			)
+			cardio_days = random.sample(
+				day_range.difference(rt_days) , days.cardio
+			)
+			cs_days = random.sample(
+				cardio_days , days.cs
+			)
+			return cardio_days , rt_days , cs_days
+
 		cardio_days = set(random.sample(
 			day_range,
 			days.cardio
 		))
+
 		if days.total <= days.cardio + days.rt:
 			rt_days = random.sample(day_range , days.rt)
+
 		else:
 			rt_days = random.sample(day_range.difference(cardio_days) , days.rt)
 
 		if self.user.is_novice():
 			cs_days = cardio_days
+
 		elif self.user.is_intermediate() and self.user.goal == Goals.WeightGain:
 			cs_days = random.sample( day_range , 2)
+
 		else:
 			cs_days_count = day_range.difference(rt_days)
 			cs_days = random.sample(
@@ -121,7 +142,7 @@ class Generator():
 
 	def weekly_as_dict(self):
 		days = set(range(1 , self.conditional_days.total + 1))
-		lists = ["warmup" , "main" , "stretching" , "cooldown"]
+		lists = ["warmup" , "main" , "stretching","cooldown" ]
 		data = {}
 		for d,l in zip(days , itertools.repeat(lists)):
 			if hasattr(self , "D%d"%d):

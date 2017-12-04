@@ -40,7 +40,7 @@ class ExerciseDay:
 		del self.cooldown.selected['warmup']
 		if self.resistance_filter:
 			self.cooldown.selected['cooldown'].append(
-				DummyCoolDown(900 , "Slow Walk")
+				DummyCoolDown(300 , "Slow Walk")
 			)
 		return self
 
@@ -76,7 +76,6 @@ class ExerciseDay:
 		'''
 		Persist the workout of the user to database;
 		Use workout.models.ExercisePlanDetail;
-		
 		'''
 		return
 

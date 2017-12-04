@@ -6,6 +6,7 @@ from workoutplan import shared_globals
 from django.db.models import Q
 
 import random
+import copy
 import collections
 import enum
 import functools
@@ -217,7 +218,6 @@ def get_intermediate_cardio_sets_reps_duration(level , goal , user_workout_week,
 
 	return sets , None ,duration
 
-@functools.lru_cache()
 def get_cardio_sets_reps_duration( level , goal , user_workout_week, cardio = True , rt = False):
 	if level == levels.Novice:
 		val =  get_novice_cardio_sets_reps_duration(level,goal , user_workout_week, cardio , rt)
@@ -268,8 +268,9 @@ class DummyWarmup:
 		return self.workout_name
 	def __repr__(self):
 		return self.workout_name
-	def __init__(self,name):
-		self.workout_name = name
+	def __init__(self,cardio):
+		self.workout_name = cardio.workout_name
+		self.machine_name = cardio.machine_name
 
 class DummyCoolDown:
 	def __init__(self , duration, workout_name):
@@ -279,7 +280,7 @@ class DummyCoolDown:
 
 def filter_key_from_q(q_obj , key_to_escape):
 	new_children = []
-
+	q_obj = copy.copy(q_obj)
 	for e in q_obj.children:
 		#e is a tuple
 		if isinstance(e , Q):

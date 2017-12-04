@@ -39,6 +39,10 @@ class ExerciseSerialzier(serializers.Serializer):
 	image = serializers.SerializerMethodField()
 	sets = serializers.SerializerMethodField()
 	reps = serializers.SerializerMethodField()
+	muscle_group = serializers.SerializerMethodField()
+	body_part = serializers.SerializerMethodField()
+	exercise_level = serializers.SerializerMethodField()
+	exercise_type = serializers.SerializerMethodField()
 
 	def get_name(self ,obj):
 		return obj.workout_name
@@ -84,6 +88,18 @@ class ExerciseSerialzier(serializers.Serializer):
 
 	def get_reps(self , obj):
 		return  getattr(obj , "reps" , None)
+
+	def get_muscle_group(self , obj):
+		return getattr(obj , "muscle_group_name" , None)
+
+	def get_exercise_type(self , obj):
+		return getattr(obj , "exercise_type" , None)
+
+	def get_body_part(self , obj):
+		return getattr(obj , "body_part" , None)
+
+	def get_exercise_level(self , obj):
+		return getattr(obj , "exercise_level" , None)
 
 class WorkoutSerializer(serializers.Serializer):
 	warmup = ExerciseSerialzier(many = True , read_only = True)

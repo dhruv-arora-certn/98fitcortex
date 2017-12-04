@@ -46,6 +46,13 @@ class CardioTimeBasedExercise(BaseExercise,models.Model):
     status = models.IntegerField(blank=True,default = 1)
     image_name = models.CharField(max_length=100, blank=True, null=True)
 
+    @property
+    def machine_name(self):
+        if self.home:
+            return self.machine_required_home
+        elif self.gym:
+            return self.machine_required_gym
+
 class NoviceCoreStrengthiningExercise(BaseExercise,models.Model):
     workout_name = models.CharField(max_length=250)
     reps = models.CharField(max_length=50)
@@ -194,8 +201,8 @@ class GeneratedExercisePlanDetails(models.Model):
     image_name = models.CharField(max_length = 100)
 
 class CustomerInjury(models.Model):
-	class Meta:
-		managed = False
-		db_table = "erp_customer_injury"
-	injury_name = models.CharField(max_length = 20)
-	customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "injuries")
+    class Meta:
+        managed = False
+        db_table = "erp_customer_injury"
+    injury_name = models.CharField(max_length = 20)
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "injuries")

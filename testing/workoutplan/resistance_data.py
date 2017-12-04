@@ -1,15 +1,20 @@
 from .nomenclature import UpperBody , LowerBody
 from django.db.models import Q
 
+def isolated():
+	return Q(exercise_type = "Isolated")
+
 class ChestAndBackFilter():
 	filters = [
 				{
-					"filter" : UpperBody.chest() & Q(exercise_type = "Isolated"),
+					"filter" : Q(muscle_group_name = "Chest") & isolated(),
 					"count" : 3,
+					"stretching_count" : 2
 				},
 				{
-					"filter" : UpperBody.back() & Q(exercise_type = "Isolated"),
+					"filter" : Q(muscle_group_name = "Back") & isolated(),
 					"count" : 3,
+					"stretching_count" : 2
 				}
 			]
 	chest = {
@@ -20,15 +25,15 @@ class ChestAndBackFilter():
 class ShouldersAndArmsFilter():
 	filters = [
 				{
-					"filter" : UpperBody.shoulder(),
+					"filter" : Q(muscle_group_name__icontains = "shoulder") & isolated(),
 					"count" : 3
 				},
 				{
-					"filter" : UpperBody.biceps(),
+					"filter" : Q(muscle_group_name = "Biceps") & isolated(),
 					"count" : 1
 				},
 				{
-					"filter" : UpperBody.triceps(),
+					"filter" : Q(muscle_group_name = "Triceps") & isolated(),
 					"count" : 1
 				},
 				{
