@@ -405,10 +405,13 @@ class DiseasePDFView(GenericAPIView):
         cals = self.get_cals()
         user = self.request.user
         food_cat = user.food_cat
-        return day , cals , user , food_cat
+        return { "day" : day ,
+                 "cals" : cals ,
+                "user" : user ,
+                "food_cat" : food_cat}
 
     def pcod_pdf(self):
-        d = bases.PcosPDF(*self.get_pdf_attrs())
+        d = base.PcosPDF(**self.get_pdf_attrs())
         pdf = d.get_pdf()
         url = file_handlers.S3PDFHandler.upload(
             pdf
