@@ -7,6 +7,10 @@ from epilogue.models import *
 
 class BaseExercise():
 
+    @property
+    def module_name(self):
+        return self.__class__.__name__.lower()
+
     def __repr__(self):
         return "%s : %s"%(str(self.workout_name) , getattr(self  , "exercise_level" , "None"))
 
@@ -199,6 +203,8 @@ class GeneratedExercisePlanDetails(models.Model):
     machine_name = models.CharField(max_length=50)
     equipment_name = models.CharField(max_length=50)
     image_name = models.CharField(max_length = 100)
+    mod_name = models.CharField(max_length = 30)
+    mod_id = models.IntegerField()
 
 class CustomerInjury(models.Model):
     class Meta:

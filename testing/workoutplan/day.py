@@ -79,9 +79,10 @@ class ExerciseDay:
 		'''
 		return
 
-	def serialize(self):
+	def as_dict(self):
 		return {
 			**self.warmup.selected,
 			**self.main.selected,
-			**self.stretching.selected
+			**self.stretching.selected,
+			**self.cooldown.selected
 		}

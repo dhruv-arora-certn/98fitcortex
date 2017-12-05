@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from workout.models import WarmupCoolDownMobilityDrillExercise, CardioTimeBasedExercise , NoviceCoreStrengthiningExercise , StretchingExercise , CustomerInjury
+from workout.models import WarmupCoolDownMobilityDrillExercise, CardioTimeBasedExercise , NoviceCoreStrengthiningExercise , StretchingExercise , CustomerInjury , GeneratedExercisePlanDetails , GeneratedExercisePlan
 import logging
 
 logger = logging.getLogger(__name__)
@@ -112,4 +112,14 @@ class WorkoutSerializer(serializers.Serializer):
 class CustomerInjurySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = CustomerInjury
+		fields = "__all__"
+
+class GeneratedExercisePlanSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = GeneratedExercisePlan
+		fields = "__all__"
+
+class GeneratedExercisePlanDetailsSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = GeneratedExercisePlanDetails
 		fields = "__all__"
