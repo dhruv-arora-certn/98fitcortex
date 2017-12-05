@@ -142,14 +142,14 @@ class Generator():
 
 	def weekly_as_dict(self):
 		days = set(range(1 , self.conditional_days.total + 1))
-		lists = ["warmup" , "main" , "stretching","cooldown" ]
 		data = {}
-		for d,l in zip(days , itertools.repeat(lists)):
+		for d in days:
 			if hasattr(self , "D%d"%d):
 				data[d] = {}
 				day_obj = getattr(self , "D%d"%d)
-				day_data = (getattr(day_obj , e) for e in l)
-				[data[d].update(**getattr(o , "selected")) for o in day_data]
+				data[d].update(
+					**day_obj.as_dict()
+				)
 		return data
 
 	def generate(self ):
