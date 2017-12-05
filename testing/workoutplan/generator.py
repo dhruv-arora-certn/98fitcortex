@@ -164,3 +164,10 @@ class Generator():
 		else:
 			self.logger.info("Workout Successfully Generated for user")
 		return self
+
+	def iterdays(self):
+		days = range( 1 , self.conditional_days.total + 1)
+		for e in days:
+			day_template = "D%d"
+			if hasattr(self , day_template%e):
+				yield getattr(self , day_template%e)
