@@ -421,7 +421,7 @@ class DiseasePDFView(GenericAPIView):
         })
 
     def diabetes_pdf(self):
-        d = bases.DiabetesPDF(*self.get_pdf_attrs())
+        d = base.DiabetesPDF(*self.get_pdf_attrs())
         pdf = d.get_pdf()
         url = file_handlers.S3PDFHandler.upload(
             pdf
