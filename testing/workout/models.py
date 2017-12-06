@@ -191,6 +191,7 @@ class GeneratedExercisePlan(models.Model):
 class GeneratedExercisePlanDetails(models.Model):
     class Meta:
         db_table = "erp_exercise_plan_detail"
+    description = models.CharField(default = '' , max_length = 225)
     workoutplan = models.ForeignKey(GeneratedExercisePlan , related_name = "exercises", db_column = "erp_exercise_plan_id")
     day = models.IntegerField()
     exercise_type = models.IntegerField()
@@ -203,6 +204,8 @@ class GeneratedExercisePlanDetails(models.Model):
     image_name = models.CharField(max_length = 100)
     mod_name = models.CharField(max_length = 30)
     mod_id = models.IntegerField()
+    muscle_group = models.CharField(default = '', max_length = 20)
+    exercise_level = models.CharField(default = "" , max_length = 20)
 
 class CustomerInjury(models.Model):
     class Meta:
