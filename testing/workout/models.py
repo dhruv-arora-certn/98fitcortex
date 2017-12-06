@@ -20,7 +20,7 @@ class BaseExercise():
 class CardioFloorExercise(BaseExercise,models.Model):
     workout_name = models.CharField(max_length=250, blank=True, null=True)
     reps = models.IntegerField(blank=True, null=True)
-    _duration = models.IntegerField( blank=True, null=True , db_column = "duration")
+    _duration = models.IntegerField( default = 0, db_column = "duration")
     swing1 = models.BooleanField(default = True)
     home = models.BooleanField(default = True)
     gym = models.BooleanField(default = True)
@@ -60,7 +60,7 @@ class CardioTimeBasedExercise(BaseExercise,models.Model):
 class NoviceCoreStrengthiningExercise(BaseExercise,models.Model):
     workout_name = models.CharField(max_length=250)
     reps = models.CharField(max_length=50)
-    _duration = models.IntegerField( db_column = "duration")
+    _duration = models.IntegerField(default=0, db_column = "duration")
     hold = models.BooleanField(default = False)
     swing1 = models.BooleanField(default = False)
     rotation = models.BooleanField()
@@ -180,7 +180,6 @@ class WarmupCoolDownTimeBasedExercise(BaseExercise,models.Model):
 
 class GeneratedExercisePlan(models.Model):
     class Meta:
-        managed = False
         db_table = "erp_exercise_plan"
 
     created_on = models.DateTimeField(auto_now_add = True)
@@ -191,7 +190,6 @@ class GeneratedExercisePlan(models.Model):
 
 class GeneratedExercisePlanDetails(models.Model):
     class Meta:
-        managed = False
         db_table = "erp_exercise_plan_detail"
     workoutplan = models.ForeignKey(GeneratedExercisePlan , related_name = "exercises", db_column = "erp_exercise_plan_id")
     day = models.IntegerField()
@@ -208,7 +206,6 @@ class GeneratedExercisePlanDetails(models.Model):
 
 class CustomerInjury(models.Model):
     class Meta:
-        managed = False
         db_table = "erp_customer_injury"
     injury_name = models.CharField(max_length = 20)
     customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "injuries")

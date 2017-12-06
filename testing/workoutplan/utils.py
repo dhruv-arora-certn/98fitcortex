@@ -264,6 +264,9 @@ def get_cardio_intensity_filter_for_warmup(user):
 
 class DummyWarmup:
 	duration = 300
+	module_name = "WarmupCoolDownMobilityDrillExercise".lower()
+	id = 0
+
 	def __str__(self):
 		return self.workout_name
 	def __repr__(self):
@@ -273,6 +276,9 @@ class DummyWarmup:
 		self.machine_name = cardio.machine_name
 
 class DummyCoolDown:
+	module_name = "WarmupCoolDownMobilityDrillExercise".lower()
+	id = 0
+
 	def __init__(self , duration, workout_name):
 		self.duration = duration
 		self.workout_name = workout_name

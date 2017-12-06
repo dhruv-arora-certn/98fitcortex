@@ -79,6 +79,12 @@ class ExerciseDay:
 		'''
 		return
 
+	def iterexercises(self):
+		data = self.as_dict()
+
+		for i,e in data.items():
+			yield i,e
+
 	def as_dict(self):
 		return {
 			**self.warmup.selected,
