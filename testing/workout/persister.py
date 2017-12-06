@@ -109,7 +109,10 @@ class ExercisePersister:
 			"machine_name" : self.get_equipment(self.exercise),
 			"equipment_name" : self.get_equipment(self.exercise),
 			"mod_name" : self.exercise.module_name,
-			"mod_id" : self.exercise.id
+			"mod_id" : self.exercise.id,
+            "description" : self.get_description(self.exercise),
+            "exercise_level" : self.get_exercise_level(self.exercise),
+            "muscle_group" : self.get_muscle_group(self.exercise)
 		}
 
 	def persist(self):
@@ -138,3 +141,18 @@ class ExercisePersister:
 		if isinstance(equipment , str) and equipment.lower().strip() == "na":
 			return None
 		return equipment
+
+	def get_description(self ,obj):
+		description = getattr(obj , "description" , None)
+		if description and description.lower().strip() == "na":
+			return None
+		return description
+
+	def get_exercise_type(self , obj):
+		return getattr(obj , "exercise_type" , None)
+
+	def get_body_part(self , obj):
+		return getattr(obj , "body_part" , None)
+
+	def get_exercise_level(self , obj):
+		return getattr(obj , "exercise_level" , None)
