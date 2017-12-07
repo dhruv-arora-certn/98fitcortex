@@ -1,4 +1,5 @@
 import itertools
+import functools
 
 from epilogue.utils import get_week , get_day , get_year
 
@@ -57,11 +58,12 @@ class WorkoutDayPersister:
 		self.day = day
 		self.workout = workout
 
-	def persist_exercise(self, exercise):
+	def persist_exercise(self, exercise , mod = None):
 		e = ExercisePersister(
 			exercise,
 			day = self.day.day,
-			workout = self.workout
+			workout = self.workout,
+			mod = mod
 		)
 		return e.persist()
 
@@ -73,7 +75,7 @@ class WorkoutDayPersister:
 				self.exercises[i] = []
 			print("Exercises",e)
 			exercises = map(
-				self.persist_exercise,
+				functools.partial(self.persist_exercise , mod = i),
 				e
 			)
 			self.exercises[i].extend([o for o in exercises])
@@ -84,7 +86,7 @@ class WorkoutDayPersister:
 			self.forward()
 		except:
 			[
-				e.delete() for e in itertools.chain(*self.exercises.values())
+				e.model_obj.delete() for e in itertools.chain(*self.exercises.values())
 			]
 			raise
 		return self
@@ -93,10 +95,15 @@ class ExercisePersister:
 
 	model = models.GeneratedExercisePlanDetails
 
-	def __init__(self, exercise , day = None , workout = None):
+	def __init__(self, exercise , day = None , workout = None, mod = None):
 		self.exercise = exercise
 		self.workout = workout
 		self.day = day
+
+		if not mod:
+			mod = self.exercise.module_name
+
+		self.mod = mod
 
 	def get_fields(self):
 		return {
@@ -108,7 +115,7 @@ class ExercisePersister:
 			"sets" : self.get_sets(self.exercise),
 			"machine_name" : self.get_equipment(self.exercise),
 			"equipment_name" : self.get_equipment(self.exercise),
-			"mod_name" : self.exercise.module_name,
+			"mod_name" : self.mod,
 			"mod_id" : self.exercise.id,
             "description" : self.get_description(self.exercise),
             "exercise_level" : self.get_exercise_level(self.exercise),
@@ -116,7 +123,7 @@ class ExercisePersister:
 		}
 
 	def persist(self):
-		self.model_obj = self.model(
+		self.model_obj = self.model.objects.create(
 			**self.get_fields()
 		)
 		return self
@@ -128,31 +135,31 @@ class ExercisePersister:
 		return "http://www.98fit.com/webroot/workout_images/workout_blank.jpg"
 
 	def get_sets(self , obj):
-		return  getattr(obj , "sets" , None)
+		return  getattr(obj , "sets" , 1)
 
 	def get_reps(self , obj):
-		return  getattr(obj , "reps" , None)
+		return  getattr(obj , "reps" , 1)
 
 	def get_muscle_group(self , obj):
-		return getattr(obj , "muscle_group_name" , None)
+		return getattr(obj , "muscle_group_name" , "")
 
 	def get_equipment(self ,obj):
 		equipment = getattr(obj , "machine_name" , None)
 		if isinstance(equipment , str) and equipment.lower().strip() == "na":
-			return None
+			return ""
 		return equipment
 
 	def get_description(self ,obj):
-		description = getattr(obj , "description" , None)
+		description = getattr(obj , "description" , "")
 		if description and description.lower().strip() == "na":
-			return None
+			return ""
 		return description
 
 	def get_exercise_type(self , obj):
-		return getattr(obj , "exercise_type" , None)
+		return getattr(obj , "exercise_type" , "")
 
 	def get_body_part(self , obj):
 		return getattr(obj , "body_part" , None)
 
 	def get_exercise_level(self , obj):
-		return getattr(obj , "exercise_level" , None)
+		return getattr(obj , "exercise_level" , "")

@@ -1,0 +1,920 @@
+[
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "30 seconds each leg",
+            "exercise_level": "Low",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": true,
+            "workout_name": "Side leg raise"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "Low",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor2.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Rope jumps"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "Low",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1480202897_3.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Knee highs"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "Low",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor4.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Jumping jacks"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 4
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "Low",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor5.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Butt kicks"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 5
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "Low",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor6.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Jog in place"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 6
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "Low",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1479245471_7.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "March in place"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 7
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "Low",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor8.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 20,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Marching High Knees"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 8
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "Low",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 20,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Calf Raise"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 9
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "30 seconds each leg front to back ",
+            "exercise_level": "Low",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 20,
+            "status": 1,
+            "swing1": true,
+            "workout_name": "Leg swing (front to back)"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 10
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "30 seconds each side",
+            "exercise_level": "Low",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 20,
+            "status": 1,
+            "swing1": true,
+            "workout_name": "Side leg swings"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 11
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "Moderate",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor9.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Inch worms"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 12
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "Moderate",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor10.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 0,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Run in place"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 13
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "30 seconds each side",
+            "exercise_level": "Moderate",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor11.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": true,
+            "workout_name": "Side lunges"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 14
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "Moderate",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor12.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Sumo squat"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 15
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "30 seconds each side",
+            "exercise_level": "Moderate",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor13.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": true,
+            "workout_name": "Single leg calf raise"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 16
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "30 seconds each side",
+            "exercise_level": "Moderate",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor14.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": true,
+            "workout_name": "Lunge stepup"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 17
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "30 seconds each side",
+            "exercise_level": "Moderate",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1.jpg",
+            "machine_name": "Bench/Box",
+            "machine_required": true,
+            "reps": 10,
+            "status": 1,
+            "swing1": true,
+            "workout_name": "Step ups (Body Weight)"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 18
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "30 seconds each side",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1.jpg",
+            "machine_name": "Bench/Box",
+            "machine_required": true,
+            "reps": 10,
+            "status": 1,
+            "swing1": true,
+            "workout_name": "Step ups Lateral"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 19
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "30 seconds each side",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1.jpg",
+            "machine_name": "Bench/Box",
+            "machine_required": true,
+            "reps": 10,
+            "status": 1,
+            "swing1": true,
+            "workout_name": "Step up Explosive"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 20
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "Moderate",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor16.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Squat"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 21
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "30 seconds each side",
+            "exercise_level": "Moderate",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1479245485_17.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": true,
+            "workout_name": "Pendulum squat"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 22
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "30 seconds each side",
+            "exercise_level": "Moderate",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor18.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": true,
+            "workout_name": "Kicks"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 23
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "Moderate",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1481794751_24.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Mini Hops"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 24
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "Moderate",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1481794742_25.jpg",
+            "machine_name": "Cones",
+            "machine_required": true,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Mini Hops Hurdle"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 25
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "Moderate",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1481794732_26.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Mini Hops forward and back ward"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 26
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "30 seconds each side",
+            "exercise_level": "Moderate",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1479245541_22.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": true,
+            "workout_name": "Mini Hop Lateral"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 27
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor23.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Jump squat"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 28
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Jump  Squat Deep Squat"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 29
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1.jpg",
+            "machine_name": "Medicine Ball",
+            "machine_required": true,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Squat Jump Overhead throw (medicine ball)"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 30
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1479245548_24.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Side to side jump squat"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 31
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor25.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Burpees"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 32
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor26.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Mountain climbers"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 33
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor27.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Jumping lunges"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 34
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor28.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Jumping knee tucks"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 35
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor29.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Tuck jumps"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 36
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor30.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Bunny hops(side to side)"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 37
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor31.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Frog hops"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 38
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1479245560_32.jpg",
+            "machine_name": "Medicine Ball",
+            "machine_required": true,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Hop and throw"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 39
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor33.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Hop turns"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 40
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1479245596_34.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Forward Hops"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 41
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "High",
+            "gym": true,
+            "home": false,
+            "image_name": "CardioFloor1479245603_35.jpg",
+            "machine_name": "Hurdles",
+            "machine_required": true,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Hurdle Jumps"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 42
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "High",
+            "gym": true,
+            "home": false,
+            "image_name": "CardioFloor1479245608_36.jpg",
+            "machine_name": "Box",
+            "machine_required": true,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Box Jumps"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 43
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "30 seconds each side",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor37.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": true,
+            "workout_name": "Lateral bound"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 44
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "30 seconds each side",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor38.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": true,
+            "workout_name": "lateral hops"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 45
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor29.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Tuck jumps"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 46
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "30 seconds each side",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor40.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": true,
+            "workout_name": "Lateral Split jumps"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 47
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor41.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Long Jump"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 48
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "Moderate",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor42.jpg",
+            "machine_name": "Medicine Ball",
+            "machine_required": true,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Over head throw- Medicine Ball"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 49
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "High",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Long Jump with Jog back"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 50
+    },
+    {
+        "fields": {
+            "_duration": 30,
+            "description": "NA",
+            "exercise_level": "Moderate",
+            "gym": true,
+            "home": true,
+            "image_name": "CardioFloor1.jpg",
+            "machine_name": "Medicine Ball",
+            "machine_required": true,
+            "reps": 10,
+            "status": 1,
+            "swing1": false,
+            "workout_name": "Throw and Catch Medicine ball"
+        },
+        "model": "workout.cardiofloorexercise",
+        "pk": 51
+    }
+]

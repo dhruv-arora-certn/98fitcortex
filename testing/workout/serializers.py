@@ -123,3 +123,4 @@ class GeneratedExercisePlanDetailsSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = GeneratedExercisePlanDetails
 		fields = "__all__"
+

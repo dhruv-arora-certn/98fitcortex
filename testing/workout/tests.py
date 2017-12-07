@@ -1,13 +1,20 @@
 from django.test import TestCase
-
+from rest_framework.test import APIRequestFactory
 # Create your tests here.
 
 from .persister import WorkoutWeekPersister
+from .models import ResistanceTrainingExercise
+
 from epilogue.models import Customer
+
 from workoutplan.generator import Generator
 
 
-c = Customer.objects.get(pk = 8)
-g = Generator(c)
-g.generate()
-w = WorkoutWeekPersister(g , 1)
+factory = APIRequestFactory()
+
+
+class WorkoutTestCase(TestCase):
+	fixtures = ["fixtures/rt.json"]
+
+	def test_count(self):
+		assert ResistanceTrainingExercise.objects.count() != 0

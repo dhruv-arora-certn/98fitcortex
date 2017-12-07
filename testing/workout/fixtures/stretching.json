@@ -1,0 +1,1503 @@
+[
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1482289749_1.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Chest",
+            "status": 1,
+            "sub_muscle_group_name": "Chest",
+            "swing1": false,
+            "workout_name": "Seated Lean Back "
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1482289765_2.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Quadriceps",
+            "status": 1,
+            "sub_muscle_group_name": "Quadriceps",
+            "swing1": true,
+            "workout_name": "Adductor Stretch Kneeling"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1482289812_3.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Quadriceps",
+            "status": 1,
+            "sub_muscle_group_name": "Adductor",
+            "swing1": true,
+            "workout_name": "Adductor Stretch Lying"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1479251254_4.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Quadriceps",
+            "status": 1,
+            "sub_muscle_group_name": "Adductor",
+            "swing1": true,
+            "workout_name": "Adductor Stretch seated"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 4
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1479251258_5.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "-",
+            "status": 1,
+            "sub_muscle_group_name": "Anterior Tibialis",
+            "swing1": true,
+            "workout_name": "Ankle Plantarflexion stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 5
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1482289828_6.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "-",
+            "status": 1,
+            "sub_muscle_group_name": "Anterior Tibialis",
+            "swing1": true,
+            "workout_name": "Shin Stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 6
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1482289845_7.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Calves",
+            "status": 1,
+            "sub_muscle_group_name": "Calf",
+            "swing1": true,
+            "workout_name": "Calf Stretch Lunge"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 7
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1479251287_8.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Calves",
+            "status": 1,
+            "sub_muscle_group_name": "Calves",
+            "swing1": true,
+            "workout_name": "Calf Stretch Lunge to wall"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 8
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1479251309_9.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Calves",
+            "status": 1,
+            "sub_muscle_group_name": "Calves",
+            "swing1": true,
+            "workout_name": "Calf Stretch toes to wall"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 9
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480196464_10.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Chest",
+            "status": 1,
+            "sub_muscle_group_name": "Chest",
+            "swing1": false,
+            "workout_name": "Chest stretch Elbow to Elbow"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 10
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480197445_11.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Chest",
+            "status": 1,
+            "sub_muscle_group_name": "Chest",
+            "swing1": false,
+            "workout_name": "Chest stretch assisted"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 11
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480197460_12.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Chest",
+            "status": 1,
+            "sub_muscle_group_name": "Chest",
+            "swing1": false,
+            "workout_name": "Chest stretch Above the head"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 12
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480197430_13.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Chest",
+            "status": 1,
+            "sub_muscle_group_name": "Chest",
+            "swing1": false,
+            "workout_name": "Chest Stretch Bent arm by the wall"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 13
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1482289873_14.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Chest",
+            "status": 1,
+            "sub_muscle_group_name": "Chest",
+            "swing1": false,
+            "workout_name": "Chest stretch child pose on the finger tips"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 14
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480197407_15.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Chest",
+            "status": 1,
+            "sub_muscle_group_name": "Chest",
+            "swing1": false,
+            "workout_name": "Chest stretch extended arms back"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 15
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1482289907_16.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Glutes",
+            "status": 1,
+            "sub_muscle_group_name": "Glutes",
+            "swing1": true,
+            "workout_name": "Glute stretch Lying 4"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 16
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1482289921_17.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Glutes",
+            "status": 1,
+            "sub_muscle_group_name": "Glutes",
+            "swing1": true,
+            "workout_name": "Glute stretch Seated 4"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 17
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1482289938_18.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Glutes",
+            "status": 1,
+            "sub_muscle_group_name": "Glutes",
+            "swing1": true,
+            "workout_name": "Glute stretch seated tight hug"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 18
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480197332_19.jpg",
+            "machine_name": "Bench/table/platform",
+            "machine_required": true,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Glutes",
+            "status": 1,
+            "sub_muscle_group_name": "Glutes",
+            "swing1": true,
+            "workout_name": "Glute stretch standing Bench"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 19
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480197322_20.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Hamstrings",
+            "status": 1,
+            "sub_muscle_group_name": "Hamstrings",
+            "swing1": true,
+            "workout_name": "Hamstring stretch lying"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 20
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480198023_21.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Hamstrings",
+            "status": 1,
+            "sub_muscle_group_name": "Hamstrings",
+            "swing1": true,
+            "workout_name": "Hamstring stretch Standing"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 21
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480197988_22.jpg",
+            "machine_name": "Stretchband",
+            "machine_required": true,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Hamstrings",
+            "status": 1,
+            "sub_muscle_group_name": "Hamstrings",
+            "swing1": true,
+            "workout_name": "Hamstring stretch using stretchband"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 22
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1482289977_23.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Hamstrings",
+            "status": 1,
+            "sub_muscle_group_name": "Hamstrings",
+            "swing1": true,
+            "workout_name": "Hamstring stretch Seated"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 23
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480198014_24.jpg",
+            "machine_name": "Stretchband",
+            "machine_required": true,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Hamstrings",
+            "status": 1,
+            "sub_muscle_group_name": "Hamstrings",
+            "swing1": true,
+            "workout_name": "Hamstring stretch seated using a stretchband"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 24
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480197936_25.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Hamstrings",
+            "status": 1,
+            "sub_muscle_group_name": "Back, Hamstring, Calf",
+            "swing1": false,
+            "workout_name": "Downward Dog"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 25
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480197927_26.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Hamstrings",
+            "status": 1,
+            "sub_muscle_group_name": "Back, Hamstring, Calf",
+            "swing1": true,
+            "workout_name": "Downward Dog Single leg"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 26
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480197918_27.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Calves",
+            "status": 1,
+            "sub_muscle_group_name": "Foot",
+            "swing1": true,
+            "workout_name": "Foot Everter Stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 27
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1482290013_28.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Back",
+            "status": 1,
+            "sub_muscle_group_name": "Low back and glutes",
+            "swing1": false,
+            "workout_name": "Low Back lying stretch "
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 28
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480197905_29.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Quadriceps",
+            "status": 1,
+            "sub_muscle_group_name": "Adductor",
+            "swing1": false,
+            "workout_name": "Hip Adductor Release- leg fall out"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 29
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480197896_30.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Quadriceps",
+            "status": 1,
+            "sub_muscle_group_name": "Adductor",
+            "swing1": true,
+            "workout_name": "Hip Capsule  Stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 30
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201641_31.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Quadriceps",
+            "status": 1,
+            "sub_muscle_group_name": "Hip Flexor",
+            "swing1": true,
+            "workout_name": "Hip Flexor - Quadracep Stretch- Kneeling"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 31
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201650_32.jpg",
+            "machine_name": "Bench",
+            "machine_required": true,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Quadriceps",
+            "status": 1,
+            "sub_muscle_group_name": "Hip Flexor",
+            "swing1": true,
+            "workout_name": "Hip Flexor - Quadracep Stretch- Bench"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 32
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201641_31.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Quadriceps",
+            "status": 1,
+            "sub_muscle_group_name": "Hip Flexor",
+            "swing1": true,
+            "workout_name": "Hip Flexor - Quadracep Stretch- Kneeling"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 33
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201672_34.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Quadriceps",
+            "status": 1,
+            "sub_muscle_group_name": "Hip Flexor",
+            "swing1": true,
+            "workout_name": "Hip Flexor Stretch Kneeling"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 34
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201679_35.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Quadriceps",
+            "status": 1,
+            "sub_muscle_group_name": "Hip Flexor",
+            "swing1": true,
+            "workout_name": "Hip Flexor Stretch "
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 35
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201672_34.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Quadriceps",
+            "status": 1,
+            "sub_muscle_group_name": "Hip Flexor",
+            "swing1": true,
+            "workout_name": "Hip Flexor Stretch Kneeling"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 36
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201751_37.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Quadriceps",
+            "status": 1,
+            "sub_muscle_group_name": "Hip Flexor",
+            "swing1": true,
+            "workout_name": "Hip Flexor Stretch- Lateral Flexion"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 37
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201761_38.jpg",
+            "machine_name": "Pillow",
+            "machine_required": true,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Hamstrings",
+            "status": 1,
+            "sub_muscle_group_name": "Quadriceps",
+            "swing1": true,
+            "workout_name": "Knee Extention stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 38
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201777_39.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Quadriceps",
+            "status": 1,
+            "sub_muscle_group_name": "ITB & Quadriceps",
+            "swing1": true,
+            "workout_name": "Lateral Thigh Stretch wall"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 39
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201787_40.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Quadriceps",
+            "status": 1,
+            "sub_muscle_group_name": "ITB & Quadriceps",
+            "swing1": true,
+            "workout_name": "Lateral Thigh Stretch side lying"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 40
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201441_41.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Back",
+            "status": 1,
+            "sub_muscle_group_name": "Back",
+            "swing1": false,
+            "workout_name": "Latissimus Dorsi stretch kneeling"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 41
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201465_42.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Back",
+            "status": 1,
+            "sub_muscle_group_name": "Back",
+            "swing1": false,
+            "workout_name": "Latissimus Dorsi stretch kneeling single arm"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 42
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201480_43.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Back",
+            "status": 1,
+            "sub_muscle_group_name": "Back",
+            "swing1": false,
+            "workout_name": "Latissimus Dorsi stretch wall"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 43
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201500_44.jpg",
+            "machine_name": "Bench",
+            "machine_required": true,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Back",
+            "status": 1,
+            "sub_muscle_group_name": "Back",
+            "swing1": false,
+            "workout_name": "Latissimus Dorsi Stretch Bench"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 44
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1482290169_45.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Back",
+            "status": 1,
+            "sub_muscle_group_name": "Back",
+            "swing1": false,
+            "workout_name": "Lower back and Hamstring stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 45
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1482290154_46.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Back",
+            "status": 1,
+            "sub_muscle_group_name": "Back",
+            "swing1": false,
+            "workout_name": "Lower back Stretch back rock"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 46
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1482290141_47.jpg",
+            "machine_name": "Exercise Ball",
+            "machine_required": true,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Back",
+            "status": 1,
+            "sub_muscle_group_name": "Back",
+            "swing1": false,
+            "workout_name": "Lower back Stretch exercise ball"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 47
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201575_48.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Back",
+            "status": 1,
+            "sub_muscle_group_name": "Back",
+            "swing1": false,
+            "workout_name": "Lower back Stretch seated legs out"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 48
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201588_49.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Back",
+            "status": 1,
+            "sub_muscle_group_name": "Back",
+            "swing1": false,
+            "workout_name": "Lower Back Stretch seated hands under the knee"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 49
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201599_50.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Back",
+            "status": 1,
+            "sub_muscle_group_name": "Back",
+            "swing1": false,
+            "workout_name": "Lower back Stretch Standing"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 50
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201319_51.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Back",
+            "status": 1,
+            "sub_muscle_group_name": "Neck & Arm",
+            "swing1": true,
+            "workout_name": "Neck and Arm Stretch Neural"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 51
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201327_52.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Back",
+            "status": 1,
+            "sub_muscle_group_name": "Neck & Arm",
+            "swing1": true,
+            "workout_name": "Neck and Arm stretch Neural on the wall"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 52
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201338_53.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Back",
+            "status": 1,
+            "sub_muscle_group_name": "Neck",
+            "swing1": true,
+            "workout_name": "Neck stretch- Forward Flexion"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 53
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201346_54.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Back",
+            "status": 1,
+            "sub_muscle_group_name": "Neck",
+            "swing1": true,
+            "workout_name": "Neck stretch- Lateral Flexion"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 54
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201353_55.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Chest",
+            "status": 1,
+            "sub_muscle_group_name": "Chest & Arm",
+            "swing1": true,
+            "workout_name": "Pectoralis and Bicep Stretch lying"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 55
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201366_56.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Chest",
+            "status": 1,
+            "sub_muscle_group_name": "Chest",
+            "swing1": false,
+            "workout_name": "Pectoralis Stretch Wall"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 56
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201378_57.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Chest",
+            "status": 1,
+            "sub_muscle_group_name": "Chest",
+            "swing1": false,
+            "workout_name": "Pectoralis Stretch hands behind back"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 57
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201386_58.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Quadriceps",
+            "status": 1,
+            "sub_muscle_group_name": "Leg",
+            "swing1": true,
+            "workout_name": "Peroneal Stretch Seated"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 58
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201392_59.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Quadriceps",
+            "status": 1,
+            "sub_muscle_group_name": "Quadriceps",
+            "swing1": true,
+            "workout_name": "Quad Stretch Lying"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 59
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201400_60.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Quadriceps",
+            "status": 1,
+            "sub_muscle_group_name": "Quadriceps",
+            "swing1": true,
+            "workout_name": "Quad Stretch Side Lying"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 60
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201168_61.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Quadriceps",
+            "status": 1,
+            "sub_muscle_group_name": "Quadriceps",
+            "swing1": true,
+            "workout_name": "Quad Stretch Standing"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 61
+    },
+    {
+        "fields": {
+            "body_part": "Lower",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201205_62.jpg",
+            "machine_name": "Stretchband",
+            "machine_required": true,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Quadriceps",
+            "status": 1,
+            "sub_muscle_group_name": "Quadriceps",
+            "swing1": true,
+            "workout_name": "Quad Stretch Stretchband"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 62
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201214_63.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Triceps",
+            "status": 1,
+            "sub_muscle_group_name": "Tricep",
+            "swing1": true,
+            "workout_name": "Tricep Standing Overhead Stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 63
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201223_64.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Triceps",
+            "status": 1,
+            "sub_muscle_group_name": "Tricep",
+            "swing1": true,
+            "workout_name": "Tricep Side Stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 64
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201233_65.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Biceps",
+            "status": 1,
+            "sub_muscle_group_name": "Bicep",
+            "swing1": false,
+            "workout_name": "Seated bent knee Bicep Stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 65
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1481794926_66.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Biceps",
+            "status": 1,
+            "sub_muscle_group_name": "Bicep",
+            "swing1": true,
+            "workout_name": "Doorway Bicep Stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 66
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201269_67.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Biceps",
+            "status": 1,
+            "sub_muscle_group_name": "Bicep",
+            "swing1": false,
+            "workout_name": "Standing Bicep Stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 67
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201276_68.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Biceps",
+            "status": 1,
+            "sub_muscle_group_name": "Bicep",
+            "swing1": true,
+            "workout_name": "Bicep Wall Stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 68
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201282_69.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Abdomen",
+            "status": 1,
+            "sub_muscle_group_name": "Abdomen",
+            "swing1": false,
+            "workout_name": "Overhead Abdominal Stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 69
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201289_70.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Abdomen",
+            "status": 1,
+            "sub_muscle_group_name": "Abdomen",
+            "swing1": true,
+            "workout_name": "Lateral Abdominal Stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 70
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold ",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201152_71.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Abdomen",
+            "status": 1,
+            "sub_muscle_group_name": "Abdomen",
+            "swing1": true,
+            "workout_name": "Seated Overhead Stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 71
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201144_72.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Shoulder",
+            "status": 1,
+            "sub_muscle_group_name": "Shoulder",
+            "swing1": true,
+            "workout_name": "External Rotation Stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 72
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201139_73.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Shoulder",
+            "status": 1,
+            "sub_muscle_group_name": "Shoulder",
+            "swing1": true,
+            "workout_name": "Internal Rotation Stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 73
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201134_74.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Minor",
+            "muscle_group_name": "Shoulder",
+            "status": 1,
+            "sub_muscle_group_name": "Shoulder",
+            "swing1": true,
+            "workout_name": "Posterior Sholder Stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 74
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201125_75.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Glutes",
+            "status": 1,
+            "sub_muscle_group_name": "Glutes",
+            "swing1": true,
+            "workout_name": "Pigeon Stretch for Glutes"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 75
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201120_76.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Glutes",
+            "status": 1,
+            "sub_muscle_group_name": "Glutes",
+            "swing1": true,
+            "workout_name": "Stacked Knee Glute Stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 76
+    },
+    {
+        "fields": {
+            "body_part": "Upper ",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201113_77.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Glutes",
+            "status": 1,
+            "sub_muscle_group_name": "Glutes",
+            "swing1": true,
+            "workout_name": "Static Deep Lunge Stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 77
+    },
+    {
+        "fields": {
+            "body_part": "Upper",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": "Stratching1480201108_78.jpg",
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Glutes",
+            "status": 1,
+            "sub_muscle_group_name": "Glutes",
+            "swing1": true,
+            "workout_name": "Twisted Buttock Stretch"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 78
+    },
+    {
+        "fields": {
+            "body_part": "Upper",
+            "description": "15 seconds hold each side",
+            "gym": true,
+            "home": true,
+            "image_name": null,
+            "machine_name": "NA",
+            "machine_required": false,
+            "muscle_group_cat": "Major ",
+            "muscle_group_name": "Shoulder",
+            "status": 1,
+            "sub_muscle_group_name": "Shoulder",
+            "swing1": true,
+            "workout_name": "Shoulder Stretch (Hands on the head)"
+        },
+        "model": "workout.stretchingexercise",
+        "pk": 79
+    }
+]
