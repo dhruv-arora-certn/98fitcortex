@@ -15,6 +15,8 @@ from epilogue.utils import get_week , get_day , BulkDifferential
 from workout.models import *
 from workout.serializers import *
 from workout.utils import get_day_from_generator
+from workout.persister import WorkoutWeekPersister
+from workout import renderers
 
 from workoutplan.generator import Generator
 from workoutplan.utils import get_cardio_sets_reps_duration
@@ -206,4 +208,61 @@ class CustomerInjuryView(ListBulkCreateAPIView , BulkDifferential):
             status = status.HTTP_201_CREATED
         )
 
+
+class GenerateWorkoutView(generics.GenericAPIView):
+	authentication_classes = [CustomerAuthentication]
+	permission_classes = [permissions.IsAuthenticated]
+
+	def generate_workout(self):
+		g = Generator(
+			self.request.user
+		)
+		g.generate()
+		import ipdb
+
+		self.new_workout = WorkoutWeekPersister(
+			g,
+			self.kwargs.get('week')
+		)
+		self.new_workout.persist()
+		return self.new_workout.model_obj
+
+
+	def get_object(self):
+		workout_week = GeneratedExercisePlan.objects.filter(
+			customer = self.request.user,
+			week_id = self.kwargs.get('week'),
+			year = self.kwargs.get('year')
+		).last()
+
+		if workout_week:
+			return workout_week
+
+		return self.generate_workout()
+
+	def filtered_queryset(self , qs):
+		return qs.exercises.filter(
+			day = self.kwargs.get('day')
+		)
+
+	def categorise_data(self,data):
+		keys = set([e.get('mod_name') for e in data])
+		new_data = {}
+
+		for e in keys:
+			new_data.update({e:[]})
+
+		def assign(a):
+			new_data[a.get('mod_name')].append(a)
+
+		[assign(e) for e in data]
+
+		return new_data
+
+	def get(self , request , *args , **kwargs):
+		obj = self.get_object()
+		obj = self.filtered_queryset(obj)
+		data = GeneratedExercisePlanDetailsSerializer(obj , many = True)
+
+		return Response(self.categorise_data(data.data))
 

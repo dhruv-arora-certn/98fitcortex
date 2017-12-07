@@ -201,7 +201,6 @@ class GeneratedExercisePlanDetails(models.Model):
     sets = models.CharField(max_length=50)
     machine_name = models.CharField(max_length=50)
     equipment_name = models.CharField(max_length=50)
-    image_name = models.CharField(max_length = 100)
     mod_name = models.CharField(max_length = 30)
     mod_id = models.IntegerField()
     muscle_group = models.CharField(default = '', max_length = 20)

@@ -1,0 +1,342 @@
+[
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "Low",
+            "functional_warmup": "Slow walk",
+            "gym": false,
+            "home": true,
+            "image_name": "CardioTimeBased1.jpg",
+            "machine_required": false,
+            "machine_required_gym": "NA",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Walk"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "Medium",
+            "functional_warmup": "Slow walk",
+            "gym": false,
+            "home": true,
+            "image_name": "CardioTimeBased2.jpg",
+            "machine_required": false,
+            "machine_required_gym": "NA",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Slow jog"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "medium",
+            "functional_warmup": "Slow walk ",
+            "gym": false,
+            "home": true,
+            "image_name": "CardioTimeBased1479245762_3.jpg",
+            "machine_required": false,
+            "machine_required_gym": "NA",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Jog"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "High",
+            "functional_warmup": "Walk",
+            "gym": false,
+            "home": true,
+            "image_name": "CardioTimeBased4.jpg",
+            "machine_required": false,
+            "machine_required_gym": "NA",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Run"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 4
+    },
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "High",
+            "functional_warmup": "Walk",
+            "gym": false,
+            "home": true,
+            "image_name": null,
+            "machine_required": false,
+            "machine_required_gym": "NA",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Interval training"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 5
+    },
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "Low",
+            "functional_warmup": "Slow walk",
+            "gym": true,
+            "home": false,
+            "image_name": "CardioTimeBased6.jpg",
+            "machine_required": true,
+            "machine_required_gym": "Treadmill",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Treadmill - Walk"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 6
+    },
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "Medium",
+            "functional_warmup": "Walk",
+            "gym": true,
+            "home": false,
+            "image_name": "CardioTimeBased7.jpg",
+            "machine_required": true,
+            "machine_required_gym": "Treadmill",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Treadmill - Slow Jog"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 7
+    },
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "Medium",
+            "functional_warmup": "Walk",
+            "gym": true,
+            "home": false,
+            "image_name": "CardioTimeBased8.jpg",
+            "machine_required": true,
+            "machine_required_gym": "Treadmill",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Treadmill - Jog"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 8
+    },
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "High",
+            "functional_warmup": "Walk",
+            "gym": true,
+            "home": false,
+            "image_name": "CardioTimeBased9.jpg",
+            "machine_required": true,
+            "machine_required_gym": "Treadmill",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Treadmill -Run"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 9
+    },
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "High",
+            "functional_warmup": "Walk",
+            "gym": true,
+            "home": false,
+            "image_name": null,
+            "machine_required": true,
+            "machine_required_gym": "Treadmill",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Treadmill -Interval Training"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 10
+    },
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "Low",
+            "functional_warmup": "Elliptical-Zero Resistance",
+            "gym": true,
+            "home": false,
+            "image_name": "CardioTimeBased11.jpg",
+            "machine_required": true,
+            "machine_required_gym": "Elliptical",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Elliptical-Low resistance"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 11
+    },
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "Medium",
+            "functional_warmup": "Elliptical-Zero Resistance",
+            "gym": true,
+            "home": false,
+            "image_name": "CardioTimeBased12.jpg",
+            "machine_required": true,
+            "machine_required_gym": "Elliptical",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Elliptical-Medium resistance"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 12
+    },
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "High",
+            "functional_warmup": "Elliptical-Zero Resistance",
+            "gym": true,
+            "home": false,
+            "image_name": "CardioTimeBased13.jpg",
+            "machine_required": true,
+            "machine_required_gym": "Elliptical",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Elliptical-High resistance"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 13
+    },
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "High",
+            "functional_warmup": "Elliptical-Zero Resistance",
+            "gym": true,
+            "home": false,
+            "image_name": null,
+            "machine_required": true,
+            "machine_required_gym": "Elliptical",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Elliptical- Interval"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 14
+    },
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "Low",
+            "functional_warmup": "Rowing Machine- Zero Resistance",
+            "gym": true,
+            "home": false,
+            "image_name": "CardioTimeBased15.jpg",
+            "machine_required": true,
+            "machine_required_gym": "Rowing Machine",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Rowing Machine- Low Resistance"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 15
+    },
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "Medium",
+            "functional_warmup": "Rowing Machine- Zero Resistance",
+            "gym": true,
+            "home": false,
+            "image_name": "CardioTimeBased1480202976_16.jpg",
+            "machine_required": true,
+            "machine_required_gym": "Rowing Machine",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Rowing Machine- Medium Resistance"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 16
+    },
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "High",
+            "functional_warmup": "Rowing Machine- Zero Resistance",
+            "gym": true,
+            "home": false,
+            "image_name": "CardioTimeBased1480202971_17.jpg",
+            "machine_required": true,
+            "machine_required_gym": "Rowing Machine",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Rowing Machine- High Resistance"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 17
+    },
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "Low",
+            "functional_warmup": "Stationary Cycle-Low Intensity",
+            "gym": true,
+            "home": false,
+            "image_name": "CardioTimeBased1480202952_18.jpg",
+            "machine_required": true,
+            "machine_required_gym": "Stationary Cycle",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Stationary Cycle- Low Resistance"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 18
+    },
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "Medium",
+            "functional_warmup": "Stationary Cycle-Low Intensity",
+            "gym": true,
+            "home": false,
+            "image_name": "CardioTimeBased1480202957_19.jpg",
+            "machine_required": true,
+            "machine_required_gym": "Stationary Cycle",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Stationary Cycle- Medium Resistance"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 19
+    },
+    {
+        "fields": {
+            "duration": 1800,
+            "exercise_level": "High",
+            "functional_warmup": "Stationary Cycle-Low Intensity",
+            "gym": true,
+            "home": false,
+            "image_name": "CardioTimeBased1480202962_20.jpg",
+            "machine_required": true,
+            "machine_required_gym": "Stationary Cycle",
+            "machine_required_home": "NA",
+            "status": 1,
+            "workout_name": "Stationary Cycle- High Resistance"
+        },
+        "model": "workout.cardiotimebasedexercise",
+        "pk": 20
+    }
+]
