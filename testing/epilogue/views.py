@@ -261,6 +261,9 @@ class CustomerFoodExclusionView(ListBulkCreateAPIView , BulkDifferential):
         new = [CustomerFoodExclusions(customer = request.user , food_type = e.get("food_type")) for e in request.data ]
         return self.getToDelete( old , new) , self.getToAdd( old , new )
 
+    def get_queryset(self):
+        return self.request.user.customerfoodexclusions_set.all()
+
     def post(self , request , *args , **kwargs):
         bulk = isinstance(request.data , list)
         if bulk:
@@ -290,6 +293,9 @@ class CustomerMedicalConditionsView(ListBulkCreateAPIView , BulkDifferential):
         old = list(request.user.customermedicalconditions_set.all())
         new = [CustomerMedicalConditions(customer = request.user , condition_name = e.get('condition_name')) for e in request.data]
         return self.getToDelete( old , new ) , self.getToAdd( old , new )
+
+    def get_queryset(self):
+        return self.request.user.customermedicalconditions_set.all()
 
     def post(self, request , *args , **kwargs):
         bulk = isinstance(request.data , list)

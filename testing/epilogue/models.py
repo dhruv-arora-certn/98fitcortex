@@ -169,12 +169,10 @@ class Food(models.Model):
 
 	class Meta:
 		db_table = "business_diet_list"
-		managed = False
 
 
 class Objective(models.Model):
 	class Meta:
-		managed = False
 		db_table = "glo_objective"
 	name = models.CharField(max_length = 50)
 
@@ -192,7 +190,6 @@ class Objective(models.Model):
 class Customer(models.Model):
 	class Meta:	
 		db_table = "erp_customer"
-		managed = False
 
 	VEG = 'veg'
 	NONVEG = 'nonveg'
@@ -638,7 +635,6 @@ class Customer(models.Model):
 class BusinessCustomer(models.Model):
 	class Meta:
 		db_table = "business_account"
-		managed = False
 
 	business_name = models.CharField(max_length = 100)
 	business_owner_first_name = models.CharField( max_length = 25)
@@ -659,7 +655,6 @@ class GeneratedDietPlan(models.Model):
 	'''
 	class Meta:
 		db_table = "erp_diet_plan"
-		managed = False
 
 	customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "dietplans")
 	created_on = models.DateTimeField(auto_now_add = True)
@@ -721,7 +716,6 @@ class GeneratedDietPlanFoodDetails(models.Model):
 	Store the generated diet plan of a day here
 	'''
 	class Meta:
-		managed = False
 		db_table = "erp_diet_plan_food_details"
 
 	dietplan = models.ForeignKey(GeneratedDietPlan , db_column = "erp_diet_plan_id"  , related_name = "meals") 
@@ -822,7 +816,6 @@ class GeneratedDietPlanFoodDetails(models.Model):
 class GeneratedExercisePlan(models.Model):
 	class Meta:
 		db_table = "erp_exercise_plan"
-		managed = False
 	
 	customer = models.ForeignKey(Customer , db_column = "erp_customer_id")
 	created_on = models.DateTimeField(default = None)
@@ -830,7 +823,6 @@ class GeneratedExercisePlan(models.Model):
 
 class ActivityLevelLog(models.Model):
 	class Meta:
-		managed = False
 		db_table = "relation_log"
 	customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "activitylevel_logs")
 	lifestyle = models.CharField(max_length = 50)	
@@ -846,7 +838,6 @@ class ActivityLevelLog(models.Model):
 
 class ExerciseDietRelation(models.Model):
 	class Meta:
-		managed = False
 		db_table = "relation_ep_dp"
 	act_level = models.CharField(max_length = 150)
 	fit_level = models.CharField(max_length = 150)
@@ -908,7 +899,6 @@ class Token(models.Model):
 class LoginCustomer(models.Model):
 	class Meta:
 		db_table = "login_customer"
-		managed = False
 	email = models.EmailField()
 	first_name = models.CharField(max_length = 100)
 	last_name = models.CharField(max_length = 100)
@@ -947,7 +937,6 @@ class CustomerFoodExclusions(models.Model):
 	food_type = models.CharField(max_length = 100 , choices = food_type_choices)
 
 	class Meta:
-		managed = False
 		db_table = "erp_customer_food_exclusion"
 
 class CustomerMedicalConditions(models.Model):
@@ -955,7 +944,6 @@ class CustomerMedicalConditions(models.Model):
 	condition_name = models.CharField(max_length = 50)
 
 	class Meta:
-		managed = False
 		db_table = "erp_customer_medicalcondition"
 
 	def __str__(self):
@@ -963,7 +951,6 @@ class CustomerMedicalConditions(models.Model):
 
 class CustomerWeightRecord(models.Model):
 	class Meta:
-		managed = False
 		db_table = "erp_customer_weight_timeline"
 
 	customer = models.ForeignKey(Customer , db_column = "erp_customer_id")
@@ -981,7 +968,6 @@ class CustomerWeightRecord(models.Model):
 
 class FoodTypeSizes(models.Model):
 	class Meta:
-		managed = False
 		db_table = "food_type_sizes"
 	size = models.CharField(max_length = 50)
 	weight = models.IntegerField()
@@ -1024,7 +1010,6 @@ class CustomerWaterLogs(models.Model):
 class CustomerSleepLogs(models.Model):
 	class Meta:
 		db_table = "user_sleep_logs"
-		managed = False
 	start = models.DateTimeField(auto_now = False)
 	end = models.DateTimeField(auto_now = False)
 	minutes = models.IntegerField(blank = True)
@@ -1045,7 +1030,6 @@ class CustomerActivityLogs(models.Model):
 class CustomerLevelLog(models.Model):
 	class Meta:
 		db_table = "erp_customer_level_log"
-		managed = False
 	level = models.IntegerField()
 	date = models.DateTimeField(auto_now_add = True)
 	customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "level_logs")
