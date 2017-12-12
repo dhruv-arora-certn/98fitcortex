@@ -204,6 +204,9 @@ class DietPlanView(GenericAPIView):
         data = DietPlanSerializer(objs , many = True).data
         return Response(data)
 
+class DietPlanYearlyView(DietPlanView):
+	pass
+
 class DishReplaceView(RetrieveAPIView):
     serializer_class = DietPlanSerializer
     authentication_classes = [CustomerAuthentication]
