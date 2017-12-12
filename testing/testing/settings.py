@@ -60,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'request_logging.middleware.LoggingMiddleware',
 ]
 
 ROOT_URLCONF = 'testing.urls'
@@ -188,6 +189,12 @@ LOGGING = {
             'formatter': 'simple',
 			'filename' : 'debug.log'
         },
+        'request': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'simple',
+			'filename' : 'request.log'
+        },
         'error': {
             'level': 'ERROR',
             'class': 'logging.FileHandler',
@@ -211,6 +218,11 @@ LOGGING = {
 			'formatter' : 'verbose',
 			'level' : 'DEBUG',
 			'propagate' :  True
+		},
+		'django.request': {
+			'handlers' : ['request'],
+			'level' : 'DEBUG',
+			'propagate' : False
 		}
     },
 }
