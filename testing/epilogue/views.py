@@ -30,6 +30,7 @@ from epilogue.authentication import CustomerAuthentication
 from epilogue.mixins import*
 from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf , get_food_cat_diabetes , disease_cals
 from epilogue.replacement import *
+from epilogue.exceptions import MultipleDiseasesException , DiseasesNotDiabetesOrPcod
 
 from pdfs import base, file_handlers
 
@@ -177,7 +178,7 @@ class DietPlanView(GenericAPIView):
                 "data" : data
             })
 
-        if request.user.has_pcod():
+        elif request.user.has_pcod():
             data , cals = self.get_pcos(request.user)
             for e in data:
                 if not e.get("image"):
@@ -193,6 +194,13 @@ class DietPlanView(GenericAPIView):
                 },
                 "data" : data
             })
+        elif request.user.customermedicalconditions_set.count() == 1:
+            return Response({
+                "errors" : [
+                    "Unsupported Disease"
+                ]
+            })
+            raise DiseasesNotDiabetesOrPcod()
         if request.user.customermedicalconditions_set.count() > 1:
             return Response({
                 "errors" : [
