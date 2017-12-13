@@ -198,14 +198,16 @@ class DietPlanView(GenericAPIView):
             return Response({
                 "errors" : [
                     "Unsupported Disease"
-                ]
+                ],
+                "code" : 1
             })
             raise DiseasesNotDiabetesOrPcod()
         if request.user.customermedicalconditions_set.count() > 1:
             return Response({
                 "errors" : [
                     "Multiple Diseases Found"
-                ]
+                ],
+                "code" : 2
             })
 
         objs = self.get_object()
