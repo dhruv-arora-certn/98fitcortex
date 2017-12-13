@@ -184,6 +184,9 @@ class CustomerInjuryView(ListBulkCreateAPIView , BulkDifferential):
 
     class BulkMeta:
         attr_name = "injury_name"
+    
+    def get_queryset(self):
+        return self.request.user.injuries.all()
 
     def getPartition(self , request):
         old = list(request.user.injuries.all())
