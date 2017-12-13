@@ -187,7 +187,7 @@ class CustomerInjuryView(ListBulkCreateAPIView , BulkDifferential):
 
     def getPartition(self , request):
         old = list(request.user.injuries.all())
-        new = [CustomerInjury(customer = request.user , injury_name = self.mapper.get(e,e)) for e in request.data ]
+        new = [CustomerInjury(customer = request.user , injury_name = e.get('injury_name')) for e in request.data ]
         return self.getToDelete( old , new) , self.getToAdd( old , new )
 
     def post(self , request , *args , **kwargs):
