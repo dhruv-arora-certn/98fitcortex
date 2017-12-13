@@ -304,7 +304,7 @@ class CustomerMedicalConditionsView(ListBulkCreateAPIView , BulkDifferential):
 
     def getPartition(self , request):
         old = list(request.user.customermedicalconditions_set.all())
-        new = [CustomerMedicalConditions(customer = request.user , condition_name = e.get('condition_name')) for e in request.data]
+        new = [CustomerMedicalConditions(customer = request.user , condition_name = e.get('condition_name')) for e in request.data if e.get('condition_name') != "none"]
         return self.getToDelete( old , new ) , self.getToAdd( old , new )
 
     def get_queryset(self):
