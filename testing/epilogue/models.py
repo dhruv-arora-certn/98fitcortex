@@ -411,7 +411,7 @@ class Customer(models.Model):
         )
         return baseQ
 
-    @decorators.scale_field("total_minutes")
+    @decorators.scale_field("total_minutes",480)
     @decorators.sorter(key = lambda x : x['date'] )
     @decorators.add_empty_day_in_week({"total_minutes" : 0})
     def weekly_sleep(self,week = None, mapped = False):
@@ -471,7 +471,7 @@ class Customer(models.Model):
         logs = baseQ.values("week" , "total_quantity")
         return logs
 
-    @decorators.scale_field("total_quantity")
+    @decorators.scale_field("total_quantity",2000)
     @decorators.sorter(lambda x : x['date'] )
     @decorators.add_empty_day_in_week({"total_quantity" : 0})
     def weekly_water(self):
@@ -503,7 +503,7 @@ class Customer(models.Model):
         baseQ = self.sleep_logs.last()
         return baseQ
 
-    @decorators.scale_field("total_steps")
+    @decorators.scale_field("total_steps",6000)
     @decorators.sorter(key = lambda x: x['date'] )
     @decorators.add_empty_day_in_week({"total_steps" : 0 , "total_distance" : 0 , "total_cals" : 0 , "total_duration" : 0})
     def weekly_activity(self):
