@@ -140,7 +140,7 @@ class DietPlanView(GenericAPIView):
 
         #If the requested week is farther away than 2 weeks, deny the request
         print("Truth" , abs(abs(week_id) - abs(current_week)))
-        if abs(abs(week_id) - abs(current_week)) > 2:
+        if abs(abs(week_id) - abs(current_week)) > 3:
             raise exceptions.PermissionDenied({
                 "message" : "You cannot access this week's diet plan"
             })
