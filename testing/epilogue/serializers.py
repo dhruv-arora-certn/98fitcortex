@@ -163,7 +163,7 @@ class SleepLoggingWeeklySerializer(serializers.Serializer):
 	day = serializers.SerializerMethodField()
 	date = serializers.DateField()
 	total_minutes = serializers.IntegerField()
-#	plotting_value = serializers.FloatField()
+	plotting_value = serializers.FloatField()
 
 	def get_day(self , obj):
 		print(obj)
