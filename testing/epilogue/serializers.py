@@ -148,7 +148,7 @@ class WaterLoggingSerializer(serializers.Serializer):
 class WaterLoggingWeeklySerializer(serializers.Serializer ):
 	date =  serializers.DateField()
 	day = serializers.SerializerMethodField()
-	total_quantity = serializers.IntegerField()
+	total_quantity = serializers.FloatField()
 	plotting_value = serializers.FloatField()
 
 	def get_day(self , obj):
