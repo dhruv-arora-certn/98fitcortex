@@ -1126,13 +1126,22 @@ class CustomerReasons(models.Model):
     def __str__(self):
         return self.reason.text
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> Adding ground work for regeneration module
 @receiver(signals.post_init , sender = Customer)
 def save_pre_state(sender , *args , **kwargs):
     import logging,ipdb
     logger = logging.getLogger(__name__)
     logger.debug("Calling Save Pre State")
 
+<<<<<<< HEAD
+=======
+    inst = kwargs.pop('instance')
+    inst.__before_attrs = inst.args_attrs
+    inst.__before_kwargs_attrs = inst.kwargs_attrs
+>>>>>>> Adding ground work for regeneration module
 
 @receiver(signals.post_save , sender = Customer)
 def compare_attrs(sender , *args , **kwargs):
