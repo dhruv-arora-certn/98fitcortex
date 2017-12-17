@@ -12,7 +12,7 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.cache import cache
-
+from django.db.models import signals
 from workoutplan import levels
 from workoutplan import locations
 
@@ -1119,3 +1119,24 @@ class CustomerReasons(models.Model):
 
     def __str__(self):
         return self.reason.text
+
+@receiver(signals.post_init , sender = Customer)
+def save_pre_state(sender , *args , **kwargs):
+    import logging,ipdb
+    logger = logging.getLogger(__name__)
+    logger.debug("Calling Save Pre State")
+
+    inst = kwargs.pop('instance')
+    inst.__before_attrs = inst.args_attrs
+    inst.__before_kwargs_attrs = inst.kwargs_attrs
+
+@receiver(signals.post_save , sender = Customer)
+def compare_attrs(sender , *args , **kwargs):
+    instance = kwargs.pop('instance')
+
+    import logging
+    logger = logging.getLogger(__name__)
+    if not instance.args_attrs == instance.__before_attrs or not instance.kwargs_attrs == instance.__before_kwargs_attrs:
+        logger.debug("Emit the Signal")
+    else:
+        logger.debug("Do not emit the signal")
