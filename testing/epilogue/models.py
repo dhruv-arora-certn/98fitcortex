@@ -12,7 +12,7 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.cache import cache
-
+from django.db.models import signals
 from workoutplan import levels
 from workoutplan import locations
 
@@ -212,7 +212,11 @@ class Customer(models.Model):
     h = models.CharField(db_column = "height", max_length = 20, blank = True )
     h_type = models.IntegerField(db_column = "height_type" , blank = True)
     ls = models.CharField( max_length = 50 , db_column = "lifestyle" , blank = True)
+<<<<<<< HEAD
     objective = models.ForeignKey(Objective , db_column = "objective", blank = True , on_delete = models.CASCADE)
+=======
+    objective = models.ForeignKey(Objective , db_column = "objective", blank = True)
+>>>>>>> Adding ground work for regeneration module
     gen = models.CharField(max_length = 20 , db_column = "gender", blank = True)
     body_type = models.CharField(max_length = 50, blank = True)
     food_cat = models.CharField(max_length = 50 , choices=  food_cat_choices, blank = True)
@@ -371,7 +375,11 @@ class Customer(models.Model):
     def map_aggregate(self , qs , obj):
         return map( lambda x : obj(**x) , qs)
 
+<<<<<<< HEAD
     @decorators.add_empty_weeks({"max":0,"min":0,"avg_wakeup":'',"avg_minutes":0,"sum":0,"avg_bedtime":0})
+=======
+    @decorators.weekly_average("total_minutes")
+>>>>>>> Adding ground work for regeneration module
     def monthly_sleep(self , month = None):
         '''
         Find Monthly Data for sleep aggregated as weekly average
@@ -385,6 +393,7 @@ class Customer(models.Model):
             date__gt = today_date - datetime.timedelta(days = 30)
         )
         baseQ = baseQ.values("date").annotate(
+<<<<<<< HEAD
             day_minutes = models.Sum("minutes")
         )
 
@@ -430,6 +439,17 @@ class Customer(models.Model):
             ref['min'] = min((e['day_minutes'] for e in g))
             data.append(ref)
         return keys , data
+=======
+            total_minutes = models.Sum("minutes")
+        )
+
+        baseQ = baseQ.annotate(
+            week = RawSQL("Week(start)",[])
+        )
+        baseQ = baseQ.order_by("-week")
+
+        return baseQ.values("date" , "week", "total_minutes")
+>>>>>>> Adding ground work for regeneration module
 
     @decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_minutes")
     def monthly_sleep_aggregate(self):
@@ -1119,3 +1139,25 @@ class CustomerReasons(models.Model):
 
     def __str__(self):
         return self.reason.text
+
+
+@receiver(signals.post_init , sender = Customer)
+def save_pre_state(sender , *args , **kwargs):
+    import logging,ipdb
+    logger = logging.getLogger(__name__)
+    logger.debug("Calling Save Pre State")
+
+    inst = kwargs.pop('instance')
+    inst.__before_attrs = inst.args_attrs
+    inst.__before_kwargs_attrs = inst.kwargs_attrs
+
+@receiver(signals.post_save , sender = Customer)
+def compare_attrs(sender , *args , **kwargs):
+    instance = kwargs.pop('instance')
+
+    import logging
+    logger = logging.getLogger(__name__)
+    if not instance.args_attrs == instance.__before_attrs or not instance.kwargs_attrs == instance.__before_kwargs_attrs:
+        logger.debug("Emit the Signal")
+    else:
+        logger.debug("Do not emit the signal")

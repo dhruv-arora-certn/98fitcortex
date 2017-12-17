@@ -219,6 +219,12 @@ LOGGING = {
 			'level' : 'DEBUG',
 			'propagate' :  True
 		},
+		'epilogue' : {
+			'handlers' : [ 'debug' ],
+			'formatter' : 'verbose',
+			'level' : 'DEBUG',
+			'propagate' :  True
+		},
 		'django.request': {
 			'handlers' : ['request'],
 			'level' : 'DEBUG',
