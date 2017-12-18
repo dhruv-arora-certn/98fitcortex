@@ -1,12 +1,21 @@
 from django.dispatch import Signal
+from django.dispatch import receiver
 
 
 
 
 attribute_changed = Signal(providing_args = ["attribute"])
 
-regeneration = Signal(
+instance_changed = Signal(providing_args=["instance"])
+
+diet_regeneration = Signal(
 	providing_args = [
-		"year","week"
+		"user"
+	]
+)
+
+workout_regeneration = Signal(
+	providing_args = [
+		"user"
 	]
 )
