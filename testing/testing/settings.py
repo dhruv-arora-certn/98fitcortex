@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 	'workout',
 	'messaging',
 	'authentication',
+	'regeneration',
 	'rest_framework',
     'rest_framework.authtoken',   
     'rest_framework_docs',

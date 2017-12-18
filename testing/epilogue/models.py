@@ -1,13 +1,22 @@
-from django.db import models
 from dietplan.goals import Goals
 from dietplan.gender import Male , Female
+
 from epilogue.managers import *
 from epilogue import decorators
+<<<<<<< HEAD
 from django.db.models.expressions import RawSQL
 from .mappers import *
 from epilogue.dummyModels import *
 from rest_framework import exceptions
 from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day  , seconds_to_hms , relative_to_week
+=======
+from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day 
+from epilogue.dummyModels import *
+from .mappers import *
+from epilogue.constants import DIET_ONLY_FACTORS , WORKOUT_ONLY_FACTORS , COMMON_FACTORS
+from epilogue.track_data import track_data
+
+>>>>>>> Upgrading the urls to re_path | Adding on_delete to models | Tracking Model Data changes | Generating Signals based on changes
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -20,13 +29,21 @@ from workoutplan import locations
 from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+from django.db import models
+from django.db.models.expressions import RawSQL
+
+from regeneration.signals import instance_changed , diet_regeneration , workout_regeneration
 
 import binascii
 import os
 import datetime
 import functools
+<<<<<<< HEAD
 import itertools
 import numpy as np
+=======
+import logging
+>>>>>>> Upgrading the urls to re_path | Adding on_delete to models | Tracking Model Data changes | Generating Signals based on changes
 #Model Managers for Food Model
 
 
@@ -187,10 +204,11 @@ class Objective(models.Model):
         if self.name.strip() == "Muscle Gain":
             return Goals.MuscleGain
         if self.name.strip() == "Be healthy":
-            return Goals.MaintainWeight 
+            return Goals.MaintainWeight
 
+@track_data(*DIET_ONLY_FACTORS + WORKOUT_ONLY_FACTORS + COMMON_FACTORS)
 class Customer(models.Model):
-    class Meta: 
+    class Meta:
         db_table = "erp_customer"
 
     VEG = 'veg'
@@ -200,7 +218,7 @@ class Customer(models.Model):
         (VEG , 'veg'),
         (NONVEG , 'nonveg'),
         (EGG , 'egg')
-    )       
+    )
     email = models.CharField(max_length = 255 , blank = True)
     first_name = models.CharField(max_length = 25, blank = True)
     last_name = models.CharField(max_length = 25 , blank = True , null = True)
@@ -212,7 +230,7 @@ class Customer(models.Model):
     h = models.CharField(db_column = "height", max_length = 20, blank = True )
     h_type = models.IntegerField(db_column = "height_type" , blank = True)
     ls = models.CharField( max_length = 50 , db_column = "lifestyle" , blank = True)
-    objective = models.ForeignKey(Objective , db_column = "objective", blank = True)
+    objective = models.ForeignKey(Objective , db_column = "objective", blank = True , on_delete = models.DO_NOTHING)
     gen = models.CharField(max_length = 20 , db_column = "gender", blank = True)
     body_type = models.CharField(max_length = 50, blank = True)
     food_cat = models.CharField(max_length = 50 , choices=  food_cat_choices, blank = True)
@@ -725,7 +743,7 @@ class GeneratedDietPlan(models.Model):
     class Meta:
         db_table = "erp_diet_plan"
 
-    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "dietplans")
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "dietplans" , on_delete = models.CASCADE)
     created_on = models.DateTimeField(auto_now_add = True)
     user_week_id = models.IntegerField(default = 1)
     week_id = models.IntegerField(default = 1)
@@ -787,8 +805,8 @@ class GeneratedDietPlanFoodDetails(models.Model):
     class Meta:
         db_table = "erp_diet_plan_food_details"
 
-    dietplan = models.ForeignKey(GeneratedDietPlan , db_column = "erp_diet_plan_id"  , related_name = "meals") 
-    food_item = models.ForeignKey(Food , db_column = "business_diet_list_id")
+    dietplan = models.ForeignKey(GeneratedDietPlan , db_column = "erp_diet_plan_id"  , related_name = "meals" , on_delete = models.CASCADE) 
+    food_item = models.ForeignKey(Food , db_column = "business_diet_list_id" , on_delete = models.DO_NOTHING)
     food_name = models.CharField(max_length = 255)
     meal_type = models.CharField(max_length = 20)
     day = models.IntegerField()
@@ -886,14 +904,14 @@ class GeneratedExercisePlan(models.Model):
     class Meta:
         db_table = "erp_exercise_plan"
     
-    customer = models.ForeignKey(Customer , db_column = "erp_customer_id")
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , on_delete = models.CASCADE)
     created_on = models.DateTimeField(default = None)
     glo_level_id = models.IntegerField()
 
 class ActivityLevelLog(models.Model):
     class Meta:
         db_table = "relation_log"
-    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "activitylevel_logs" , null = True)
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "activitylevel_logs" , on_delete = models.CASCADE)
     lifestyle = models.CharField(max_length = 50)   
     
     @property
@@ -972,13 +990,13 @@ class LoginCustomer(models.Model):
     first_name = models.CharField(max_length = 100)
     last_name = models.CharField(max_length = 100)
     password = models.CharField(max_length = 255)
-    customer = models.OneToOneField(Customer , db_column = "erp_customer_id")
+    customer = models.OneToOneField(Customer , db_column = "erp_customer_id" , on_delete = models.CASCADE)
     status_id = models.BooleanField(default = True)
     created_on = models.DateTimeField(auto_now_add = True)  
 
 class DishReplacementSuggestions(models.Model):
-    dietplan_food_details = models.ForeignKey(GeneratedDietPlanFoodDetails , related_name = "suggestions")
-    food = models.ForeignKey(Food)
+    dietplan_food_details = models.ForeignKey(GeneratedDietPlanFoodDetails , related_name = "suggestions" , on_delete = models.CASCADE)
+    food = models.ForeignKey(Food , on_delete = models.DO_NOTHING)
 #   created_on = models.DateTimeField(auto_now = True)
 
 class CustomerFoodExclusions(models.Model):
@@ -1002,14 +1020,14 @@ class CustomerFoodExclusions(models.Model):
         (BEEF , "beef"),
         (MEAT , "meat")
     )
-    customer = models.ForeignKey(Customer , db_column = 'erp_customer_id')
+    customer = models.ForeignKey(Customer , db_column = 'erp_customer_id' , on_delete = models.CASCADE)
     food_type = models.CharField(max_length = 100 , choices = food_type_choices)
 
     class Meta:
         db_table = "erp_customer_food_exclusion"
 
 class CustomerMedicalConditions(models.Model):
-    customer = models.ForeignKey(Customer , db_column = "erp_customer_id")
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , on_delete = models.CASCADE)
     condition_name = models.CharField(max_length = 50)
 
     class Meta:
@@ -1022,7 +1040,7 @@ class CustomerWeightRecord(models.Model):
     class Meta:
         db_table = "erp_customer_weight_timeline"
 
-    customer = models.ForeignKey(Customer , db_column = "erp_customer_id")
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , on_delete = models.CASCADE)
     date = models.DateTimeField(auto_now_add = True)
     weight = models.FloatField()
     weight_type = models.IntegerField()
@@ -1059,8 +1077,8 @@ class WaterContainer(models.Model):
 class CustomerWaterLogs(models.Model):
     saved = models.DateTimeField(auto_now_add = True)
     count = models.IntegerField()
-    customer = models.ForeignKey(Customer, related_name = "water_logs")
-    container = models.ForeignKey(WaterContainer)
+    customer = models.ForeignKey(Customer, related_name = "water_logs" , on_delete = models.CASCADE)
+    container = models.ForeignKey(WaterContainer , on_delete = models.DO_NOTHING)
     quantity = models.IntegerField()
     added = models.DateTimeField(null = True)   
 
@@ -1082,14 +1100,14 @@ class CustomerSleepLogs(models.Model):
     start = models.DateTimeField(auto_now = False)
     end = models.DateTimeField(auto_now = False)
     minutes = models.IntegerField(blank = True)
-    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "sleep_logs")
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "sleep_logs" , on_delete = models.CASCADE)
     saved = models.DateTimeField(auto_now_add = True)
 
 class CustomerActivityLogs(models.Model):
     timestamp = models.DateTimeField(null = True)
     steps = models.IntegerField()
     cals = models.IntegerField()
-    customer = models.ForeignKey(Customer , related_name = "activity_logs", db_column = "erp_customer_id")
+    customer = models.ForeignKey(Customer , related_name = "activity_logs", db_column = "erp_customer_id" , on_delete = models.CASCADE)
     duration = models.IntegerField()
     start = models.DateTimeField(auto_now = False)
     end = models.DateTimeField(auto_now = False)
@@ -1101,6 +1119,7 @@ class CustomerLevelLog(models.Model):
         db_table = "erp_customer_level_log"
     level = models.IntegerField()
     date = models.DateTimeField(auto_now_add = True)
+<<<<<<< HEAD
     customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "level_logs")
 
 class Reasons(models.Model):
@@ -1125,18 +1144,44 @@ def save_pre_state(sender , *args , **kwargs):
     import logging,ipdb
     logger = logging.getLogger(__name__)
     logger.debug("Calling Save Pre State")
+=======
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "level_logs" , on_delete = models.CASCADE)
+>>>>>>> Upgrading the urls to re_path | Adding on_delete to models | Tracking Model Data changes | Generating Signals based on changes
 
-    inst = kwargs.pop('instance')
-    inst.__before_attrs = inst.args_attrs
-    inst.__before_kwargs_attrs = inst.kwargs_attrs
 
 @receiver(signals.post_save , sender = Customer)
 def compare_attrs(sender , *args , **kwargs):
     instance = kwargs.pop('instance')
 
-    import logging
     logger = logging.getLogger(__name__)
-    if not instance.args_attrs == instance.__before_attrs or not instance.kwargs_attrs == instance.__before_kwargs_attrs:
-        logger.debug("Emit the Signal")
+
+    if instance.whats_changed():
+
+        logger.debug("Send Signal")
+
+        regenerate_diet = False
+        regenerate_workout = False
+
+        keys = set(instance.whats_changed().keys())
+        if keys.intersection(COMMON_FACTORS):
+            #Both ought to be changed
+            regenerate_diet = True
+            regenerate_workout = True
+
+        elif keys.intersection(DIET_ONLY_FACTORS):
+            regenerate_diet = True
+
+        elif keys.intersection(WORKOUT_ONLY_FACTORS):
+            regenerate_workout = True
+
+        if regenerate_diet:
+            #Send Diet Regeneration Signal
+            logger.debug('Diet Regeneration')
+            diet_regeneration.send(sender = Customer , user = instance)
+
+        if regenerate_workout:
+            #Send workout Regeneration Signal
+            logger.debug('Workout Regeneration')
+            workout_regeneration.send(sender = Customer , user = instance)
     else:
-        logger.debug("Do not emit the signal")
+        logger.debug("Do not send signal")
