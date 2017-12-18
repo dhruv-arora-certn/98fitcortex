@@ -215,3 +215,4 @@ class CustomerInjury(models.Model):
 
     def __str__(self):
         return self.injury_name
+

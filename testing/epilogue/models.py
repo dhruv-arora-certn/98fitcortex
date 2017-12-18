@@ -3,12 +3,28 @@ from dietplan.gender import Male , Female
 
 from epilogue.managers import *
 from epilogue import decorators
+<<<<<<< HEAD
 from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day , get_day
 from epilogue.dummyModels import *
+=======
+<<<<<<< HEAD
+from django.db.models.expressions import RawSQL
+from .mappers import *
+from epilogue.dummyModels import *
+from rest_framework import exceptions
+from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day  , seconds_to_hms , relative_to_week
+=======
+from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day 
+from epilogue.dummyModels import *
+>>>>>>> Upgrading the urls to re_path | Adding on_delete to models | Tracking Model Data changes | Generating Signals based on changes
 from .mappers import *
 from epilogue.constants import DIET_ONLY_FACTORS , WORKOUT_ONLY_FACTORS , COMMON_FACTORS
 from epilogue.track_data import track_data
 
+<<<<<<< HEAD
+=======
+>>>>>>> Upgrading the urls to re_path | Adding on_delete to models | Tracking Model Data changes | Generating Signals based on changes
+>>>>>>> Upgrading the urls to re_path | Adding on_delete to models | Tracking Model Data changes | Generating Signals based on changes
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -30,9 +46,16 @@ import binascii
 import os
 import datetime
 import functools
+<<<<<<< HEAD
 import itertools
 import numpy as np
+<<<<<<< HEAD
 import logging
+=======
+=======
+import logging
+>>>>>>> Upgrading the urls to re_path | Adding on_delete to models | Tracking Model Data changes | Generating Signals based on changes
+>>>>>>> Upgrading the urls to re_path | Adding on_delete to models | Tracking Model Data changes | Generating Signals based on changes
 #Model Managers for Food Model
 
 
@@ -218,7 +241,11 @@ class Customer(models.Model):
     h = models.CharField(db_column = "height", max_length = 20, blank = True )
     h_type = models.IntegerField(db_column = "height_type" , default = 1)
     ls = models.CharField( max_length = 50 , db_column = "lifestyle" , blank = True)
+<<<<<<< HEAD
     objective = models.ForeignKey(Objective , db_column = "objective", blank = True , on_delete = models.DO_NOTHING , null = True)
+=======
+    objective = models.ForeignKey(Objective , db_column = "objective", blank = True , on_delete = models.DO_NOTHING)
+>>>>>>> Upgrading the urls to re_path | Adding on_delete to models | Tracking Model Data changes | Generating Signals based on changes
     gen = models.CharField(max_length = 20 , db_column = "gender", blank = True)
     body_type = models.CharField(max_length = 50, blank = True)
     food_cat = models.CharField(max_length = 50 , choices=  food_cat_choices, blank = True)
@@ -731,7 +758,11 @@ class GeneratedDietPlan(models.Model):
     class Meta:
         db_table = "erp_diet_plan"
 
+<<<<<<< HEAD
     customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "dietplans" , on_delete = models.CASCADE , null = True)
+=======
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "dietplans" , on_delete = models.CASCADE)
+>>>>>>> Upgrading the urls to re_path | Adding on_delete to models | Tracking Model Data changes | Generating Signals based on changes
     created_on = models.DateTimeField(auto_now_add = True)
     user_week_id = models.IntegerField(default = 1)
     week_id = models.IntegerField(default = 1)
@@ -793,12 +824,21 @@ class GeneratedDietPlanFoodDetails(models.Model):
     class Meta:
         db_table = "erp_diet_plan_food_details"
 
+<<<<<<< HEAD
     dietplan = models.ForeignKey(GeneratedDietPlan , db_column = "erp_diet_plan_id"  , related_name = "meals" , on_delete = models.CASCADE , null = True) 
     food_item = models.ForeignKey(Food , db_column = "business_diet_list_id" , on_delete = models.DO_NOTHING , null = True)
     food_name = models.CharField(max_length = 255 , null = True)
     meal_type = models.CharField(max_length = 20 , null = True)
     day = models.IntegerField(default = get_day())
     calorie = models.CharField(max_length = 50 , default = '0')
+=======
+    dietplan = models.ForeignKey(GeneratedDietPlan , db_column = "erp_diet_plan_id"  , related_name = "meals" , on_delete = models.CASCADE) 
+    food_item = models.ForeignKey(Food , db_column = "business_diet_list_id" , on_delete = models.DO_NOTHING)
+    food_name = models.CharField(max_length = 255)
+    meal_type = models.CharField(max_length = 20)
+    day = models.IntegerField()
+    calorie = models.CharField(max_length = 50)
+>>>>>>> Upgrading the urls to re_path | Adding on_delete to models | Tracking Model Data changes | Generating Signals based on changes
     weight = models.FloatField(default = 0)
     quantity = models.FloatField(default = 0)
     food_type = models.CharField(max_length = 50 , null = True)
@@ -892,14 +932,22 @@ class GeneratedExercisePlan(models.Model):
     class Meta:
         db_table = "erp_exercise_plan"
     
+<<<<<<< HEAD
     customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , on_delete = models.CASCADE , null = True)
+=======
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , on_delete = models.CASCADE)
+>>>>>>> Upgrading the urls to re_path | Adding on_delete to models | Tracking Model Data changes | Generating Signals based on changes
     created_on = models.DateTimeField(default = None)
     glo_level_id = models.IntegerField(default = 1)
 
 class ActivityLevelLog(models.Model):
     class Meta:
         db_table = "relation_log"
+<<<<<<< HEAD
     customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "activitylevel_logs" , on_delete = models.CASCADE , null = True)
+=======
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "activitylevel_logs" , on_delete = models.CASCADE)
+>>>>>>> Upgrading the urls to re_path | Adding on_delete to models | Tracking Model Data changes | Generating Signals based on changes
     lifestyle = models.CharField(max_length = 50)   
     
     @property
@@ -975,16 +1023,28 @@ class LoginCustomer(models.Model):
     class Meta:
         db_table = "login_customer"
     email = models.EmailField()
+<<<<<<< HEAD
     first_name = models.CharField(max_length = 100 , null = True)
     last_name = models.CharField(max_length = 100 , null = True)
     password = models.CharField(max_length = 255 , null = True)
     customer = models.OneToOneField(Customer , db_column = "erp_customer_id" , on_delete = models.CASCADE , null = True)
+=======
+    first_name = models.CharField(max_length = 100)
+    last_name = models.CharField(max_length = 100)
+    password = models.CharField(max_length = 255)
+    customer = models.OneToOneField(Customer , db_column = "erp_customer_id" , on_delete = models.CASCADE)
+>>>>>>> Upgrading the urls to re_path | Adding on_delete to models | Tracking Model Data changes | Generating Signals based on changes
     status_id = models.BooleanField(default = True)
     created_on = models.DateTimeField(auto_now_add = True , null = True)
 
 class DishReplacementSuggestions(models.Model):
+<<<<<<< HEAD
     dietplan_food_details = models.ForeignKey(GeneratedDietPlanFoodDetails , related_name = "suggestions" , on_delete = models.CASCADE , null = True)
     food = models.ForeignKey(Food , on_delete = models.DO_NOTHING , null = True)
+=======
+    dietplan_food_details = models.ForeignKey(GeneratedDietPlanFoodDetails , related_name = "suggestions" , on_delete = models.CASCADE)
+    food = models.ForeignKey(Food , on_delete = models.DO_NOTHING)
+>>>>>>> Upgrading the urls to re_path | Adding on_delete to models | Tracking Model Data changes | Generating Signals based on changes
 #   created_on = models.DateTimeField(auto_now = True)
 
 class CustomerFoodExclusions(models.Model):
@@ -1008,14 +1068,22 @@ class CustomerFoodExclusions(models.Model):
         (BEEF , "beef"),
         (MEAT , "meat")
     )
+<<<<<<< HEAD
     customer = models.ForeignKey(Customer , db_column = 'erp_customer_id' , on_delete = models.CASCADE , null = True)
+=======
+    customer = models.ForeignKey(Customer , db_column = 'erp_customer_id' , on_delete = models.CASCADE)
+>>>>>>> Upgrading the urls to re_path | Adding on_delete to models | Tracking Model Data changes | Generating Signals based on changes
     food_type = models.CharField(max_length = 100 , choices = food_type_choices)
 
     class Meta:
         db_table = "erp_customer_food_exclusion"
 
 class CustomerMedicalConditions(models.Model):
+<<<<<<< HEAD
     customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , on_delete = models.CASCADE , null = True)
+=======
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , on_delete = models.CASCADE)
+>>>>>>> Upgrading the urls to re_path | Adding on_delete to models | Tracking Model Data changes | Generating Signals based on changes
     condition_name = models.CharField(max_length = 50)
 
     class Meta:
@@ -1028,7 +1096,11 @@ class CustomerWeightRecord(models.Model):
     class Meta:
         db_table = "erp_customer_weight_timeline"
 
+<<<<<<< HEAD
     customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , on_delete = models.CASCADE , null = True)
+=======
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , on_delete = models.CASCADE)
+>>>>>>> Upgrading the urls to re_path | Adding on_delete to models | Tracking Model Data changes | Generating Signals based on changes
     date = models.DateTimeField(auto_now_add = True)
     weight = models.FloatField()
     weight_type = models.IntegerField()
@@ -1065,8 +1137,13 @@ class WaterContainer(models.Model):
 class CustomerWaterLogs(models.Model):
     saved = models.DateTimeField(auto_now_add = True)
     count = models.IntegerField()
+<<<<<<< HEAD
     customer = models.ForeignKey(Customer, related_name = "water_logs" , on_delete = models.CASCADE , null = True)
     container = models.ForeignKey(WaterContainer , on_delete = models.DO_NOTHING , null = True)
+=======
+    customer = models.ForeignKey(Customer, related_name = "water_logs" , on_delete = models.CASCADE)
+    container = models.ForeignKey(WaterContainer , on_delete = models.DO_NOTHING)
+>>>>>>> Upgrading the urls to re_path | Adding on_delete to models | Tracking Model Data changes | Generating Signals based on changes
     quantity = models.IntegerField()
     added = models.DateTimeField(null = True)   
 
@@ -1126,22 +1203,15 @@ class CustomerReasons(models.Model):
     def __str__(self):
         return self.reason.text
 
-<<<<<<< HEAD
-
-=======
->>>>>>> Adding ground work for regeneration module
 @receiver(signals.post_init , sender = Customer)
 def save_pre_state(sender , *args , **kwargs):
     import logging,ipdb
     logger = logging.getLogger(__name__)
     logger.debug("Calling Save Pre State")
-
-<<<<<<< HEAD
-=======
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "level_logs" , on_delete = models.CASCADE)
     inst = kwargs.pop('instance')
     inst.__before_attrs = inst.args_attrs
     inst.__before_kwargs_attrs = inst.kwargs_attrs
->>>>>>> Adding ground work for regeneration module
 
 @receiver(signals.post_save , sender = Customer)
 def compare_attrs(sender , *args , **kwargs):
