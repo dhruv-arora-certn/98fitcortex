@@ -1,6 +1,6 @@
-from django.conf.urls import url
+from django.urls import re_path
 from .views import SendSMSView
 
 urlpatterns = [
-	url(r'^send-sms/' , SendSMSView.as_view())
+	re_path(r'^send-sms/' , SendSMSView.as_view())
 ]

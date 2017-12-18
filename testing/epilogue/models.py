@@ -1,13 +1,14 @@
-from django.db import models
 from dietplan.goals import Goals
 from dietplan.gender import Male , Female
+
 from epilogue.managers import *
 from epilogue import decorators
-from django.db.models.expressions import RawSQL
-from .mappers import *
+from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day 
 from epilogue.dummyModels import *
-from rest_framework import exceptions
-from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day  , seconds_to_hms , relative_to_week
+from .mappers import *
+from epilogue.constants import DIET_ONLY_FACTORS , WORKOUT_ONLY_FACTORS , COMMON_FACTORS
+from epilogue.track_data import track_data
+
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -20,6 +21,10 @@ from workoutplan import locations
 from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+from django.db import models
+from django.db.models.expressions import RawSQL
+
+from regeneration.signals import instance_changed , diet_regeneration , workout_regeneration
 
 import binascii
 import os
@@ -27,6 +32,7 @@ import datetime
 import functools
 import itertools
 import numpy as np
+import logging
 #Model Managers for Food Model
 
 
@@ -187,10 +193,11 @@ class Objective(models.Model):
         if self.name.strip() == "Muscle Gain":
             return Goals.MuscleGain
         if self.name.strip() == "Be healthy":
-            return Goals.MaintainWeight 
+            return Goals.MaintainWeight
 
+@track_data(*DIET_ONLY_FACTORS + WORKOUT_ONLY_FACTORS + COMMON_FACTORS)
 class Customer(models.Model):
-    class Meta: 
+    class Meta:
         db_table = "erp_customer"
 
     VEG = 'veg'
@@ -200,7 +207,7 @@ class Customer(models.Model):
         (VEG , 'veg'),
         (NONVEG , 'nonveg'),
         (EGG , 'egg')
-    )       
+    )
     email = models.CharField(max_length = 255 , blank = True)
     first_name = models.CharField(max_length = 25, blank = True)
     last_name = models.CharField(max_length = 25 , blank = True , null = True)
@@ -212,11 +219,7 @@ class Customer(models.Model):
     h = models.CharField(db_column = "height", max_length = 20, blank = True )
     h_type = models.IntegerField(db_column = "height_type" , blank = True)
     ls = models.CharField( max_length = 50 , db_column = "lifestyle" , blank = True)
-<<<<<<< HEAD
-    objective = models.ForeignKey(Objective , db_column = "objective", blank = True , on_delete = models.CASCADE)
-=======
-    objective = models.ForeignKey(Objective , db_column = "objective", blank = True)
->>>>>>> Adding ground work for regeneration module
+    objective = models.ForeignKey(Objective , db_column = "objective", blank = True , on_delete = models.DO_NOTHING)
     gen = models.CharField(max_length = 20 , db_column = "gender", blank = True)
     body_type = models.CharField(max_length = 50, blank = True)
     food_cat = models.CharField(max_length = 50 , choices=  food_cat_choices, blank = True)
@@ -375,11 +378,7 @@ class Customer(models.Model):
     def map_aggregate(self , qs , obj):
         return map( lambda x : obj(**x) , qs)
 
-<<<<<<< HEAD
     @decorators.add_empty_weeks({"max":0,"min":0,"avg_wakeup":'',"avg_minutes":0,"sum":0,"avg_bedtime":0})
-=======
-    @decorators.weekly_average("total_minutes")
->>>>>>> Adding ground work for regeneration module
     def monthly_sleep(self , month = None):
         '''
         Find Monthly Data for sleep aggregated as weekly average
@@ -393,7 +392,6 @@ class Customer(models.Model):
             date__gt = today_date - datetime.timedelta(days = 30)
         )
         baseQ = baseQ.values("date").annotate(
-<<<<<<< HEAD
             day_minutes = models.Sum("minutes")
         )
 
@@ -439,17 +437,6 @@ class Customer(models.Model):
             ref['min'] = min((e['day_minutes'] for e in g))
             data.append(ref)
         return keys , data
-=======
-            total_minutes = models.Sum("minutes")
-        )
-
-        baseQ = baseQ.annotate(
-            week = RawSQL("Week(start)",[])
-        )
-        baseQ = baseQ.order_by("-week")
-
-        return baseQ.values("date" , "week", "total_minutes")
->>>>>>> Adding ground work for regeneration module
 
     @decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_minutes")
     def monthly_sleep_aggregate(self):
@@ -1147,17 +1134,40 @@ def save_pre_state(sender , *args , **kwargs):
     logger = logging.getLogger(__name__)
     logger.debug("Calling Save Pre State")
 
-    inst = kwargs.pop('instance')
-    inst.__before_attrs = inst.args_attrs
-    inst.__before_kwargs_attrs = inst.kwargs_attrs
 
 @receiver(signals.post_save , sender = Customer)
 def compare_attrs(sender , *args , **kwargs):
     instance = kwargs.pop('instance')
 
-    import logging
     logger = logging.getLogger(__name__)
-    if not instance.args_attrs == instance.__before_attrs or not instance.kwargs_attrs == instance.__before_kwargs_attrs:
-        logger.debug("Emit the Signal")
+
+    if instance.whats_changed():
+
+        logger.debug("Send Signal")
+
+        regenerate_diet = False
+        regenerate_workout = False
+
+        keys = set(instance.whats_changed().keys())
+        if keys.intersection(COMMON_FACTORS):
+            #Both ought to be changed
+            regenerate_diet = True
+            regenerate_workout = True
+
+        elif keys.intersection(DIET_ONLY_FACTORS):
+            regenerate_diet = True
+
+        elif keys.intersection(WORKOUT_ONLY_FACTORS):
+            regenerate_workout = True
+
+        if regenerate_diet:
+            #Send Diet Regeneration Signal
+            logger.debug('Diet Regeneration')
+            diet_regeneration.send(sender = Customer , user = instance)
+
+        if regenerate_workout:
+            #Send workout Regeneration Signal
+            logger.debug('Workout Regeneration')
+            workout_regeneration.send(sender = Customer , user = instance)
     else:
-        logger.debug("Do not emit the signal")
+        logger.debug("Do not send signal")
