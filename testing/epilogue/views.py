@@ -23,7 +23,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import exceptions , status
 from rest_framework_bulk import ListBulkCreateAPIView
 
-from epilogue.forms import AnalysisForm
 from epilogue.models import *
 from epilogue.serializers import *
 from epilogue.authentication import CustomerAuthentication
@@ -38,48 +37,6 @@ from weasyprint import HTML
 
 
 DATE_FORMAT = '%B {S} - %Y, %A'
-
-def get_analysis(request):
-    if request.method == "GET":
-        form = AnalysisForm()
-        return render(request , 'index.html' , {
-            'form' : form
-        })
-    if request.method == "POST":
-        form = AnalysisForm(request.POST)
-        if form.is_valid():
-            form_goal = form.cleaned_data["goals"]
-            if form_goal == '0':
-                goal = Goals.WeightLoss
-            if form_goal == '1':
-                goal = Goals.WeightGain
-            if form_goal == '2':
-                goal = Goals.MaintainWeight
-            if form_goal == '3':
-                goal = Goals.MuscleGain
-            form_disease = form.cleaned_data["disease"]
-            print("Form Disease " , form_disease)
-            disease = None
-            if form_disease == 'Anemia':
-                disease = Anemia
-            if form_disease == "Osteoporosis":
-                disease = Osteoporosis
-            print("Final disease is " , disease)    
-            p = Pipeline(
-                form.cleaned_data['weight'],
-                form.cleaned_data['height'],
-                float(form.cleaned_data['activity_level']),
-                goal,
-                float(form.cleaned_data["gender"]),
-                disease = disease
-            )
-            # ipdb.set_trace()
-            p.generate()
-            return render(request , "results.html" , {
-                'p' : p,
-                'form' : AnalysisForm()
-            })
-        return HttpResponse('0')
 
 
 class UserView(RetrieveUpdateAPIView):
