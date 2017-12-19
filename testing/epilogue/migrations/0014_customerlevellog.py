@@ -12,16 +12,4 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='CustomerLevelLog',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('level', models.IntegerField()),
-                ('date', models.DateTimeField(auto_now_add=True)),
-            ],
-            options={
-                'db_table': 'erp_customer_level_log',
-                'managed': False,
-            },
-        ),
     ]
