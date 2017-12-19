@@ -1,12 +1,11 @@
 from django.urls import re_path
-from .views import get_analysis , UserView , DietPlanView , DishReplaceView , MealReplaceView , CustomerFoodExclusionView ,\
+from .views import  UserView , DietPlanView , DishReplaceView , MealReplaceView , CustomerFoodExclusionView ,\
  					CustomerMedicalConditionsView , CreateCustomerView , GuestPDFView , DietPlanRegenerationView , UserDietPlanRegenerationView ,\
  					DietPlanMobileView , WaterBulkView  ,SleepWeeklyAggregationView,SleepMonthlyAggregatedView, WaterWeeklyAggregateView,WaterMonthlyAggregateView , \
 					LastDaySleepView, MonthlyActivityView , WeeklyActivityView, ActivityLogView , CustomerSleepLoggingView , DashboardMealTextView , CustomerMedicalConditionsMobileView , CustomerFoodExclusionsMobileView , \
 					DiseasePDFView , DietPlanYearlyView
 
 urlpatterns = [
-	re_path(r'^analysis' , get_analysis),
 	re_path(r'^users/(?P<pk>[0-9]+)/$' , UserView.as_view()),
 	re_path(r'^users/$' , CreateCustomerView.as_view()),
 	re_path(r'^dietplans/(?P<week_id>[0-9]+)/day/(?P<day>[1-7])/$' , DietPlanView.as_view()),
