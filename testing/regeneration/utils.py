@@ -20,9 +20,6 @@ def get_window_tuples(week = get_week() , year = get_year()):
 				week + i for i in range(0, 1 + constants.REGENERATION_WINDOW)
 			],
 			itertools.repeat(year , constants.REGENERATION_WINDOW + 1)
-		)
-	]
-
 
 def create_regeneration_node(_type, user, year , week):
 	obj = models.RegenerationLog.objects.get_or_create(
