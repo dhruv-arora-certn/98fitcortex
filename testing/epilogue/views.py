@@ -38,6 +38,10 @@ from weasyprint import HTML
 
 DATE_FORMAT = '%B {S} - %Y, %A'
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> Cleaning Up Epilogue of Analysis endpoint
 class UserView(RetrieveUpdateAPIView):
     queryset = Customer.objects
     serializer_class = CustomerSerializer
