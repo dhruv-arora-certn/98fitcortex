@@ -211,3 +211,6 @@ class CustomerInjury(models.Model):
         db_table = "erp_customer_injury"
     injury_name = models.CharField(max_length = 20)
     customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "injuries")
+
+    def __str__(self):
+        return self.injury_name
