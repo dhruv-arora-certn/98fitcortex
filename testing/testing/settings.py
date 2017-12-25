@@ -46,9 +46,10 @@ INSTALLED_APPS = [
 	'messaging',
 	'authentication',
 	'regeneration',
+	'django_extensions',
 	'rest_framework',
     'rest_framework.authtoken',   
-    'rest_framework_docs',
+    #'rest_framework_docs',
     'corsheaders',
 ]
 
@@ -61,7 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-	'request_logging.middleware.LoggingMiddleware',
+	#'request_logging.middleware.LoggingMiddleware',
 ]
 
 ROOT_URLCONF = 'testing.urls'
@@ -221,6 +222,12 @@ LOGGING = {
 			'propagate' :  True
 		},
 		'epilogue' : {
+			'handlers' : [ 'debug' ],
+			'formatter' : 'verbose',
+			'level' : 'DEBUG',
+			'propagate' :  True
+		},
+		'regeneration' : {
 			'handlers' : [ 'debug' ],
 			'formatter' : 'verbose',
 			'level' : 'DEBUG',
