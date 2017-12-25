@@ -16,7 +16,7 @@ Including another URLconf
 from django.urls import re_path
 from django.urls import include
 from django.contrib import admin
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+#from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
@@ -26,6 +26,6 @@ urlpatterns = [
     re_path(r'^cheese/' , include("analytics.urls")),
     re_path(r'^workout/' , include("workout.urls")),
     re_path(r'^messaging/' , include("messaging.urls")),
-    re_path(r'^docs/', include('rest_framework_docs.urls')),
+    #re_path(r'^docs/', include('rest_framework_docs.urls')),
 ]
-urlpatterns += staticfiles_urlpatterns()
+#urlpatterns += staticfiles_urlpatterns()
