@@ -11,6 +11,7 @@ from django.utils import timezone
 
 import functools
 import json
+import datetime as dt
 
 def get_week(date = datetime.now(tz = timezone.get_current_timezone())):
 	return date.isocalendar()[1]
@@ -23,6 +24,37 @@ def get_year(date = datetime.now(tz = timezone.get_current_timezone())):
 
 def get_month(date = datetime.now()):
 	return date.month
+
+def count_weeks(start , end = datetime.now()):
+	start_year , start_week , start_day = start.isocalendar()
+	end_year , end_week , end_day = end.isocalendar()
+
+	if start_year < end_year:
+		final_week = dt.date(
+			year = start_year,
+			month = 12,
+			day = 31
+		).isocalendar()[1]
+
+		count = final_week - start_week
+		count += end_week
+	else:
+		count = end_week - start_week
+	return count
+
+def is_valid_week(year,week):
+	current_year = get_year()
+	current_week = get_week()
+
+	if year < current_year:
+		count = 52 - week +  current_week
+		return count <= 2
+	elif year > current_year:
+		count = 52 - current_week + week
+		print("Count",count)
+		return count <= 2
+	else:
+		return abs(week - current_week) <= 2
 
 def aggregate_avg(field , qs):
 	return qs.aggregate(average =  Coalesce(models.Avg(field) , 0))

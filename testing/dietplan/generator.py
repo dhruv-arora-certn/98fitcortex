@@ -10,7 +10,7 @@ from .ibw import IBW
 from .calculations import Calculations
 from knapsack.knapsack_dp import knapsack
 from epilogue.models import Food , GeneratedDietPlan , GeneratedDietPlanFoodDetails
-from epilogue.utils import get_day , get_week , get_year
+from epilogue.utils import get_day , get_week , get_year , count_weeks
 import itertools , threading , lego , numpy as np , click
 from datetime import datetime
 from django.db.models import Q
@@ -54,7 +54,7 @@ class Day:
 
 class Pipeline:
 	@lego.assemble
-	def __init__(self , weight , height , activity , goal , gender , user = None ,disease = None , persist = False , week = None , dietplan = None):
+	def __init__(self , weight , height , activity , goal , gender , user = None ,disease = None , persist = False , week = None , dietplan = None , year = get_year()):
 		self.excluded = []
 		if self.week is None:
 			week = get_week(datetime.today())
@@ -62,7 +62,7 @@ class Pipeline:
 		self.excluded2 = None
 		self.exclusion_conditions = Q()
 		if self.user:
-			user_week = week - get_week(user.create_on) + 1
+			user_week = count_weeks(user.create_on)
 			self.excluded = [self.get_initial_exclude()]
 			self.excluded2 = None
 			self.exclusion_conditions = self.user.get_exclusions()
@@ -72,7 +72,7 @@ class Pipeline:
 		if self.dietplan:
 			self._is_dietplan_set = True
 		if self.persist and self.user and not self.dietplan:
-			self.dietplan = GeneratedDietPlan.objects.create(customer = user , week_id = week , user_week_id = user_week , year = get_year())
+			self.dietplan = GeneratedDietPlan.objects.create(customer = user , week_id = week , user_week_id = user_week , year = self.year )
 
 		self.comboDays = self.daysForCombinations()
 		self.dessertDays = self.getDessertDays()
