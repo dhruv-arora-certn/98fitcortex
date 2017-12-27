@@ -215,13 +215,13 @@ class CustomerInjuryView(ListBulkCreateAPIView , BulkDifferential):
 class GenerateWorkoutView(generics.GenericAPIView):
 	authentication_classes = [CustomerAuthentication]
 	permission_classes = [permissions.IsAuthenticated]
+	logger = logging.getLogger(__name__)
 
 	def generate_workout(self):
 		g = Generator(
 			self.request.user
 		)
 		g.generate()
-		import ipdb
 
 		self.new_workout = WorkoutWeekPersister(
 			g,
@@ -234,8 +234,8 @@ class GenerateWorkoutView(generics.GenericAPIView):
 	def get_object(self):
 		workout_week = GeneratedExercisePlan.objects.filter(
 			customer = self.request.user,
-			week_id = self.kwargs.get('week'),
-			year = self.kwargs.get('year')
+			week_id = int(self.kwargs.get('week_id')),
+			year = int(self.kwargs.get('year'))
 		).last()
 
 		if workout_week:
@@ -245,7 +245,7 @@ class GenerateWorkoutView(generics.GenericAPIView):
 
 	def filtered_queryset(self , qs):
 		return qs.exercises.filter(
-			day = self.kwargs.get('day')
+			day = int(self.kwargs.get('day'))
 		)
 
 	def categorise_data(self,data):

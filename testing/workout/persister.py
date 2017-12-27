@@ -119,6 +119,7 @@ class ExercisePersister:
 			"mod_id" : self.exercise.id,
             "description" : self.get_description(self.exercise),
             "exercise_level" : self.get_exercise_level(self.exercise),
+			"exercise_type" : 0,
             "muscle_group" : self.get_muscle_group(self.exercise)
 		}
 
