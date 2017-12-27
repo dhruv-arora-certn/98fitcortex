@@ -110,7 +110,7 @@ class ExercisePersister:
 			"workoutplan" : self.workout,
 			"day" : self.day,
 			"workout_name" : self.exercise.workout_name,
-			"time" : self.exercise.duration,
+			"time" : self.get_time(self.exercise),
 			"reps" : self.get_reps(self.exercise),
 			"sets" : self.get_sets(self.exercise),
 			"machine_name" : self.get_equipment(self.exercise),
@@ -164,3 +164,6 @@ class ExercisePersister:
 
 	def get_exercise_level(self , obj):
 		return getattr(obj , "exercise_level" , "")
+
+	def get_time(self , obj):
+		return getattr(obj , "duration" , 0)
