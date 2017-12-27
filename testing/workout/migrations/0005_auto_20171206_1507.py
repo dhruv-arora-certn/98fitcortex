@@ -9,7 +9,6 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('epilogue', '0014_customerlevellog'),
         ('workout', '0004_auto_20171024_1738_squashed_0006_auto_20171024_1738'),
     ]
 
