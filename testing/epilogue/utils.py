@@ -118,3 +118,7 @@ def disease_cals(user):
 	else:
 		cals = 1400
 
+def accumulate_sum(group , keyfunc = None):
+	return sum(
+		keyfunc(e) for e in group
+	)

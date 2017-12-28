@@ -25,6 +25,7 @@ import binascii
 import os
 import datetime
 import functools
+import itertools
 #Model Managers for Food Model
 
 
@@ -435,7 +436,7 @@ class Customer(models.Model):
         baseQ = baseQ.values("day").annotate(total_minutes = models.Sum("minutes")).values("day", "total_minutes")
         return baseQ
 
-    @decorators.weekly_average("total_quantity")
+    #@decorators.weekly_average("total_quantity")
     def monthly_water(self,month = None):
         today_date = datetime.datetime.today().date()
         baseQ = self.water_logs.annotate(
@@ -445,14 +446,29 @@ class Customer(models.Model):
             day__lte = today_date,
             day__gt = today_date - datetime.timedelta(days = 30)
         )
-        baseQ = baseQ.values("day").annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))
+        baseQ = baseQ.values("day").annotate(day_quantity = models.Sum(models.F("quantity")*models.F("count")))
         baseQ = baseQ.annotate(
             week = RawSQL("Week(saved)",[])
         )
-        baseQ = countBottles(baseQ)
-        baseQ = countGlasses(baseQ)
-        baseQ = baseQ.order_by("-week")
-        return baseQ.values("day" , "week" , "total_quantity" , "bottles" , "glasses")
+        keys = []
+        groups = []
+        data = []
+        for k,g in itertools.groupby(baseQ , key = lambda x : x['week']):
+            keys.append(k)
+            groups.append(list(g))
+
+        for k,g in zip(keys , groups):
+            ref = dict()
+            ref['week'] = k
+            ref['sum'] = sum(
+                e['day_quantity'] for e in g
+            )
+            ref['min'] = min((e['day_quantity'] for e in g))
+            ref['max'] = max((e['day_quantity'] for e in g))
+            data.append(ref)
+        #baseQ = countGlasses(baseQ)
+        #baseQ = baseQ.order_by("-week")
+        return data
 
     @decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_quantity")
     def monthly_water_aggregated(self):

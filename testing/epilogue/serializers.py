@@ -158,9 +158,11 @@ class WaterLoggingWeeklySerializer(serializers.Serializer ):
 		print(obj)
 		return obj['date'].strftime("%a")
 
-class WaterLoggingMonthlySerializer(WaterLoggingSerializer):
+class WaterLoggingMonthlySerializer(serializers.Serializer):
 	week = serializers.IntegerField()
-#	plotting_value = serializers.FloatField()
+	sum = serializers.IntegerField()
+	max = serializers.IntegerField()
+	min = serializers.IntegerField()
 
 class SleepLoggingWeeklySerializer(serializers.Serializer):
 	day = serializers.SerializerMethodField()
