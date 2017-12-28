@@ -77,7 +77,7 @@ def weekly_average(field):
 				avg = vals.filter(
 					week = e
 				).aggregate(
-					avg = models.Avg(field)
+					avg = models.Sum(field)
 				)
 				d = {
 					"week" : e,
