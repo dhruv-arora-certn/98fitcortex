@@ -10,6 +10,15 @@ def last_days(days = 6):
 		days -= 1
 		yield val
 
+def last_weeks(weeks = 5):
+	today = datetime.datetime.today().date()
+	current_week = today.isocalendar()[1]
+
+	while weeks >= 0:
+		yield current_week
+		current_week -= 1
+		weeks -= 1
+
 def add_today(f):
 	@functools.wraps(f)
 	def wrapper(*args , **kwargs):
@@ -32,6 +41,22 @@ def add_empty_day_in_week(defaults):
 					}
 					data.append(d)
 			return data + list(vals)
+		return wrapper
+	return decorator
+
+def add_empty_weeks(defaults):
+	def decorator(f):
+		@functools.wraps(f)
+		def wrapper(*args , **kwargs):
+			weeks , data = f(*args , **kwargs)
+			for e in last_weeks():
+				if e not in weeks:
+					d = {
+						"week" : e,
+						**defaults
+					}
+					data.append(d)
+			return sorted(data , key = lambda x : x['week'])
 		return wrapper
 	return decorator
 

@@ -384,7 +384,7 @@ class Customer(models.Model):
             date__gt = today_date - datetime.timedelta(days = 30)
         )
         baseQ = baseQ.values("date").annotate(
-            total_minutes = models.Sum("minutes")
+            day_minutes = models.Sum("minutes")
         )
 
         baseQ = baseQ.annotate(
@@ -436,7 +436,7 @@ class Customer(models.Model):
         baseQ = baseQ.values("day").annotate(total_minutes = models.Sum("minutes")).values("day", "total_minutes")
         return baseQ
 
-    #@decorators.weekly_average("total_quantity")
+    @decorators.add_empty_weeks({"max" : 0,"min" : 0,"sum" : 0})
     def monthly_water(self,month = None):
         today_date = datetime.datetime.today().date()
         baseQ = self.water_logs.annotate(
@@ -468,7 +468,7 @@ class Customer(models.Model):
             data.append(ref)
         #baseQ = countGlasses(baseQ)
         #baseQ = baseQ.order_by("-week")
-        return data
+        return keys , data
 
     @decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_quantity")
     def monthly_water_aggregated(self):
