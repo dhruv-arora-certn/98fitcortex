@@ -29,7 +29,7 @@ urlpatterns = [
 	url(r'^logging/sleep/aggregate/monthly/(?P<month>[0-9]+)/$' , SleepMonthlyAggregatedView.as_view()),
 	url(r'^logging/sleep/aggregate/last/$' ,LastDaySleepView.as_view()),
 	url(r'^logging/water/aggregate/weekly/(?P<week>[0-9]+)/$' , WaterWeeklyAggregateView.as_view()),
-	url(r'^logging/water/aggregate/monthly/(?P<month>[0-9]+)/$' ,WaterMonthlyAggregateView.as_view()),
+	url(r'^logging/water/aggregate/monthly/$' ,WaterMonthlyAggregateView.as_view()),
 	url(r'^logging/activity/aggregate/monthly/(?P<month>[0-9]+)/$' ,MonthlyActivityView.as_view()),
 	url(r'^logging/activity/aggregate/weekly/(?P<week>[0-9]+)/$' ,WeeklyActivityView.as_view()),
 	url(r'^dashboard/strings/meal/$', DashboardMealTextView.as_view())
