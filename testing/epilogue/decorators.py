@@ -10,7 +10,7 @@ def last_days(days = 6):
 		days -= 1
 		yield val
 
-def last_weeks(weeks = 5):
+def last_weeks(weeks = 6):
 	today = datetime.datetime.today().date()
 	current_week = today.isocalendar()[1]
 
