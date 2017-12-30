@@ -389,7 +389,8 @@ class Customer(models.Model):
         )
 
         baseQ = baseQ.annotate(
-            end_in_sec = RawSQL("time_to_sec(time(end))" , [])
+            end_in_sec = RawSQL("time_to_sec(time(end))" , []),
+            start_in_sec = RawSQL("time_to_sec(time(start))" , []),
         )
 
         baseQ = baseQ.annotate(
@@ -397,7 +398,7 @@ class Customer(models.Model):
         )
         baseQ = baseQ.order_by("-week")
 
-        result =  baseQ.values("date" , "week", "day_minutes" , "end_in_sec")
+        result =  baseQ.values("date" , "week", "day_minutes" , "end_in_sec" , "start_in_sec")
         keyfunc = lambda x : x['week']
 
         keys = []
@@ -416,6 +417,10 @@ class Customer(models.Model):
             ])
             ref['avg_wakeup'] = seconds_to_hms(np.mean([
                 e['end_in_sec'] for e in g
+            ]))
+
+            ref['avg_bedtime'] = seconds_to_hms(np.mean([
+                e['start_in_sec'] for e in g
             ]))
             ref['max'] = max((e['day_minutes'] for e in g))
             ref['sum'] = sum((e['day_minutes'] for e in g))
