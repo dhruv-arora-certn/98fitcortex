@@ -215,7 +215,7 @@ class DietPlanView(GenericAPIView):
         return Response(data)
 
 class DietPlanYearlyView(DietPlanView):
-	pass
+    pass
 
 class DishReplaceView(RetrieveAPIView):
     serializer_class = DietPlanSerializer
@@ -658,8 +658,8 @@ class SleepWeeklyAggregationView(GenericAPIView):
     def serializeWeeklyLogs(self , user,week = None):
         weekly_logs = user.weekly_sleep(week)
         data = SleepLoggingWeeklySerializer(data = list(weekly_logs) , many = True)
-        if data.is_valid():
-            return data.data
+        data.is_valid()
+        return data.data
         return {}
 
     def serializeWeeklyAggregatedLogs(self,user,week = None):

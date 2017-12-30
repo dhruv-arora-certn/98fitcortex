@@ -448,7 +448,7 @@ class Customer(models.Model):
 
     @decorators.scale_field("total_minutes",480)
     @decorators.sorter(key = lambda x : x['date'] )
-    @decorators.add_empty_day_in_week({"total_minutes" : 0 , "wakeup":datetime.time(hour = 0 , minute = 0 , second = 0),"sleep":datetime.time(hour = 0 , minute = 0 , second = 0)})
+    @decorators.add_empty_day_in_week({"total_minutes" : 0 })
     def weekly_sleep(self,week = None, mapped = False):
         today_date = datetime.datetime.today().date()
         baseQ = self.sleep_logs.annotate(date = RawSQL("Date(start)" , [])).filter(
@@ -458,7 +458,7 @@ class Customer(models.Model):
 			total_minutes = models.Sum("minutes"),
 			wakeup = RawSQL("time(start)",[]),
 			sleep = RawSQL("time(end)",[])
-		).values("date","total_minutes" ,"wakeup","sleep")
+		).values("date","total_minutes" )
         baseQ = baseQ.order_by("date")
         if mapped:
             return self.map_aggregate(baseQ , SleepWeekly )
