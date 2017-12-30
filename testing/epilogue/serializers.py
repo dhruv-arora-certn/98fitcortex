@@ -189,8 +189,9 @@ class ActivityAggregationSerializer(SleepAggregationSerializer):
 	pass
 
 class SleepLoggingMonthlySerializer(serializers.Serializer):
-	week = models.IntegerField()
-	total_minutes = models.IntegerField()
+	week = serializers.IntegerField()
+	avg_minutes = serializers.IntegerField()
+	avg_wakeup = serializers.CharField()
 
 class SleepPreviousDaySerializer(serializers.Serializer):
 	date = serializers.DateField()

@@ -7,7 +7,7 @@ from django.db.models.expressions import RawSQL
 from .mappers import *
 from epilogue.dummyModels import *
 from rest_framework import exceptions
-from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day 
+from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day  , seconds_to_hms
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -26,6 +26,7 @@ import os
 import datetime
 import functools
 import itertools
+import numpy as np
 #Model Managers for Food Model
 
 
@@ -370,7 +371,7 @@ class Customer(models.Model):
     def map_aggregate(self , qs , obj):
         return map( lambda x : obj(**x) , qs)
 
-    @decorators.weekly_average("total_minutes")
+    @decorators.add_empty_weeks({"max":0,"min":0,"avg_wakeup":'',"avg_minutes":0})
     def monthly_sleep(self , month = None):
         '''
         Find Monthly Data for sleep aggregated as weekly average
@@ -388,11 +389,38 @@ class Customer(models.Model):
         )
 
         baseQ = baseQ.annotate(
+            end_in_sec = RawSQL("time_to_sec(time(end))" , [])
+        )
+
+        baseQ = baseQ.annotate(
             week = RawSQL("Week(start)",[])
         )
         baseQ = baseQ.order_by("-week")
 
-        return baseQ.values("date" , "week", "total_minutes")
+        result =  baseQ.values("date" , "week", "day_minutes" , "end_in_sec")
+        keyfunc = lambda x : x['week']
+
+        keys = []
+        groups = []
+
+        for k,g in itertools.groupby(result ,key = keyfunc):
+            keys.append(k)
+            groups.append(list(g))
+
+        data = []
+        for k,g in zip(keys , groups):
+            ref = {}
+            ref['week'] = k
+            ref['avg_minutes'] = np.mean([
+                e['day_minutes'] for e in g
+            ])
+            ref['avg_wakeup'] = seconds_to_hms(np.mean([
+                e['end_in_sec'] for e in g
+            ]))
+            ref['max'] = max((e['day_minutes'] for e in g))
+            ref['min'] = min((e['day_minutes'] for e in g))
+            data.append(ref)
+        return keys , data
 
     @decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_minutes")
     def monthly_sleep_aggregate(self):
