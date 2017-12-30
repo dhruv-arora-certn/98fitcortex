@@ -371,7 +371,7 @@ class Customer(models.Model):
     def map_aggregate(self , qs , obj):
         return map( lambda x : obj(**x) , qs)
 
-    @decorators.add_empty_weeks({"max":0,"min":0,"avg_wakeup":'',"avg_minutes":0,"sum":0})
+    @decorators.add_empty_weeks({"max":0,"min":0,"avg_wakeup":'',"avg_minutes":0,"sum":0,"avg_bedtime":0})
     def monthly_sleep(self , month = None):
         '''
         Find Monthly Data for sleep aggregated as weekly average
