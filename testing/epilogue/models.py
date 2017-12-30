@@ -453,7 +453,8 @@ class Customer(models.Model):
         keys = []
         groups = []
         data = []
-        for k,g in itertools.groupby(baseQ , key = lambda x : x['week']):
+        keyfunc = lambda x : x['week']
+        for k,g in itertools.groupby(sorted(baseQ , key = keyfunc) , key = keyfunc):
             keys.append(k)
             groups.append(list(g))
 
