@@ -1,7 +1,7 @@
 import functools
 import datetime
 
-from django.db import models 
+from django.db import models
 
 def last_days(days = 6):
 	today = datetime.datetime.today().date()
@@ -12,12 +12,23 @@ def last_days(days = 6):
 
 def last_weeks(weeks = 6):
 	today = datetime.datetime.today().date()
-	current_week = today.isocalendar()[1]
+	current_year , current_week , current_day = today.isocalendar()
 
-	while weeks >= 0:
-		yield current_week
-		current_week -= 1
-		weeks -= 1
+	start_week = current_week
+	if start_week >= 6:
+		while weeks >= 0:
+			yield current_week
+			current_week -= 1
+			weeks -= 1
+	else:
+		while weeks >= 0:
+			print("Else block")
+			yield current_week
+			current_week -= 1
+			current_week = abs(52+current_week)%52
+			if current_week == 0:
+				current_week = 52
+			weeks -= 1
 
 def add_today(f):
 	@functools.wraps(f)
