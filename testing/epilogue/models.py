@@ -490,7 +490,7 @@ class Customer(models.Model):
         )
         baseQ = baseQ.values("day").annotate(day_quantity = models.Sum(models.F("quantity")*models.F("count")))
         baseQ = baseQ.annotate(
-            week = RawSQL("Week(saved)",[]),
+            week = RawSQL("weekofyear(saved)",[]),
             year = RawSQL("Year(saved)",[])
         )
         baseQ = baseQ.order_by("-year" , "-week")
@@ -527,7 +527,7 @@ class Customer(models.Model):
         )
         baseQ = baseQ.values("day").annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))
         baseQ = baseQ.annotate(
-            week = RawSQL("Week(saved)",[])
+            week = RawSQL("weekofyear(saved)",[])
         )
         logs = baseQ.values("week" , "total_quantity")
         return logs
