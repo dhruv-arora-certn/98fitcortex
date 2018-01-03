@@ -15,19 +15,21 @@ def last_weeks(weeks = 6):
 	current_year , current_week , current_day = today.isocalendar()
 
 	start_week = current_week
+	year = current_year
+
 	if start_week >= 6:
 		while weeks >= 0:
-			yield current_week
+			yield (year ,current_week)
 			current_week -= 1
 			weeks -= 1
 	else:
 		while weeks >= 0:
-			print("Else block")
-			yield current_week
+			yield (year , current_week)
 			current_week -= 1
 			current_week = abs(52+current_week)%52
 			if current_week == 0:
 				current_week = 52
+				year -= 1
 			weeks -= 1
 
 def add_today(f):
@@ -55,19 +57,20 @@ def add_empty_day_in_week(defaults):
 		return wrapper
 	return decorator
 
-def add_empty_weeks(defaults):
+def add_empty_weeks(defaults , sort = lambda x : (x['year'],x['week'])):
 	def decorator(f):
 		@functools.wraps(f)
 		def wrapper(*args , **kwargs):
 			weeks , data = f(*args , **kwargs)
-			for e in last_weeks():
-				if e not in weeks:
+			for y,w in last_weeks():
+				if (y,w) not in weeks:
 					d = {
-						"week" : e,
+						"week" : w,
+						"year" : y,
 						**defaults
 					}
 					data.append(d)
-			return sorted(data , key = lambda x : x['week'])
+			return sorted(data , key = sort)
 		return wrapper
 	return decorator
 

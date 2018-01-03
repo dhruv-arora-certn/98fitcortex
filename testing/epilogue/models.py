@@ -7,7 +7,7 @@ from django.db.models.expressions import RawSQL
 from .mappers import *
 from epilogue.dummyModels import *
 from rest_framework import exceptions
-from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day  , seconds_to_hms
+from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day  , seconds_to_hms , relative_to_week
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -394,12 +394,14 @@ class Customer(models.Model):
         )
 
         baseQ = baseQ.annotate(
-            week = RawSQL("Week(start)",[])
+            week = RawSQL("Week(start)",[]),
+            year = RawSQL("Year(start)",[])
         )
-        baseQ = baseQ.order_by("-week")
+        baseQ = baseQ.order_by("-year","-week")
 
-        result =  baseQ.values("date" , "week", "day_minutes" , "end_in_sec" , "start_in_sec")
-        keyfunc = lambda x : x['week']
+        result =  baseQ.values("date" , "week", "year", "day_minutes" , "end_in_sec" , "start_in_sec")
+        result = sorted(result , key = lambda x :(x['year'],x['week']))
+        keyfunc = lambda x : (x['year'] , x['week'])
 
         keys = []
         groups = []
@@ -408,10 +410,12 @@ class Customer(models.Model):
             keys.append(k)
             groups.append(list(g))
 
+
         data = []
         for k,g in zip(keys , groups):
             ref = {}
-            ref['week'] = k
+            ref['week'] = k[1]
+            ref['year'] = k[0]
             ref['avg_minutes'] = np.mean([
                 e['day_minutes'] for e in g
             ])
@@ -486,19 +490,22 @@ class Customer(models.Model):
         )
         baseQ = baseQ.values("day").annotate(day_quantity = models.Sum(models.F("quantity")*models.F("count")))
         baseQ = baseQ.annotate(
-            week = RawSQL("Week(saved)",[])
+            week = RawSQL("Week(saved)",[]),
+            year = RawSQL("Year(saved)",[])
         )
+        baseQ = baseQ.order_by("-year" , "-week")
         keys = []
         groups = []
         data = []
-        keyfunc = lambda x : x['week']
+        keyfunc = lambda x : (x['year'] , x['week'])
         for k,g in itertools.groupby(sorted(baseQ , key = keyfunc) , key = keyfunc):
             keys.append(k)
             groups.append(list(g))
 
         for k,g in zip(keys , groups):
             ref = dict()
-            ref['week'] = k
+            ref['week'] = k[1]
+            ref['year'] = k[0]
             ref['sum'] = sum(
                 e['day_quantity'] for e in g
             )
@@ -506,7 +513,6 @@ class Customer(models.Model):
             ref['max'] = max((e['day_quantity'] for e in g))
             data.append(ref)
         #baseQ = countGlasses(baseQ)
-        #baseQ = baseQ.order_by("-week")
         return keys , data
 
     @decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_quantity")

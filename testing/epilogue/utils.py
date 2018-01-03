@@ -71,6 +71,12 @@ def diabetes_pdf(cals , day):
 		a = json.load(f)
 	return a.get("%s-%s"%(cals,day))
 
+def relative_to_week(k):
+	if k == 0:
+		k = 52
+	else :
+		k = (k + 52)%52
+	return k
 class BulkDifferential:
 
 	def getToDelete(self , old , new):
