@@ -400,7 +400,6 @@ class Customer(models.Model):
         baseQ = baseQ.order_by("-year","-week")
 
         result =  baseQ.values("date" , "week", "year", "day_minutes" , "end_in_sec" , "start_in_sec")
-        result = sorted(result , key = lambda x :(x['year'],x['week']))
         keyfunc = lambda x : (x['year'] , x['week'])
 
         keys = []
@@ -589,7 +588,7 @@ class Customer(models.Model):
         weekly_logs = self._weekly_activity()
         return weekly_logs
 
-    @decorators.weekly_average("total_steps")
+    @decorators.add_empty_weeks({"total_steps":0,"total_distance":0,"total_cals":0})
     def monthly_activity(self,month = None):
         today_date = datetime.datetime.today().date()
         baseQ = self.activity_logs.annotate(
@@ -601,9 +600,14 @@ class Customer(models.Model):
         )
 
         baseQ = baseQ.values("day").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration"))
-        baseQ = baseQ.annotate(week = RawSQL("Week(start)",[]))
-        baseQ = baseQ.values("day" , "week" ,"total_steps" , "total_distance" , "total_cals")
-        return baseQ
+        baseQ = baseQ.annotate(
+            week = RawSQL("weekofyear(start)",[]),
+            year = RawSQL("Year(start)" , [])
+        )
+        baseQ = baseQ.values("day" , "week" ,"year" ,"total_steps" , "total_distance" , "total_cals")
+        baseQ = baseQ.order_by("-year" , "-week")
+
+        return [(e['year'],e['week']) for e in baseQ.values("year","week")] , list(baseQ)
 
     @decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_steps")
     def monthly_activity_aggregate(self):
