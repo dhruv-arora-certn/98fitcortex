@@ -487,7 +487,7 @@ class Customer(models.Model):
             day__lte = today_date,
             day__gt = today_date - datetime.timedelta(days = 30)
         )
-        baseQ = baseQ.values("day").annotate(day_quantity = models.Sum(models.F("quantity")*models.F("count")))
+        baseQ = baseQ.values("day").annotate(day_quantity = models.Sum(models.F("quantity")*models.F("count")/1000 , output_field = models.FloatField()))
         baseQ = baseQ.annotate(
             week = RawSQL("weekofyear(saved)",[]),
             year = RawSQL("Year(saved)",[])

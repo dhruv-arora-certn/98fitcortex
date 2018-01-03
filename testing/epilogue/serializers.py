@@ -160,9 +160,9 @@ class WaterLoggingWeeklySerializer(serializers.Serializer ):
 
 class WaterLoggingMonthlySerializer(serializers.Serializer):
 	week = serializers.IntegerField()
-	sum = serializers.IntegerField()
-	max = serializers.IntegerField()
-	min = serializers.IntegerField()
+	sum = serializers.FloatField()
+	max = serializers.FloatField()
+	min = serializers.FloatField()
 
 class SleepLoggingWeeklySerializer(serializers.Serializer):
 	day = serializers.SerializerMethodField()
