@@ -592,17 +592,18 @@ class Customer(models.Model):
     def monthly_activity(self,month = None):
         today_date = datetime.datetime.today().date()
         baseQ = self.activity_logs.annotate(
-            day = RawSQL("Date(start)",[])
+            day = RawSQL("Date(start)",[]),
+            week = RawSQL("weekofyear(start)",[]),
+            year = RawSQL("Year(start)" , [])
         )
         baseQ = baseQ.filter(
             day__lte = today_date,
             day__gt = today_date - datetime.timedelta(days = 30)
         )
 
-        baseQ = baseQ.values("day").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration"))
+        baseQ = baseQ.values("year","week").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration"))
         baseQ = baseQ.annotate(
-            week = RawSQL("weekofyear(start)",[]),
-            year = RawSQL("Year(start)" , [])
+            day = RawSQL("Date(start)",[])
         )
         baseQ = baseQ.values("day" , "week" ,"year" ,"total_steps" , "total_distance" , "total_cals")
         baseQ = baseQ.order_by("-year" , "-week")
