@@ -211,9 +211,10 @@ class ActivitySerializer(serializers.Serializer ):
 	total_duration = serializers.IntegerField()
 
 class MonthlyActivitySerializer(serializers.Serializer):
-	avg = serializers.FloatField()
+	total_steps = serializers.IntegerField()
+	total_cals = serializers.IntegerField()
+	total_distance = serializers.IntegerField()
 	week = serializers.IntegerField()
-#	plotting_value = serializers.FloatField()
 
 class WeeklyActivitySerializer(ActivitySerializer):
 	date = serializers.DateField()
