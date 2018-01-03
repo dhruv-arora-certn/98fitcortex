@@ -604,7 +604,6 @@ class Customer(models.Model):
         baseQ = baseQ.values("week").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration"))
         baseQ = baseQ.annotate(
             day = RawSQL("Date(start)",[]),
-            week = RawSQL("weekofyear(start)",[]),
             year = RawSQL("Year(start)" , [])
         )
         baseQ = baseQ.values("day" , "week" ,"year" ,"total_steps" , "total_distance" , "total_cals")
