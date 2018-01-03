@@ -601,7 +601,7 @@ class Customer(models.Model):
             day__gt = today_date - datetime.timedelta(days = 30)
         )
 
-        baseQ = baseQ.values("year","week").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration"))
+        baseQ = baseQ.values("week").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration"))
         baseQ = baseQ.annotate(
             day = RawSQL("Date(start)",[])
         )
