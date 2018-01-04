@@ -461,7 +461,7 @@ class Customer(models.Model):
             total_minutes = models.Sum("minutes"),
             wakeup = RawSQL("time(start)",[]),
             sleep = RawSQL("time(end)",[])
-        ).values("date","total_minutes" )
+        ).values("date","total_minutes","wakeup","sleep" )
         baseQ = baseQ.order_by("date")
         if mapped:
             return self.map_aggregate(baseQ , SleepWeekly )
