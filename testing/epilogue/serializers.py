@@ -160,6 +160,7 @@ class WaterLoggingWeeklySerializer(serializers.Serializer ):
 
 class WaterLoggingMonthlySerializer(serializers.Serializer):
 	week = serializers.IntegerField()
+	year = serializers.IntegerField()
 	sum = serializers.FloatField()
 	max = serializers.FloatField()
 	min = serializers.FloatField()
