@@ -606,9 +606,8 @@ class Customer(models.Model):
             day = RawSQL("Date(start)",[]),
             year = RawSQL("Year(start)" , [])
         )
-        baseQ = baseQ.values("day" , "week" ,"year" ,"total_steps" , "total_distance" , "total_cals")
+        baseQ = baseQ.values("week" ,"year" ,"total_steps" , "total_distance" , "total_cals")
         baseQ = baseQ.order_by("-year" , "-week")
-
         return [(e['year'],e['week']) for e in baseQ.values("year","week")] , list(baseQ)
 
     @decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_steps")
