@@ -394,7 +394,7 @@ class Customer(models.Model):
         )
 
         baseQ = baseQ.annotate(
-            week = RawSQL("Week(start)",[]),
+            week = RawSQL("weekofyear(start)",[]),
             year = RawSQL("Year(start)",[])
         )
         baseQ = baseQ.order_by("-year","-week")
