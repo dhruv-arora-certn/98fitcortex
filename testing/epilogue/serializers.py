@@ -193,6 +193,7 @@ class ActivityAggregationSerializer(SleepAggregationSerializer):
 
 class SleepLoggingMonthlySerializer(serializers.Serializer):
 	week = serializers.IntegerField()
+	year = serializers.IntegerField()
 	avg_minutes = serializers.IntegerField()
 	avg_wakeup = serializers.CharField()
 
@@ -216,6 +217,7 @@ class MonthlyActivitySerializer(serializers.Serializer):
 	total_cals = serializers.IntegerField()
 	total_distance = serializers.IntegerField()
 	week = serializers.IntegerField()
+	year = serializers.IntegerField()
 
 class WeeklyActivitySerializer(ActivitySerializer):
 	date = serializers.DateField()
