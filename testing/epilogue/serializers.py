@@ -13,6 +13,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 	diseases = serializers.StringRelatedField(many = True , source = "customermedicalconditions_set")
 	injuries = serializers.StringRelatedField(many = True)
+	reasons = serializers.StringRelatedField()
 	height = serializers.CharField(source = "h" , required = False)
 	weight = serializers.CharField(source = "w", required = False)
 	gender = serializers.CharField(source = "gen", required = False)
@@ -22,7 +23,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Customer
-		fields = ["email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender" , "body_type" , "food_cat" ,"weight_type" , "height_type" , "work_pref" , "level" , "diseases" , "injuries"]
+		fields = ["email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender" , "body_type" , "food_cat" ,"weight_type" , "height_type" , "work_pref" , "level" , "diseases" , "injuries" , "reasons"]
 
 class FoodSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -248,4 +249,10 @@ class CustomerSleepLoggingSerializer(serializers.ModelSerializer):
 		d = end - start
 		validated_data['minutes'] = d.total_seconds()//60
 		return super().create(validated_data)
+
+class CustomerReasonsSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = CustomerReasons
+		fields = "__all__"
+
 

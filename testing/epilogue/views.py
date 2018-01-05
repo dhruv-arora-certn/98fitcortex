@@ -4,7 +4,7 @@ from datetime import datetime as dt
 from django.core.exceptions import ObjectDoesNotExist
 from django.template.loader import render_to_string
 from django.views import View
-from django.shortcuts import render
+from django.shortcuts import render , get_object_or_404
 from django.http import HttpResponse , JsonResponse
 
 from dietplan.goals import Goals
@@ -87,85 +87,85 @@ class UserView(RetrieveUpdateAPIView):
     serializer_class = CustomerSerializer
 
 class DietPlanView(GenericAPIView):
-	serializer_class = DietPlanSerializer
-	authentication_classes = (CustomerAuthentication,)
-	permission_classes = (IsAuthenticated,)
-	lookup_fields = ("year" , "week_id" , "day")
-	queryset = GeneratedDietPlan.objects
+    serializer_class = DietPlanSerializer
+    authentication_classes = (CustomerAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    lookup_fields = ("year" , "week_id" , "day")
+    queryset = GeneratedDietPlan.objects
 
-	def get_queryset(self):
-		return GeneratedDietPlan.objects.filter(customer = self.request.user)
+    def get_queryset(self):
+        return GeneratedDietPlan.objects.filter(customer = self.request.user)
 
-	def get_diet_plan_details(self , dietplan ):
-		return GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(calorie__gt = 0).filter(day = int(self.kwargs['day']))
+    def get_diet_plan_details(self , dietplan ):
+        return GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(calorie__gt = 0).filter(day = int(self.kwargs['day']))
 
-	def get_diabetes(self , user):
-		c = Calculations(*user.args_attrs)
-		rounded_cals = round(c.calories/100)*100
-		if rounded_cals <= 1200:
-			cals = 1200
-		elif rounded_cals == 1300:
-			cals = 1300
-		else:
-			cals = 1400
+    def get_diabetes(self , user):
+        c = Calculations(*user.args_attrs)
+        rounded_cals = round(c.calories/100)*100
+        if rounded_cals <= 1200:
+            cals = 1200
+        elif rounded_cals == 1300:
+            cals = 1300
+        else:
+            cals = 1400
 
-		file_to_read = "disease-data/diabetes-%s-%s.json"%(cals,self.kwargs['day'])
-		print("File" , file_to_read)
-		with open(file_to_read , "r") as f:
-			return json.load(f) , cals
+        file_to_read = "disease-data/diabetes-%s-%s.json"%(cals,self.kwargs['day'])
+        print("File" , file_to_read)
+        with open(file_to_read , "r") as f:
+            return json.load(f) , cals
 
-	def get_object(self):
-		qs = self.get_queryset()
-		user = self.request.user
-		week_id = int(self.kwargs.get("week_id"))
-		year = int(self.kwargs.get("year"))
-		current_week = get_week(dt.today())
+    def get_object(self):
+        qs = self.get_queryset()
+        user = self.request.user
+        week_id = int(self.kwargs.get("week_id"))
+        year = int(self.kwargs.get("year"))
+        current_week = get_week(dt.today())
 
-		#If the requested week is farther away than 2 weeks, deny the request
-		print("Truth" , abs(abs(week_id) - abs(current_week)))
-		if not is_valid_week(year , week_id):
-			raise exceptions.PermissionDenied({
-				"message" : "You cannot access this week's diet plan"
-			})
+        #If the requested week is farther away than 2 weeks, deny the request
+        print("Truth" , abs(abs(week_id) - abs(current_week)))
+        if not is_valid_week(year , week_id):
+            raise exceptions.PermissionDenied({
+                "message" : "You cannot access this week's diet plan"
+            })
 
-		qs = qs.filter(week_id = int(self.kwargs['week_id'])).filter(
-			year = int(self.kwargs.get('year'))
-		).last()
-		if qs is None:
-			p = Pipeline(user.latest_weight , user.height , float(user.latest_activity) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id) , year = year)
-			try:
-				print("Trying to generate")
-				p.generate()
-			except Exception as e:
-				print("There has been a MF exception " , e )
-				p.dietplan.delete()
-			else:
-				qs = p.dietplan
-		g = self.get_diet_plan_details(qs)
-		return g
+        qs = qs.filter(week_id = int(self.kwargs['week_id'])).filter(
+            year = int(self.kwargs.get('year'))
+        ).last()
+        if qs is None:
+            p = Pipeline(user.latest_weight , user.height , float(user.latest_activity) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id) , year = year)
+            try:
+                print("Trying to generate")
+                p.generate()
+            except Exception as e:
+                print("There has been a MF exception " , e )
+                p.dietplan.delete()
+            else:
+                qs = p.dietplan
+        g = self.get_diet_plan_details(qs)
+        return g
 
-	def get(self , request , *args , **kwargs):
-		print("Diabetes" , request.user.has_diabetes())
-		if request.user.has_diabetes():
-			data , cals = self.get_diabetes(request.user)
-			for e in data:
-				if not e.get("image"):
-					e['image'] = "http://98fit.com//webroot/dietlist_images/images.jpg"
-			return Response({
-				"meta" : {
-					"disease" : "diabetes",
-					"calories" :  cals ,
-					"allow-replace" : False,
-					"user_id": request.user.id,
-					"pdf" : diabetes_pdf(cals , kwargs['day']),
-					"user_week" : request.user.user_week
-				},
-				"data" : data
-			})
+    def get(self , request , *args , **kwargs):
+        print("Diabetes" , request.user.has_diabetes())
+        if request.user.has_diabetes():
+            data , cals = self.get_diabetes(request.user)
+            for e in data:
+                if not e.get("image"):
+                    e['image'] = "http://98fit.com//webroot/dietlist_images/images.jpg"
+            return Response({
+                "meta" : {
+                    "disease" : "diabetes",
+                    "calories" :  cals ,
+                    "allow-replace" : False,
+                    "user_id": request.user.id,
+                    "pdf" : diabetes_pdf(cals , kwargs['day']),
+                    "user_week" : request.user.user_week
+                },
+                "data" : data
+            })
 
-		objs = self.get_object()
-		data = DietPlanSerializer(objs , many = True).data
-		return Response(data)
+        objs = self.get_object()
+        data = DietPlanSerializer(objs , many = True).data
+        return Response(data)
 
 class DishReplaceView(RetrieveAPIView):
     serializer_class = DietPlanSerializer
@@ -187,28 +187,28 @@ class DishReplaceView(RetrieveAPIView):
         return Response(data)
 
 class MealReplaceView(GenericAPIView):
-	serializer_class = DietPlanSerializer
-	authentication_classes = [CustomerAuthentication]
-	permission_classes = [IsAuthenticated]
-	queryset = GeneratedDietPlan.objects
+    serializer_class = DietPlanSerializer
+    authentication_classes = [CustomerAuthentication]
+    permission_classes = [IsAuthenticated]
+    queryset = GeneratedDietPlan.objects
 
-	def get_queryset(self):
-		return GeneratedDietPlan.objects.filter(customer = self.request.user).filter(year = int(self.kwargs.get('year'))).filter(week_id = self.kwargs.get('week_id'))
+    def get_queryset(self):
+        return GeneratedDietPlan.objects.filter(customer = self.request.user).filter(year = int(self.kwargs.get('year'))).filter(week_id = self.kwargs.get('week_id'))
 
-	def get_diet_plan_details(self , dietplan):
-		return GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = int(self.kwargs.get('day'))).filter(meal_type = self.kwargs.get('meal'))
+    def get_diet_plan_details(self , dietplan):
+        return GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(day = int(self.kwargs.get('day'))).filter(meal_type = self.kwargs.get('meal'))
 
-	def get_object(self):
-		qs = self.get_queryset().last()
-		objs = self.get_diet_plan_details(qs).last()
-		r = ReplacementPipeline(dish = objs , replaceMeal = True)
-		r.meal.build()
-		return r.save()
+    def get_object(self):
+        qs = self.get_queryset().last()
+        objs = self.get_diet_plan_details(qs).last()
+        r = ReplacementPipeline(dish = objs , replaceMeal = True)
+        r.meal.build()
+        return r.save()
 
-	def get(self, request , *args , **kwargs):
-		objs = self.get_object()
-		data = self.serializer_class(objs , many = True).data
-		return Response(data)
+    def get(self, request , *args , **kwargs):
+        objs = self.get_object()
+        data = self.serializer_class(objs , many = True).data
+        return Response(data)
 
 class CustomerFoodExclusionView(ListBulkCreateAPIView , BulkDifferential):
     serializer_class = CustomerFoodExclusionSerializer
@@ -542,52 +542,52 @@ class UserDietPlanRegenerationView(GenericAPIView):
 
 
 class DietPlanMobileView(GenericAPIView):
-	serializer_class = DietPlanSerializer
-	authentication_classes = (CustomerAuthentication,)
-	permission_classes = (IsAuthenticated,)
-	lookup_fields = ("week_id" , "day" , "meal")
+    serializer_class = DietPlanSerializer
+    authentication_classes = (CustomerAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    lookup_fields = ("week_id" , "day" , "meal")
 
-	def get_queryset(self):
-		return GeneratedDietPlan.objects.filter(customer = self.request.user)
+    def get_queryset(self):
+        return GeneratedDietPlan.objects.filter(customer = self.request.user)
 
-	def get_diet_plan_details(self , dietplan ):
-		return GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(calorie__gt = 0).filter(day = int(self.kwargs['day'])).filter(meal_type = self.kwargs.get("meal"))
+    def get_diet_plan_details(self , dietplan ):
+        return GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(calorie__gt = 0).filter(day = int(self.kwargs['day'])).filter(meal_type = self.kwargs.get("meal"))
 
-	def get_object(self):
-		# If user has diabetes	
-		if self.request.user.has_diabetes():
-			self.get_diabetes()
+    def get_object(self):
+        # If user has diabetes  
+        if self.request.user.has_diabetes():
+            self.get_diabetes()
 
-		qs = self.get_queryset()
-		user = self.request.user
-		week_id = int(self.kwargs.get("week_id"))
-		current_week = get_week(dt.today())
+        qs = self.get_queryset()
+        user = self.request.user
+        week_id = int(self.kwargs.get("week_id"))
+        current_week = get_week(dt.today())
 
-		#If the requested week is farther away than 2 weeks, deny the request
-		print("Truth" , abs(abs(week_id) - abs(current_week)))
-		if abs(abs(week_id) - abs(current_week)) > 2:
-			raise exceptions.PermissionDenied({
-				"message" : "You cannot access this week's diet plan"
-			})
+        #If the requested week is farther away than 2 weeks, deny the request
+        print("Truth" , abs(abs(week_id) - abs(current_week)))
+        if abs(abs(week_id) - abs(current_week)) > 2:
+            raise exceptions.PermissionDenied({
+                "message" : "You cannot access this week's diet plan"
+            })
 
-		qs = qs.filter(year = int(self.kwargs['year']) , week_id = int(self.kwargs['week_id'])).last()
-		if qs is None:
-			p = Pipeline(user.weight , user.height , float(user.lifestyle) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id))
-			try:
-				print("Trying to generate")
-				p.generate()
-			except Exception as e:
-				print("There has been a MF exception " , e )
-				p.dietplan.delete()
-			else:
-				qs = p.dietplan
-		g = self.get_diet_plan_details(qs)
-		return g
+        qs = qs.filter(year = int(self.kwargs['year']) , week_id = int(self.kwargs['week_id'])).last()
+        if qs is None:
+            p = Pipeline(user.weight , user.height , float(user.lifestyle) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id))
+            try:
+                print("Trying to generate")
+                p.generate()
+            except Exception as e:
+                print("There has been a MF exception " , e )
+                p.dietplan.delete()
+            else:
+                qs = p.dietplan
+        g = self.get_diet_plan_details(qs)
+        return g
 
-	def get(self , request , *args , **kwargs):
-		objs = self.get_object()
-		data = DietPlanSerializer(objs , many = True).data
-		return Response(data)
+    def get(self , request , *args , **kwargs):
+        objs = self.get_object()
+        data = DietPlanSerializer(objs , many = True).data
+        return Response(data)
 
 class WaterBulkView(ListBulkCreateAPIView):
     serializer_class = WaterLoggingModelSerializer
@@ -872,7 +872,6 @@ class CustomerMedicalConditionsMobileView(GenericAPIView , BulkDifferential):
 
 class CustomerFoodExclusionsMobileView(GenericAPIView , BulkDifferential):
     authentication_classes = [CustomerAuthentication]
-    permission_classes = [IsAuthenticated]
     serializer_class = CustomerFoodExclusionSerializer
 
     class BulkMeta:
@@ -910,3 +909,8 @@ class CustomerFoodExclusionsMobileView(GenericAPIView , BulkDifferential):
         objs = request.user.customerfoodexclusions_set.all()
         serialized = self.serializer_class(objs , many = True)
         return Response(serialized.data , status.HTTP_201_CREATED)
+
+class CustomerReasonsView(CreateAPIView):
+    authentication_classes = [CustomerAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = CustomerReasonsSerializer

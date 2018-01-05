@@ -1102,3 +1102,20 @@ class CustomerLevelLog(models.Model):
     level = models.IntegerField()
     date = models.DateTimeField(auto_now_add = True)
     customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "level_logs")
+
+class Reasons(models.Model):
+	text = models.CharField(max_length = 20 , null = True)
+	active = models.BooleanField(default = False)
+	created = models.DateTimeField(auto_now_add = True)
+	sku = models.IntegerField(default = 0 , db_index = True)
+
+	def __str__(self):
+		return "%s : %s"%(self.text , "Active" if self.active else "Inactive")
+
+
+class CustomerReasons(models.Model):
+	customer = models.OneToOneField(Customer  , related_name = "reasons")
+	reason = models.ForeignKey(Reasons)
+
+	def __str__(self):
+		return self.reason.text

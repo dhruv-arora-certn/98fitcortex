@@ -3,7 +3,7 @@ from .views import get_analysis , UserView , DietPlanView , DishReplaceView , Me
  					CustomerMedicalConditionsView , CreateCustomerView , GuestPDFView , DietPlanRegenerationView , UserDietPlanRegenerationView ,\
  					DietPlanMobileView , WaterBulkView  ,SleepWeeklyAggregationView,SleepMonthlyAggregatedView, WaterWeeklyAggregateView,WaterMonthlyAggregateView , \
 					LastDaySleepView, MonthlyActivityView , WeeklyActivityView, ActivityLogView , CustomerSleepLoggingView , DashboardMealTextView , CustomerMedicalConditionsMobileView , CustomerFoodExclusionsMobileView , \
-					DiseasePDFView 
+					DiseasePDFView  , CustomerReasonsView
 
 urlpatterns = [
 	url(r'^analysis' , get_analysis),
@@ -16,6 +16,7 @@ urlpatterns = [
 	url(r'^user/medical-condition/$' , CustomerMedicalConditionsView.as_view()),
 	url(r'^user/medical-condition/mobile/$' , CustomerMedicalConditionsMobileView.as_view()),
 	url(r'^user/food-exclusion/mobile/$' , CustomerFoodExclusionsMobileView.as_view()),
+	url(r'^user/reasons/$' , CustomerReasonsView.as_view()),
 	url(r'^guest-diet-pdf/$' , GuestPDFView.as_view()),
 	url(r'^disease-pdf/(?P<day>[1-7])/$' , DiseasePDFView.as_view()),
 	url(r'^dietplans/(?P<id>[0-9]+)/regenerate/$' , DietPlanRegenerationView.as_view()),
