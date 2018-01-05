@@ -103,7 +103,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='customerreasons',
             name='customer',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='epilogue.Customer'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='epilogue.Customer'),
         ),
         migrations.AddField(
             model_name='customerreasons',

@@ -699,7 +699,7 @@ class Customer(models.Model):
             self.customermedicalconditions_set.count() == 1
         )
     def __str__(self):
-        return self.first_name + " : " + self.email
+        return "%s : %s"%(self.first_name , self.email)
 
 class BusinessCustomer(models.Model):
     class Meta:
@@ -1104,18 +1104,18 @@ class CustomerLevelLog(models.Model):
     customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "level_logs")
 
 class Reasons(models.Model):
-	text = models.CharField(max_length = 20 , null = True)
-	active = models.BooleanField(default = False)
-	created = models.DateTimeField(auto_now_add = True)
-	sku = models.IntegerField(default = 0 , db_index = True)
+    text = models.CharField(max_length = 20 , null = True)
+    active = models.BooleanField(default = False)
+    created = models.DateTimeField(auto_now_add = True)
+    sku = models.IntegerField(default = 0 , db_index = True)
 
-	def __str__(self):
-		return "%s : %s"%(self.text , "Active" if self.active else "Inactive")
+    def __str__(self):
+        return "%s : %s"%(self.text , "Active" if self.active else "Inactive")
 
 
 class CustomerReasons(models.Model):
-	customer = models.OneToOneField(Customer  , related_name = "reasons")
-	reason = models.ForeignKey(Reasons)
+    customer = models.ForeignKey(Customer  , related_name = "reasons")
+    reason = models.ForeignKey(Reasons)
 
-	def __str__(self):
-		return self.reason.text
+    def __str__(self):
+        return self.reason.text
