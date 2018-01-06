@@ -205,6 +205,7 @@ class GeneratedExercisePlanDetails(models.Model):
     mod_id = models.IntegerField()
     muscle_group = models.CharField(default = '', max_length = 20)
     exercise_level = models.CharField(default = "" , max_length = 20)
+    image = models.URLField()
 
 class CustomerInjury(models.Model):
     class Meta:

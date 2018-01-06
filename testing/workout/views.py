@@ -6,11 +6,13 @@ from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import exceptions
 
 from rest_framework_bulk import ListBulkCreateAPIView
 
 from epilogue.authentication import CustomerAuthentication
-from epilogue.utils import get_week , get_day , BulkDifferential
+from epilogue.utils import get_week , get_day , BulkDifferential , is_valid_week
+from epilogue.permissions import WeekWindowAccessPermission
 
 from workout.models import *
 from workout.serializers import *
@@ -213,59 +215,66 @@ class CustomerInjuryView(ListBulkCreateAPIView , BulkDifferential):
 
 
 class GenerateWorkoutView(generics.GenericAPIView):
-	authentication_classes = [CustomerAuthentication]
-	permission_classes = [permissions.IsAuthenticated]
-	logger = logging.getLogger(__name__)
+    authentication_classes = [CustomerAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    logger = logging.getLogger(__name__)
 
-	def generate_workout(self):
-		g = Generator(
-			self.request.user
-		)
-		g.generate()
+    def generate_workout(self):
+        g = Generator(
+            self.request.user
+        )
+        g.generate()
 
-		self.new_workout = WorkoutWeekPersister(
-			g,
-			self.kwargs.get('week')
-		)
-		self.new_workout.persist()
-		return self.new_workout.model_obj
+        self.new_workout = WorkoutWeekPersister(
+            g,
+            self.kwargs.get('week')
+        )
+        self.new_workout.persist()
+        return self.new_workout.model_obj
 
 
-	def get_object(self):
-		workout_week = GeneratedExercisePlan.objects.filter(
-			customer = self.request.user,
-			week_id = int(self.kwargs.get('week_id')),
-			year = int(self.kwargs.get('year'))
-		).last()
+    def get_object(self):
+        workout_week = GeneratedExercisePlan.objects.filter(
+            customer = self.request.user,
+            week_id = int(self.kwargs.get('week_id')),
+            year = int(self.kwargs.get('year'))
+        ).last()
 
-		if workout_week:
-			return workout_week
+        if workout_week:
+            return workout_week
 
-		return self.generate_workout()
+        return self.generate_workout()
 
-	def filtered_queryset(self , qs):
-		return qs.exercises.filter(
-			day = int(self.kwargs.get('day'))
-		)
+    def filtered_queryset(self , qs):
+        return qs.exercises.filter(
+            day = int(self.kwargs.get('day'))
+        )
 
-	def categorise_data(self,data):
-		keys = set([e.get('mod_name') for e in data])
-		new_data = {}
+    def categorise_data(self,data):
+        keys = set([e.get('mod_name') for e in data])
+        new_data = {}
 
-		for e in keys:
-			new_data.update({e:[]})
+        for e in keys:
+            new_data.update({e:[]})
 
-		def assign(a):
-			new_data[a.get('mod_name')].append(a)
+        def assign(a):
+            new_data[a.get('mod_name')].append(a)
 
-		[assign(e) for e in data]
+        [assign(e) for e in data]
 
-		return new_data
+        return new_data
 
-	def get(self , request , *args , **kwargs):
-		obj = self.get_object()
-		obj = self.filtered_queryset(obj)
-		data = GeneratedExercisePlanDetailsSerializer(obj , many = True)
+    def get(self , request , *args , **kwargs):
+        year = int(self.kwargs.get('year'))
+        week = int(self.kwargs.get('week_id'))
+        if not is_valid_week(year , week):
+            raise exceptions.PermissionDenied({
+                "message" : "You cannot access this week's workout plan"
+            })
 
-		return Response(self.categorise_data(data.data))
+        obj = self.get_object()
+        obj = self.filtered_queryset(obj)
+        data = GeneratedExercisePlanDetailsSerializer(obj , many = True)
+
+        return Response(self.categorise_data(data.data))
 

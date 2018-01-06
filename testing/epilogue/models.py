@@ -893,7 +893,7 @@ class GeneratedExercisePlan(models.Model):
 class ActivityLevelLog(models.Model):
     class Meta:
         db_table = "relation_log"
-    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "activitylevel_logs")
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "activitylevel_logs" , null = True)
     lifestyle = models.CharField(max_length = 50)   
     
     @property

@@ -120,7 +120,8 @@ class ExercisePersister:
             "description" : self.get_description(self.exercise),
             "exercise_level" : self.get_exercise_level(self.exercise),
 			"exercise_type" : 0,
-            "muscle_group" : self.get_muscle_group(self.exercise)
+            "muscle_group" : self.get_muscle_group(self.exercise),
+			"image" : self.get_image(self.exercise)
 		}
 
 	def persist(self):
