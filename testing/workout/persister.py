@@ -137,10 +137,10 @@ class ExercisePersister:
 		return "http://www.98fit.com/webroot/workout_images/workout_blank.jpg"
 
 	def get_sets(self , obj):
-		return  getattr(obj , "sets" , 1)
+		return  getattr(obj , "sets" , 0)
 
 	def get_reps(self , obj):
-		return  getattr(obj , "reps" , 1)
+		return  getattr(obj , "reps" , 0)
 
 	def get_muscle_group(self , obj):
 		return getattr(obj , "muscle_group_name" , "")
