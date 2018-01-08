@@ -227,7 +227,7 @@ class GenerateWorkoutView(generics.GenericAPIView):
 
         self.new_workout = WorkoutWeekPersister(
             g,
-            self.kwargs.get('week')
+            self.kwargs.get('week_id')
         )
         self.new_workout.persist()
         return self.new_workout.model_obj
