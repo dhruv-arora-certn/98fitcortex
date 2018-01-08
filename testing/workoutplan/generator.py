@@ -170,4 +170,5 @@ class Generator():
 		for e in days:
 			day_template = "D%d"
 			if hasattr(self , day_template%e):
+				self.logger.debug("Yielding Day %d"%e)
 				yield getattr(self , day_template%e)

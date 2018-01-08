@@ -18,3 +18,9 @@ class WorkoutTestCase(TestCase):
 
 	def test_count(self):
 		assert ResistanceTrainingExercise.objects.count() != 0
+
+c = Customer.objects.get(pk = 8)
+g = Generator(c)
+g.generate()
+
+ws = WorkoutWeekPersister(g)

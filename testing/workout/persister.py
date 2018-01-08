@@ -1,10 +1,12 @@
 import itertools
 import functools
+import logging
 
 from epilogue.utils import get_week , get_day , get_year
 
 from workout import models
 
+logger = logging.getLogger(__name__)
 
 class PersisterBase:
 
@@ -58,6 +60,11 @@ class WorkoutDayPersister:
 		self.day = day
 		self.workout = workout
 
+	def __str__(self):
+		return "Day:%d"%self.day
+	def __repr__(self):
+		return "Day:%d"%self.day.day
+
 	def persist_exercise(self, exercise , mod = None):
 		e = ExercisePersister(
 			exercise,
@@ -105,6 +112,9 @@ class ExercisePersister:
 
 		self.mod = mod
 
+	def __repr__(self):
+		return "%s : %s : Persister"%(self.exercise.workout_name , self.mod)
+
 	def get_fields(self):
 		return {
 			"workoutplan" : self.workout,
@@ -124,10 +134,15 @@ class ExercisePersister:
 			"image" : self.get_image(self.exercise)
 		}
 
-	def persist(self):
-		self.model_obj = self.model.objects.create(
-			**self.get_fields()
-		)
+	def persist(self , save = True):
+		if save:
+			self.model_obj = self.model.objects.create(
+				**self.get_fields()
+			)
+		else:
+			self.model_obj = self.model(
+				**self.get_fields()
+			)
 		return self
 
 	def get_image(self , obj):
@@ -140,7 +155,7 @@ class ExercisePersister:
 		return  getattr(obj , "sets" , 0)
 
 	def get_reps(self , obj):
-		return  getattr(obj , "reps" , 0)
+		return  str(getattr(obj , "reps" , 0))
 
 	def get_muscle_group(self , obj):
 		return getattr(obj , "muscle_group_name" , "")
@@ -168,3 +183,6 @@ class ExercisePersister:
 
 	def get_time(self , obj):
 		return getattr(obj , "duration" , 0)
+
+	def __str__(self):
+		return self.exercise.workout_name
