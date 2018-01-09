@@ -175,19 +175,11 @@ class Food(models.Model):
         if self.drink == 1:
             return 'ml'
         return 'gms'
-<<<<<<< HEAD
 
     class Meta:
         db_table = "business_diet_list"
 
 
-=======
-
-    class Meta:
-        db_table = "business_diet_list"
-
-
->>>>>>> f40138313afdc70aea2394ff0c4c9786ebaf3866
 class Objective(models.Model):
     class Meta:
         db_table = "glo_objective"
@@ -387,11 +379,7 @@ class Customer(models.Model):
     def map_aggregate(self , qs , obj):
         return map( lambda x : obj(**x) , qs)
 
-<<<<<<< HEAD
     @decorators.add_empty_weeks({"max":0,"min":0,"avg_wakeup":'',"avg_minutes":0,"sum":0,"avg_bedtime":0})
-=======
-    @decorators.weekly_average("total_minutes")
->>>>>>> f40138313afdc70aea2394ff0c4c9786ebaf3866
     def monthly_sleep(self , month = None):
         '''
         Find Monthly Data for sleep aggregated as weekly average
@@ -405,7 +393,6 @@ class Customer(models.Model):
             date__gt = today_date - datetime.timedelta(days = 30)
         )
         baseQ = baseQ.values("date").annotate(
-<<<<<<< HEAD
             day_minutes = models.Sum("minutes")
         )
 
@@ -451,17 +438,6 @@ class Customer(models.Model):
             ref['min'] = min((e['day_minutes'] for e in g))
             data.append(ref)
         return keys , data
-=======
-            total_minutes = models.Sum("minutes")
-        )
-
-        baseQ = baseQ.annotate(
-            week = RawSQL("Week(start)",[])
-        )
-        baseQ = baseQ.order_by("-week")
-
-        return baseQ.values("date" , "week", "total_minutes")
->>>>>>> f40138313afdc70aea2394ff0c4c9786ebaf3866
 
     @decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_minutes")
     def monthly_sleep_aggregate(self):
@@ -481,28 +457,19 @@ class Customer(models.Model):
         )
         return baseQ
 
-<<<<<<< HEAD
     @decorators.scale_field("total_minutes",480)
     @decorators.sorter(key = lambda x : x['date'] )
     @decorators.add_empty_day_in_week({"total_minutes" : 0 ,"wakeup":None,"sleep":None})
-=======
-    @decorators.sorter(key = lambda x : x['date'] )
-    @decorators.add_empty_day_in_week({"total_minutes" : 0})
->>>>>>> f40138313afdc70aea2394ff0c4c9786ebaf3866
     def weekly_sleep(self,week = None, mapped = False):
         today_date = datetime.datetime.today().date()
         baseQ = self.sleep_logs.annotate(date = RawSQL("Date(start)" , [])).filter(
             date__lte = today_date , date__gt = today_date - datetime.timedelta(days = 6)
         )
-<<<<<<< HEAD
         baseQ = baseQ.values("date" ).annotate(
             total_minutes = models.Sum("minutes"),
             wakeup = RawSQL("time(start)",[]),
             sleep = RawSQL("time(end)",[])
         ).values("date","total_minutes","wakeup","sleep" )
-=======
-        baseQ = baseQ.values("date" ).annotate(total_minutes = models.Sum("minutes")).values("date","total_minutes")
->>>>>>> f40138313afdc70aea2394ff0c4c9786ebaf3866
         baseQ = baseQ.order_by("date")
         if mapped:
             return self.map_aggregate(baseQ , SleepWeekly )
@@ -518,11 +485,7 @@ class Customer(models.Model):
         baseQ = baseQ.values("day").annotate(total_minutes = models.Sum("minutes")).values("day", "total_minutes")
         return baseQ
 
-<<<<<<< HEAD
     @decorators.add_empty_weeks({"max" : 0,"min" : 0,"sum" : 0})
-=======
-    @decorators.weekly_average("total_quantity")
->>>>>>> f40138313afdc70aea2394ff0c4c9786ebaf3866
     def monthly_water(self,month = None):
         today_date = datetime.datetime.today().date()
         baseQ = self.water_logs.annotate(
@@ -532,7 +495,6 @@ class Customer(models.Model):
             day__lte = today_date,
             day__gt = today_date - datetime.timedelta(days = 30)
         )
-<<<<<<< HEAD
         baseQ = baseQ.values("day").annotate(day_quantity = models.Sum(models.F("quantity")*models.F("count")/1000 , output_field = models.FloatField()))
         baseQ = baseQ.annotate(
             week = RawSQL("weekofyear(saved)",[]),
@@ -559,16 +521,6 @@ class Customer(models.Model):
             data.append(ref)
         #baseQ = countGlasses(baseQ)
         return keys , data
-=======
-        baseQ = baseQ.values("day").annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))
-        baseQ = baseQ.annotate(
-            week = RawSQL("Week(saved)",[])
-        )
-        baseQ = countBottles(baseQ)
-        baseQ = countGlasses(baseQ)
-        baseQ = baseQ.order_by("-week")
-        return baseQ.values("day" , "week" , "total_quantity" , "bottles" , "glasses")
->>>>>>> f40138313afdc70aea2394ff0c4c9786ebaf3866
 
     @decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_quantity")
     def monthly_water_aggregated(self):
@@ -582,19 +534,12 @@ class Customer(models.Model):
         )
         baseQ = baseQ.values("day").annotate(total_quantity = models.Sum(models.F("quantity")*models.F("count")))
         baseQ = baseQ.annotate(
-<<<<<<< HEAD
             week = RawSQL("weekofyear(saved)",[])
-=======
-            week = RawSQL("Week(saved)",[])
->>>>>>> f40138313afdc70aea2394ff0c4c9786ebaf3866
         )
         logs = baseQ.values("week" , "total_quantity")
         return logs
 
-<<<<<<< HEAD
     @decorators.scale_field("total_quantity",2000)
-=======
->>>>>>> f40138313afdc70aea2394ff0c4c9786ebaf3866
     @decorators.sorter(lambda x : x['date'] )
     @decorators.add_empty_day_in_week({"total_quantity" : 0})
     def weekly_water(self):
@@ -626,10 +571,7 @@ class Customer(models.Model):
         baseQ = self.sleep_logs.last()
         return baseQ
 
-<<<<<<< HEAD
     @decorators.scale_field("total_steps",6000)
-=======
->>>>>>> f40138313afdc70aea2394ff0c4c9786ebaf3866
     @decorators.sorter(key = lambda x: x['date'] )
     @decorators.add_empty_day_in_week({"total_steps" : 0 , "total_distance" : 0 , "total_cals" : 0 , "total_duration" : 0})
     def weekly_activity(self):
@@ -654,7 +596,6 @@ class Customer(models.Model):
         weekly_logs = self._weekly_activity()
         return weekly_logs
 
-<<<<<<< HEAD
     @decorators.add_empty_weeks({"total_steps":0,"total_distance":0,"total_cals":0})
     def monthly_activity(self,month = None):
         today_date = datetime.datetime.today().date()
@@ -662,20 +603,12 @@ class Customer(models.Model):
             day = RawSQL("Date(start)",[]),
             week = RawSQL("weekofyear(start)",[]),
             year = RawSQL("Year(start)" , [])
-=======
-    @decorators.weekly_average("total_steps")
-    def monthly_activity(self,month = None):
-        today_date = datetime.datetime.today().date()
-        baseQ = self.activity_logs.annotate(
-            day = RawSQL("Date(start)",[])
->>>>>>> f40138313afdc70aea2394ff0c4c9786ebaf3866
         )
         baseQ = baseQ.filter(
             day__lte = today_date,
             day__gt = today_date - datetime.timedelta(days = 30)
         )
 
-<<<<<<< HEAD
         baseQ = baseQ.values("week").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration"))
         baseQ = baseQ.annotate(
             day = RawSQL("Date(start)",[]),
@@ -684,12 +617,6 @@ class Customer(models.Model):
         baseQ = baseQ.values("week" ,"year" ,"total_steps" , "total_distance" , "total_cals")
         baseQ = baseQ.order_by("-year" , "-week")
         return [(e['year'],e['week']) for e in baseQ.values("year","week")] , list(baseQ)
-=======
-        baseQ = baseQ.values("day").annotate(total_cals = models.Sum("cals")).annotate(total_distance = models.Sum("distance")).annotate(total_steps = models.Sum("steps")).annotate(total_duration = models.Sum("duration"))
-        baseQ = baseQ.annotate(week = RawSQL("Week(start)",[]))
-        baseQ = baseQ.values("day" , "week" ,"total_steps" , "total_distance" , "total_cals")
-        return baseQ
->>>>>>> f40138313afdc70aea2394ff0c4c9786ebaf3866
 
     @decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_steps")
     def monthly_activity_aggregate(self):
@@ -780,11 +707,7 @@ class Customer(models.Model):
             self.customermedicalconditions_set.count() == 1
         )
     def __str__(self):
-<<<<<<< HEAD
         return "%s : %s"%(self.first_name , self.email)
-=======
-        return self.first_name + " : " + self.email
->>>>>>> f40138313afdc70aea2394ff0c4c9786ebaf3866
 
 class BusinessCustomer(models.Model):
     class Meta:
@@ -1174,7 +1097,7 @@ class CustomerActivityLogs(models.Model):
     timestamp = models.DateTimeField(null = True)
     steps = models.IntegerField()
     cals = models.IntegerField()
-    customer = models.ForeignKey(Customer , related_name = "activity_logs", db_column = "erp_customer_id" , on_delete = models.CASCADE , null = True)
+    customer = models.ForeignKey(Customer , related_name = "activity_logs", db_column = "customer_id" , on_delete = models.CASCADE , null = True)
     duration = models.IntegerField()
     start = models.DateTimeField(auto_now = False)
     end = models.DateTimeField(auto_now = False)
@@ -1186,7 +1109,7 @@ class CustomerLevelLog(models.Model):
         db_table = "erp_customer_level_log"
     level = models.IntegerField()
     date = models.DateTimeField(auto_now_add = True)
-    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "level_logs")
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "level_logs" , on_delete = models.CASCADE)
 
 class Reasons(models.Model):
     text = models.CharField(max_length = 20 , null = True)
@@ -1199,8 +1122,8 @@ class Reasons(models.Model):
 
 
 class CustomerReasons(models.Model):
-    customer = models.ForeignKey(Customer  , related_name = "reasons")
-    reason = models.ForeignKey(Reasons)
+    customer = models.ForeignKey(Customer  , related_name = "reasons" , on_delete = models.CASCADE)
+    reason = models.ForeignKey(Reasons , on_delete = models.DO_NOTHING)
 
     def __str__(self):
         return self.reason.text

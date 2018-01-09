@@ -26,6 +26,6 @@ urlpatterns = [
     re_path(r'^cheese/' , include("analytics.urls")),
     re_path(r'^workout/' , include("workout.urls")),
     re_path(r'^messaging/' , include("messaging.urls")),
-    re_path(r'^docs/', include('rest_framework_docs.urls')),
+    #re_path(r'^docs/', include('rest_framework_docs.urls')),
 ]
 #urlpatterns += staticfiles_urlpatterns()
