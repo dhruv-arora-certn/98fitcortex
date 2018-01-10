@@ -309,7 +309,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='customeractivitylogs',
             name='customer',
-            field=models.ForeignKey(db_column='erp_customer_id', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='activity_logs', to='epilogue.Customer'),
+            field=models.ForeignKey(db_column='customer_id', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='activity_logs', to='epilogue.Customer'),
         ),
         migrations.AlterField(
             model_name='customerfoodexclusions',

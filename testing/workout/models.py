@@ -205,7 +205,7 @@ class GeneratedExercisePlanDetails(models.Model):
     mod_id = models.IntegerField()
     muscle_group = models.CharField(default = '', max_length = 20)
     exercise_level = models.CharField(default = "" , max_length = 20)
-    image = models.URLField()
+    image = models.URLField(default = "http://www.98fit.com/webroot/workout_images/workout_blank.jpg")
 
 class CustomerInjury(models.Model):
     class Meta:
