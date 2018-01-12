@@ -102,7 +102,9 @@ class RegistrationSerializer(BaseRegistrationSerializer):
 		return password
 
 class GoogleLoginSerializer(BaseSocialSerializer):
-	access_token = serializers.CharField() 
+	email = serializers.EmailField()
+	name = serializers.CharField()
+	picture = serializers.CharField()
 
 	def release_attrs(self , credentials):
 		return credentials['email'] , credentials['name'] ,"" , credentials['picture']
@@ -111,14 +113,16 @@ class GoogleLoginSerializer(BaseSocialSerializer):
 		adapter = GoogleAdapter(
 			access_token = attrs.get('access_token')
 		)
+		email = attrs['email']
+		name = attrs['name']
+		picture = attrs['picture']
 		try:
-			credentials = adapter.complete_login()
 			if not self.context['request'].user.is_anonymous and self.context['request'].user.email  :
-				assert credentials['email'] == self.context['request'].user.email , exceptions.ValidationError("Conflicting Email Addresses")
+				assert email == self.context['request'].user.email , exceptions.ValidationError("Conflicting Email Addresses")
 		except Exception as e:
 			raise exceptions.ValidationError(e)
 		else:
-			return credentials
+			return attrs
 
 
 class FacebookLoginSerializer(BaseSocialSerializer):
@@ -141,7 +145,7 @@ class FacebookLoginSerializer(BaseSocialSerializer):
 			if not self.context['request'].user.is_anonymous and self.context['request'].user.email  :
 				if not credentials['email'] == self.context['request'].user.email:
 					raise exceptions.ValidationError("Conflicting Email Addresses")
-			return credentials
+			return attrs
 
 class BatraGoogleSerializer(BaseSocialSerializer):
 	email = serializers.EmailField()
