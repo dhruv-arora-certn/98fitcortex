@@ -870,3 +870,6 @@ class CustomerReasonsView(CreateAPIView):
     authentication_classes = [CustomerAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = CustomerReasonsSerializer
+
+
+class RegeneratableView(GenericAPIView)
