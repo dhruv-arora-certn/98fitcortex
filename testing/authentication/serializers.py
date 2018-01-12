@@ -145,7 +145,7 @@ class FacebookLoginSerializer(BaseSocialSerializer):
 			if not self.context['request'].user.is_anonymous and self.context['request'].user.email  :
 				if not credentials['email'] == self.context['request'].user.email:
 					raise exceptions.ValidationError("Conflicting Email Addresses")
-			return attrs
+			return credentials
 
 class BatraGoogleSerializer(BaseSocialSerializer):
 	email = serializers.EmailField()
