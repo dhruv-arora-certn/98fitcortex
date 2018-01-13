@@ -872,4 +872,3 @@ class CustomerReasonsView(CreateAPIView):
     serializer_class = CustomerReasonsSerializer
 
 
-class RegeneratableView(GenericAPIView)
