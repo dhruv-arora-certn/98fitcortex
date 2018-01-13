@@ -31,6 +31,8 @@ from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf 
 from epilogue.replacement import *
 from epilogue.exceptions import MultipleDiseasesException , DiseasesNotDiabetesOrPcod
 
+from regeneration import views as regeneration_views
+
 from pdfs import base, file_handlers
 
 from weasyprint import HTML
@@ -42,12 +44,20 @@ class UserView(RetrieveUpdateAPIView):
     queryset = Customer.objects
     serializer_class = CustomerSerializer
 
-class DietPlanView(GenericAPIView):
+class DietPlanView(regeneration_views.RegenerableView):
     serializer_class = DietPlanSerializer
     authentication_classes = (CustomerAuthentication,)
     permission_classes = (IsAuthenticated,)
     lookup_fields = ("year" , "week_id" , "day")
     queryset = GeneratedDietPlan.objects
+    
+    def get_regenerate_log_filter(self):
+        return {
+            'customer' : self.request.user,
+            'year' : self.kwargs.get('year'),
+            'week' : self.kwargs.get('week_id'),
+            'regenerated' : False
+        }
 
     def get_queryset(self):
         return GeneratedDietPlan.objects.filter(customer = self.request.user)
@@ -70,7 +80,7 @@ class DietPlanView(GenericAPIView):
         with open(file_to_read , "r") as f:
             return json.load(f) , cals
 
-    def get_object(self):
+    def get_object_(self):
         qs = self.get_queryset()
         user = self.request.user
         week_id = int(self.kwargs.get("week_id"))
@@ -120,6 +130,7 @@ class DietPlanView(GenericAPIView):
             })
 
         objs = self.get_object()
+        return Response(objs)
         data = DietPlanSerializer(objs , many = True).data
         return Response(data)
 

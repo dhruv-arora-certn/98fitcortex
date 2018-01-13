@@ -25,6 +25,11 @@ class RegenerationLog(models.Model):
 	regenerated_on = models.DateTimeField(auto_now = True)
 	regenerated = models.BooleanField(default = False)
 
+	def toggleStatus(self):
+		self.regenerated = not self.regenerated
+		self.save()
+		return self
+
 
 	def __str__(self):
 		return "%s:%s:(%s,%s)"%(
@@ -35,6 +40,6 @@ class RegenerationLog(models.Model):
 		)
 
 	class Meta:
-		unique_together = ("customer" , "year" , "week")
-		index_together = ("customer" , "year" , "week")
+		unique_together = ("customer" , "year" , "week" , "type")
+		index_together = ("customer" , "year" , "week" , "type")
 
