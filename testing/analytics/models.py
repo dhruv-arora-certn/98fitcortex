@@ -6,7 +6,7 @@ from epilogue.models import Customer
 
 class CustomerGoogleClient(models.Model):
 	visited = models.DateTimeField(auto_now_add = True)
-	customer = models.ForeignKey(Customer , related_name = "gaclientids")
+	customer = models.ForeignKey(Customer , related_name = "gaclientids" , on_delete = models.CASCADE)
 	clientId = models.CharField(max_length = 255)
 
 	class Meta:
@@ -31,7 +31,7 @@ class EventPageTracking(models.Model):
 
 
 class UserSignupSource(models.Model):
-	customer = models.ForeignKey(Customer, db_index = True , related_name = "signupsource")
+	customer = models.ForeignKey(Customer, db_index = True , related_name = "signupsource" , on_delete = models.CASCADE)
 	source = models.CharField(max_length = 50 , db_index = True)
 	campaign = models.CharField(max_length = 50 , null = True)
 	language = models.CharField(max_length = 50 , default = "english")

@@ -212,7 +212,7 @@ class Customer(models.Model):
     h = models.CharField(db_column = "height", max_length = 20, blank = True )
     h_type = models.IntegerField(db_column = "height_type" , blank = True)
     ls = models.CharField( max_length = 50 , db_column = "lifestyle" , blank = True)
-    objective = models.ForeignKey(Objective , db_column = "objective", blank = True)
+    objective = models.ForeignKey(Objective , db_column = "objective", blank = True , on_delete = models.CASCADE)
     gen = models.CharField(max_length = 20 , db_column = "gender", blank = True)
     body_type = models.CharField(max_length = 50, blank = True)
     food_cat = models.CharField(max_length = 50 , choices=  food_cat_choices, blank = True)
@@ -725,7 +725,7 @@ class GeneratedDietPlan(models.Model):
     class Meta:
         db_table = "erp_diet_plan"
 
-    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "dietplans")
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "dietplans" , on_delete = models.CASCADE)
     created_on = models.DateTimeField(auto_now_add = True)
     user_week_id = models.IntegerField(default = 1)
     week_id = models.IntegerField(default = 1)
@@ -787,8 +787,8 @@ class GeneratedDietPlanFoodDetails(models.Model):
     class Meta:
         db_table = "erp_diet_plan_food_details"
 
-    dietplan = models.ForeignKey(GeneratedDietPlan , db_column = "erp_diet_plan_id"  , related_name = "meals") 
-    food_item = models.ForeignKey(Food , db_column = "business_diet_list_id")
+    dietplan = models.ForeignKey(GeneratedDietPlan , db_column = "erp_diet_plan_id"  , related_name = "meals" , on_delete = models.CASCADE) 
+    food_item = models.ForeignKey(Food , db_column = "business_diet_list_id" , on_delete = models.DO_NOTHING)
     food_name = models.CharField(max_length = 255)
     meal_type = models.CharField(max_length = 20)
     day = models.IntegerField()
@@ -886,14 +886,14 @@ class GeneratedExercisePlan(models.Model):
     class Meta:
         db_table = "erp_exercise_plan"
     
-    customer = models.ForeignKey(Customer , db_column = "erp_customer_id")
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , on_delete = models.CASCADE)
     created_on = models.DateTimeField(default = None)
     glo_level_id = models.IntegerField()
 
 class ActivityLevelLog(models.Model):
     class Meta:
         db_table = "relation_log"
-    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "activitylevel_logs" , null = True)
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "activitylevel_logs" , null = True , on_delete = models.CASCADE)
     lifestyle = models.CharField(max_length = 50)   
     
     @property
@@ -972,13 +972,13 @@ class LoginCustomer(models.Model):
     first_name = models.CharField(max_length = 100)
     last_name = models.CharField(max_length = 100)
     password = models.CharField(max_length = 255)
-    customer = models.OneToOneField(Customer , db_column = "erp_customer_id")
+    customer = models.OneToOneField(Customer , db_column = "erp_customer_id" , on_delete = models.CASCADE)
     status_id = models.BooleanField(default = True)
     created_on = models.DateTimeField(auto_now_add = True)  
 
 class DishReplacementSuggestions(models.Model):
-    dietplan_food_details = models.ForeignKey(GeneratedDietPlanFoodDetails , related_name = "suggestions")
-    food = models.ForeignKey(Food)
+    dietplan_food_details = models.ForeignKey(GeneratedDietPlanFoodDetails , related_name = "suggestions" , on_delete = models.CASCADE)
+    food = models.ForeignKey(Food , on_delete = models.CASCADE)
 #   created_on = models.DateTimeField(auto_now = True)
 
 class CustomerFoodExclusions(models.Model):
@@ -1002,14 +1002,14 @@ class CustomerFoodExclusions(models.Model):
         (BEEF , "beef"),
         (MEAT , "meat")
     )
-    customer = models.ForeignKey(Customer , db_column = 'erp_customer_id')
+    customer = models.ForeignKey(Customer , db_column = 'erp_customer_id' , on_delete = models.CASCADE)
     food_type = models.CharField(max_length = 100 , choices = food_type_choices)
 
     class Meta:
         db_table = "erp_customer_food_exclusion"
 
 class CustomerMedicalConditions(models.Model):
-    customer = models.ForeignKey(Customer , db_column = "erp_customer_id")
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , on_delete = models.CASCADE)
     condition_name = models.CharField(max_length = 50)
 
     class Meta:
@@ -1022,7 +1022,7 @@ class CustomerWeightRecord(models.Model):
     class Meta:
         db_table = "erp_customer_weight_timeline"
 
-    customer = models.ForeignKey(Customer , db_column = "erp_customer_id")
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , on_delete = models.CASCADE)
     date = models.DateTimeField(auto_now_add = True)
     weight = models.FloatField()
     weight_type = models.IntegerField()
@@ -1059,8 +1059,8 @@ class WaterContainer(models.Model):
 class CustomerWaterLogs(models.Model):
     saved = models.DateTimeField(auto_now_add = True)
     count = models.IntegerField()
-    customer = models.ForeignKey(Customer, related_name = "water_logs")
-    container = models.ForeignKey(WaterContainer)
+    customer = models.ForeignKey(Customer, related_name = "water_logs" , on_delete = models.CASCADE)
+    container = models.ForeignKey(WaterContainer , on_delete = models.CASCADE)
     quantity = models.IntegerField()
     added = models.DateTimeField(null = True)   
 
@@ -1082,14 +1082,14 @@ class CustomerSleepLogs(models.Model):
     start = models.DateTimeField(auto_now = False)
     end = models.DateTimeField(auto_now = False)
     minutes = models.IntegerField(blank = True)
-    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "sleep_logs")
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "sleep_logs" , on_delete = models.CASCADE)
     saved = models.DateTimeField(auto_now_add = True)
 
 class CustomerActivityLogs(models.Model):
     timestamp = models.DateTimeField(null = True)
     steps = models.IntegerField()
     cals = models.IntegerField()
-    customer = models.ForeignKey(Customer , related_name = "activity_logs", db_column = "erp_customer_id")
+    customer = models.ForeignKey(Customer , related_name = "activity_logs", db_column = "erp_customer_id" , on_delete = models.CASCADE)
     duration = models.IntegerField()
     start = models.DateTimeField(auto_now = False)
     end = models.DateTimeField(auto_now = False)
@@ -1101,7 +1101,7 @@ class CustomerLevelLog(models.Model):
         db_table = "erp_customer_level_log"
     level = models.IntegerField()
     date = models.DateTimeField(auto_now_add = True)
-    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "level_logs")
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "level_logs" , on_delete = models.CASCADE)
 
 class Reasons(models.Model):
     text = models.CharField(max_length = 20 , null = True)
@@ -1114,8 +1114,8 @@ class Reasons(models.Model):
 
 
 class CustomerReasons(models.Model):
-    customer = models.ForeignKey(Customer  , related_name = "reasons")
-    reason = models.ForeignKey(Reasons)
+    customer = models.ForeignKey(Customer  , related_name = "reasons" , on_delete = models.CASCADE)
+    reason = models.ForeignKey(Reasons , on_delete = models.CASCADE)
 
     def __str__(self):
         return self.reason.text

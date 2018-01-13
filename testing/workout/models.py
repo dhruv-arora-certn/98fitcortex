@@ -184,7 +184,7 @@ class GeneratedExercisePlan(models.Model):
 
     created_on = models.DateTimeField(auto_now_add = True)
     year = models.IntegerField()
-    customer = models.ForeignKey(Customer , related_name = "workouts", db_column = "erp_customer_id")
+    customer = models.ForeignKey(Customer , related_name = "workouts", db_column = "erp_customer_id" , on_delete = models.CASCADE)
     user_week_id = models.IntegerField()
     week_id = models.IntegerField()
 
@@ -192,7 +192,7 @@ class GeneratedExercisePlanDetails(models.Model):
     class Meta:
         db_table = "erp_exercise_plan_detail"
     description = models.CharField(default = '' , max_length = 225)
-    workoutplan = models.ForeignKey(GeneratedExercisePlan , related_name = "exercises", db_column = "erp_exercise_plan_id")
+    workoutplan = models.ForeignKey(GeneratedExercisePlan , related_name = "exercises", db_column = "erp_exercise_plan_id" , on_delete = models.CASCADE)
     day = models.IntegerField()
     exercise_type = models.IntegerField()
     workout_name = models.CharField(max_length = 100)
@@ -211,7 +211,7 @@ class CustomerInjury(models.Model):
     class Meta:
         db_table = "erp_customer_injury"
     injury_name = models.CharField(max_length = 20)
-    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "injuries")
+    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "injuries" , on_delete = models.CASCADE)
 
     def __str__(self):
         return self.injury_name
