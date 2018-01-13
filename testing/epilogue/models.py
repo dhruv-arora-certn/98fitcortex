@@ -1120,7 +1120,7 @@ class Reasons(models.Model):
 
 class CustomerReasons(models.Model):
     customer = models.ForeignKey(Customer  , related_name = "reasons" , on_delete = models.CASCADE)
-    reason = models.ForeignKey(Reasons , on_delete = models.CASCADE)
+    reason = models.ForeignKey(Reasons , on_delete = models.DO_NOTHING)
 
     def __str__(self):
         return self.reason.text
@@ -1130,10 +1130,10 @@ def save_pre_state(sender , *args , **kwargs):
     import logging,ipdb
     logger = logging.getLogger(__name__)
     logger.debug("Calling Save Pre State")
-    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "level_logs" , on_delete = models.CASCADE)
     inst = kwargs.pop('instance')
     inst.__before_attrs = inst.args_attrs
     inst.__before_kwargs_attrs = inst.kwargs_attrs
+
 
 @receiver(signals.post_save , sender = Customer)
 def compare_attrs(sender , *args , **kwargs):
