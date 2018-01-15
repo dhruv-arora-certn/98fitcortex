@@ -17,22 +17,28 @@ class RegenerableView(generics.GenericAPIView):
 
 	def get_regeneration_log_object(self):
 		filter_ = Q(**self.get_regenerate_log_filter())
-		regen_obj = RegenerationLog.objects.get(filter_)
 
-		if regen_obj:
-			return {
-				"status" : True
-			}
-		return {
-			"status" : False
-		}
+		try:
+			regen_obj = RegenerationLog.objects.get(filter_)
+		except RegenerationLog.DoesNotExist:
+			regen_obj = None
+
+		return regen_obj
 
 	def get_object(self):
 		regen_obj = self.get_regeneration_log_object()
+		obj = self.get_object_hook()
+
+		if regen_obj:
+			return self.regeneration_hook(obj)
+
+		#No Regeneration is required so just return the obj
+		return obj
 
 		if regen_obj:
 			return {
-				"status" : True
+				"status" : True,
+				"obj" : str(obj_to_regenerate)
 			}
 		return {
 			"status" : False

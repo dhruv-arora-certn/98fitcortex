@@ -3,12 +3,12 @@ from .views import  UserView , DietPlanView , DishReplaceView , MealReplaceView 
  					CustomerMedicalConditionsView , CreateCustomerView , GuestPDFView , DietPlanRegenerationView , UserDietPlanRegenerationView ,\
  					DietPlanMobileView , WaterBulkView  ,SleepWeeklyAggregationView,SleepMonthlyAggregatedView, WaterWeeklyAggregateView,WaterMonthlyAggregateView , \
 					LastDaySleepView, MonthlyActivityView , WeeklyActivityView, ActivityLogView , CustomerSleepLoggingView , DashboardMealTextView , CustomerMedicalConditionsMobileView , CustomerFoodExclusionsMobileView , \
-					DiseasePDFView  , CustomerReasonsView
+					DiseasePDFView  , CustomerReasonsView , RegenerableDietPlanView
 
 urlpatterns = [
 	re_path(r'^users/(?P<pk>[0-9]+)/$' , UserView.as_view()),
 	re_path(r'^users/$' , CreateCustomerView.as_view()),
-	re_path(r'^dietplans/(?P<year>(2017|2018))/(?P<week_id>[0-9]+)/day/(?P<day>[1-7])/$' , DietPlanView.as_view()),
+	re_path(r'^dietplans/(?P<year>(2017|2018))/(?P<week_id>[0-9]+)/day/(?P<day>[1-7])/$' , RegenerableDietPlanView.as_view()),
 	re_path(r'^dish-replace/(?P<pk>[0-9]+)/$' , DishReplaceView.as_view()),
 	re_path(r'^meal-replace/(?P<week_id>\d{1,55})/(?P<day>[1-7])/(?P<meal>(m1|m2|m3|m4|m5))/$' , MealReplaceView.as_view()),
 	re_path(r'^food-exclusion/$' , CustomerFoodExclusionView.as_view()),

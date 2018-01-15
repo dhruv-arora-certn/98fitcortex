@@ -60,7 +60,7 @@ class DietPlanView(regeneration_views.RegenerableView):
         }
 
     def get_queryset(self):
-        return GeneratedDietPlan.objects.filter(customer = self.request.user)
+        return GeneratedDietPlan.objects.filter(customer = self.request.user , year = self.kwargs.get('year') , week_id = self.kwargs.get('week_id'))
 
     def get_diet_plan_details(self , dietplan ):
         return GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = dietplan.id).filter(calorie__gt = 0).filter(day = int(self.kwargs['day']))
@@ -883,3 +883,48 @@ class CustomerReasonsView(CreateAPIView):
     serializer_class = CustomerReasonsSerializer
 
 
+class RegenerableDietPlanView(regeneration_views.RegenerableView):
+    authentication_classes = [CustomerAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = DietPlanSerializer
+
+    def get_object_hook(self):
+        diet_week = GeneratedDietPlan.objects.filter(
+            customer = self.request.user,
+            week_id = int(self.kwargs.get('week_id')),
+            year = int(self.kwargs.get('year'))
+        ).last()
+
+        if diet_week:
+            return diet_week
+        else:
+            #No Dietplan is available, so make it
+            return self.generate()
+
+    def generate(self):
+        return {
+            "status": "Generating"
+        }
+        p = Pipeline(user.latest_weight , user.height , float(user.latest_activity) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id) , year = year)
+
+    def regeneration_hook(self , obj):
+        return obj.regenerate()
+
+    def get(self , request , *args , **kwargs):
+        year = int(self.kwargs.get('year'))
+        week = int(self.kwargs.get('week_id'))
+
+        if not is_valid_week(year , week):
+            raise exceptions.PermissionDenied({
+                "message" : "You cannot access this week's plan"
+            })
+        obj = self.get_object()
+        return Response(obj)
+
+    def get_regenerate_log_filter(self):
+        return {
+            'customer' : self.request.user,
+            'year' : self.kwargs.get('year'),
+            'week' : self.kwargs.get('week_id'),
+            'regenerated' : False
+        }
