@@ -902,13 +902,30 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
             return self.generate()
 
     def generate(self):
-        return {
-            "status": "Generating"
-        }
+        #return {
+        #    "status": "Generating"
+        #}
+        user = self.request.user
+        week_id = self.kwargs.get('week_id')
+        year = self.kwargs.get('year')
         p = Pipeline(user.latest_weight , user.height , float(user.latest_activity) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id) , year = year)
+        try:
+            p.generate()
+        except Exception as e:
+            p.dietplan.delete()
+            raise
+        else:
+            return {
+                "status" : "Generated",
+                "id" : p.dietplan.id
+            }
 
     def regeneration_hook(self , obj):
-        return obj.regenerate()
+        logger = logging.getLogger("regeneration")
+        logger.debug("Regenerating")
+        dietplan = obj.regenerate().dietplan
+        self.regen_obj.toggleStatus()
+        return dietplan
 
     def get(self , request , *args , **kwargs):
         year = int(self.kwargs.get('year'))
@@ -919,7 +936,20 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
                 "message" : "You cannot access this week's plan"
             })
         obj = self.get_object()
-        return Response(obj)
+
+        #Extract the Meals from the dietplan now
+
+        meals = self.get_filtered_queryset(obj)
+        serialized = self.serializer_class(meals , many = True)
+        return Response(serialized.data)
+        return Response({
+            "message" : "Doo Daa Dee"
+        })
+
+    def get_filtered_queryset(self , obj):
+        assert isinstance(obj , GeneratedDietPlan) , "Instance is Not a GeneratedDietPlan : %s"%type(obj)
+        meals = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = obj.id)
+        return meals
 
     def get_regenerate_log_filter(self):
         return {

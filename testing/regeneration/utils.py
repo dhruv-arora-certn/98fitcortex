@@ -25,6 +25,8 @@ def get_window_tuples(week = get_week() , year = get_year()):
 
 
 def create_regeneration_node(_type, user, year , week):
+	logger = get_logger()
+	logger.debug("++++++++++++++++ Creating Object")
 	obj = models.RegenerationLog.objects.get_or_create(
 		type = _type,
 		year = year,

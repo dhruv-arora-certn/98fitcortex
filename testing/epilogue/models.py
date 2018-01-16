@@ -780,6 +780,7 @@ class GeneratedDietPlan(models.Model):
             persist = True
         )
         self.pipeline.regenerate()
+        return self.pipeline
 
     @property
     def items(self):

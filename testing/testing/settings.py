@@ -201,7 +201,13 @@ LOGGING = {
             'level': 'ERROR',
             'class': 'logging.FileHandler',
             'filename': 'error.log',
-		}
+		},
+        'regeneration': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'simple',
+			'filename' : 'regeneration.log'
+        },
     },
     'loggers': {
         'django': {
@@ -228,7 +234,7 @@ LOGGING = {
 			'propagate' :  True
 		},
 		'regeneration' : {
-			'handlers' : [ 'debug' ],
+			'handlers' : [ 'regeneration' ],
 			'formatter' : 'verbose',
 			'level' : 'DEBUG',
 			'propagate' :  True

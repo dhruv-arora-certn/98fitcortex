@@ -5,9 +5,11 @@ from rest_framework import generics
 
 from .models import RegenerationLog
 
+import logging
 
 # Create your views here.
 class RegenerableView(generics.GenericAPIView):
+	logger = logging.getLogger(__name__)
 
 	def get_object_hook(self):
 		raise NotImplementedError("The child class should implement this function")
@@ -23,13 +25,17 @@ class RegenerableView(generics.GenericAPIView):
 		except RegenerationLog.DoesNotExist:
 			regen_obj = None
 
+		self.regen_obj = regen_obj
+
 		return regen_obj
 
 	def get_object(self):
 		regen_obj = self.get_regeneration_log_object()
 		obj = self.get_object_hook()
-
+		import ipdb
+		#ipdb.set_trace()
 		if regen_obj:
+			RegenerableView.logger.debug("---------------------Regeneration Object Found")
 			return self.regeneration_hook(obj)
 
 		#No Regeneration is required so just return the obj
@@ -43,6 +49,12 @@ class RegenerableView(generics.GenericAPIView):
 		return {
 			"status" : False
 		}
+
+	def request_end_hook(self):
+
+		if getattr(self , "regen_obj"):
+			self.regen_obj.toggleStatus()
+		return
 
 
 class TestRegenerableView(RegenerableView):
