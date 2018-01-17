@@ -68,6 +68,7 @@ class Migration(migrations.Migration):
                 ('saved', models.DateTimeField(auto_now_add=True)),
                 ('count', models.IntegerField()),
                 ('quantity', models.IntegerField()),
+                ('user_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='epilogue.Customer')),
             ],
         ),
         migrations.CreateModel(
