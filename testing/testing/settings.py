@@ -100,6 +100,17 @@ DATABASES = {
     }
 }
 
+if os.environ.get('database2'):
+	vals = {
+		"ENGINE" : 'django.db.backends.mysql',
+        'NAME': os.environ.get('dbname2'),
+        'USER' : os.environ.get('dbuser2'),
+        'PASSWORD' : os.environ.get('dbpassword2'),
+        'HOST' : os.environ.get('dbhost2'),
+        'PORT' : os.environ.get('dbport2')
+	}
+	DATABASES.update(vals)
+
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
