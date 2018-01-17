@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('epilogue', '0007_auto_20170828_1247'),
+        ('epilogue', '0007_auto_20170812_0930'),
     ]
 
     operations = [
