@@ -27,7 +27,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'business_account',
-                'managed': False,
             },
         ),
         migrations.CreateModel(
@@ -47,7 +46,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'erp_customer',
-                'managed': False,
             },
         ),
         migrations.CreateModel(
@@ -63,7 +61,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'erp_diet_plan',
-                'managed': False,
             },
         ),
         migrations.CreateModel(
@@ -77,7 +74,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'erp_diet_plan_food_details',
-                'managed': False,
             },
             managers=[
                 ('day1', django.db.models.manager.Manager()),
@@ -91,7 +87,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'erp_exercise_plan',
-                'managed': False,
             },
         ),
         migrations.CreateModel(
@@ -102,7 +97,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'glo_objective',
-                'managed': False,
             },
         ),
         migrations.CreateModel(
@@ -120,6 +114,5 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='food',
-            options={'managed': False},
         ),
     ]

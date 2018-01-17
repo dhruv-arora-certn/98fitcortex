@@ -23,7 +23,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'login_customer',
-                'managed': False,
             },
         ),
         migrations.CreateModel(

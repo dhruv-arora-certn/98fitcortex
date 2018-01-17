@@ -21,7 +21,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'relation_log',
-                'managed': False,
             },
         ),
         migrations.CreateModel(
@@ -34,7 +33,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'erp_customer_weight_timeline',
-                'managed': False,
             },
         ),
         migrations.CreateModel(
@@ -49,7 +47,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'relation_ep_dp',
-                'managed': False,
             },
         ),
         migrations.CreateModel(
@@ -62,7 +59,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'food_type_sizes',
-                'managed': False,
             },
         ),
         migrations.AlterField(

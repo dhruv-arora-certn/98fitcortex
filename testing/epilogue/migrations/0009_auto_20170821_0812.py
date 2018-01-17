@@ -24,7 +24,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'user_sleep_logs',
-                'managed': False,
             },
         ),
         migrations.AddField(

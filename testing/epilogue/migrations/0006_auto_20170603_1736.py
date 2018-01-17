@@ -19,7 +19,6 @@ class Migration(migrations.Migration):
                 ('food_type', models.CharField(choices=[('lamb_mutton', 'Lamb'), ('seafood', 'Seafood'), ('nuts', 'nuts'), ('wheat', 'wheat'), ('dairy', 'dairy'), ('POULTARY', 'poultary'), ('egg', 'egg')], max_length=100)),
             ],
             options={
-                'managed': False,
                 'db_table': 'erp_customer_food_exclusion',
             },
         ),
@@ -30,7 +29,6 @@ class Migration(migrations.Migration):
                 ('condition_name', models.CharField(max_length=50)),
             ],
             options={
-                'managed': False,
                 'db_table': 'erp_customer_medicalcondition',
             },
         ),
