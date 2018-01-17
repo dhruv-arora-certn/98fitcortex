@@ -109,7 +109,11 @@ if os.environ.get('database2'):
         'HOST' : os.environ.get('dbhost2'),
         'PORT' : os.environ.get('dbport2')
 	}
-	DATABASES.update(vals)
+	DATABASES.update({
+		'main' : {
+			**vals	
+		}
+	})
 
 
 # Password validation
