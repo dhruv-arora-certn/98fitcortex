@@ -267,7 +267,7 @@ class Customer(models.Model):
             feet , inches = self.h.split('.')
             inches = 12 * float(feet) + float(inches)
             val =  inches * 0.0254
-        if self.h_type == 2: #Centimeters
+        else: #Centimeters
             val =  int(self.h)/100
         return round(val , 2)
 
