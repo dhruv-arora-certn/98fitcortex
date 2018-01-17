@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddIndex(
             model_name='customerwaterlogs',
-            index=models.Index(fields=['erp_customer_id'], name='epilogue_cu_custome_23b50a_idx'),
+            index=models.Index(fields=['user_id'], name='epilogue_cu_custome_23b50a_idx'),
         ),
         migrations.AddIndex(
             model_name='customerwaterlogs',
