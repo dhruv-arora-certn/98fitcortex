@@ -217,7 +217,7 @@ class Customer(models.Model):
     h = models.CharField(db_column = "height",  default = '0.0' , max_length = 6)
     h_type = models.IntegerField(db_column = "height_type" , default = 1)
     ls = models.CharField( max_length = 50 , db_column = "lifestyle" , blank = True)
-    objective = models.ForeignKey(Objective , db_column = "objective", blank = True , on_delete = models.DO_NOTHING , null = True)
+    objective = models.ForeignKey(Objective , db_column = "objective", default = 1, on_delete = models.DO_NOTHING )
     gen = models.CharField(max_length = 20 , db_column = "gender", blank = True)
     body_type = models.CharField(max_length = 50, blank = True)
     food_cat = models.CharField(max_length = 50 , choices=  food_cat_choices, blank = True)
@@ -264,7 +264,7 @@ class Customer(models.Model):
         Convert the persisted height to meters
         '''
         if self.h_type == 1: #Feets and inches
-            feet , inches = self.h.split('.')
+            feet , inches = str(float(self.h)).split(".")
             inches = 12 * float(feet) + float(inches)
             val =  inches * 0.0254
         else: #Centimeters
