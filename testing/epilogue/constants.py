@@ -1,8 +1,8 @@
 
 
 DIET_ONLY_FACTORS = [
-	'height',
-	'weight',
+	'h',
+	'w',
 	'gender',
 	'lifestyle',
 	'food_exclusions_string'
