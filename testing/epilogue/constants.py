@@ -14,5 +14,5 @@ WORKOUT_ONLY_FACTORS = [
 ]
 
 COMMON_FACTORS = [
-	'goal'
+	'objective'
 ]
