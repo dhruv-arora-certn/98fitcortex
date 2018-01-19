@@ -19,7 +19,7 @@ logger.addHandler(handler)
 
 def log_written_objs(objs):
     for e in objs:
-        logger.debug(str(e))
+        logger.debug("%s : %s"%(e.__class__.__name__ , str(e)))
 
 
 
@@ -33,16 +33,23 @@ def transfer(app , start= 0 ):
         start = 0
 
     for model in models:
-        items = model.objects.using('main').all()
-        start = 0
-        count = items.count()
+        transfer_model(model)
+    return
 
+def transfer_model(model):
+    items = model.objects.using('main').all()
+    start = 0
+    count = items.count()
+    try:
         for i in range(start , count , 100):
             items_to_transfer = items[i:i+100]
             created = model.objects.bulk_create(items_to_transfer)
             log_written_objs(created)
+    except Exception as err:
+        logger.debug("Exception Encountered : %s. Retransfer the model after fixing the error"%err)
+        model.objects.all().delete()
+        raise
 
-    return
 
 
 
