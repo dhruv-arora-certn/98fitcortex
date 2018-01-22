@@ -16,7 +16,7 @@ Including another URLconf
 from django.urls import re_path
 from django.urls import include
 from django.contrib import admin
-#from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from rest_framework_swagger.views import get_swagger_view
 schema_view = get_swagger_view("98Fit APIs")
 
@@ -30,4 +30,4 @@ urlpatterns = [
     re_path(r'^messaging/' , include("messaging.urls")),
     re_path(r'^docs/', schema_view),
 ]
-#urlpatterns += staticfiles_urlpatterns()
+urlpatterns += staticfiles_urlpatterns()
