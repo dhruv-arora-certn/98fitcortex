@@ -10,11 +10,13 @@ certifi==2017.4.17
 cffi==1.10.0
 chardet==3.0.3
 click==6.7
+coreapi==2.3.3
+coreschema==0.0.4
 cssselect==1.0.1
 csvImporter==0.1.3.2
 decorator==4.0.11
 defusedxml==0.5.0
-Django==1.11.2
+Django==2.0
 django-allauth==0.33.0
 django-cors-headers==2.0.2
 django-easy-pdf==0.1.1
@@ -23,8 +25,9 @@ django-hashers-passlib==0.3
 django-redis==4.8.0
 django-request-logging==0.5.4
 django-rest-auth==0.9.1
+django-rest-swagger==2.1.2
 django-ses==0.8.2
-djangorestframework==3.6.3
+djangorestframework==3.7.3
 djangorestframework-bulk==0.2.1
 docutils==0.13.1
 drfdocs==0.0.11
@@ -32,6 +35,7 @@ entrypoints==0.2.3
 google-api-python-client==1.6.3
 gunicorn==19.7.1
 html5lib==0.999999999
+httpie==0.9.9
 httplib2==0.10.3
 idna==2.5
 ipdb==0.10.3
@@ -40,6 +44,7 @@ ipython==6.0.0
 ipython-genutils==0.2.0
 ipywidgets==7.0.5
 isoweek==1.3.3
+itypes==1.1.0
 jedi==0.10.2
 Jinja2==2.10
 jmespath==0.9.3
@@ -61,6 +66,7 @@ numpy==1.12.1
 oauth2client==4.1.2
 oauthlib==2.0.3
 olefile==0.44
+openapi-codec==1.3.2
 packaging==16.8
 pandas==0.21.0
 pandocfilters==1.4.2
@@ -96,6 +102,7 @@ requests-oauthlib==0.8.0
 rsa==3.4.2
 s3transfer==0.1.10
 simplegeneric==0.8.1
+simplejson==3.13.2
 six==1.10.0
 South==1.0.2
 terminado==0.8.1

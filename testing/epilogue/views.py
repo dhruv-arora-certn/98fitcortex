@@ -915,10 +915,7 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
             p.dietplan.delete()
             raise
         else:
-            return {
-                "status" : "Generated",
-                "id" : p.dietplan.id
-            }
+            return p.dietplan
 
     def regeneration_hook(self , obj):
         logger = logging.getLogger("regeneration")
