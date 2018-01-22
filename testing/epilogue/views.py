@@ -945,7 +945,8 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
 
     def get_filtered_queryset(self , obj):
         assert isinstance(obj , GeneratedDietPlan) , "Instance is Not a GeneratedDietPlan : %s"%type(obj)
-        meals = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = obj.id)
+        day = self.kwargs.get('day',1)
+        meals = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = obj.id , day = day)
         return meals
 
     def get_regenerate_log_filter(self):
