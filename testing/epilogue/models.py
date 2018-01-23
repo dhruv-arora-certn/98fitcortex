@@ -3,7 +3,7 @@ from dietplan.gender import Male , Female
 
 from epilogue.managers import *
 from epilogue import decorators
-from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day , get_day
+from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day , get_day , seconds_to_hms
 from epilogue.dummyModels import *
 from .mappers import *
 from epilogue.constants import DIET_ONLY_FACTORS , WORKOUT_ONLY_FACTORS , COMMON_FACTORS
