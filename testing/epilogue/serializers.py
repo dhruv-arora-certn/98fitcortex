@@ -14,12 +14,12 @@ class CustomerSerializer(serializers.ModelSerializer):
 	diseases = serializers.StringRelatedField(many = True , source = "customermedicalconditions_set")
 	injuries = serializers.StringRelatedField(many = True)
 	reasons = serializers.SerializerMethodField()
-	height = serializers.CharField(source = "h" , required = False)
-	weight = serializers.CharField(source = "w", required = False)
-	gender = serializers.CharField(source = "gen", required = False)
-	lifestyle = serializers.CharField(source = "ls", required = False)
-	height_type = serializers.IntegerField(source = "h_type", required = False)
-	weight_type = serializers.IntegerField(source = "w_type", required = False)
+	height = serializers.CharField(source = "h" , required = False , default = '0.0')
+	weight = serializers.CharField(source = "w", required = False , default = '0')
+	gender = serializers.CharField(source = "gen", required = False , default = 'female')
+	lifestyle = serializers.CharField(source = "ls", required = False , default = 1.37)
+	height_type = serializers.IntegerField(source = "h_type", required = False , default= 1)
+	weight_type = serializers.IntegerField(source = "w_type", required = False , default = 2)
 
 	class Meta:
 		model = Customer
