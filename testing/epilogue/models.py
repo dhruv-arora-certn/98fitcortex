@@ -464,8 +464,8 @@ class Customer(models.Model):
         )
         baseQ = baseQ.values("date" ).annotate(
             total_minutes = models.Sum("minutes"),
-            wakeup = RawSQL("time(start)",[]),
-            sleep = RawSQL("time(end)",[])
+            sleep = RawSQL("time(start)",[]),
+            wakeup = RawSQL("time(end)",[])
         ).values("date","total_minutes","wakeup","sleep" )
         baseQ = baseQ.order_by("date")
         if mapped:
