@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  api:
+    #build:
+    image: 98fit:regeneration
+      #context: .
+      #dockerfile: Dockerfile-api-server
+  nginx:
+    image: nginx:1.13
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+    ports:
+      - 8001:80
+
