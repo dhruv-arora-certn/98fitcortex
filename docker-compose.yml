@@ -2,14 +2,19 @@ version: '3'
 
 services:
   api:
-    #build:
-    image: 98fit:regeneration
-      #context: .
-      #dockerfile: Dockerfile-api-server
+    networks:
+      - 98fit_net
+    build:
+      context: .
+      dockerfile: Dockerfile-api-server
   nginx:
+    networks:
+      - 98fit_net
     image: nginx:1.13
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
     ports:
-      - 8001:80
+      - 80:80
 
+networks:
+    98fit_net:
