@@ -1092,7 +1092,7 @@ class CustomerSleepLogs(models.Model):
     saved = models.DateTimeField(auto_now_add = True)
 
 class CustomerActivityLogs(models.Model):
-    timestamp = models.DateTimeField(null = True)
+    timestamp = models.DateTimeField(auto_now_add = True)
     steps = models.IntegerField()
     cals = models.IntegerField()
     customer = models.ForeignKey(Customer , related_name = "activity_logs", db_column = "customer_id" , on_delete = models.CASCADE , null = True)
