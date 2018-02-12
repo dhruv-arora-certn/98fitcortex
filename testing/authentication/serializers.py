@@ -73,7 +73,8 @@ class BaseSocialSerializer(serializers.Serializer):
 				lc , created = LoginCustomer.objects.get_or_create(
 					email = email,
 					first_name = customer.first_name or first_name,
-					customer = customer
+					customer = customer,
+                                        password = ""
 				)
 				return lc
 		return l
