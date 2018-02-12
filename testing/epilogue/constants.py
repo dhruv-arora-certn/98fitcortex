@@ -5,7 +5,9 @@ DIET_ONLY_FACTORS = [
 	'w',
 	'gender',
 	'lifestyle',
-	'food_exclusions_string'
+	'food_exclusions_string',
+        'food_cat'
+
 ]
 
 WORKOUT_ONLY_FACTORS = [

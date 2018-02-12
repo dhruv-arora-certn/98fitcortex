@@ -33,7 +33,7 @@ def create_regeneration_node(_type, user, year , week):
         week = week,
         customer = user
     )
-    if not created:
+    if not created and obj.regenerated:
         obj.toggleStatus()
 
     return obj

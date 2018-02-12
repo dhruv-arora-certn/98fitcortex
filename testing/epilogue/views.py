@@ -32,6 +32,7 @@ from epilogue.replacement import *
 from epilogue.exceptions import MultipleDiseasesException , DiseasesNotDiabetesOrPcod
 
 from regeneration import views as regeneration_views
+from regeneration import signals as regeneration_signals
 
 from pdfs import base, file_handlers
 
@@ -198,7 +199,12 @@ class CustomerFoodExclusionView(ListBulkCreateAPIView , BulkDifferential):
         bulk = isinstance(request.data , list)
         if bulk:
             toDelete , toAdd = self.getPartition(request)
-
+            
+            if toDelete or toAdd:
+                regeneration_signals.diet_regeneration.send(
+                    sender = Customer,
+                    user = request.user 
+                )
             for e in toDelete:
                 e.delete()
             for e in toAdd:
@@ -873,6 +879,7 @@ class CustomerFoodExclusionsMobileView(GenericAPIView , BulkDifferential):
 
             for a in toAdd:
                 a.save()
+
         objs = request.user.customerfoodexclusions_set.all()
         serialized = self.serializer_class(objs , many = True)
         return Response(serialized.data , status.HTTP_201_CREATED)
