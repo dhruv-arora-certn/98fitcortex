@@ -545,7 +545,7 @@ class Customer(models.Model):
     def _weekly_water(self , week = None):
         today_date = datetime.datetime.today().date()
         baseQ = self.water_logs.annotate(
-            date = RawSQL("Date(saved)",[])
+            date = RawSQL("Date(added)",[])
         )
         baseQ = baseQ.filter(
             date__lte = today_date,
