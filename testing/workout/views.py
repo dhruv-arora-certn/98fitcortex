@@ -23,6 +23,8 @@ from workout import renderers
 from workoutplan.generator import Generator
 from workoutplan.utils import get_cardio_sets_reps_duration
 
+import regeneration.views as regeneration_views
+
 import random
 import json
 import logging
@@ -217,6 +219,7 @@ class CustomerInjuryView(ListBulkCreateAPIView , BulkDifferential):
 class GenerateWorkoutView(generics.GenericAPIView):
     authentication_classes = [CustomerAuthentication]
     permission_classes = [permissions.IsAuthenticated]
+    queryset = GeneratedExercisePlan
     logger = logging.getLogger(__name__)
 
     def generate_workout(self):
@@ -232,8 +235,10 @@ class GenerateWorkoutView(generics.GenericAPIView):
         self.new_workout.persist()
         return self.new_workout.model_obj
 
-
     def get_object(self):
+        return self.get_object_hook()
+
+    def get_object_hook(self):
         workout_week = GeneratedExercisePlan.objects.filter(
             customer = self.request.user,
             week_id = int(self.kwargs.get('week_id')),
@@ -278,3 +283,30 @@ class GenerateWorkoutView(generics.GenericAPIView):
 
         return Response(self.categorise_data(data.data))
 
+
+class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.RegenerableView):
+    
+    def get_regenerate_log_filter(self):
+        return {
+            'customer' : self.request.user,
+            'year' : self.kwargs.get('year'),
+            'week' : self.kwargs.get("week_id"),
+            'regenerated' : False
+        }
+
+    def regeneration_hook(self , obj):
+        logger = logging.getLogger("regeneration") 
+    
+    def get(self , request , *args, **kwargs):
+        year = int(self.kwargs.get('year'))
+        week = int(self.kwargs.get('week_id'))
+
+        if not is_valid_week(year,week):
+            raise exceptions.PermissionDenied({
+                "message" : "You cannot access this week's plan"
+            })
+        obj = self.get_object()
+        objs = self.get_filtered_queryset(obj)
+
+        data = GeneratedExercisePlanDetailsSerializer(objs , many = True)
+        return Response(self.categorise_data(data.data))
