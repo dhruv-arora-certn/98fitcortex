@@ -2,6 +2,7 @@
 
 from django.db import models
 from epilogue.models import *
+from workoutplan import levels
 
 # Create your models here.
 
@@ -187,6 +188,20 @@ class GeneratedExercisePlan(models.Model):
     customer = models.ForeignKey(Customer , related_name = "workouts", db_column = "erp_customer_id" , on_delete = models.CASCADE)
     user_week_id = models.IntegerField()
     week_id = models.IntegerField()
+    glo_level_id = models.IntegerField(default = 1)
+
+    @property
+    def level(self):
+        level = self.glo_level_id
+
+        if level == 1:
+            return levels.Novice
+        elif level == 2:
+            return levels.Beginner
+        elif level == 3:
+            return levels.Intermediate
+
+        return levels.Novice
 
 class GeneratedExercisePlanDetails(models.Model):
     class Meta:

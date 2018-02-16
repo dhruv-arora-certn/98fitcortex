@@ -36,6 +36,7 @@ class RegenerableView(generics.GenericAPIView):
         return regen_obj
 
     def get_object(self):
+        print("Calling Get Object of Regeneration view")
         regen_obj = self.get_regeneration_log_object()
         obj = self.get_object_hook()
         import ipdb

@@ -30,7 +30,7 @@ class WorkoutWeekPersister:
             "year" : get_year(),
             "week_id" : self.week,
             "user_week_id" : self.workout.user.user_relative_workout_week,
-            "customer" : self.workout.user,
+            "customer_id" : self.workout.user.id,
         }
 
     def forward(self):

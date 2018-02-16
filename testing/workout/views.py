@@ -16,7 +16,7 @@ from epilogue.permissions import WeekWindowAccessPermission
 
 from workout.models import *
 from workout.serializers import *
-from workout.utils import get_day_from_generator
+from workout.utils import get_day_from_generator , workout_regenerator
 from workout.persister import WorkoutWeekPersister
 from workout import renderers
 
@@ -235,8 +235,6 @@ class GenerateWorkoutView(generics.GenericAPIView):
         self.new_workout.persist()
         return self.new_workout.model_obj
 
-    def get_object(self):
-        return self.get_object_hook()
 
     def get_object_hook(self):
         workout_week = GeneratedExercisePlan.objects.filter(
@@ -291,11 +289,15 @@ class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.Regenerab
             'customer' : self.request.user,
             'year' : self.kwargs.get('year'),
             'week' : self.kwargs.get("week_id"),
-            'regenerated' : False
+            'regenerated' : False,
+            'type' : 'workout'
         }
 
     def regeneration_hook(self , obj):
         logger = logging.getLogger("regeneration") 
+        logger.debug("Calling Regeneration Hook")
+        return workout_regenerator(obj)
+
     
     def get(self , request , *args, **kwargs):
         year = int(self.kwargs.get('year'))
@@ -306,7 +308,7 @@ class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.Regenerab
                 "message" : "You cannot access this week's plan"
             })
         obj = self.get_object()
-        objs = self.get_filtered_queryset(obj)
+        objs = self.filtered_queryset(obj)
 
         data = GeneratedExercisePlanDetailsSerializer(objs , many = True)
         return Response(self.categorise_data(data.data))
