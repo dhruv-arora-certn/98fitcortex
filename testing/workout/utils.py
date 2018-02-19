@@ -74,6 +74,7 @@ def workout_regenerator(workout):
     except Exception as e:
         logger.debug("Unable to regenerate WP")
         logger.debug(e)
+        status = False
         raise 
     else:
         #NO exception was raised
@@ -86,5 +87,6 @@ def workout_regenerator(workout):
         workout.delete()
         workout = workout_persister.model_obj
         print("New Id :%d"%workout.id)
-    #finally:
-        #return workout
+        status = True
+    finally:
+        return workout , status

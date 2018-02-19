@@ -296,8 +296,11 @@ class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.Regenerab
     def regeneration_hook(self , obj):
         logger = logging.getLogger("regeneration") 
         logger.debug("Calling Regeneration Hook")
-        return workout_regenerator(obj)
-
+        workout , status =  workout_regenerator(obj)
+        
+        if status:
+            self.regen_obj.toggleStatus()
+        return workout
     
     def get(self , request , *args, **kwargs):
         year = int(self.kwargs.get('year'))
