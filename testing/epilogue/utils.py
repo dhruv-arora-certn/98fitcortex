@@ -165,3 +165,12 @@ def seconds_to_hms(secs):
     m,s = divmod(secs , 60)
     h,m = divmod(m , 60)
     return "%d:%02d:%02d"%(h, m, s)
+
+def last_days_filter(baseQ , days = 6):
+    today_date = datetime.today().date()
+    baseQ = baseQ.filter(
+        date__lte = today_date,
+        date__gt = today_date - timedelta(days = days)
+    )
+    return baseQ
+

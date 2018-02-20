@@ -3,7 +3,7 @@ from dietplan.gender import Male , Female
 
 from epilogue.managers import *
 from epilogue import decorators
-from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day , get_day , seconds_to_hms
+from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day , get_day , seconds_to_hms, last_days_filter
 from epilogue.dummyModels import *
 from .mappers import *
 from epilogue.constants import DIET_ONLY_FACTORS , WORKOUT_ONLY_FACTORS , COMMON_FACTORS
@@ -458,10 +458,8 @@ class Customer(models.Model):
     @decorators.sorter(key = lambda x : x['date'] )
     @decorators.add_empty_day_in_week({"total_minutes" : 0 ,"wakeup":None,"sleep":None})
     def weekly_sleep(self,week = None, mapped = False):
-        today_date = datetime.datetime.today().date()
-        baseQ = self.sleep_logs.annotate(date = RawSQL("Date(start)" , [])).filter(
-            date__lte = today_date , date__gt = today_date - datetime.timedelta(days = 6)
-        )
+        baseQ = self.sleep_logs.annotate(date = RawSQL("Date(start)" , []))
+        baseQ = last_days_filter(baseQ)
         baseQ = baseQ.values("date" ).annotate(
             total_minutes = models.Sum("minutes"),
             sleep = RawSQL("time(start)",[]),
