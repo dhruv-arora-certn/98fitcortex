@@ -7,7 +7,6 @@ admin.site.register(Reasons)
 admin.site.register(CustomerReasons)
 admin.site.register(CustomerActivityLogs)
 admin.site.register(CustomerWaterLogs)
-admin.site.register(CustomerSleepLogs)
 
 
 #@admin.register(CustomerSleepLogs)
@@ -17,3 +16,11 @@ admin.site.register(CustomerSleepLogs)
 #        'minutes',
 #        'start'
 #    ]
+
+
+@admin.register(CustomerSleepLogs)
+class SleepAdmin(admin.ModelAdmin):
+    list_display = ["id","name","start","end"]
+
+    def name(self,obj):
+        return obj.customer.first_name
