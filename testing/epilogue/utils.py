@@ -1,14 +1,17 @@
-from datetime import datetime,timedelta
+from datetime import datetime,timedelta,time
+
 from django.db import models 
 from django.db.models.expressions import RawSQL 
 from django.db.models.functions import Coalesce
+
 from functools import partial
+
 from weasyprint import HTML
+
 from django.template.loader import render_to_string
+
 from django.utils import timezone
-
 #from dietplan.calculations import Calculations
-
 import functools
 import json
 import datetime as dt
@@ -169,8 +172,40 @@ def seconds_to_hms(secs):
 def last_days_filter(baseQ , days = 6):
     today_date = datetime.today().date()
     baseQ = baseQ.filter(
-        date__lte = today_date,
-        date__gt = today_date - timedelta(days = days)
+        day__lte = today_date,
+        day__gt = today_date - timedelta(days = days)
     )
     return baseQ
 
+def annotate_sleep_time(baseQ):
+    start_cutoff = time(
+        hour = 0, minute = 0, second = 0
+    ) 
+
+    when1 = models.When(
+        start_time__gt = start_cutoff,
+        start_time__lt = "05:00:00",
+        then = RawSQL(
+            "\
+            DATE(\
+               DATE_SUB(\
+                start , interval 1 day\
+               )\
+            )\
+            ",[]
+        )
+    )
+    when2 = models.When(
+        start_time__gt = "05:00:00",
+        then = RawSQL(
+            "DATE(start)",[]
+        )
+    )
+
+    return baseQ.annotate(
+        sleep_date = models.Case(
+            when1,
+            when2,
+            output_field = models.DateField()
+        )
+    )

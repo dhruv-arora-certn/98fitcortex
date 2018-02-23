@@ -14,11 +14,11 @@ from epilogue.manipulation.manipulator import *
 from dietplan.categorizer.categorizers import *
 import itertools
 
-weight = 46 
-height = 1.6
-goal = Goals.WeightGain
-activity = ActivityLevel.sedentary
-gender = Female.number
+weight = 95 
+height = 1.78
+goal = Goals.WeightLoss
+activity = ActivityLevel.moderately_active
+gender = Male.number
 exclude = []
 
 def generate_diet_plan():

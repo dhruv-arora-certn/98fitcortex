@@ -24,13 +24,13 @@ when = When(
     start_time__gt = start_time,
     start_time__lt = "05:00:00",
     then = RawSQL(
-        "DATE_SUB('start' , interval 30 day)" , []
+        "DATE(DATE_SUB(start , interval 1 day))" , []
     ),
 )
 when2 = When(
     start_time__gt = "05:00:00",
     then = RawSQL(
-        "DATE_SUB('start' , interval 0 day)" , []
+        "DATE(start)" , []
     ),
 )
 

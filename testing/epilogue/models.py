@@ -3,7 +3,7 @@ from dietplan.gender import Male , Female
 
 from epilogue.managers import *
 from epilogue import decorators
-from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day , get_day , seconds_to_hms, last_days_filter
+from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day , get_day , seconds_to_hms, last_days_filter, annotate_sleep_time
 from epilogue.dummyModels import *
 from .mappers import *
 from epilogue.constants import DIET_ONLY_FACTORS , WORKOUT_ONLY_FACTORS , COMMON_FACTORS
@@ -455,19 +455,30 @@ class Customer(models.Model):
             total_minutes = models.Sum("minutes")
         )
         return baseQ
+    
+    def _weekly_sleep(self):
+        baseQ = self.sleep_logs.annotate(
+            day = RawSQL("Date(start)" , []),
+            start_time = RawSQL("Time(start)",[])
+        )
+        baseQ = last_days_filter(baseQ)
+        baseQ = annotate_sleep_time(baseQ)
+        baseQ = baseQ.annotate(
+            sleep = RawSQL("time(start)",[]),
+            wakeup = RawSQL("time(end)",[]),
+            total_minutes = models.F('minutes'),
+            date = RawSQL("Datesub(start , interval 5 hour)" , []),
+        ).values("sleep_date","total_minutes","wakeup","sleep" ,"date")
+        
+         
+        baseQ = baseQ.order_by("sleep_date")
+        return baseQ
 
     @decorators.scale_field("total_minutes",480)
-    @decorators.sorter(key = lambda x : x['date'] )
+    @decorators.sorter(key = lambda x : x['sleep_date'] )
     @decorators.add_empty_day_in_week({"total_minutes" : 0 ,"wakeup":None,"sleep":None})
     def weekly_sleep(self,week = None, mapped = False):
-        baseQ = self.sleep_logs.annotate(date = RawSQL("Date(start)" , []))
-        baseQ = last_days_filter(baseQ)
-        baseQ = baseQ.values("date" ).annotate(
-            total_minutes = models.Sum("minutes"),
-            sleep = RawSQL("time(start)",[]),
-            wakeup = RawSQL("time(end)",[])
-        ).values("date","total_minutes","wakeup","sleep" )
-        baseQ = baseQ.order_by("date")
+        baseQ = self._weekly_sleep()
         if mapped:
             return self.map_aggregate(baseQ , SleepWeekly )
         return baseQ
