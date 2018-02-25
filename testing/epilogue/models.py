@@ -458,24 +458,18 @@ class Customer(models.Model):
     
     def _weekly_sleep(self):
         baseQ = self.sleep_logs.annotate(
-            day = RawSQL("Date(start)" , []),
-            start_time = RawSQL("Time(start)",[])
-        )
-        baseQ = last_days_filter(baseQ)
-        baseQ = annotate_sleep_time(baseQ)
-        baseQ = baseQ.annotate(
             sleep = RawSQL("time(start)",[]),
             wakeup = RawSQL("time(end)",[]),
             total_minutes = models.F('minutes'),
-            date = RawSQL("Datesub(start , interval 5 hour)" , []),
-        ).values("sleep_date","total_minutes","wakeup","sleep" ,"date")
-        
-         
-        baseQ = baseQ.order_by("sleep_date")
+            date = RawSQL("Date(DATE_SUB(start , interval 5 hour))" , []),
+        )
+        baseQ = last_days_filter(baseQ)
+        baseQ = baseQ.values("total_minutes","wakeup","sleep" ,"date")
+        baseQ = baseQ.order_by("date")
         return baseQ
 
     @decorators.scale_field("total_minutes",480)
-    @decorators.sorter(key = lambda x : x['sleep_date'] )
+    @decorators.sorter(key = lambda x : x['date'] )
     @decorators.add_empty_day_in_week({"total_minutes" : 0 ,"wakeup":None,"sleep":None})
     def weekly_sleep(self,week = None, mapped = False):
         baseQ = self._weekly_sleep()

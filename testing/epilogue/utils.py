@@ -172,8 +172,8 @@ def seconds_to_hms(secs):
 def last_days_filter(baseQ , days = 6):
     today_date = datetime.today().date()
     baseQ = baseQ.filter(
-        day__lte = today_date,
-        day__gt = today_date - timedelta(days = days)
+        date__lte = today_date,
+        date__gt = today_date - timedelta(days = days)
     )
     return baseQ
 

@@ -171,7 +171,7 @@ class WaterLoggingMonthlySerializer(serializers.Serializer):
 
 class SleepLoggingWeeklySerializer(serializers.Serializer):
     day = serializers.SerializerMethodField()
-    date = serializers.SerializerMethodField()
+    date = serializers.DateField()
     total_minutes = serializers.IntegerField()
     plotting_value = serializers.FloatField()
     wakeup = serializers.TimeField(allow_null = True)
@@ -179,10 +179,7 @@ class SleepLoggingWeeklySerializer(serializers.Serializer):
 
     def get_day(self , obj):
         print(obj)
-        return obj['sleep_date'].strftime("%a")
-
-    def get_date(self,obj):
-        return obj['sleep_date']
+        return obj['date'].strftime("%a")
 
 class SleepAggregationSerializer(serializers.Serializer):
     minimum = serializers.IntegerField(default = 0 , allow_null = True)
