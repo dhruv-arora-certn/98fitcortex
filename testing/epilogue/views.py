@@ -579,7 +579,7 @@ class SleepWeeklyAggregationView(GenericAPIView):
     permission_classes = (IsAuthenticated ,)
 
     def serializeWeeklyLogs(self , user,week = None):
-        weekly_logs = user.weekly_sleep(week)
+        weekly_logs = user.weekly_sleep(week)[:-1]
         data = SleepLoggingWeeklySerializer(data = list(weekly_logs) , many = True)
         data.is_valid()
         return data.data

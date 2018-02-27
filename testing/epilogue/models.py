@@ -463,14 +463,14 @@ class Customer(models.Model):
             total_minutes = models.F('minutes'),
             date = RawSQL("Date(DATE_SUB(start , interval 5 hour))" , []),
         )
-        baseQ = last_days_filter(baseQ)
+        baseQ = last_days_filter(baseQ , days = 7)
         baseQ = baseQ.values("total_minutes","wakeup","sleep" ,"date")
         baseQ = baseQ.order_by("date")
         return baseQ
 
     @decorators.scale_field("total_minutes",480)
     @decorators.sorter(key = lambda x : x['date'] )
-    @decorators.add_empty_day_in_week({"total_minutes" : 0 ,"wakeup":None,"sleep":None})
+    @decorators.add_empty_day_in_week({"total_minutes" : 0 ,"wakeup":None,"sleep":None} , days_range = 7)
     def weekly_sleep(self,week = None, mapped = False):
         baseQ = self._weekly_sleep()
         if mapped:
@@ -479,6 +479,7 @@ class Customer(models.Model):
 
     @decorators.map_transform_queryset([aggregate_avg , aggregate_max , aggregate_min , aggregate_sum] , "total_minutes")
     def weekly_sleep_aggregated(self , week = None):
+
         today_date = datetime.datetime.today().date()
         baseQ = self.sleep_logs.annotate(day = RawSQL("Date(start)" , [])).filter(
             day__lte = today_date,

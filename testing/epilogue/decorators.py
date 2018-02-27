@@ -39,14 +39,14 @@ def add_today(f):
 		return f(*args , **kwargs)
 	return wrapper
 
-def add_empty_day_in_week(defaults):
+def add_empty_day_in_week(defaults , days_range = 6):
 	def decorator(f):
 		@functools.wraps(f)
 		def wrapper(*args , **kwargs):
 			vals = f(*args , **kwargs)
 			days = set(vals.values_list("date" , flat = True))
 			data = []
-			for e in last_days():
+			for e in last_days(days = days_range):
 				if e not in days:
 					d = {
 						"date" : e,
