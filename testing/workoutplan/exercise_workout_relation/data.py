@@ -29,10 +29,34 @@ activity_level_map = [
     ]
 ]
 
-
+periodization_map = [
+    ( ActivityLevel.lightly_active, levels.Beginner),
+    ( ActivityLevel.moderately_active , levels.Beginner) ,
+    ( ActivityLevel.moderately_active , levels.Intermediate),
+]
 def check_activity_fitness_compat(activity , fitness):
-    act , periodize = activity_level_map[1][0]
-    changed = False
-    if not act == activity:
-        changed = True
-    return act,periodize,changed
+    act_index = [
+        ActivityLevel.sedentary , ActivityLevel.lightly_active, ActivityLevel.moderately_active, ActivityLevel.very_active
+    ].index(activity)
+
+    fit_index = [
+        levels.Novice ,levels.Beginner, levels.Intermediate        
+    ].index(fitness)
+
+    act , periodize = activity_level_map[act_index][fit_index]
+    return act, periodize
+
+
+def upgrade_activity(activity , fitness , weeks_in_fitness):
+    new_activity , periodize= check_activity_fitness_compat(activity , fitness)
+    if not periodize:
+        print("Not periodize")
+        return new_activity
+    else:
+        if weeks_in_fitness < duration:
+            print("Weeks less")
+            return activity
+        else:
+            print("Last")
+            return new_activity
+
