@@ -69,7 +69,7 @@ def upgrade_activity(fitness, activity, periodization_weeks):
     Return the new activity level of the user.
     '''
     to_periodize = is_periodized(fitness, activity)
-    new_activity = get_new_activity(fitness,activity)
+    new_activity = get_new_activity(fitness,activity)[0]
     print("To periodize ", to_periodize)
     print("New Activity ",new_activity )
     if not to_periodize:
@@ -93,3 +93,12 @@ def check_activity_fitness_compat(activity , fitness):
 
     act , periodize = activity_level_map[act_index][fit_index]
     return act, periodize
+
+
+def upgrade_user(user , week = None):
+    if not week:
+        week = user.user_relative_workout_week
+    activity = upgrade_activity(user.level_obj , user.new_latest_activity, week) 
+    if activity != user.new_latest_activity:
+        return "Needs Upgrade" , activity
+    return "Does Not need upgrade"

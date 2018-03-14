@@ -362,6 +362,10 @@ class Customer(models.Model):
         return float(self.lifestyle)
 
     @property
+    def new_latest_activity(self):
+        return ActivityLevelLog.latest_record(customer = self).activity
+
+    @property
     def weight_type(self):
         if self.w_type == 2:
             return "Kgs"

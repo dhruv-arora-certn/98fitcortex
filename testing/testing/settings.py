@@ -63,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'request_logging.middleware.LoggingMiddleware',
+    'workoutplan.exercise_workout_relation.middleware.EDRelationMiddleware'
 ]
 
 ROOT_URLCONF = 'testing.urls'
@@ -140,13 +141,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = os.environ.get("time_zone")
+#TIME_ZONE = os.environ.get("time_zone")
 
 USE_I18N = True
-
 USE_L10N = True
 
-USE_TZ = True
+#USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -219,9 +219,9 @@ LOGGING = {
 		},
         'regeneration': {
             'level': 'DEBUG',
-            'class': 'logging.FileHandler',
+            'class': 'logging.StreamHandler',
             'formatter': 'simple',
-			'filename' : 'regeneration.log'
+	    #'filename' : 'regeneration.log'
         },
     },
     'loggers': {
