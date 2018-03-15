@@ -363,7 +363,9 @@ class Customer(models.Model):
 
     @property
     def new_latest_activity(self):
-        return ActivityLevelLog.latest_record(customer = self).activity
+        if self.activitylevel_logs.count():
+            return ActivityLevelLog.latest_record(customer = self).activity
+        return self.lifestyle
 
     @property
     def weight_type(self):

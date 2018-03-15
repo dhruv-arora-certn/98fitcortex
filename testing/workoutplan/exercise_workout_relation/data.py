@@ -1,6 +1,12 @@
 from workoutplan import levels
+
 from dietplan.activity import ActivityLevel
+
+from regeneration.signals import diet_regeneration
+
 from collections import namedtuple
+
+import logging
 
 
 activity_tuple = namedtuple("Activity", ["name" , "value"])
@@ -29,24 +35,20 @@ activity_level_map = [
     ]
 ]
 
-periodization_map = [
-    ( ActivityLevel.lightly_active, levels.Beginner),
-    ( ActivityLevel.moderately_active , levels.Beginner) ,
-    ( ActivityLevel.moderately_active , levels.Intermediate),
-]
-
+periodization_map = {
+    ( ActivityLevel.lightly_active, levels.Beginner) : range(1,12),
+    ( ActivityLevel.moderately_active , levels.Beginner) :  range(1,12),
+    ( ActivityLevel.moderately_active , levels.Intermediate) : range(13,24) ,
+}
 
 def is_periodized(fitness, activity):
     '''
     Given a pair of (fitness,activity) return if it is periodized.
     Checks against the (fitness,activity) values in periodization_map
     '''
-    try:
-        index = periodization_map.index((activity,fitness))
-    except ValueError as e:
-        return False
-    else:
+    if (activity,fitness) in periodization_map:
         return True
+    return False
 
 def get_new_activity(fitness, activity):
     '''
@@ -68,8 +70,9 @@ def upgrade_activity(fitness, activity, periodization_weeks):
     upgraded or not.
     Return the new activity level of the user.
     '''
-    to_periodize = is_periodized(fitness, activity)
-    new_activity = get_new_activity(fitness,activity)[0]
+    fit_act = (fitness,activity)
+    to_periodize = is_periodized(*fit_act)
+    new_activity = get_new_activity(*fit_act)[0]
     print("To periodize ", to_periodize)
     print("New Activity ",new_activity )
     if not to_periodize:
@@ -77,28 +80,35 @@ def upgrade_activity(fitness, activity, periodization_weeks):
             return new_activity
         return activity
     else:
-        if periodization_weeks < 12:
+        if periodization_weeks in periodization_map[(activity,fitness)]:
             return activity
         return new_activity
 
-
-def check_activity_fitness_compat(activity , fitness):
-    act_index = [
-        ActivityLevel.sedentary , ActivityLevel.lightly_active, ActivityLevel.moderately_active, ActivityLevel.very_active
-    ].index(activity)
-
-    fit_index = [
-        levels.Novice ,levels.Beginner, levels.Intermediate        
-    ].index(fitness)
-
-    act , periodize = activity_level_map[act_index][fit_index]
-    return act, periodize
-
+def _upgrade_user_activity(user, new_activity):
+    '''
+    Add new activity level record for the user.
+    Send a signal for diet regeneration.
+    '''
+    logger = logging.getLogger(__name__)
+    logger.debug("Upgrading User from %0.2f to %0.2f"%(user.new_latest_activity , new_activity))
+    try:
+        record, created = user.activitylevel_logs.create(
+            lifestyle = str(new_activity)        
+        )
+    except Exception as e:
+        return user
+    else:
+        diet_regeneration.send()
+    return user
 
 def upgrade_user(user , week = None):
+    '''
+    Function to Upgrade User's activity level based on his workout week
+    Return the upgraded user
+    '''
     if not week:
         week = user.user_relative_workout_week
     activity = upgrade_activity(user.level_obj , user.new_latest_activity, week) 
     if activity != user.new_latest_activity:
-        return "Needs Upgrade" , activity
-    return "Does Not need upgrade"
+        return _upgrade_user_activity(user,activity)
+    return user
