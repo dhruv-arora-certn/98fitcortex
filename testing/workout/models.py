@@ -188,7 +188,8 @@ class GeneratedExercisePlan(models.Model):
     customer = models.ForeignKey(Customer , related_name = "workouts", db_column = "erp_customer_id" , on_delete = models.CASCADE)
     user_week_id = models.IntegerField()
     week_id = models.IntegerField()
-    glo_level_id = models.IntegerField(default = 1)
+    level = models.IntegerField(default = 1)
+    lifestyle = models.FloatField(default = 1.2)
 
     @property
     def level(self):
