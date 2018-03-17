@@ -3,7 +3,7 @@ from dietplan.gender import Male , Female
 
 from epilogue.managers import *
 from epilogue import decorators
-from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day , get_day , seconds_to_hms, last_days_filter, annotate_sleep_time
+from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day , get_day , seconds_to_hms, last_days_filter, annotate_sleep_time, count_weeks
 from epilogue.dummyModels import *
 from .mappers import *
 from epilogue.constants import DIET_ONLY_FACTORS , WORKOUT_ONLY_FACTORS , COMMON_FACTORS
@@ -678,18 +678,9 @@ class Customer(models.Model):
         level_obj = self.level_obj
         last_date = self.get_last_level_day()
 
-        workouts_after = self.workouts.filter(created_on__gt = last_date).count()
+        weeks = count_weeks(last_date) + 1 #Count weeks only returns the difference in weeks, but workout weeks is inclusive, so + 1
 
-        if workouts_after >= 1:
-            return workouts_after
-        return 1
-
-    @property
-    def user_absolute_workout_week(self):
-        count = self.workouts.count()
-        if count >= 1:
-            return count
-        return 1
+        return weeks
 
     def is_novice(self):
         if self.level == 1:
