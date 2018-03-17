@@ -644,16 +644,20 @@ class Customer(models.Model):
             total_steps = models.Sum("steps")
         )
         return baseQ
-
+    
     @property
-    def level_obj(self):
+    def current_level(self):
         last_level_record = self.level_logs.last()
 
         if last_level_record:
             level = last_level_record.level
         else:
             level = self.level
-
+        return level
+        
+    @property
+    def level_obj(self):
+        level = self.current_level
         if level == 1:
             return levels.Novice
         elif level == 2:

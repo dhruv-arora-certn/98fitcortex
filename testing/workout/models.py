@@ -188,11 +188,11 @@ class GeneratedExercisePlan(models.Model):
     customer = models.ForeignKey(Customer , related_name = "workouts", db_column = "erp_customer_id" , on_delete = models.CASCADE)
     user_week_id = models.IntegerField()
     week_id = models.IntegerField()
-    level = models.IntegerField(default = 1)
-    lifestyle = models.FloatField(default = 1.2)
+    level = models.IntegerField(default = 1, db_column = "glo_level_id")
+    lifestyle = models.FloatField(default = 1.2, db_column = "life_style")
 
     @property
-    def level(self):
+    def level_obj(self):
         level = self.glo_level_id
 
         if level == 1:
@@ -203,6 +203,10 @@ class GeneratedExercisePlan(models.Model):
             return levels.Intermediate
 
         return levels.Novice
+    
+    @property
+    def activity(self):
+       return self.lifestyle 
 
 class GeneratedExercisePlanDetails(models.Model):
     class Meta:

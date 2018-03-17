@@ -31,6 +31,8 @@ class WorkoutWeekPersister:
             "week_id" : self.week,
             "user_week_id" : self.workout.user.user_relative_workout_week,
             "customer_id" : self.workout.user.id,
+            "level" : self.workout.user.current_level, #The Current fitness level of user
+            "lifestyle": self.workout.user.new_latest_activity, #The Current Activity Level of the user
         }
 
     def forward(self):
