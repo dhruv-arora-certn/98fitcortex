@@ -65,6 +65,9 @@ class InfRange(ComparableRange):
         if num >= self.start:
             return True
 
+    def __repr__(self):
+        return "InfRange(%d,%0.1f)"%(self.start,self.stop)
+
     
 
 week_range_mapping = {
@@ -73,6 +76,15 @@ week_range_mapping = {
     levels.Intermediate : InfRange(25)
 }
 
+def valid_fitness(week):
+    '''
+    Return the Valid Fitness Level of the User based on his week
+    '''
+    mapping = [
+        week in v for v in week_range_mapping.values()
+    ]
+    idx = mapping.index(True)
+    return list(week_range_mapping.keys())[idx]
 
 def upgrade(user):
     '''
