@@ -72,7 +72,7 @@ class InfRange(ComparableRange):
 
 week_range_mapping = {
     levels.Novice : ComparableRange(1,7) ,
-    levels.Beginner: ComparableRange(8,25),
+    levels.Beginner: ComparableRange(7,25),
     levels.Intermediate : InfRange(25)
 }
 
@@ -94,8 +94,8 @@ def upgrade(user):
     current_week = get_current_weeks(user)
     current_fitness = get_current_fitness(user)
 
-    if current_week in week_range_mapping[current_fitness]:
-        return user
-    return 
+    correct_fitness = valid_fitness(current_week)
+    
+    return correct_fitness == valid_fitness 
 
 
