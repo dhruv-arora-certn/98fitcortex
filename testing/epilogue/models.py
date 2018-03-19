@@ -14,8 +14,11 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.cache import cache
 from django.db.models import signals
+
 from workoutplan import levels
 from workoutplan import locations
+
+from workout import week_upgrade
 
 
 from django.utils.encoding import python_2_unicode_compatible
@@ -346,6 +349,17 @@ class Customer(models.Model):
         if last_weight:
             return last_weight.weight
         return self.weight
+    
+    def update_fitness(self , week):
+        fitness, should_upgrade = week_upgrade.upgrade(self , week)
+        if should_upgrade:
+            print("Upgrading Fitness")
+            self.level_logs.create(
+                level = fitness.value  
+            )
+        else:
+            print("No need to update fitness")
+        return self
 
     @property
     def latest_activity(self):
@@ -1141,7 +1155,6 @@ def save_pre_state(sender , *args , **kwargs):
     inst = kwargs.pop('instance')
     inst.__before_attrs = inst.args_attrs
     inst.__before_kwargs_attrs = inst.kwargs_attrs
-
 
 @receiver(signals.post_save , sender = Customer)
 def compare_attrs(sender , *args , **kwargs):

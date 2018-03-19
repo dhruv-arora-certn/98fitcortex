@@ -86,16 +86,15 @@ def valid_fitness(week):
     idx = mapping.index(True)
     return list(week_range_mapping.keys())[idx]
 
-def upgrade(user):
+def upgrade(user , week):
     '''
     Upgrade the user to the next Fitness level
     '''
 
-    current_week = get_current_weeks(user)
     current_fitness = get_current_fitness(user)
 
-    correct_fitness = valid_fitness(current_week)
+    correct_fitness = valid_fitness(week)
     
-    return correct_fitness == valid_fitness 
+    return correct_fitness, correct_fitness == valid_fitness 
 
 

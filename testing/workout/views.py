@@ -283,6 +283,25 @@ class GenerateWorkoutView(generics.GenericAPIView):
 
 
 class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.RegenerableView):
+
+    def check_and_update_fitness(self,request):
+        '''
+        Check if the fitness needs to be updated for the workout week requested
+        '''
+        pass
+
+    def check_and_update_activity_level(self,request):
+        '''
+        Check if the activity level needs to be updated for the workout week requested
+        '''
+        pass
+
+    def before_request_hook(self,request, *args, **kwargs):
+        '''
+        Add calls to functions that must be run before the request is responded to
+        '''
+        self.check_and_update_fitness(request, *args, **kwargs)
+        return
     
     def get_regenerate_log_filter(self):
         return {
@@ -303,6 +322,7 @@ class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.Regenerab
         return workout
     
     def get(self , request , *args, **kwargs):
+        self.before_request_hook(request , *args, **kwargs)
         year = int(self.kwargs.get('year'))
         week = int(self.kwargs.get('week_id'))
 
