@@ -80,9 +80,11 @@ def valid_fitness(week):
     '''
     Return the Valid Fitness Level of the User based on his week
     '''
+
     mapping = [
         week in v for v in week_range_mapping.values()
     ]
+    print("Mapping for week %d"%(week), mapping)
     idx = mapping.index(True)
     return list(week_range_mapping.keys())[idx]
 
@@ -95,6 +97,6 @@ def upgrade(user , week):
 
     correct_fitness = valid_fitness(week)
     
-    return correct_fitness, correct_fitness == valid_fitness 
+    return correct_fitness, correct_fitness != current_fitness 
 
 

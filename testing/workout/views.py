@@ -16,7 +16,7 @@ from epilogue.permissions import WeekWindowAccessPermission
 
 from workout.models import *
 from workout.serializers import *
-from workout.utils import get_day_from_generator , workout_regenerator
+from workout.utils import get_day_from_generator , workout_regenerator, check_and_update_fitness
 from workout.persister import WorkoutWeekPersister
 from workout import renderers
 
@@ -28,6 +28,8 @@ import regeneration.views as regeneration_views
 import random
 import json
 import logging
+import datetime as dt
+import isoweek
 
 def shuffle(qs):
     l = list(qs)
@@ -284,11 +286,10 @@ class GenerateWorkoutView(generics.GenericAPIView):
 
 class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.RegenerableView):
 
-    def check_and_update_fitness(self,request):
-        '''
-        Check if the fitness needs to be updated for the workout week requested
-        '''
-        pass
+    before_hooks = [
+        check_and_update_fitness,
+    ]
+
 
     def check_and_update_activity_level(self,request):
         '''
@@ -300,7 +301,9 @@ class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.Regenerab
         '''
         Add calls to functions that must be run before the request is responded to
         '''
-        self.check_and_update_fitness(request, *args, **kwargs)
+        [
+            f(request,*args,**kwargs) for f in self.before_hooks
+        ]
         return
     
     def get_regenerate_log_filter(self):
@@ -322,7 +325,6 @@ class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.Regenerab
         return workout
     
     def get(self , request , *args, **kwargs):
-        self.before_request_hook(request , *args, **kwargs)
         year = int(self.kwargs.get('year'))
         week = int(self.kwargs.get('week_id'))
 
@@ -330,6 +332,8 @@ class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.Regenerab
             raise exceptions.PermissionDenied({
                 "message" : "You cannot access this week's plan"
             })
+
+        self.before_request_hook(request , *args, **kwargs)
         obj = self.get_object()
         objs = self.filtered_queryset(obj)
 

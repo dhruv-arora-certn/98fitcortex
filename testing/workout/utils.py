@@ -6,6 +6,7 @@ from workoutplan import levels
 
 import random
 import logging
+import isoweek
 
 
 def get_day_from_generator(generator , day):
@@ -29,7 +30,7 @@ class MockCustomerLevel:
     def is_intermediate(self):
         return self.level_obj == levels.Intermediate
 
-def dummy_customer(level = None , goal = None , week = None , location = None , email = None):
+def dummy_customer(level = None , goal = None , week = None , location = None , email = None, current_level = 1 , new_latest_activity = None):
     return type(
         "DummyCustomer",
         (MockCustomerLevel,),
@@ -39,17 +40,20 @@ def dummy_customer(level = None , goal = None , week = None , location = None , 
             "user_relative_workout_week" : week,
             "id" : random.randint(9,100),
             "email" : email or "test@98fit.com",
-            "workout_location" : location
-
+            "workout_location" : location,
+            "current_level" : current_level,
+            "new_latest_activity" : new_latest_activity
         }
     )()
 
 def make_dummy_customer_like(customer , week = None , email = None):
     return dummy_customer(
+        current_level = customer.current_level,
         level = customer.level_obj,
         goal = customer.goal,
         week = week or customer.user_relative_workout_week,
-        location = customer.workout_location 
+        location = customer.workout_location,
+        new_latest_activity = customer.new_latest_activity
     )
 
 def workout_regenerator(workout):
@@ -90,3 +94,18 @@ def workout_regenerator(workout):
         status = True
     finally:
         return workout , status
+
+def check_and_update_fitness(request , *args, **kwargs):
+    '''
+    Check if the fitness needs to be updated for the workout week requested
+    '''
+    week = int(kwargs.get('week_id'))
+    year = int(kwargs.get('year'))
+    end = isoweek.Week(year,week).monday()
+    start = request.user.get_last_level_day()
+
+    from epilogue.utils import count_weeks
+    weeks_since = count_weeks(start , end) + 1
+
+    request.user.update_fitness(weeks_since)
+    return 

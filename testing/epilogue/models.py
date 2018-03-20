@@ -351,6 +351,11 @@ class Customer(models.Model):
         return self.weight
     
     def update_fitness(self , week):
+        if self.level_obj == levels.Beginner:
+            offset = 6
+        elif self.level_obj == levels.Intermediate:
+            offset = 24
+        week += offset
         fitness, should_upgrade = week_upgrade.upgrade(self , week)
         if should_upgrade:
             print("Upgrading Fitness")
@@ -693,7 +698,11 @@ class Customer(models.Model):
         last_date = self.get_last_level_day()
 
         weeks = count_weeks(last_date) + 1 #Count weeks only returns the difference in weeks, but workout weeks is inclusive, so + 1
-
+        
+        if level_obj == levels.Beginner:
+            weeks += 6
+        elif level_obj == levels.Intermediate:
+            weeks += 24
         return weeks
 
     def is_novice(self):
@@ -1192,3 +1201,11 @@ def compare_attrs(sender , *args , **kwargs):
             workout_regeneration.send(sender = Customer , user = instance)
     else:
         logger.debug("Do not send signal")
+
+@receiver(signals.post_save , sender = CustomerLevelLog)
+def level_log_created(sender, *args, **kwargs):
+    created = kwargs.get('created',False)
+    instance = kwargs.get('instance')
+    
+    if created:
+        workout_regeneration.send(sender = Customer, user = instance.customer)
