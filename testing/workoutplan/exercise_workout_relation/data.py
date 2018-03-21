@@ -36,8 +36,8 @@ activity_level_map = [
 ]
 
 periodization_map = {
-    ( ActivityLevel.lightly_active, levels.Beginner) : range(1,12),
-    ( ActivityLevel.moderately_active , levels.Beginner) :  range(1,12),
+    ( ActivityLevel.lightly_active, levels.Beginner) : range(1,13),
+    ( ActivityLevel.moderately_active , levels.Beginner) :  range(1,13),
     ( ActivityLevel.moderately_active , levels.Intermediate) : range(13,24) ,
 }
 
@@ -68,6 +68,10 @@ def upgrade_activity(fitness, activity, periodization_weeks):
     '''
     Given a pair of (fitness,activity) determine if the activity is to be
     upgraded or not.
+
+    @param periodization_weeks : weeks into that particular fitness level. If 
+    an offset has been provided, it needs to be removed
+
     Return the new activity level of the user.
     '''
     fit_act = (fitness,activity)

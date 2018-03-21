@@ -16,7 +16,7 @@ from epilogue.permissions import WeekWindowAccessPermission
 
 from workout.models import *
 from workout.serializers import *
-from workout.utils import get_day_from_generator , workout_regenerator, check_and_update_fitness
+from workout.utils import get_day_from_generator , workout_regenerator, check_and_update_fitness, check_and_update_activity_level
 from workout.persister import WorkoutWeekPersister
 from workout import renderers
 
@@ -288,6 +288,7 @@ class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.Regenerab
 
     before_hooks = [
         check_and_update_fitness,
+        check_and_update_activity_level
     ]
 
 

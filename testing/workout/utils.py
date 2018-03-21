@@ -3,6 +3,8 @@ from workout.persister import WorkoutWeekPersister
 
 from workoutplan.generator import Generator
 from workoutplan import levels
+from workoutplan.exercise_workout_relation import data
+
 
 import random
 import logging
@@ -95,10 +97,8 @@ def workout_regenerator(workout):
     finally:
         return workout , status
 
-def check_and_update_fitness(request , *args, **kwargs):
-    '''
-    Check if the fitness needs to be updated for the workout week requested
-    '''
+
+def get_weeks_since(**kwargs):
     week = int(kwargs.get('week_id'))
     year = int(kwargs.get('year'))
     end = isoweek.Week(year,week).monday()
@@ -106,6 +106,20 @@ def check_and_update_fitness(request , *args, **kwargs):
 
     from epilogue.utils import count_weeks
     weeks_since = count_weeks(start , end) + 1
+    return weeks_since
 
+def check_and_update_fitness(request , *args, **kwargs):
+    '''
+    Check if the fitness needs to be updated for the workout week requested
+    '''
+    weeks_since = get_weeks_since(**kwargs)
     request.user.update_fitness(weeks_since)
     return 
+
+def check_and_update_activity_level(reqeust, *args, **kwargs):
+    '''
+    Update User's activity level
+    '''
+    weeks_since = get_weeks_since(**kwargs)
+    data.upgrade_user(request.user, weeks_since)
+    return
