@@ -320,7 +320,6 @@ class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.Regenerab
         logger = logging.getLogger("regeneration") 
         logger.debug("Calling Regeneration Hook")
         workout , status =  workout_regenerator(obj)
-        
         if status:
             self.regen_obj.toggleStatus()
         return workout

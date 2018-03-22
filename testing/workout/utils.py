@@ -71,7 +71,7 @@ def workout_regenerator(workout):
         logger.debug("Trying to regenerate workout")
         generator = Generator(
             dummy_customer        
-        )
+        ).generate()
         workout_persister = WorkoutWeekPersister(
             generator,
             workout.user_week_id
@@ -98,7 +98,7 @@ def workout_regenerator(workout):
         return workout , status
 
 
-def get_weeks_since(**kwargs):
+def get_weeks_since(request,**kwargs):
     week = int(kwargs.get('week_id'))
     year = int(kwargs.get('year'))
     end = isoweek.Week(year,week).monday()
@@ -112,14 +112,14 @@ def check_and_update_fitness(request , *args, **kwargs):
     '''
     Check if the fitness needs to be updated for the workout week requested
     '''
-    weeks_since = get_weeks_since(**kwargs)
+    weeks_since = get_weeks_since(request,**kwargs)
     request.user.update_fitness(weeks_since)
     return 
 
-def check_and_update_activity_level(reqeust, *args, **kwargs):
+def check_and_update_activity_level(request, *args, **kwargs):
     '''
     Update User's activity level
     '''
-    weeks_since = get_weeks_since(**kwargs)
+    weeks_since = get_weeks_since(request,**kwargs)
     data.upgrade_user(request.user, weeks_since)
     return

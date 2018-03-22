@@ -102,19 +102,19 @@ DATABASES = {
 }
 
 if os.environ.get('database2'):
-	vals = {
-		"ENGINE" : 'django.db.backends.mysql',
+    vals = {
+        "ENGINE" : 'django.db.backends.mysql',
         'NAME': os.environ.get('dbname2'),
         'USER' : os.environ.get('dbuser2'),
         'PASSWORD' : os.environ.get('dbpassword2'),
         'HOST' : os.environ.get('dbhost2'),
         'PORT' : os.environ.get('dbport2')
-	}
-	DATABASES.update({
-		'main' : {
-			**vals	
-		}
-	})
+    }
+    DATABASES.update({
+        'main' : {
+            **vals  
+        }
+    })
 
 
 # Password validation
@@ -162,16 +162,16 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES' : [
         'epilogue.authentication.CustomerAuthentication'
     ],
-	'DEFAULT_THROTTLE_CLASSES': (
-		'rest_framework.throttling.ScopedRateThrottle',
-		'rest_framework.throttling.AnonRateThrottle',
-		'rest_framework.throttling.UserRateThrottle'
-	),
-	'DEFAULT_THROTTLE_RATES' : {
-		'navratri-sms' : '10/day',
-		'anon' : '100/hour',
-		'user' : '400/hour'
-	}
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.ScopedRateThrottle',
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ),
+    'DEFAULT_THROTTLE_RATES' : {
+        'navratri-sms' : '10/day',
+        'anon' : '100/hour',
+        'user' : '400/hour'
+    }
 }
 
 REST_AUTH_SERIALIZERS = {
@@ -186,14 +186,14 @@ CORS_ORIGIN_ALLOW_ALL =  True
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-	'formatters' : {
-		'verbose' : {
-			'format' : '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-		},
-		'simple' : {
-			'format' : '%(levelname)s %(asctime)s %(module)s %(message)s'
-		}
-	},
+    'formatters' : {
+        'verbose' : {
+            'format' : '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple' : {
+            'format' : '%(levelname)s %(asctime)s %(module)s %(message)s'
+        }
+    },
     'handlers': {
         'console': {
             'level': 'INFO',
@@ -204,61 +204,72 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'simple',
-			'filename' : 'debug.log'
+            'filename' : 'debug.log'
         },
         'request': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'simple',
-			'filename' : 'request.log'
+            'filename' : 'request.log'
         },
         'error': {
             'level': 'ERROR',
             'class': 'logging.FileHandler',
             'filename': 'error.log',
-		},
+        },
         'regeneration': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'simple',
-	    #'filename' : 'regeneration.log'
+        #'filename' : 'regeneration.log'
         },
+        'persister' : {
+            'level' : 'DEBUG',
+            'class' : 'logging.FileHandler',
+            'filename' : 'persister.log'
+        }
     },
     'loggers': {
         'django': {
-			'handlers' : [ 'debug' ],
-			'formatter' : 'verbose',
+            'handlers' : [ 'debug' ],
+            'formatter' : 'verbose',
             'propagate': True,
         },
-		'workoutplan' : {
-			'handlers' : [ 'debug' ],
-			'formatter' : 'verbose',
-			'level' : 'DEBUG',
-			'propagate' :  True
-		},
-		'workout' : {
-			'handlers' : [ 'debug' ],
-			'formatter' : 'verbose',
-			'level' : 'DEBUG',
-			'propagate' :  True
-		},
-		'epilogue' : {
-			'handlers' : [ 'debug' ],
-			'formatter' : 'verbose',
-			'level' : 'DEBUG',
-			'propagate' :  True
-		},
-		'regeneration' : {
-			'handlers' : [ 'regeneration' ],
-			'formatter' : 'verbose',
-			'level' : 'DEBUG',
-			'propagate' :  True
-		},
-		'django.request': {
-			'handlers' : ['request'],
-			'level' : 'DEBUG',
-			'propagate' : False
-		}
+        'workoutplan' : {
+            'handlers' : [ 'debug' ],
+            'formatter' : 'verbose',
+            'level' : 'DEBUG',
+            'propagate' :  True
+        },
+        'workout' : {
+            'handlers' : [ 'debug' ],
+            'formatter' : 'verbose',
+            'level' : 'DEBUG',
+            'propagate' :  True
+        },
+        'epilogue' : {
+            'handlers' : [ 'debug' ],
+            'formatter' : 'verbose',
+            'level' : 'DEBUG',
+            'propagate' :  True
+        },
+        'regeneration' : {
+            'handlers' : [ 'regeneration' ],
+            'formatter' : 'verbose',
+            'level' : 'DEBUG',
+            'propagate' :  True
+        },
+        'django.request': {
+            'handlers' : ['request'],
+            'level' : 'DEBUG',
+            'propagate' : False
+        },
+        'persister' : {
+            'handlers' : ['persister'],
+            'formatter' : 'verbose',
+            'level': 'DEBUG',
+            'propagate' : True
+        }
     },
 }
 
@@ -280,11 +291,11 @@ email_user_name="Ghost"
 DEFAULT_FROM_USER="info@98Fit"
 
 CACHES = {
-	'default': {
-				'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-				'LOCATION': '/var/tmp/django_cache',
-				'TIMEOUT' : None
-			}
+    'default': {
+                'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+                'LOCATION': '/var/tmp/django_cache',
+                'TIMEOUT' : None
+            }
 }
 
 CACHE_WORKOUT=False

@@ -6,7 +6,7 @@ from epilogue.utils import get_week , get_day , get_year
 
 from workout import models
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("persister")
 
 class PersisterBase:
 
@@ -145,6 +145,9 @@ class ExercisePersister:
             self.model_obj = self.model(
                 **self.get_fields()
             )
+        logger.debug(
+            "Exercise Persister: %d - %s"%(self.model_obj.id , self.model_obj.workout_name)
+        )
         return self
 
     def get_image(self , obj):
