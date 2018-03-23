@@ -4,6 +4,8 @@ from django.db import models
 from epilogue.models import *
 from workoutplan import levels
 
+import isoweek
+
 # Create your models here.
 
 class BaseExercise():
@@ -207,6 +209,10 @@ class GeneratedExercisePlan(models.Model):
     @property
     def activity(self):
        return self.lifestyle 
+    
+    @property
+    def monday(self):
+        return isoweek.Week(self.year, self.week_id)
 
 class GeneratedExercisePlanDetails(models.Model):
     class Meta:
