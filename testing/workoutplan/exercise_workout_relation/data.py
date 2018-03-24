@@ -11,7 +11,7 @@ import logging
 
 activity_tuple = namedtuple("Activity", ["name" , "value"])
 
-
+logger = logging.getLogger("activity_upgrade")   
 
 ##### Activity-Level Validation Map
 # 4x3 matrix
@@ -77,23 +77,22 @@ def upgrade_activity(fitness, activity, periodization_weeks):
     fit_act = (fitness,activity)
     to_periodize = is_periodized(*fit_act)
     new_activity = get_new_activity(*fit_act)[0]
-    print("To periodize ", to_periodize)
-    print("New Activity ",new_activity )
-    if not to_periodize:
-        if new_activity != activity:
-            return new_activity
-        return activity
-    else:
+    logger.debug("To periodize %s"%str(to_periodize))
+    logger.debug("New Activity %s"%str(new_activity ))
+    if to_periodize:
         if periodization_weeks in periodization_map[(activity,fitness)]:
             return activity
         return new_activity
+    else:
+        if new_activity != activity:
+            return new_activity
+        return activity
 
 def _upgrade_user_activity(user, new_activity):
     '''
     Add new activity level record for the user.
     Send a signal for diet regeneration.
     '''
-    logger = logging.getLogger(__name__)
     logger.debug("Upgrading User from %0.2f to %0.2f"%(user.new_latest_activity , new_activity))
     try:
         record, created = user.activitylevel_logs.create(
@@ -113,6 +112,7 @@ def upgrade_user(user , week = None):
     if not week:
         week = user.user_relative_workout_week
     activity = upgrade_activity(user.level_obj , user.new_latest_activity, week) 
+    logger.debug("User Week %d"%week)
     if activity != user.new_latest_activity:
         return _upgrade_user_activity(user,activity)
     return user

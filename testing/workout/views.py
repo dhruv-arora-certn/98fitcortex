@@ -292,11 +292,6 @@ class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.Regenerab
     ]
 
 
-    def check_and_update_activity_level(self,request):
-        '''
-        Check if the activity level needs to be updated for the workout week requested
-        '''
-        pass
 
     def before_request_hook(self,request, *args, **kwargs):
         '''

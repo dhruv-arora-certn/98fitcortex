@@ -351,19 +351,24 @@ class Customer(models.Model):
         return self.weight
     
     def update_fitness(self , week):
+        logger = logging.getLogger("fitness_upgrade")
+        logger.debug("Checking Fitness Upgrade for %d"%(self.id))
         if self.level_obj == levels.Beginner:
             offset = 6
         elif self.level_obj == levels.Intermediate:
             offset = 24
+        else:
+            offset = 0
         week += offset
+        logger.debug("User Week : %d"%week)
         fitness, should_upgrade = week_upgrade.upgrade(self , week)
         if should_upgrade:
-            print("Upgrading Fitness")
+            logger.debug("Upgrading Fitness")
             self.level_logs.create(
                 level = fitness.value  
             )
         else:
-            print("No need to update fitness")
+            logger.debug("No need to update fitness")
         return self
 
     @property

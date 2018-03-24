@@ -120,6 +120,8 @@ def check_and_update_activity_level(request, *args, **kwargs):
     '''
     Update User's activity level
     '''
+    logger = logging.getLogger("activity_upgrade")
+    logger.debug("Calling Update Acitvity")
     weeks_since = get_weeks_since(request,**kwargs)
     data.upgrade_user(request.user, weeks_since)
     return

@@ -1,5 +1,9 @@
 from workoutplan import levels
 
+import logging
+
+logger = logging.getLogger("fitness_upgrade")
+
 def get_current_fitness(user):
     '''
     Return the current fitness level of the user
@@ -84,7 +88,7 @@ def valid_fitness(week):
     mapping = [
         week in v for v in week_range_mapping.values()
     ]
-    print("Mapping for week %d"%(week), mapping)
+    logger.debug("Mapping for week %d"%(week), mapping)
     idx = mapping.index(True)
     return list(week_range_mapping.keys())[idx]
 

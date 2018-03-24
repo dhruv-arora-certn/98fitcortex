@@ -227,6 +227,11 @@ LOGGING = {
             'level' : 'DEBUG',
             'class' : 'logging.FileHandler',
             'filename' : 'persister.log'
+        },
+        'ep_dp_relation' : {
+            'level' : 'DEBUG',
+            'class' : 'logging.FileHandler',
+            'filename' : 'ep_dp_relation.log'
         }
     },
     'loggers': {
@@ -268,6 +273,18 @@ LOGGING = {
             'handlers' : ['persister'],
             'formatter' : 'verbose',
             'level': 'DEBUG',
+            'propagate' : True
+        },
+        'fitness_upgrade':{
+            'handlers' : ['ep_dp_relation'],
+            'formatters' : 'verbose',
+            'level' : 'DEBUG',
+            'propagate' : True
+        },
+        'activity_upgrade':{
+            'handlers' : ['ep_dp_relation'],
+            'formatters' : 'verbose',
+            'level' : 'DEBUG',
             'propagate' : True
         }
     },

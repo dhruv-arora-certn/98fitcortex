@@ -909,13 +909,10 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
             return self.generate()
 
     def generate(self):
-        #return {
-        #    "status": "Generating"
-        #}
         user = self.request.user
         week_id = self.kwargs.get('week_id')
         year = self.kwargs.get('year')
-        p = Pipeline(user.latest_weight , user.height , float(user.latest_activity) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id) , year = year)
+        p = Pipeline(user.latest_weight , user.height , float(user.new_latest_activity) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id) , year = year)
         try:
             p.generate()
         except Exception as e:
