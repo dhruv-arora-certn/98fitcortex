@@ -301,15 +301,16 @@ class Customer(models.Model):
 
     @property
     def lifestyle_string(self):
-        if self.lifestyle == 1.2:
+        lifestyle = self.new_latest_activity
+        if lifestyle == 1.2:
             return "Sedentary"
-        if self.lifestyle == 1.37:
+        if lifestyle == 1.37:
             return "Lightly Active"
-        if self.lifestyle == 1.55:
+        if lifestyle == 1.55:
             return "Moderately Active"
-        if self.lifestyle == 1.70:
+        if lifestyle == 1.70:
             return "Very Active"
-        if self.lifestyle == 1.9:
+        if lifestyle == 1.9:
             return "Extra Active"
 
     @property
