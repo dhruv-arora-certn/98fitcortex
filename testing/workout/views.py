@@ -291,8 +291,6 @@ class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.Regenerab
         check_and_update_activity_level
     ]
 
-
-
     def before_request_hook(self,request, *args, **kwargs):
         '''
         Add calls to functions that must be run before the request is responded to
