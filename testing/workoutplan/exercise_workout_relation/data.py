@@ -36,9 +36,9 @@ activity_level_map = [
 ]
 
 periodization_map = {
-    ( ActivityLevel.lightly_active, levels.Beginner) : range(1,13),
-    ( ActivityLevel.moderately_active , levels.Beginner) :  range(1,13),
-    ( ActivityLevel.moderately_active , levels.Intermediate) : range(13,24) ,
+    ( ActivityLevel.lightly_active, levels.Beginner) : range(1,9),
+    ( ActivityLevel.moderately_active , levels.Beginner) :  range(1,9),
+    ( ActivityLevel.moderately_active , levels.Intermediate) : range(1,9) ,
 }
 
 def is_periodized(fitness, activity):
