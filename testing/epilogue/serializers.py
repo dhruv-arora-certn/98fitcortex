@@ -28,6 +28,20 @@ class CustomerSerializer(serializers.ModelSerializer):
     def get_reasons(self, obj):
         return str(obj.reasons.last())
 
+    def update(self, instance, validated_data):
+        print("Calling Update " , "+"*30)
+        print(validated_data)
+        if 'ls' in validated_data:
+            activitylevel_log = instance.activitylevel_logs.create(
+                lifestyle = validated_data['ls']
+            )
+        if 'level' in validated_data:
+            level_log = instance.level_logs.create(
+                level = validated_data['level']   
+            )
+            print(level_log)
+        return super().update(instance, validated_data)
+
 class FoodSerializer(serializers.ModelSerializer):
     class Meta:
         model = Food
