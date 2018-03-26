@@ -34,6 +34,8 @@ from epilogue.exceptions import MultipleDiseasesException , DiseasesNotDiabetesO
 from regeneration import views as regeneration_views
 from regeneration import signals as regeneration_signals
 
+from workout.utils import check_and_update_activity_level
+
 from pdfs import base, file_handlers
 
 from weasyprint import HTML
@@ -894,6 +896,18 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
     authentication_classes = [CustomerAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = DietPlanSerializer
+    before_hooks = [
+        check_and_update_activity_level
+    ]
+    
+    def before_request_hook(self, request, *args, **kwargs):
+        '''
+        Add calls to functions that must be run before the request is responded to
+        '''
+        [
+            f(request, *args, **kwargs) for f in self.before_hooks
+        ]
+        return 
 
     def get_object_hook(self):
         diet_week = GeneratedDietPlan.objects.filter(
@@ -936,6 +950,7 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
             raise exceptions.PermissionDenied({
                 "message" : "You cannot access this week's plan"
             })
+        self.before_request_hook(request, *args, **kwargs)
         obj = self.get_object()
 
         #Extract the Meals from the dietplan now
