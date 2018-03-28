@@ -704,11 +704,15 @@ class Customer(models.Model):
         last_date = self.get_last_level_day()
 
         weeks = count_weeks(last_date) #Count weeks only returns the difference in weeks, but workout weeks is inclusive, so + 1
+
+        if weeks == 0:
+            return 1
         
         if level_obj == levels.Beginner:
             weeks += 7
         elif level_obj == levels.Intermediate:
             weeks += 25
+
         return weeks
 
     def is_novice(self):

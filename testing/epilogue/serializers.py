@@ -23,7 +23,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Customer
-        fields = ["email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender" , "body_type" , "food_cat" ,"weight_type" , "height_type" , "work_pref" , "level" , "diseases" , "injuries" , "reasons"]
+        fields = ["email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender" , "body_type" , "food_cat" ,"weight_type" , "height_type" , "work_pref" , "level" , "diseases" , "injuries" , "reasons", "new_latest_activity", "current_level"]
 
     def get_reasons(self, obj):
         return str(obj.reasons.last())
@@ -51,7 +51,7 @@ class DietPlanSerializer(serializers.ModelSerializer):
     protein = serializers.SerializerMethodField()
     fat = serializers.SerializerMethodField()
     carbohydrates = serializers.SerializerMethodField()
-    image = serializers.SerializerMethodField()
+    images = serializers.SerializerMethodField()
     quantity = serializers.SerializerMethodField()
     weight = serializers.SerializerMethodField()
     dietplan_id = serializers.SerializerMethodField()
@@ -144,7 +144,7 @@ class CreateCustomerSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Customer
-        fields = [ "email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender" , "body_type" , "food_cat" , "auth_token",  "weight_type" , "height_type"]
+        fields = [ "email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender" , "body_type" , "food_cat" , "auth_token",  "weight_type" , "height_type", "level" , "current_level"]
 
 
     weight = serializers.CharField(source = "w",  required = False)     
@@ -157,6 +157,20 @@ class CreateCustomerSerializer(serializers.ModelSerializer):
 
     def get_auth_token(self , obj):
         return obj.auth_token.key
+
+    def create(self, validated_data):
+        instance = super().create(validated_data)
+
+
+        if 'ls' in validated_data:
+            activitylevel_log = instance.activitylevel_logs.create(
+                lifestyle = validated_data['ls']
+            )
+        if 'level' in validated_data:
+            level_log = instance.level_logs.create(
+                level = validated_data['level']   
+            )
+        return instance
 
 class WaterLoggingModelSerializer(serializers.ModelSerializer):
     class Meta:
