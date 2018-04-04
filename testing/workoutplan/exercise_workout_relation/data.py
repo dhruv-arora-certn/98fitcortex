@@ -36,8 +36,8 @@ activity_level_map = [
 ]
 
 periodization_map = {
-    ( ActivityLevel.lightly_active, levels.Beginner) : range(1,9),
-    ( ActivityLevel.moderately_active , levels.Beginner) :  range(1,9),
+    ( ActivityLevel.lightly_active, levels.Beginner) : range(1,10),
+    ( ActivityLevel.moderately_active , levels.Beginner) :  range(1,10),
     ( ActivityLevel.moderately_active , levels.Intermediate) : range(1,9) ,
 }
 
