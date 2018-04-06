@@ -1,8 +1,11 @@
 from django.shortcuts import render
-from authentication.serializers import RegistrationSerializer , GoogleLoginSerializer , FacebookLoginSerializer, BatraGoogleSerializer
+
+from authentication.serializers import RegistrationSerializer , GoogleLoginSerializer , FacebookLoginSerializer, BatraGoogleSerializer, DeviceRegistrationSerializer
+
 from rest_framework import generics
 from rest_framework import response
 from rest_framework import permissions
+
 from epilogue.models import LoginCustomer , Customer
 from epilogue.authentication import CustomerAuthentication
 # Create your views here.
@@ -87,3 +90,13 @@ class BatraGoogleLoginView(generics.GenericAPIView):
 			"key" : lc.customer.auth_token.key ,
 			"id" : lc.customer.id
 		})
+
+class DeviceRegistrationView(generics.CreateAPIView):
+    serializer_class = DeviceRegistrationSerializer
+
+    def create(self,request, *args, **kwargs):
+        request.data.update({
+            "customer" : request.user.pk
+        })
+        return super().create(request, *args, **kwargs)
+

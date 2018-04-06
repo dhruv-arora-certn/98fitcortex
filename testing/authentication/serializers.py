@@ -1,27 +1,30 @@
-from rest_framework import serializers , exceptions
-from epilogue.serializers import LoginSerializer
-from epilogue.models import LoginCustomer , Customer
-from django.contrib.auth import password_validation
-from authentication.exceptions import UserAlreadyExists
-from passlib.hash import bcrypt
-from analytics.models import UserSignupSource
-from .adapters import GoogleAdapter  , FacebookAdapter
-from .signals import navratri_signup
-import ipdb 
+import rest_framework
 
-class BaseRegistrationSerializer(serializers.Serializer):
+from epilogue import models as epilogue_models, serializers as epilogue_serializers
+
+from django.contrib.auth import password_validation
+
+from passlib.hash import bcrypt
+
+from analytics.models import UserSignupSource
+
+
+from . import adapters, signals, exceptions as authentication_exceptions, models
+
+
+class BaseRegistrationSerializer(rest_framework.serializers.Serializer):
     
     def user_create(self , validated_data):
         '''
-        Create an instance of LoginCustomer.
-        If the ERPCustomer is present in the request, bind the LoginCustomer instance to it. Otherwise create ERPCustomer Instance as well.
+        Create an instance of epilogue_models.LoginCustomer.
+        If the ERPCustomer is present in the request, bind the epilogue_models.LoginCustomer instance to it. Otherwise create ERPCustomer Instance as well.
         '''
         if not getattr(self.context.get("request") , "user").is_anonymous:
             #ERPCustomer Exists
             customer = self.context.get("request").user
             if hasattr(customer , "logincustomer"):
-                raise UserAlreadyExists("Account With this email already exists")
-            lc = LoginCustomer.objects.create(
+                raise authentication_exceptions.UserAlreadyExists("Account With this email already exists")
+            lc = epilogue_models.LoginCustomer.objects.create(
                 email = validated_data['email'],
                 password = bcrypt.hash(validated_data["password"]),
                 customer = self.context['request'].user
@@ -31,10 +34,10 @@ class BaseRegistrationSerializer(serializers.Serializer):
             return lc
         else:
             email = validated_data['email']
-            c = Customer.objects.create(
+            c = epilogue_models.Customer.objects.create(
                 email = email
             )
-            lc = LoginCustomer.objects.create(
+            lc = epilogue_models.LoginCustomer.objects.create(
                 email = email,
                 password = bcrypt.hash(validated_data['password']),
                 customer = c
@@ -42,21 +45,21 @@ class BaseRegistrationSerializer(serializers.Serializer):
             return lc
 
 
-class BaseSocialSerializer(serializers.Serializer):
+class BaseSocialSerializer(rest_framework.serializers.Serializer):
 
     def create(self , credentials):
 
         email , first_name , last_name , picture = self.release_attrs(credentials)
 
         try:
-            l = LoginCustomer.objects.get(email = email)
-        except LoginCustomer.DoesNotExist as e:
+            l = epilogue_models.LoginCustomer.objects.get(email = email)
+        except epilogue_models.LoginCustomer.DoesNotExist as e:
             if self.context['request'].user.is_anonymous:
                 print(email)
-                customer,created = Customer.objects.get_or_create(email = email)
+                customer,created = epilogue_models.Customer.objects.get_or_create(email = email)
                 customer.image = picture
                 customer.save()
-                lc = LoginCustomer.objects.create(
+                lc = epilogue_models.LoginCustomer.objects.create(
                     email = email,
                     first_name = customer.first_name or first_name,
                     customer = customer,
@@ -66,11 +69,11 @@ class BaseSocialSerializer(serializers.Serializer):
             else:
                 customer = self.context.get("request").user
                 if customer.email  and customer.email != email:
-                    raise exceptions.ValidationError("Conflicting Email Addresses")
+                    raise rest_framework.exceptions.ValidationError("Conflicting Email Addresses")
                 customer.image = picture
                 customer.email = email
                 customer.save()
-                lc , created = LoginCustomer.objects.get_or_create(
+                lc , created = epilogue_models.LoginCustomer.objects.get_or_create(
                     email = email,
                     first_name = customer.first_name or first_name,
                     customer = customer,
@@ -81,17 +84,17 @@ class BaseSocialSerializer(serializers.Serializer):
 
 
 class RegistrationSerializer(BaseRegistrationSerializer):
-    email = serializers.EmailField()
-    password = serializers.CharField()
+    email = rest_framework.serializers.EmailField()
+    password = rest_framework.serializers.CharField()
 
     def create(self , validated_data):
         return super().user_create(validated_data)
 
     def validate_email(self , email ):
         print("Calling Validate Email")
-        l = LoginCustomer.objects.filter(email = email)
+        l = epilogue_models.LoginCustomer.objects.filter(email = email)
         if l:
-            raise UserAlreadyExists("This Email is already Registered")
+            raise authentication_exceptions.UserAlreadyExists("This Email is already Registered")
         return email
 
     def validate_password(self , password):
@@ -104,15 +107,15 @@ class RegistrationSerializer(BaseRegistrationSerializer):
         return password
 
 class GoogleLoginSerializer(BaseSocialSerializer):
-    email = serializers.EmailField()
-    name = serializers.CharField()
-    picture = serializers.CharField()
+    email = rest_framework.serializers.EmailField()
+    name = rest_framework.serializers.CharField()
+    picture = rest_framework.serializers.CharField()
 
     def release_attrs(self , credentials):
         return credentials['email'] , credentials['name'] ,"" , credentials['picture']
 
     def validate(self ,attrs):
-        adapter = GoogleAdapter(
+        adapter = adapters.GoogleAdapter(
             access_token = attrs.get('access_token')
         )
         email = attrs['email']
@@ -120,46 +123,46 @@ class GoogleLoginSerializer(BaseSocialSerializer):
         picture = attrs['picture']
         try:
             if not self.context['request'].user.is_anonymous and self.context['request'].user.email  :
-                assert email == self.context['request'].user.email , exceptions.ValidationError("Conflicting Email Addresses")
+                assert email == self.context['request'].user.email , rest_framework.exceptions.ValidationError("Conflicting Email Addresses")
         except Exception as e:
-            raise exceptions.ValidationError(e)
+            raise rest_framework.exceptions.ValidationError(e)
         else:
             return attrs
 
 
 class FacebookLoginSerializer(BaseSocialSerializer):
-    access_token = serializers.CharField()
+    access_token = rest_framework.serializers.CharField()
 
     def release_attrs(self , credentials):
         return credentials['email'] , credentials['first_name'] , credentials['last_name'] , credentials['picture']['data']['url']
 
     def validate(self , attrs):
-        adapter = FacebookAdapter(
+        adapter = adapters.FacebookAdapter(
             access_token = attrs['access_token']
         )
         try:
             credentials = adapter.complete_login()
         except Exception as e:
             #Facebook returns an error
-            raise exceptions.ValidationError(e)
+            raise rest_framework.exceptions.ValidationError(e)
         else:
             #Facebook Returns the credentials
             if not self.context['request'].user.is_anonymous and self.context['request'].user.email  :
                 if not credentials['email'] == self.context['request'].user.email:
-                    raise exceptions.ValidationError("Conflicting Email Addresses")
+                    raise rest_framework.exceptions.ValidationError("Conflicting Email Addresses")
             return credentials
 
 class BatraGoogleSerializer(BaseSocialSerializer):
-    email = serializers.EmailField()
-    name = serializers.CharField()
-    picture = serializers.CharField()
-    url = serializers.URLField(required = False , default = "")
-    source = serializers.CharField(required = False)
-    language = serializers.CharField(required = False , default = "en")
+    email = rest_framework.serializers.EmailField()
+    name = rest_framework.serializers.CharField()
+    picture = rest_framework.serializers.CharField()
+    url = rest_framework.serializers.URLField(required = False , default = "")
+    source = rest_framework.serializers.CharField(required = False)
+    language = rest_framework.serializers.CharField(required = False , default = "en")
 
     def validate_language(self , lang):
         if lang not in ("en" , "hi"):
-            raise exceptions.ValidationError("Not a valid language")
+            raise rest_framework.exceptions.ValidationError("Not a valid language")
         return lang
 
     def release_attrs(self, credentials):
@@ -179,5 +182,13 @@ class BatraGoogleSerializer(BaseSocialSerializer):
             language = language
         )
         #if url:
-        #   navratri_signup.send(sender = LoginCustomer , email = email , url = url , lang = language)
+        #   signals.navratri_signup.send(sender = epilogue_models.LoginCustomer , email = email , url = url , lang = language)
         return created
+
+class DeviceRegistrationSerializer(rest_framework.serializers.ModelSerializer):
+    class Meta:
+        model = models.Devices
+        exclude = ["id"]
+
+    def get_serializer(self, request, *args, **kwargs):
+        import ipdb; ipdb.set_trace()
