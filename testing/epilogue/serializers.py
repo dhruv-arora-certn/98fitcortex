@@ -51,7 +51,7 @@ class DietPlanSerializer(serializers.ModelSerializer):
     protein = serializers.SerializerMethodField()
     fat = serializers.SerializerMethodField()
     carbohydrates = serializers.SerializerMethodField()
-    images = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
     quantity = serializers.SerializerMethodField()
     weight = serializers.SerializerMethodField()
     dietplan_id = serializers.SerializerMethodField()
