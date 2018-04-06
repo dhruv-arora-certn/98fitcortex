@@ -204,18 +204,18 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'simple',
-            'filename' : 'debug.log'
+            'filename' : 'logs/debug.log'
         },
         'request': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'simple',
-            'filename' : 'request.log'
+            'filename' : 'logs/request.log'
         },
         'error': {
             'level': 'ERROR',
             'class': 'logging.FileHandler',
-            'filename': 'error.log',
+            'filename': 'logs/error.log',
         },
         'regeneration': {
             'level': 'DEBUG',
@@ -226,12 +226,12 @@ LOGGING = {
         'persister' : {
             'level' : 'DEBUG',
             'class' : 'logging.FileHandler',
-            'filename' : 'persister.log'
+            'filename' : 'logs/persister.log'
         },
         'ep_dp_relation' : {
             'level' : 'DEBUG',
             'class' : 'logging.FileHandler',
-            'filename' : 'ep_dp_relation.log'
+            'filename' : 'logs/ep_dp_relation.log'
         }
     },
     'loggers': {
