@@ -242,7 +242,7 @@ class Customer(models.Model):
         return [
             self.weight,
             self.height,
-            self.lifestyle,
+            self.new_latest_activity,
             self.goal,
             self.gender.number,
             []
