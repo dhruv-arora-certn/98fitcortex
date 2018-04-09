@@ -26,12 +26,4 @@ class Migration(migrations.Migration):
                 ('customer', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='regeneration_nodes', to='epilogue.Customer')),
             ],
         ),
-        migrations.AlterUniqueTogether(
-            name='regenerationlog',
-            unique_together={('customer', 'year', 'week')},
-        ),
-        migrations.AlterIndexTogether(
-            name='regenerationlog',
-            index_together={('customer', 'year', 'week')},
-        ),
     ]
