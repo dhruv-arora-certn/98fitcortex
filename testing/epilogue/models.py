@@ -391,6 +391,19 @@ class Customer(models.Model):
         if self.activitylevel_logs.count():
             return ActivityLevelLog.latest_record(customer = self).activity
         return self.lifestyle
+ 
+    def activity_level_to_use(self, year, week):
+        '''
+        Return the activity level that is to be used for the given year,week
+
+        The last record with `activation_tuple` < (year,week) is returned 
+        '''
+        record = self.activitylevel_logs.filter(
+            year__lte = year,
+            week__lte = week
+        ).last()
+
+        return record.activity
 
     @property
     def weight_type(self):
@@ -941,6 +954,10 @@ class ActivityLevelLog(models.Model):
         db_table = "relation_log"
     customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "activitylevel_logs" , on_delete = models.CASCADE , null = True)
     lifestyle = models.CharField(max_length = 50)   
+    created = models.DateTimeField(default = datetime.datetime.now())
+    week = models.IntegerField(default = get_week())
+    year = models.IntegerField(default = get_year())
+    activated = models.BooleanField(default = False)
     
     @property
     def activity(self):
@@ -950,6 +967,13 @@ class ActivityLevelLog(models.Model):
     def latest_record(self , customer = None):
         if customer:
             return self.objects.filter(customer = customer).last()
+
+    @property
+    def activation_tuple(self):
+        iso = self.activation.isocalendar()
+        return (
+            iso[0] , iso[1]
+        )
 
 class ExerciseDietRelation(models.Model):
     class Meta:

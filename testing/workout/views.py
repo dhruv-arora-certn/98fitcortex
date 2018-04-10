@@ -288,7 +288,7 @@ class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.Regenerab
 
     before_hooks = [
         check_and_update_fitness,
-        check_and_update_activity_level
+        #check_and_update_activity_level
     ]
 
     def before_request_hook(self,request, *args, **kwargs):

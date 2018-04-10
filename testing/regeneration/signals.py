@@ -10,7 +10,7 @@ instance_changed = Signal(providing_args=["instance"])
 
 diet_regeneration = Signal(
 	providing_args = [
-		"user"
+		"user",
 	]
 )
 
@@ -18,4 +18,12 @@ workout_regeneration = Signal(
 	providing_args = [
 		"user"
 	]
+)
+
+specific_diet_regeneration = Signal(
+    providing_args = [
+        "user",
+        "week",
+        "year"
+    ]
 )

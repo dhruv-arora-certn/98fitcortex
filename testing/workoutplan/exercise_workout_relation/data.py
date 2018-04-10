@@ -6,7 +6,10 @@ from regeneration.signals import diet_regeneration
 
 from collections import namedtuple
 
+from django import apps
+
 import logging
+import collections
 
 
 activity_tuple = namedtuple("Activity", ["name" , "value"])
@@ -88,7 +91,7 @@ def upgrade_activity(fitness, activity, periodization_weeks):
             return new_activity
         return activity
 
-def _upgrade_user_activity(user, new_activity):
+def _upgrade_user_activity(user, new_activity, context):
     '''
     Add new activity level record for the user.
     Send a signal for diet regeneration.
@@ -96,15 +99,21 @@ def _upgrade_user_activity(user, new_activity):
     logger.debug("Upgrading User from %0.2f to %0.2f"%(user.new_latest_activity , new_activity))
     try:
         record, created = user.activitylevel_logs.create(
-            lifestyle = str(new_activity)        
+            lifestyle = str(new_activity),
+            week = context.get("week"),
+            year = context.get("year")
         )
     except Exception as e:
         return user
     else:
-        diet_regeneration.send()
+        specific_diet_regeneration.send(
+            sender = apps.apps.get_model("epilogue","Customer"),
+            user = user,
+            **context
+        )
     return user
 
-def upgrade_user(user , week = None):
+def upgrade_user(user , week = None, context = collections.defaultdict(int)):
     '''
     Function to Upgrade User's activity level based on his workout week
     Return the upgraded user
@@ -114,5 +123,5 @@ def upgrade_user(user , week = None):
     activity = upgrade_activity(user.level_obj , user.new_latest_activity, week) 
     logger.debug("User Week %d"%week)
     if activity != user.new_latest_activity:
-        return _upgrade_user_activity(user,activity)
+        return _upgrade_user_activity(user,activity,context)
     return user
