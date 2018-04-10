@@ -26,7 +26,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.db.models.expressions import RawSQL
 
-from regeneration.signals import instance_changed , diet_regeneration , workout_regeneration
+from regeneration import signals as regeneration_signals
 
 import binascii
 import os
@@ -392,7 +392,7 @@ class Customer(models.Model):
             return ActivityLevelLog.latest_record(customer = self).activity
         return self.lifestyle
  
-    def activity_level_to_use(self, year, week):
+    def activity_level_to_use(self, year = get_year(), week = get_week()):
         '''
         Return the activity level that is to be used for the given year,week
 
@@ -403,7 +403,7 @@ class Customer(models.Model):
             week__lte = week
         ).last()
 
-        return record.activity
+        return record.lifestyle
 
     @property
     def weight_type(self):
@@ -1227,12 +1227,12 @@ def compare_attrs(sender , *args , **kwargs):
         if regenerate_diet:
             #Send Diet Regeneration Signal
             logger.debug('Diet Regeneration')
-            diet_regeneration.send(sender = Customer , user = instance)
+            regeneration_signals.diet_regeneration.send(sender = Customer , user = instance)
 
         if regenerate_workout:
             #Send workout Regeneration Signal
             logger.debug('Workout Regeneration')
-            workout_regeneration.send(sender = Customer , user = instance)
+            regeneration_signals.workout_regeneration.send(sender = Customer , user = instance)
     else:
         logger.debug("Do not send signal")
 
@@ -1240,6 +1240,24 @@ def compare_attrs(sender , *args , **kwargs):
 def level_log_created(sender, *args, **kwargs):
     created = kwargs.get('created',False)
     instance = kwargs.get('instance')
-    
+    print("CAlling level log receiver") 
     if created:
-        workout_regeneration.send(sender = Customer, user = instance.customer)
+        regeneration_signals.workout_regeneration.send(
+            sender = Customer,
+            user = instance.customer
+        )
+
+@receiver(signals.post_save , sender = ActivityLevelLog)
+def activity_log_created(sender, *args, **kwargs):
+    logger = logging.getLevelName("regeneration")
+    print("ACtivity Level Record Created")
+    created = kwargs.get('created' , False)
+    instance = kwargs.get('instance')
+
+    if created:
+        regeneration_signals.specific_diet_regeneration.send(
+            sender = ActivityLevelLog,
+            user = instance.customer,
+            week = instance.week,
+            year = instance.year
+        )

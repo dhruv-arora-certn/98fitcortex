@@ -23,8 +23,12 @@ def specific_diet_regeneration(sender, *args, **kwargs):
     user = kwargs.pop("user")
     week = kwargs.pop("week")
     year = kwargs.pop("year")
+
+    eligible_window = get_window_tuples(week = week , year = year)
     
-    return create_diet_regeneration_node(user, year, week)
+    return [
+        create_diet_regeneration_node(user, *t) for t in eligible_window
+    ]
 
 
 @receiver(signals.workout_regeneration)

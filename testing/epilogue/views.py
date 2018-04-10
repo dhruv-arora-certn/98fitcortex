@@ -90,6 +90,7 @@ class DietPlanView(regeneration_views.RegenerableView):
         year = int(self.kwargs.get("year"))
         current_week = get_week(dt.today())
 
+        import ipdb; ipdb.set_trace()
         #If the requested week is farther away than 2 weeks, deny the request
         print("Truth" , abs(abs(week_id) - abs(current_week)))
         if not is_valid_week(year , week_id):
@@ -101,7 +102,16 @@ class DietPlanView(regeneration_views.RegenerableView):
             year = int(self.kwargs.get('year'))
         ).last()
         if qs is None:
-            p = Pipeline(user.latest_weight , user.height , float(user.latest_activity) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id) , year = year)
+            p = Pipeline(
+                user.latest_weight , 
+                user.height , 
+                float(user.activity_level_to_use(week = week_id, year = year)) , 
+                useractvitiy.goal ,
+                user.gender.number , 
+                user = user , 
+                persist = True , 
+                week = week_id , 
+                year = year)
             try:
                 print("Trying to generate")
                 p.generate()
@@ -131,7 +141,7 @@ class DietPlanView(regeneration_views.RegenerableView):
                 },
                 "data" : data
             })
-
+        import ipdb; ipdb.set_trace()
         objs = self.get_object()
         return Response(objs)
         data = DietPlanSerializer(objs , many = True).data
@@ -897,7 +907,7 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
     permission_classes = [IsAuthenticated]
     serializer_class = DietPlanSerializer
     before_hooks = [
-        check_and_update_activity_level
+        #check_and_update_activity_level
     ]
     
     def before_request_hook(self, request, *args, **kwargs):
@@ -926,7 +936,7 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
         user = self.request.user
         week_id = self.kwargs.get('week_id')
         year = self.kwargs.get('year')
-        p = Pipeline(user.latest_weight , user.height , float(user.new_latest_activity) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id) , year = year)
+        p = Pipeline(user.latest_weight , user.height , float(user.activity_level_to_use()) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id) , year = year)
         try:
             p.generate()
         except Exception as e:
