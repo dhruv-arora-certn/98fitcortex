@@ -31,9 +31,12 @@ class CustomerSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         print("Calling Update " , "+"*30)
         print(validated_data)
+        data = self.context.get('request').data
         if 'ls' in validated_data:
             activitylevel_log = instance.activitylevel_logs.create(
-                lifestyle = validated_data['ls']
+                lifestyle = validated_data['ls'],
+                year = data.get('year'),
+                week = data.get('week')
             )
         if 'level' in validated_data:
             level_log = instance.level_logs.create(
