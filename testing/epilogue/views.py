@@ -907,7 +907,7 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
     permission_classes = [IsAuthenticated]
     serializer_class = DietPlanSerializer
     before_hooks = [
-        #check_and_update_activity_level
+        check_and_update_activity_level
     ]
     
     def before_request_hook(self, request, *args, **kwargs):

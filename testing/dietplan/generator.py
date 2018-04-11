@@ -64,7 +64,6 @@ class Pipeline:
         import logging
         logger = logging.getLogger(name="activity_upgrade")
         logger.debug("Activity to use %.2f"%self.activity)
-        import ipdb; ipdb.set_trace()
         self.excluded = []
         if self.week is None:
             week = get_week(datetime.today())
