@@ -1,7 +1,12 @@
 from rest_framework import serializers , exceptions
+
 from epilogue.models import * 
+from epilogue import utils
+
 from django.core.exceptions import ObjectDoesNotExist
+
 from passlib.hash import bcrypt
+
 import datetime
 
 class ObjectiveSerializer(serializers.ModelSerializer):
@@ -29,12 +34,11 @@ class CustomerSerializer(serializers.ModelSerializer):
         return str(obj.reasons.last())
 
     def update(self, instance, validated_data):
-        data = self.context.get('request').data
         if 'ls' in validated_data:
             activitylevel_log = instance.activitylevel_logs.create(
                 lifestyle = validated_data['ls'],
-                year = data.get('year'),
-                week = data.get('week')
+                year = utils.get_year(),
+                week = utils.get_week()
             )
         if 'level' in validated_data:
             level_log = instance.level_logs.create(
