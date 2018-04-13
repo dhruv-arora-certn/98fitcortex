@@ -46,6 +46,13 @@ DATE_FORMAT = '%B {S} - %Y, %A'
 class UserView(RetrieveUpdateAPIView):
     queryset = Customer.objects
     serializer_class = CustomerSerializer
+    
+    def get_serializer_context(self):
+        data = super().get_serializer_class()
+        data.update({
+            'kwargs' : self.kwargs
+        })
+        return data
 
 class DietPlanView(regeneration_views.RegenerableView):
     serializer_class = DietPlanSerializer

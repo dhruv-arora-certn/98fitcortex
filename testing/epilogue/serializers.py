@@ -14,7 +14,23 @@ class ObjectiveSerializer(serializers.ModelSerializer):
         model = Objective
         fields = ["id" , "name"]
 
-class CustomerSerializer(serializers.ModelSerializer):
+class CustomerUpdateMixin:
+    def update(self, instance, validated_data):
+        print("CAlling Customer Update Mixin")
+        if 'ls' in validated_data:
+            activitylevel_log = instance.activitylevel_logs.create(
+                lifestyle = validated_data['ls'],
+                year = utils.get_year(),
+                week = utils.get_week()
+            )
+        if 'level' in validated_data:
+            level_log = instance.level_logs.create(
+                level = validated_data['level']   
+            )
+            print(level_log)
+        return super().update(instance, validated_data)
+
+class CustomerSerializer(serializers.ModelSerializer , CustomerUpdateMixin):
 
     diseases = serializers.StringRelatedField(many = True , source = "customermedicalconditions_set")
     injuries = serializers.StringRelatedField(many = True)
@@ -33,19 +49,6 @@ class CustomerSerializer(serializers.ModelSerializer):
     def get_reasons(self, obj):
         return str(obj.reasons.last())
 
-    def update(self, instance, validated_data):
-        if 'ls' in validated_data:
-            activitylevel_log = instance.activitylevel_logs.create(
-                lifestyle = validated_data['ls'],
-                year = utils.get_year(),
-                week = utils.get_week()
-            )
-        if 'level' in validated_data:
-            level_log = instance.level_logs.create(
-                level = validated_data['level']   
-            )
-            print(level_log)
-        return super().update(instance, validated_data)
 
 class FoodSerializer(serializers.ModelSerializer):
     class Meta:
@@ -169,7 +172,9 @@ class CreateCustomerSerializer(serializers.ModelSerializer):
 
         if 'ls' in validated_data:
             activitylevel_log = instance.activitylevel_logs.create(
-                lifestyle = validated_data['ls']
+                lifestyle = validated_data['ls'],
+                year = utils.get_year(),
+                week = utils.get_week()
             )
         if 'level' in validated_data:
             level_log = instance.level_logs.create(
