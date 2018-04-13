@@ -22,12 +22,13 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import exceptions , status
 from rest_framework_bulk import ListBulkCreateAPIView
+from rest_framework import status
 
 from epilogue.models import *
 from epilogue.serializers import *
 from epilogue.authentication import CustomerAuthentication
 from epilogue.mixins import *
-from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf , is_valid_week
+from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf , is_valid_week, check_dietplan_dependencies
 from epilogue.replacement import *
 from epilogue.exceptions import MultipleDiseasesException , DiseasesNotDiabetesOrPcod
 
@@ -804,7 +805,7 @@ class DashboardMealTextView(GenericAPIView):
         week_diet_plan = GeneratedDietPlan.objects.filter(customer = self.request.user).filter(week_id = week , year = year).last()
 
         if not week_diet_plan:
-            return Response(dict())
+            return Response(dict() , status = status.HTTP_404_NOT_FOUND)
 
         today_items = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = week_diet_plan.id , day = day)
 
@@ -958,11 +959,22 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
         dietplan = obj.regenerate().dietplan
         self.regen_obj.toggleStatus()
         return dietplan
+    
+    def satisfied_dependencies(self,request):
+        return check_dietplan_dependencies(request.user)
 
     def get(self , request , *args , **kwargs):
         year = int(self.kwargs.get('year'))
         week = int(self.kwargs.get('week_id'))
+        
 
+        if not self.satisfied_dependencies(request):
+            return Response(
+                {
+                    "message" : "Dependencies not Satisfied"
+                },
+                status = status.HTTP_424_FAILED_DEPENDENCY
+            )
         if not is_valid_week(year , week):
             raise exceptions.PermissionDenied({
                 "message" : "You cannot access this week's plan"

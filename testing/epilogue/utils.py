@@ -209,3 +209,20 @@ def annotate_sleep_time(baseQ):
             output_field = models.DateField()
         )
     )
+
+def check_dietplan_dependencies(user):
+        '''
+        Check if the dependencies for the dietplan are satisfied
+        '''
+        val = all(map(
+            bool,
+            [
+                user.height,
+                user.weight,
+                user.activitylevel_logs.count(),
+                user.level_logs.count(),
+                user.food_cat
+            ]
+        ))
+        return val
+
