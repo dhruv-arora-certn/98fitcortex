@@ -30,7 +30,7 @@ class CustomerUpdateMixin:
             print(level_log)
         return super().update(instance, validated_data)
 
-class CustomerSerializer(serializers.ModelSerializer , CustomerUpdateMixin):
+class CustomerSerializer( CustomerUpdateMixin , serializers.ModelSerializer):
 
     diseases = serializers.StringRelatedField(many = True , source = "customermedicalconditions_set")
     injuries = serializers.StringRelatedField(many = True)
@@ -38,7 +38,8 @@ class CustomerSerializer(serializers.ModelSerializer , CustomerUpdateMixin):
     height = serializers.CharField(source = "h" , required = False , default = '0.0')
     weight = serializers.CharField(source = "w", required = False , default = '0')
     gender = serializers.CharField(source = "gen", required = False , default = 'female')
-    lifestyle = serializers.CharField(source = "ls", required = False , default = 1.37)
+    lifestyle = serializers.CharField(source="ls",required = False)
+    new_latest_activity = serializers.SerializerMethodField()
     height_type = serializers.IntegerField(source = "h_type", required = False , default= 1)
     weight_type = serializers.IntegerField(source = "w_type", required = False , default = 2)
 
@@ -48,6 +49,12 @@ class CustomerSerializer(serializers.ModelSerializer , CustomerUpdateMixin):
 
     def get_reasons(self, obj):
         return str(obj.reasons.last())
+
+    def get_lifestyle(self, obj):
+        return obj.activity_level_to_use()
+
+    def get_new_latest_activity(self, obj):
+        return obj.activity_level_to_use()
 
 
 class FoodSerializer(serializers.ModelSerializer):

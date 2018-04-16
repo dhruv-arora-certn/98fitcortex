@@ -242,7 +242,7 @@ class Customer(models.Model):
         return [
             self.weight,
             self.height,
-            self.new_latest_activity,
+            self.activity_level_to_use(),
             self.goal,
             self.gender.number,
             []
@@ -401,9 +401,12 @@ class Customer(models.Model):
         record = self.activitylevel_logs.filter(
             year__lte = year,
             week__lte = week
-        ).last()
+        ).order_by("pk").last()
 
-        return record.lifestyle
+        if record:
+            return record.lifestyle
+
+        return self.lifestyle
 
     @property
     def weight_type(self):
