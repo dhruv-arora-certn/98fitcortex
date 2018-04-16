@@ -220,7 +220,6 @@ def check_dietplan_dependencies(user):
                 user.height,
                 user.weight,
                 user.activitylevel_logs.count(),
-                user.level_logs.count(),
                 user.food_cat
             ]
         ))
