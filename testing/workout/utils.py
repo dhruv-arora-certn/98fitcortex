@@ -116,10 +116,15 @@ def check_and_update_fitness(request , *args, **kwargs):
     request.user.update_fitness(weeks_since)
     return 
 
-def check_and_update_activity_level(request, *args, **kwargs):
+def check_and_update_activity_level(request, *args, override = False , **kwargs):
     '''
-    Update User's activity level
+    Update User's activity level 
+    Either when a workout plan has been created or override signal is passed
+    override signal is passed by workout view
     '''
+    condition = request.user.workouts.count() or override
+    if not condition:
+        return
     logger = logging.getLogger("activity_upgrade")
     logger.debug("Calling Update Acitvity")
     weeks_since = get_weeks_since(request,**kwargs)

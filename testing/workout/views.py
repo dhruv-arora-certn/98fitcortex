@@ -30,6 +30,7 @@ import json
 import logging
 import datetime as dt
 import isoweek
+import functools
 
 def shuffle(qs):
     l = list(qs)
@@ -288,7 +289,7 @@ class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.Regenerab
 
     before_hooks = [
         check_and_update_fitness,
-        #check_and_update_activity_level
+        functools.partial(check_and_update_activity_level, override = True)
     ]
 
     def before_request_hook(self,request, *args, **kwargs):
@@ -321,10 +322,10 @@ class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.Regenerab
         year = int(self.kwargs.get('year'))
         week = int(self.kwargs.get('week_id'))
 
-        if not is_valid_week(year,week):
-            raise exceptions.PermissionDenied({
-                "message" : "You cannot access this week's plan"
-            })
+        #if not is_valid_week(year,week):
+        #    raise exceptions.PermissionDenied({
+        #        "message" : "You cannot access this week's plan"
+        #    })
 
         self.before_request_hook(request , *args, **kwargs)
         obj = self.get_object()
