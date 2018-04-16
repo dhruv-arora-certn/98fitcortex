@@ -120,7 +120,10 @@ def upgrade_user(user , week = None, context = collections.defaultdict(int)):
     '''
     if not week:
         week = user.user_relative_workout_week
-    activity = upgrade_activity(user.level_obj , user.new_latest_activity, week) 
+    activity = upgrade_activity(user.level_obj , float(user.activity_level_to_use(
+        week = context['week'],
+        year = context['year']
+    )), week) 
     logger.debug("User Week %d"%week)
     if activity != user.new_latest_activity:
         return _upgrade_user_activity(user,activity,context)
