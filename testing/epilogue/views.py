@@ -944,7 +944,7 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
         user = self.request.user
         week_id = self.kwargs.get('week_id')
         year = self.kwargs.get('year')
-        p = Pipeline(user.latest_weight , user.height , float(user.activity_level_to_use()) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id) , year = year)
+        p = Pipeline(user.latest_weight , user.height , float(user.activity_level_to_use(week = week_id , year = year)) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id) , year = year)
         try:
             p.generate()
         except Exception as e:
@@ -975,10 +975,10 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
                 },
                 status = status.HTTP_424_FAILED_DEPENDENCY
             )
-        if not is_valid_week(year , week):
-            raise exceptions.PermissionDenied({
-                "message" : "You cannot access this week's plan"
-            })
+        #if not is_valid_week(year , week):
+        #    raise exceptions.PermissionDenied({
+        #        "message" : "You cannot access this week's plan"
+        #    })
         self.before_request_hook(request, *args, **kwargs)
         obj = self.get_object()
 
