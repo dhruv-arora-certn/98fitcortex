@@ -25,7 +25,8 @@ class CustomerUpdateMixin:
             )
         if 'level' in validated_data:
             level_log = instance.level_logs.create(
-                level = validated_data['level']   
+                level = validated_data['level']   ,
+                date = datetime.datetime.today()
             )
             print(level_log)
         return super().update(instance, validated_data)

@@ -35,6 +35,7 @@ import functools
 import itertools
 import numpy as np
 import logging
+import isoweek
 #Model Managers for Food Model
 
 
@@ -351,22 +352,17 @@ class Customer(models.Model):
             return last_weight.weight
         return self.weight
     
-    def update_fitness(self , week):
+    def update_fitness(self , week, context):
         logger = logging.getLogger("fitness_upgrade")
         logger.debug("Checking Fitness Upgrade for %d"%(self.id))
-        if self.level_obj == levels.Beginner:
-            offset = 6
-        elif self.level_obj == levels.Intermediate:
-            offset = 24
-        else:
-            offset = 0
-        week += offset
         logger.debug("User Week : %d"%week)
         fitness, should_upgrade = week_upgrade.upgrade(self , week)
         if should_upgrade:
-            logger.debug("Upgrading Fitness")
+            import ipdb; ipdb.set_trace()
+            logger.debug("***********Upgrading Fitness******")
             self.level_logs.create(
-                level = fitness.value  
+                level = fitness.value,  
+                date = isoweek.Week(year = context['year'] , week = context['week']).monday()
             )
         else:
             logger.debug("No need to update fitness")
@@ -820,15 +816,17 @@ class GeneratedDietPlan(models.Model):
             items.extend(baseQ.filter(day = day).values_list('food_name' , flat = True ))
         return items
 
-    def regenerate(self):
+    def regenerate(self , context = {
+            'week' : get_week(),
+            'year' : get_year()
+    }):
         
         #Avoiding circular import
         from dietplan.generator import Pipeline
-        
         self.pipeline = Pipeline(
             self.customer.latest_weight,
             self.customer.height, 
-            float(self.customer.latest_activity),
+            float(self.customer.activity_level_to_use(**context)),
             self.customer.goal,
             self.customer.gender.number,
             user = self.customer,
@@ -1173,7 +1171,7 @@ class CustomerLevelLog(models.Model):
     class Meta:
         db_table = "erp_customer_level_log"
     level = models.IntegerField()
-    date = models.DateTimeField(auto_now_add = True)
+    date = models.DateTimeField()
     customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "level_logs" , on_delete = models.CASCADE , null = True)
 
 class Reasons(models.Model):
@@ -1195,7 +1193,7 @@ class CustomerReasons(models.Model):
 
 @receiver(signals.post_init , sender = Customer)
 def save_pre_state(sender , *args , **kwargs):
-    import logging,ipdb
+    import logging
     logger = logging.getLogger(__name__)
     logger.debug("Calling Save Pre State")
     inst = kwargs.pop('instance')

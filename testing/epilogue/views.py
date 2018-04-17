@@ -917,6 +917,13 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
     before_hooks = [
         check_and_update_activity_level
     ]
+
+    def get_week_year_context(self):
+        kwargs = self.kwargs
+        return {
+            "week" : int(kwargs.get('week_id')),
+            "year" : int(kwargs.get('year'))
+        }
     
     def before_request_hook(self, request, *args, **kwargs):
         '''
@@ -928,10 +935,11 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
         return 
 
     def get_object_hook(self):
+        week_id, year = self.get_week_year_context().values()
         diet_week = GeneratedDietPlan.objects.filter(
             customer = self.request.user,
-            week_id = int(self.kwargs.get('week_id')),
-            year = int(self.kwargs.get('year'))
+            week_id = week_id,
+            year = year
         ).last()
 
         if diet_week:
@@ -942,9 +950,7 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
 
     def generate(self):
         user = self.request.user
-        week_id = self.kwargs.get('week_id')
-        year = self.kwargs.get('year')
-        p = Pipeline(user.latest_weight , user.height , float(user.activity_level_to_use(week = week_id , year = year)) , user.goal ,user.gender.number , user = user , persist = True , week = int(week_id) , year = year)
+        p = Pipeline(user.latest_weight , user.height , float(user.activity_level_to_use(**self.get_week_year_context())) , user.goal ,user.gender.number , user = user , persist = True , **self.get_week_year_context())
         try:
             p.generate()
         except Exception as e:
@@ -954,9 +960,16 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
             return p.dietplan
 
     def regeneration_hook(self , obj):
+        '''
+        Function to call for regenration
+        
+        Params:
+        obj : Dietplan object which has to be regenerated. Instance of 
+              epilogue.models.GeneratedDietPlan
+        '''
         logger = logging.getLogger("regeneration")
         logger.debug("Regenerating")
-        dietplan = obj.regenerate().dietplan
+        dietplan = obj.regenerate(context = self.get_week_year_context()).dietplan
         self.regen_obj.toggleStatus()
         return dietplan
     
@@ -964,10 +977,8 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
         return check_dietplan_dependencies(request.user)
 
     def get(self , request , *args , **kwargs):
-        year = int(self.kwargs.get('year'))
-        week = int(self.kwargs.get('week_id'))
+        week,year = self.get_week_year_context().values()
         
-
         if not self.satisfied_dependencies(request):
             return Response(
                 {
@@ -987,9 +998,6 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
         meals = self.get_filtered_queryset(obj)
         serialized = self.serializer_class(meals , many = True)
         return Response(serialized.data)
-        return Response({
-            "message" : "Doo Daa Dee"
-        })
 
     def get_filtered_queryset(self , obj):
         assert isinstance(obj , GeneratedDietPlan) , "Instance is Not a GeneratedDietPlan : %s"%type(obj)
@@ -1000,7 +1008,6 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
     def get_regenerate_log_filter(self):
         return {
             'customer' : self.request.user,
-            'year' : self.kwargs.get('year'),
-            'week' : self.kwargs.get('week_id'),
-            'regenerated' : False
+            'regenerated' : False,
+            **self.get_week_year_context()
         }

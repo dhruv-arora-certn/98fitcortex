@@ -1,6 +1,8 @@
 from workoutplan import levels
 
 import logging
+import collections
+
 
 logger = logging.getLogger("fitness_upgrade")
 
@@ -74,13 +76,36 @@ class InfRange(ComparableRange):
 
     
 
-week_range_mapping = {
+week_range_mapping = collections.OrderedDict({
     levels.Novice : ComparableRange(1,7) ,
-    levels.Beginner: ComparableRange(7,25),
-    levels.Intermediate : InfRange(25)
-}
+    levels.Beginner: ComparableRange(1,19),
+    levels.Intermediate : InfRange(1)
+})
 
-def valid_fitness(week):
+call_count = 1
+def valid_fitness(current_fitness,week):
+    '''
+    Return the Valid Fitness Level of the User based on his week
+    '''
+    #If user is intermediate, no need to change the fitness level
+    if current_fitness == levels.Intermediate:
+        return levels.Intermediate
+    
+    #If the user 
+    #if current_fitness == levels.Beginner:
+     #   week -= 6
+    
+    #If the weeks since last upgrade are in range of current fitness, no need to upgrade
+    if not current_fitness == levels.Intermediate and week in week_range_mapping[current_fitness]:
+        return current_fitness 
+    
+    #If the user's weeks are not in range check if the next fitness level is in range
+
+    keys = list(week_range_mapping.keys())
+    next_fitness = keys[keys.index(current_fitness) + 1]
+    return valid_fitness(next_fitness, week - week_range_mapping[current_fitness].right_boundary) 
+
+def _valid_fitness(current_fitness,week):
     '''
     Return the Valid Fitness Level of the User based on his week
     '''
@@ -99,7 +124,7 @@ def upgrade(user , week):
 
     current_fitness = get_current_fitness(user)
 
-    correct_fitness = valid_fitness(week)
+    correct_fitness = valid_fitness(current_fitness,week)
     
     return correct_fitness, correct_fitness != current_fitness 
 

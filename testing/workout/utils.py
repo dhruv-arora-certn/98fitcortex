@@ -105,7 +105,11 @@ def get_weeks_since(request,**kwargs):
     start = request.user.get_last_level_day()
 
     from epilogue.utils import count_weeks
-    weeks_since = count_weeks(start , end) + 1
+    weeks_since = count_weeks(start , end) 
+
+    if weeks_since == 0:
+        return 1
+
     return weeks_since
 
 def check_and_update_fitness(request , *args, **kwargs):
@@ -113,10 +117,13 @@ def check_and_update_fitness(request , *args, **kwargs):
     Check if the fitness needs to be updated for the workout week requested
     '''
     weeks_since = get_weeks_since(request,**kwargs)
-    request.user.update_fitness(weeks_since)
+    request.user.update_fitness(weeks_since , context = {
+        "week" : int(kwargs.get("week_id")),
+        "year" : int(kwargs.get("year"))
+    })
     return 
 
-def check_and_update_activity_level(request, *args, override = False , **kwargs):
+def check_and_update_activity_level(request, *args, override= False , **kwargs):
     '''
     Update User's activity level 
     Either when a workout plan has been created or override signal is passed
