@@ -35,7 +35,7 @@ from epilogue.exceptions import MultipleDiseasesException , DiseasesNotDiabetesO
 from regeneration import views as regeneration_views
 from regeneration import signals as regeneration_signals
 
-from workout.utils import check_and_update_activity_level
+from workout import utils as workout_utils
 
 from pdfs import base, file_handlers
 
@@ -98,7 +98,6 @@ class DietPlanView(regeneration_views.RegenerableView):
         year = int(self.kwargs.get("year"))
         current_week = get_week(dt.today())
 
-        import ipdb; ipdb.set_trace()
         #If the requested week is farther away than 2 weeks, deny the request
         print("Truth" , abs(abs(week_id) - abs(current_week)))
         if not is_valid_week(year , week_id):
@@ -149,7 +148,6 @@ class DietPlanView(regeneration_views.RegenerableView):
                 },
                 "data" : data
             })
-        import ipdb; ipdb.set_trace()
         objs = self.get_object()
         return Response(objs)
         data = DietPlanSerializer(objs , many = True).data
@@ -915,7 +913,8 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
     permission_classes = [IsAuthenticated]
     serializer_class = DietPlanSerializer
     before_hooks = [
-        check_and_update_activity_level
+        workout_utils.set_user_level,
+        workout_utils.check_and_update_activity_level
     ]
 
     def get_week_year_context(self):
@@ -1009,5 +1008,6 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
         return {
             'customer' : self.request.user,
             'regenerated' : False,
+            'type' : 'diet',
             **self.get_week_year_context()
         }

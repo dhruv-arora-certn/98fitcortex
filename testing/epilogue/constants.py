@@ -11,7 +11,6 @@ DIET_ONLY_FACTORS = [
 ]
 
 WORKOUT_ONLY_FACTORS = [
-    'level_obj',
     'workout_location'
 ]
 

@@ -25,8 +25,10 @@ class CustomerUpdateMixin:
             )
         if 'level' in validated_data:
             level_log = instance.level_logs.create(
-                level = validated_data['level']   ,
-                date = datetime.datetime.today()
+                level = validated_data['level'],
+                date = datetime.datetime.today(),
+                year = utils.get_year(),
+                week = utils.get_week()
             )
             print(level_log)
         return super().update(instance, validated_data)
@@ -41,12 +43,13 @@ class CustomerSerializer( CustomerUpdateMixin , serializers.ModelSerializer):
     gender = serializers.CharField(source = "gen", required = False , default = 'female')
     lifestyle = serializers.CharField(source="ls",required = False)
     new_latest_activity = serializers.SerializerMethodField()
+    level_in_use = serializers.SerializerMethodField()
     height_type = serializers.IntegerField(source = "h_type", required = False , default= 1)
     weight_type = serializers.IntegerField(source = "w_type", required = False , default = 2)
 
     class Meta:
         model = Customer
-        fields = ["email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender" , "body_type" , "food_cat" ,"weight_type" , "height_type" , "work_pref" , "level" , "diseases" , "injuries" , "reasons", "new_latest_activity", "current_level"]
+        fields = ["email" , "first_name" , "last_name" , "mobile" , "age" , "weight" , "height", "lifestyle" , "objective" , "id", "gender" , "body_type" , "food_cat" ,"weight_type" , "height_type" , "work_pref" , "level" , "diseases" , "injuries" , "reasons", "new_latest_activity", "current_level", "level_in_use"]
 
     def get_reasons(self, obj):
         return str(obj.reasons.last())
@@ -56,6 +59,9 @@ class CustomerSerializer( CustomerUpdateMixin , serializers.ModelSerializer):
 
     def get_new_latest_activity(self, obj):
         return obj.activity_level_to_use()
+
+    def get_level_in_use(self,obj):
+        return obj.fitness_level_to_use()
 
 
 class FoodSerializer(serializers.ModelSerializer):
@@ -186,7 +192,9 @@ class CreateCustomerSerializer(serializers.ModelSerializer):
             )
         if 'level' in validated_data:
             level_log = instance.level_logs.create(
-                level = validated_data['level']   
+                level = validated_data['level'],
+                week = utils.get_week(),
+                year = utils.get_year()
             )
         return instance
 

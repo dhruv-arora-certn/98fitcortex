@@ -16,7 +16,7 @@ from epilogue.permissions import WeekWindowAccessPermission
 
 from workout.models import *
 from workout.serializers import *
-from workout.utils import get_day_from_generator , workout_regenerator, check_and_update_fitness, check_and_update_activity_level
+from workout.utils import get_day_from_generator , workout_regenerator, check_and_update_fitness, check_and_update_activity_level, set_user_level
 from workout.persister import WorkoutWeekPersister
 from workout import renderers
 
@@ -167,6 +167,9 @@ class DashboardWorkoutTextView(generics.GenericAPIView):
     def get(self , *args , **kwargs):
         user = self.request.user
         string = "5 Minutes Warmup, %d Minutes Cardio"
+        return Response({
+            "workout" : "Daa-bee-doo"
+        })
 
         cardio_duration = get_cardio_sets_reps_duration(user.level_obj , user.goal , user.user_relative_workout_week)
 
@@ -288,6 +291,7 @@ class GenerateWorkoutView(generics.GenericAPIView):
 class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.RegenerableView):
 
     before_hooks = [
+        set_user_level,
         check_and_update_fitness,
         functools.partial(check_and_update_activity_level, override = True)
     ]

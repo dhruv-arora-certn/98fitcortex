@@ -2,7 +2,7 @@ from workoutplan import levels
 
 from dietplan.activity import ActivityLevel
 
-from regeneration.signals import diet_regeneration
+from regeneration.signals import diet_regeneration, specific_diet_regeneration
 
 from collections import namedtuple
 
@@ -98,12 +98,13 @@ def _upgrade_user_activity(user, new_activity, context):
     '''
     logger.debug("Upgrading User from %0.2f to %0.2f"%(user.new_latest_activity , new_activity))
     try:
-        record, created = user.activitylevel_logs.create(
+        record = user.activitylevel_logs.create(
             lifestyle = str(new_activity),
             week = context.get("week"),
             year = context.get("year")
         )
     except Exception as e:
+        raise
         return user
     else:
         specific_diet_regeneration.send(
@@ -120,10 +121,13 @@ def upgrade_user(user , week = None, context = collections.defaultdict(int)):
     '''
     if not week:
         week = user.user_relative_workout_week
-    activity = upgrade_activity(user.level_obj , float(user.activity_level_to_use(
-        week = context['week'],
-        year = context['year']
-    )), week) 
+    activity_level = float(user.activity_level_to_use(
+        **context
+    ))
+    fitness_level = user.fitness_level_to_use_obj(
+        **context
+    )
+    activity = upgrade_activity( fitness_level, activity_level, week ) 
     logger.debug("User Week %d"%week)
     if activity != user.new_latest_activity:
         return _upgrade_user_activity(user,activity,context)

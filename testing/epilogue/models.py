@@ -358,11 +358,10 @@ class Customer(models.Model):
         logger.debug("User Week : %d"%week)
         fitness, should_upgrade = week_upgrade.upgrade(self , week)
         if should_upgrade:
-            import ipdb; ipdb.set_trace()
             logger.debug("***********Upgrading Fitness******")
             self.level_logs.create(
                 level = fitness.value,  
-                date = isoweek.Week(year = context['year'] , week = context['week']).monday()
+                **context
             )
         else:
             logger.debug("No need to update fitness")
@@ -403,6 +402,32 @@ class Customer(models.Model):
             return record.lifestyle
 
         return self.lifestyle
+    
+    def fitness_level_to_use(self, year = get_year(), week = get_week()):
+        '''
+        Return the fitness level that is to be used for the given year, week
+        '''
+        record = self.level_logs.filter(
+            year__lte = year,
+            week__lte = week
+        ).order_by("pk").last()
+
+        if record:
+            return record.level
+        return 1
+
+    def fitness_level_to_use_obj(self, year = get_year(), week = get_week()):
+        '''
+        Return the fitness level object that is to be used for the given year,week
+        '''
+        level = self.fitness_level_to_use(year, week)
+        if level == 1:
+            return levels.Novice
+        elif level == 2:
+            return levels.Beginner
+        elif level == 3:
+            return levels.Intermediate
+        return levels.Novice
 
     @property
     def weight_type(self):
@@ -692,40 +717,43 @@ class Customer(models.Model):
             level = self.level
         return level
         
-    @property
-    def level_obj(self):
-        level = self.current_level
-        if level == 1:
-            return levels.Novice
-        elif level == 2:
-            return levels.Beginner
-        elif level == 3:
-            return levels.Intermediate
-        return levels.Novice
+    #@property
+    #def level_obj(self):
+    #    level = self.current_level
+    #    if level == 1:
+    #        return levels.Novice
+    #    elif level == 2:
+    #        return levels.Beginner
+    #    elif level == 3:
+    #        return levels.Intermediate
+    #    return levels.Novice
 
     def get_last_level_day(self):
         last_level_record = self.level_logs.last()
 
         if last_level_record:
-            return last_level_record.date
+            return isoweek.Week(
+                year = last_level_record.year,
+                week = last_level_record.week
+            ).monday()
         return self.create_on
 
-    @property
-    def user_relative_workout_week(self):
-        level_obj = self.level_obj
-        last_date = self.get_last_level_day()
+    #@property
+    #def user_relative_workout_week(self):
+    #    level_obj = self.level_obj
+    #    last_date = self.get_last_level_day()
 
-        weeks = count_weeks(last_date) #Count weeks only returns the difference in weeks, but workout weeks is inclusive, so + 1
+    #    weeks = count_weeks(last_date) #Count weeks only returns the difference in weeks, but workout weeks is inclusive, so + 1
 
-        if weeks == 0:
-            return 1
-        
-        if level_obj == levels.Beginner:
-            weeks += 7
-        elif level_obj == levels.Intermediate:
-            weeks += 25
+    #    if weeks == 0:
+    #        return 1
+    #    
+    #    if level_obj == levels.Beginner:
+    #        weeks += 7
+    #    elif level_obj == levels.Intermediate:
+    #        weeks += 25
 
-        return weeks
+    #    return weeks
 
     def is_novice(self):
         if self.level == 1:
@@ -1170,8 +1198,11 @@ class CustomerActivityLogs(models.Model):
 class CustomerLevelLog(models.Model):
     class Meta:
         db_table = "erp_customer_level_log"
+        managed = False
     level = models.IntegerField()
-    date = models.DateTimeField()
+    date = models.DateTimeField(auto_now_add = True)
+    week = models.IntegerField(default = get_week())
+    year = models.IntegerField(default = get_year())
     customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , related_name = "level_logs" , on_delete = models.CASCADE , null = True)
 
 class Reasons(models.Model):

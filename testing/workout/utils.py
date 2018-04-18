@@ -88,8 +88,6 @@ def workout_regenerator(workout):
         #Can Safely delete the existing plan
         logger.debug("Successful Regeneration")
         logger.debug("Old Id : %d"%workout.id)
-        import ipdb
-        #ipdb.set_trace()
         workout.delete()
         workout = workout_persister.model_obj
         print("New Id :%d"%workout.id)
@@ -110,17 +108,19 @@ def get_weeks_since(request,**kwargs):
     if weeks_since == 0:
         return 1
 
-    return weeks_since
+    return weeks_since + 1
 
 def check_and_update_fitness(request , *args, **kwargs):
     '''
     Check if the fitness needs to be updated for the workout week requested
     '''
     weeks_since = get_weeks_since(request,**kwargs)
+    request.user.user_relative_workout_week = weeks_since
     request.user.update_fitness(weeks_since , context = {
         "week" : int(kwargs.get("week_id")),
         "year" : int(kwargs.get("year"))
     })
+    request.user.user_relative_workout_week = get_weeks_since(request,**kwargs)
     return 
 
 def check_and_update_activity_level(request, *args, override= False , **kwargs):
@@ -129,14 +129,21 @@ def check_and_update_activity_level(request, *args, override= False , **kwargs):
     Either when a workout plan has been created or override signal is passed
     override signal is passed by workout view
     '''
+    weeks_since = get_weeks_since(request,**kwargs)
+    if not getattr(request.user,"user_relative_workout_week",None):
+        request.user.user_relative_workout_week = weeks_since
     condition = request.user.workouts.count() or override
     if not condition:
         return
     logger = logging.getLogger("activity_upgrade")
     logger.debug("Calling Update Acitvity")
-    weeks_since = get_weeks_since(request,**kwargs)
     data.upgrade_user(request.user, weeks_since , context = {
         "week" : int(kwargs.get("week_id")),
         "year" : int(kwargs.get("year"))
     })
     return
+
+def set_user_level(request,*args, **kwargs):
+    week = int(kwargs.get("week_id"))
+    year = int(kwargs.get("year"))
+    request.user.level_obj = request.user.fitness_level_to_use_obj(week = week, year = year)

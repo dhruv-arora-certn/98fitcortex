@@ -12,12 +12,6 @@ def get_current_fitness(user):
     '''
     return user.level_obj
 
-def get_current_weeks(user):
-    '''
-    Return the Current workout week of the user for his current fitness level
-    '''
-    return user.user_relative_workout_week
-
 
 class ComparableRange():
 
