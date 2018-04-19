@@ -280,7 +280,10 @@ class GenerateWorkoutView(generics.GenericAPIView):
             raise exceptions.PermissionDenied({
                 "message" : "You cannot access this week's workout plan"
             })
-
+        request.user.level_obj = user.fitness_level_to_use_obj(
+            week = week,
+            year = year
+        )
         obj = self.get_object()
         obj = self.filtered_queryset(obj)
         data = GeneratedExercisePlanDetailsSerializer(obj , many = True)
