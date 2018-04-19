@@ -1276,7 +1276,9 @@ def level_log_created(sender, *args, **kwargs):
     if created:
         regeneration_signals.workout_regeneration.send(
             sender = Customer,
-            user = instance.customer
+            user = instance.customer,
+            week = instance.week,
+            year = instance.year
         )
 
 @receiver(signals.post_save , sender = ActivityLevelLog)
