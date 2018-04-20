@@ -13,6 +13,7 @@ from rest_framework_bulk import ListBulkCreateAPIView
 from epilogue.authentication import CustomerAuthentication
 from epilogue.utils import get_week , get_day , BulkDifferential , is_valid_week
 from epilogue.permissions import WeekWindowAccessPermission
+from epilogue.views import UserGenericAPIView
 
 from workout.models import *
 from workout.serializers import *
@@ -291,10 +292,9 @@ class GenerateWorkoutView(generics.GenericAPIView):
         return Response(self.categorise_data(data.data))
 
 
-class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.RegenerableView):
+class RegenerableWorkoutView( UserGenericAPIView, GenerateWorkoutView , regeneration_views.RegenerableView):
 
     before_hooks = [
-        set_user_level,
         check_and_update_fitness,
         functools.partial(check_and_update_activity_level, override = True)
     ]
@@ -320,7 +320,7 @@ class RegenerableWorkoutView( GenerateWorkoutView , regeneration_views.Regenerab
     def regeneration_hook(self , obj):
         logger = logging.getLogger("regeneration") 
         logger.debug("Calling Regeneration Hook")
-        workout , status =  workout_regenerator(obj)
+        workout , status =  workout_regenerator(obj , self.request.user)
         if status:
             self.regen_obj.toggleStatus()
         return workout

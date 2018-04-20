@@ -44,6 +44,51 @@ from weasyprint import HTML
 
 DATE_FORMAT = '%B {S} - %Y, %A'
 
+class UserGenericAPIView(GenericAPIView):
+    '''
+    View to assign user attributes:
+    - level_obj
+    - user_relative_workout_week
+    '''
+
+    def set_level_obj(self , request):
+        '''
+        Set level_obj attribute on request.user
+        '''
+        workout_utils.set_user_level(request, *self.args, **self.kwargs)
+
+    def set_user_relative_workout_week(self, request):
+        '''
+        Set the user_relative_workout_week attribute on request.user
+        '''
+        request.user.user_relative_workout_week = workout_utils.get_weeks_since(request, **self.kwargs)
+
+    def initialize_request(self, request, *args, **kwargs):
+        '''
+        Modify the request.user object to assign
+        - level_obj
+        - user_relative_workout_week
+        '''
+        req = super().initialize_request(
+            request, *args, **kwargs
+        )
+        #if the user is not anonymous assign the attributes
+        if not req.user.is_anonymous:
+            self.set_level_obj(req)
+            self.set_user_relative_workout_week(req)
+
+        return req
+
+    def get_week_year_context(self):
+        '''
+        Get the week and year of the request as a dict
+        '''
+        kwargs = self.kwargs
+        return {
+            "week" : int(kwargs.get('week_id')),
+            "year" : int(kwargs.get('year'))
+        }
+
 class UserView(RetrieveUpdateAPIView):
     queryset = Customer.objects
     serializer_class = CustomerSerializer
@@ -153,7 +198,7 @@ class DietPlanView(regeneration_views.RegenerableView):
         data = DietPlanSerializer(objs , many = True).data
         return Response(data)
 
-class DishReplaceView(RetrieveAPIView):
+class DishReplaceView(UserGenericAPIView, RetrieveAPIView):
     serializer_class = DietPlanSerializer
     authentication_classes = [CustomerAuthentication]
     permission_classes = [IsAuthenticated]
@@ -172,7 +217,7 @@ class DishReplaceView(RetrieveAPIView):
         data = self.serializer_class(obj).data
         return Response(data)
 
-class MealReplaceView(GenericAPIView):
+class MealReplaceView(UserGenericAPIView):
     serializer_class = DietPlanSerializer
     authentication_classes = [CustomerAuthentication]
     permission_classes = [IsAuthenticated]
@@ -908,7 +953,7 @@ class CustomerReasonsView(CreateAPIView):
     serializer_class = CustomerReasonsSerializer
 
 
-class RegenerableDietPlanView(regeneration_views.RegenerableView):
+class RegenerableDietPlanView(UserGenericAPIView, regeneration_views.RegenerableView):
     authentication_classes = [CustomerAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = DietPlanSerializer
@@ -916,13 +961,6 @@ class RegenerableDietPlanView(regeneration_views.RegenerableView):
         workout_utils.set_user_level,
         workout_utils.check_and_update_activity_level
     ]
-
-    def get_week_year_context(self):
-        kwargs = self.kwargs
-        return {
-            "week" : int(kwargs.get('week_id')),
-            "year" : int(kwargs.get('year'))
-        }
     
     def before_request_hook(self, request, *args, **kwargs):
         '''

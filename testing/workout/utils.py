@@ -58,9 +58,9 @@ def make_dummy_customer_like(customer , week = None , email = None):
         new_latest_activity = customer.new_latest_activity
     )
 
-def workout_regenerator(workout):
+def workout_regenerator(workout , customer):
     dummy_customer = make_dummy_customer_like(
-        workout.customer,
+        customer,
         week = workout.user_week_id
     ) 
      
