@@ -31,6 +31,7 @@ from epilogue.mixins import *
 from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf , is_valid_week, check_dietplan_dependencies
 from epilogue.replacement import *
 from epilogue.exceptions import MultipleDiseasesException , DiseasesNotDiabetesOrPcod
+from epilogue import permissions as epilogue_permissions
 
 from regeneration import views as regeneration_views
 from regeneration import signals as regeneration_signals
@@ -201,7 +202,9 @@ class DietPlanView(regeneration_views.RegenerableView):
 class DishReplaceView(RetrieveAPIView):
     serializer_class = DietPlanSerializer
     authentication_classes = [CustomerAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [
+        IsAuthenticated, epilogue_permissions.IsOwner
+    ]
     queryset = GeneratedDietPlanFoodDetails.objects
 
     def get(self , request , *args , **kwargs):
@@ -225,7 +228,9 @@ class DishReplaceView(RetrieveAPIView):
 class MealReplaceView(UserGenericAPIView):
     serializer_class = DietPlanSerializer
     authentication_classes = [CustomerAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [
+        IsAuthenticated, epilogue_permissions.IsOwner
+    ]
     queryset = GeneratedDietPlan.objects
 
     def get_queryset(self):
@@ -966,7 +971,9 @@ class CustomerReasonsView(CreateAPIView):
 
 class RegenerableDietPlanView(UserGenericAPIView, regeneration_views.RegenerableView):
     authentication_classes = [CustomerAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [
+        IsAuthenticated, epilogue_permissions.IsOwner
+    ]
     serializer_class = DietPlanSerializer
     before_hooks = [
         workout_utils.set_user_level,

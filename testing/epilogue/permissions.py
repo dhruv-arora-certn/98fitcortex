@@ -9,3 +9,13 @@ class WeekWindowAccessPermission(permissions.BasePermission):
 	def has_permission(self , request , view):
 		return True
 
+class IsOwner(permissions.BasePermission):
+    '''
+    Permission to only access to a user's own data
+    '''
+    message = "Access Denied"
+
+    def has_object_permission(self, request, view, obj):
+        if obj.customer == request.user:
+            return True
+        return False

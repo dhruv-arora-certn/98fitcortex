@@ -953,6 +953,10 @@ class GeneratedDietPlanFoodDetails(models.Model):
     def old_suggestions(self):
         return list(self.suggestions.values_list('food__name' , flat = True))
 
+    @property
+    def customer(self):
+        return self.dietplan.customer
+
     def update_attrs(self , item):
         self.calorie = str(item.calarie)
         self.weight = item.weight
