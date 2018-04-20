@@ -1,7 +1,7 @@
 from django.urls import re_path
 from .views import  UserView , DietPlanView , DishReplaceView , MealReplaceView , CustomerFoodExclusionView ,\
                     CustomerMedicalConditionsView , CreateCustomerView , GuestPDFView , DietPlanRegenerationView , UserDietPlanRegenerationView ,\
-                    DietPlanMobileView , WaterBulkView  ,SleepWeeklyAggregationView,SleepMonthlyAggregatedView, WaterWeeklyAggregateView,WaterMonthlyAggregateView , \
+                    WaterBulkView  ,SleepWeeklyAggregationView,SleepMonthlyAggregatedView, WaterWeeklyAggregateView,WaterMonthlyAggregateView , \
                     LastDaySleepView, MonthlyActivityView , WeeklyActivityView, ActivityLogView , CustomerSleepLoggingView , DashboardMealTextView , CustomerMedicalConditionsMobileView , CustomerFoodExclusionsMobileView , \
                     DiseasePDFView  , CustomerReasonsView , RegenerableDietPlanView
 
@@ -20,7 +20,6 @@ urlpatterns = [
     re_path(r'^disease-pdf/(?P<day>[1-7])/$' , DiseasePDFView.as_view()),
     re_path(r'^dietplans/(?P<id>[0-9]+)/regenerate/$' , DietPlanRegenerationView.as_view()),
     re_path(r'^user/regenerate' , UserDietPlanRegenerationView.as_view()),
-    re_path(r'^dietplans/(?P<week_id>[0-9]+)/day/(?P<day>[1-7])/meal/(?P<meal>(m1|m2|m3|m4|m5))/$' , DietPlanMobileView.as_view()),
     re_path(r'^logging/water/$',WaterBulkView.as_view()),
     re_path(r'^logging/activity/$',ActivityLogView.as_view()),
     re_path(r'^logging/sleep/$',CustomerSleepLoggingView.as_view()),

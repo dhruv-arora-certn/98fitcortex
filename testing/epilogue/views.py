@@ -46,7 +46,7 @@ DATE_FORMAT = '%B {S} - %Y, %A'
 
 class UserGenericAPIView(GenericAPIView):
     '''
-    View to assign user attributes:
+    View to assign request.user attributes:
     - level_obj
     - user_relative_workout_week
     '''
@@ -198,7 +198,7 @@ class DietPlanView(regeneration_views.RegenerableView):
         data = DietPlanSerializer(objs , many = True).data
         return Response(data)
 
-class DishReplaceView(UserGenericAPIView, RetrieveAPIView):
+class DishReplaceView(RetrieveAPIView):
     serializer_class = DietPlanSerializer
     authentication_classes = [CustomerAuthentication]
     permission_classes = [IsAuthenticated]
@@ -207,7 +207,12 @@ class DishReplaceView(UserGenericAPIView, RetrieveAPIView):
     def get(self , request , *args , **kwargs):
         print("Calling Dish Replace")
         obj = self.get_object()
-        r = ReplacementPipeline(dish = obj , replaceMeal = False)
+
+        activity_level_to_use = float(self.request.user.activity_level_to_use(
+            week = obj.dietplan.week_id,
+            year = obj.dietplan.year
+        ))
+        r = ReplacementPipeline(dish = obj , replaceMeal = False, activity_level_to_use = activity_level_to_use)
         r.meal.build()
         a = r.save()
         if not a:
@@ -232,7 +237,13 @@ class MealReplaceView(UserGenericAPIView):
     def get_object(self):
         qs = self.get_queryset().last()
         objs = self.get_diet_plan_details(qs).last()
-        r = ReplacementPipeline(dish = objs , replaceMeal = True)
+        r = ReplacementPipeline(
+            dish = objs,
+            replaceMeal = True,
+            activity_level_to_use = float(self.request.user.activity_level_to_use(
+                **self.get_week_year_context()
+            ))
+        )
         r.meal.build()
         return r.save()
 

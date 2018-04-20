@@ -18,7 +18,10 @@ class Calculations:
         self.bmi = BMI(weight , height)
         self.ibw = IBW(self.height, self.gender)
         self.calorieNumber = CalorieNumber(self.bmi , self.activity)
-        self.countCalories()
+        try:
+            self.countCalories()
+        except Exception as err:
+            import ipdb; ipdb.set_trace()
         self._selected = {
             'm1' : dict(),
             'm2' : dict(),
