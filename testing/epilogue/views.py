@@ -861,7 +861,7 @@ class DashboardMealTextView(GenericAPIView):
         week = get_week()
         year = get_year()
 
-        week_diet_plan = GeneratedDietPlan.objects.filter(customer = self.request.user).filter(week_id = week , year = year).last()
+        week_diet_plan = self.request.user.dietplans.filter(week_id = week , year = year).last()
 
         if not week_diet_plan:
             return Response(dict() , status = status.HTTP_404_NOT_FOUND)
@@ -870,9 +870,6 @@ class DashboardMealTextView(GenericAPIView):
 
         if not today_items:
             return Response(dict())
-
-        m1_string = ' + '.join([e.food_name for e in today_items.filter(meal_type = "m1")])
-        m2_string = ' + '.join([e.food_name for e in today_items.filter()])
 
         meals = ["m%d"%i for i in range(1,6)]
         string_dict = {
