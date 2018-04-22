@@ -1,10 +1,19 @@
 from django.dispatch import Signal
 from django.dispatch import receiver
-from .utils import EmailMessage
 from django.template.loader import render_to_string
+
+from . import utils
+
 
 navratri_signup = Signal(
 	providing_args = ["email" , "url" , "lang"]
+)
+
+#Signal to use when user registers through mobile
+mobile_signup = Signal(
+    providing_args = [
+        "logincustomer"
+    ]
 )
 
 @receiver(navratri_signup)
@@ -20,7 +29,7 @@ def send_navratri_email(sender , **kwargs):
 		template = "navratri-welcome-email.html"
 		subject = "Your Navratri Ingredient List to lose weight while fasting | 98Fit"
 
-	e = EmailMessage(
+	e = utils.EmailMessage(
 		subject = subject,
 		message = render_to_string(template , {
 			"url" : url
@@ -29,4 +38,25 @@ def send_navratri_email(sender , **kwargs):
 		html = True
 	)
 	e.send()
+
+
+@receiver(mobile_signup)
+def send_welcome_email(sender, **kwargs):
+    '''
+    Send welcome email to the user coming through the app
+    '''
+    login_customer = kwargs.get("logincustomer")
+    secret = utils.sign(
+        login_customer.email
+    )
+    link = f'<a href="https://www.98fit.com/confirm/{secret}">Click Here</a>'
+    message = f'Hello {link}'
+    e = utils.EmailMessage(
+        subject = "Welcome to 98Fit",
+        message = message,
+        recipient = [login_customer.email],
+        html = True
+    )
+    status = e.send()
+    return
 

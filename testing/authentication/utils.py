@@ -1,5 +1,7 @@
 import boto3
 
+from django.core import signing
+
 
 class EmailMessage():
 	
@@ -59,4 +61,33 @@ class EmailMessage():
 			Destination = self.get_destination_object(),
 			Message = self.get_message_object()
 		)
+
+
+def sign(data = None, signer = signing.TimestampSigner):
+    '''
+    Sign data 
+
+    Params
+    ------
+    data : data to sign
+    signer : signer to use
+    '''
+    signer = signer()
+    value = signer.sign(data) 
+    return value
+
+def unsign(value, signer = signing.TimestampSigner, max_age = 0):
+    '''
+    Unsign data
+
+    Params
+    ------
+    value: data to unsign
+    signer: signer to use to unsign
+    max_age: maximum age of the data
+    '''
+    signer = signer()
+    value = signer.unsign(value, max_age=max_age)
+    return value
+
 

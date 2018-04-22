@@ -20,6 +20,7 @@ from workoutplan import locations
 
 from workout import week_upgrade
 
+from authentication import signals as authentication_signals
 
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
@@ -1299,3 +1300,15 @@ def activity_log_created(sender, *args, **kwargs):
             week = instance.week,
             year = instance.year
         )
+
+@receiver(signals.post_save , sender = LoginCustomer)
+def login_customer_created(sender, *args, **kwargs):
+    created = kwargs.get('created', False)
+    instance = kwargs.get('instance')
+
+    if created:
+        #Send the signals for handling login customer creation
+        authentication_signals.send_welcome_email(
+            sender = sender,
+            logincustomer = instance 
+        ) 
