@@ -180,6 +180,8 @@ class ChangePasswordView(generics.GenericAPIView):
             return response.Response({
                 "message" : "Incorrect OTP"
             }, status = status.HTTP_403_FORBIDDEN)
-        return response.Response({
-            "message" : "Successfully Changed"
-        })
+        else:
+            s.save()
+            return response.Response({
+                "message" : "Successfully Changed"
+            })

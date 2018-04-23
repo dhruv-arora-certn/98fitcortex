@@ -218,7 +218,7 @@ class ForgotPasswordOTPSerializer(rest_framework.serializers.Serializer):
 
 class ChangePasswordSerializer(rest_framework.serializers.Serializer):
     otp = rest_framework.serializers.IntegerField()
-    signature = rest_framework.serializers.CharField()
+    token = rest_framework.serializers.CharField()
     password = rest_framework.serializers.CharField()
     email = rest_framework.serializers.EmailField()
     
@@ -236,7 +236,7 @@ class ChangePasswordSerializer(rest_framework.serializers.Serializer):
 
     def validate(self, data):
         data = super().validate(data)
-        signature = data['signature']
+        signature = data['token']
         otp = data['otp']
         email = data['email']
         if utils.verify_otp_signature(signature, otp, email):
@@ -245,14 +245,14 @@ class ChangePasswordSerializer(rest_framework.serializers.Serializer):
             raise rest_framework.exceptions.ValidationError("Invalid OTP")
 
     def create(self, data):
-        signature = data['signature']
+        signature = data['token']
         otp = data['otp']
         email = data['email']
         user = epilogue_models.LoginCustomer.objects.filter(
             email = email
         ).last()
         password = bcrypt.hash(data['password'])
-        user.logincustomer.password = password
-        user.logincustomer.save()
+        user.password = password
+        user.save()
         return user
 
