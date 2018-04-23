@@ -1079,6 +1079,7 @@ class LoginCustomer(models.Model):
     customer = models.OneToOneField(Customer , db_column = "erp_customer_id" , on_delete = models.CASCADE , null = True)
     status_id = models.BooleanField(default = True)
     created_on = models.DateTimeField(auto_now_add = True , null = True)
+    email_confirm = models.CharField(max_length = 50)
 
 class DishReplacementSuggestions(models.Model):
     dietplan_food_details = models.ForeignKey(GeneratedDietPlanFoodDetails , related_name = "suggestions" , on_delete = models.CASCADE , null = True)

@@ -10,6 +10,7 @@ from analytics.models import UserSignupSource
 
 
 from . import adapters, signals, exceptions as authentication_exceptions, models
+from . import utils
 
 
 class BaseRegistrationSerializer(rest_framework.serializers.Serializer):
@@ -101,7 +102,6 @@ class RegistrationSerializer(BaseRegistrationSerializer):
         validators = [
             password_validation.NumericPasswordValidator,
             password_validation.MinimumLengthValidator({"min_length" : 7}),
-            password_validation.CommonPasswordValidator
         ]
         password_validation.validate_password(password , validators)
         return password
@@ -192,3 +192,67 @@ class DeviceRegistrationSerializer(rest_framework.serializers.ModelSerializer):
 
     def get_serializer(self, request, *args, **kwargs):
         import ipdb; ipdb.set_trace()
+
+class ForgotPasswordOTPSerializer(rest_framework.serializers.Serializer):
+    email = rest_framework.serializers.EmailField()
+
+    def validate_email(self,email):
+        if epilogue_models.LoginCustomer.objects.filter(email = email).count():
+            return email
+
+    def create(self, data):
+        otp = utils.get_otp()
+        email = data['email']
+        signature = utils.get_signed_otp(
+            otp,
+            email
+        )
+        e = utils.EmailMessage(
+            subject = "Forgot Password OTP" ,
+            message = f'Your OTP is {otp} \n -Team 98Fit',
+            recipient = [email]
+        )
+        e.send()
+        return signature
+ 
+
+class ChangePasswordSerializer(rest_framework.serializers.Serializer):
+    otp = rest_framework.serializers.IntegerField()
+    signature = rest_framework.serializers.CharField()
+    password = rest_framework.serializers.CharField()
+    email = rest_framework.serializers.EmailField()
+    
+    def validate_password(self , password):
+        validators = [
+            password_validation.NumericPasswordValidator,
+            password_validation.MinimumLengthValidator({"min_length" : 7}),
+        ]
+        password_validation.validate_password(password , validators)
+        return password
+
+    def validate_email(self, email):
+        if epilogue_models.LoginCustomer.objects.filter(email = email).count():
+            return email
+
+    def validate(self, data):
+        data = super().validate(data)
+        signature = data['signature']
+        otp = data['otp']
+        email = data['email']
+        if utils.verify_otp_signature(signature, otp, email):
+            return data
+        else:
+            raise rest_framework.exceptions.ValidationError("Invalid OTP")
+
+    def create(self, data):
+        signature = data['signature']
+        otp = data['otp']
+        email = data['email']
+        user = epilogue_models.LoginCustomer.objects.filter(
+            email = email
+        ).last()
+        password = bcrypt.hash(data['password'])
+        user.logincustomer.password = password
+        user.logincustomer.save()
+        return user
+

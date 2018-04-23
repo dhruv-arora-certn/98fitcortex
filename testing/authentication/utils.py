@@ -1,4 +1,5 @@
 import boto3
+import random
 
 from django.core import signing
 
@@ -91,3 +92,30 @@ def unsign(value, signer = signing.TimestampSigner, max_age = 0):
     return value
 
 
+def get_otp():
+    '''
+    Generate a 4 digit random number
+    '''
+    return random.randint(999,9999)
+
+def get_signed_otp(otp,email):
+    '''
+    Sign the OTP using object signing
+    '''
+    return signing.dumps({
+        "otp" : otp,
+        "email" : email
+    })
+
+def otp_email_from_signature(signature):
+    return signing.loads(signature, max_age = 300)
+
+def verify_otp_signature(signature, otp, email):
+    '''
+    Verify if the otp and email in signature match the given params
+    '''
+    signature = otp_email_from_signature(signature)
+    if signature['otp'] == otp and signature['email'] == email:
+        return True
+    return False
+    

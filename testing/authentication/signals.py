@@ -16,6 +16,12 @@ mobile_signup = Signal(
     ]
 )
 
+email_verification = Signal(
+    providing_args = [
+        "logincustomer"
+    ]
+)
+
 @receiver(navratri_signup)
 def send_navratri_email(sender , **kwargs):
 	email  = kwargs.pop('email')
@@ -50,7 +56,7 @@ def send_welcome_email(sender, **kwargs):
         login_customer.email
     )
     link = f'<a href="https://www.98fit.com/confirm/{secret}">Click Here</a>'
-    message = f'Hello {link}'
+    message = f'<p>Welcome to 98Fit</p><p>To verify your email address {link}.</p> <p>Link is only valid for 24 hours'
     e = utils.EmailMessage(
         subject = "Welcome to 98Fit",
         message = message,
@@ -60,3 +66,19 @@ def send_welcome_email(sender, **kwargs):
     status = e.send()
     return
 
+@receiver(email_verification)
+def send_verification_email(sender, **kwargs):
+    login_customer = kwargs.get("logincustomer")
+    secret = utils.sign(
+        login_customer.email
+    )
+    link = f'<a href="https://www.98fit.com/confirm/{secret}">Click Here</a>'
+    message = f'<p>To verify your email address {link}.</p> <p>Link is only valid for 24 hours'
+    e = utils.EmailMessage(
+        subject = "Welcome to 98Fit",
+        message = message,
+        recipient = [login_customer.email],
+        html = True
+    )
+    status = e.send()
+    return
