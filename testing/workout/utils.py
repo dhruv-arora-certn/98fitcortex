@@ -100,7 +100,7 @@ def get_weeks_since(request,**kwargs):
     week = int(kwargs.get('week_id'))
     year = int(kwargs.get('year'))
     end = isoweek.Week(year,week).monday()
-    start = request.user.get_last_level_day()
+    start = request.user.get_last_level_day(week = week, year = year)
 
     from epilogue.utils import count_weeks
     weeks_since = count_weeks(start , end) 

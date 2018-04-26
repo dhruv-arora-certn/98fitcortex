@@ -729,8 +729,11 @@ class Customer(models.Model):
     #        return levels.Intermediate
     #    return levels.Novice
 
-    def get_last_level_day(self):
-        last_level_record = self.level_logs.last()
+    def get_last_level_day(self, week , year):
+        last_level_record = self.level_logs.filter(
+            year__lte = year,
+            week__lte = week
+        ).order_by("pk").last()
 
         if last_level_record:
             return isoweek.Week(
