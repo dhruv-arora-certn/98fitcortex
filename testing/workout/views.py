@@ -11,13 +11,13 @@ from rest_framework import exceptions
 from rest_framework_bulk import ListBulkCreateAPIView
 
 from epilogue.authentication import CustomerAuthentication
-from epilogue.utils import get_week , get_day , BulkDifferential , is_valid_week
+from epilogue.utils import get_week , get_day , BulkDifferential , is_valid_week, get_year
 from epilogue.permissions import WeekWindowAccessPermission
 from epilogue.views import UserGenericAPIView
 
 from workout.models import *
 from workout.serializers import *
-from workout.utils import get_day_from_generator , workout_regenerator, check_and_update_fitness, check_and_update_activity_level, set_user_level
+from workout.utils import get_day_from_generator , workout_regenerator, check_and_update_fitness, check_and_update_activity_level, set_user_level, get_weeks_since
 from workout.persister import WorkoutWeekPersister
 from workout import renderers
 
@@ -165,14 +165,22 @@ class DashboardWorkoutTextView(generics.GenericAPIView):
     authentication_classes = [CustomerAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self , *args , **kwargs):
+    def get(self , request,*args , **kwargs):
         user = self.request.user
+        day = get_day()
+        week = get_week()
+        year = get_year()
+        week_workout = user.workouts.filter(week_id = week, year=  year).last()
+        if not week_workout:
+            return Response(
+                status = status.HTTP_404_NOT_FOUND
+            )
         string = "5 Minutes Warmup, %d Minutes Cardio"
-        return Response({
-            "workout" : "Daa-bee-doo"
-        })
-
-        cardio_duration = get_cardio_sets_reps_duration(user.level_obj , user.goal , user.user_relative_workout_week)
+        week = 1
+        cardio_duration = get_cardio_sets_reps_duration(user.fitness_level_to_use_obj() , user.goal , get_weeks_since(request, **{
+            "week_id" : get_week(),
+            "year": get_year()
+        }))
 
         string = string%(cardio_duration.duration/60)
 

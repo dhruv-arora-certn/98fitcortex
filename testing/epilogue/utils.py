@@ -4,15 +4,12 @@ from django.db import models
 from django.db.models.expressions import RawSQL 
 from django.db.models.functions import Coalesce
 
-from functools import partial
-
 from weasyprint import HTML
 
 from django.template.loader import render_to_string
 
 from django.utils import timezone
 #from dietplan.calculations import Calculations
-import functools
 import json
 import datetime as dt
 
@@ -225,3 +222,9 @@ def check_dietplan_dependencies(user):
         ))
         return val
 
+
+def get_meal_string(dietplan, meal):
+    '''
+    Return the meal string for a dietplan
+    '''
+    return
