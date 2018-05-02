@@ -1231,6 +1231,23 @@ class CustomerReasons(models.Model):
     def __str__(self):
         return self.reason.text
 
+class CustomerFoodItemsPreference(models.Model):
+    '''
+    Store User Food preferences
+    '''
+    food = models.ForeignKey(Food, on_delete = models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete = models.CASCADE)
+    preference = models.IntegerField(db_index = True)
+
+    class Meta:
+        index_together = [
+            "customer", "food"
+        ]
+        unique_together = [
+            "customer", "food"
+        ]
+
+
 @receiver(signals.post_init , sender = Customer)
 def save_pre_state(sender , *args , **kwargs):
     import logging
