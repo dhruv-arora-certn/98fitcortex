@@ -848,7 +848,7 @@ class MonthlyActivityView(ListAPIView):
 
 class CustomerSleepLoggingView(CreateAPIView):
     authentication_classes = [CustomerAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, epilogue_permissions.SingleSleepLog]
     serializer_class = CustomerSleepLoggingSerializer
     queryset = CustomerSleepLogs.objects
 
