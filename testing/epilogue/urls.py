@@ -3,7 +3,7 @@ from .views import  UserView , DietPlanView , DishReplaceView , MealReplaceView 
                     CustomerMedicalConditionsView , CreateCustomerView , GuestPDFView , DietPlanRegenerationView , UserDietPlanRegenerationView ,\
                     WaterBulkView  ,SleepWeeklyAggregationView,SleepMonthlyAggregatedView, WaterWeeklyAggregateView,WaterMonthlyAggregateView , \
                     LastDaySleepView, MonthlyActivityView , WeeklyActivityView, ActivityLogView , CustomerSleepLoggingView , DashboardMealTextView , CustomerMedicalConditionsMobileView , CustomerFoodExclusionsMobileView , \
-                    DiseasePDFView  , CustomerReasonsView , RegenerableDietPlanView
+                    DiseasePDFView  , CustomerReasonsView , RegenerableDietPlanView, CustomerPreferenceView
 
 urlpatterns = [
     re_path(r'^users/(?P<pk>[0-9]+)/$' , UserView.as_view()),
@@ -30,5 +30,6 @@ urlpatterns = [
     re_path(r'^logging/water/aggregate/monthly/(?P<month>[0-9]+)/$' ,WaterMonthlyAggregateView.as_view()),
     re_path(r'^logging/activity/aggregate/monthly/(?P<month>[0-9]+)/$' ,MonthlyActivityView.as_view()),
     re_path(r'^logging/activity/aggregate/weekly/(?P<week>[0-9]+)/$' ,WeeklyActivityView.as_view()),
-    re_path(r'^dashboard/strings/meal/$', DashboardMealTextView.as_view())
+    re_path(r'^dashboard/strings/meal/$', DashboardMealTextView.as_view()),
+    re_path(r'^food-preference/$', CustomerPreferenceView.as_view())
 ]

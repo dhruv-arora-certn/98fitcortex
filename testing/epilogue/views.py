@@ -1038,10 +1038,10 @@ class RegenerableDietPlanView(UserGenericAPIView, regeneration_views.Regenerable
                 },
                 status = status.HTTP_424_FAILED_DEPENDENCY
             )
-        #if not is_valid_week(year , week):
-        #    raise exceptions.PermissionDenied({
-        #        "message" : "You cannot access this week's plan"
-        #    })
+        if not is_valid_week(year , week):
+            raise exceptions.PermissionDenied({
+                "message" : "You cannot access this week's plan"
+            })
         self.before_request_hook(request, *args, **kwargs)
         obj = self.get_object()
 
@@ -1064,3 +1064,13 @@ class RegenerableDietPlanView(UserGenericAPIView, regeneration_views.Regenerable
             'type' : 'diet',
             **self.get_week_year_context()
         }
+
+class CustomerPreferenceView(CreateAPIView,ListAPIView):
+    authentication_classes = [CustomerAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = CustomerPreferenceSerializer
+
+    def initialize_request(self, request, *args, **kwargs):
+        request = super().initialize_request(request, *args, **kwargs)
+        request.data['customer'] = request.user.id
+        return request

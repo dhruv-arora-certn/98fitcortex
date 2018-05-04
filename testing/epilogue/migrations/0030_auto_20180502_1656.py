@@ -19,6 +19,7 @@ class Migration(migrations.Migration):
                 ('preference', models.IntegerField(db_index=True)),
                 ('customer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='epilogue.Customer')),
                 ('food', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='epilogue.Food')),
+                ('created', models.DateTimeField(auto_now_add=True))
             ],
         ),
         migrations.AlterModelOptions(

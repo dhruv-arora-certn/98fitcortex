@@ -313,3 +313,7 @@ class CustomerReasonsSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class CustomerPreferenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomerFoodItemsPreference
+        fields = "__all__"

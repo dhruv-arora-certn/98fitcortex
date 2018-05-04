@@ -1236,14 +1236,12 @@ class CustomerFoodItemsPreference(models.Model):
     Store User Food preferences
     '''
     food = models.ForeignKey(Food, on_delete = models.CASCADE)
-    customer = models.ForeignKey(Customer, on_delete = models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete = models.CASCADE, related_name = "food_preference")
     preference = models.IntegerField(db_index = True)
+    created = models.DateTimeField(auto_now_add = True)
 
     class Meta:
         index_together = [
-            "customer", "food"
-        ]
-        unique_together = [
             "customer", "food"
         ]
 
