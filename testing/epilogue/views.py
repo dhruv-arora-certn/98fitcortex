@@ -1070,6 +1070,9 @@ class CustomerPreferenceView(CreateAPIView,ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = CustomerPreferenceSerializer
 
+    def get_queryset(self):
+        return self.request.user.food_preference.all()
+
     def initialize_request(self, request, *args, **kwargs):
         request = super().initialize_request(request, *args, **kwargs)
         request.data['customer'] = request.user.id
