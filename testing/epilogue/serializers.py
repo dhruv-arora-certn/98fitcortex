@@ -317,3 +317,8 @@ class CustomerPreferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerFoodItemsPreference
         fields = "__all__"
+
+class WeeklyDietDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GeneratedDietPlan
+        fields = ["followed","id"]

@@ -822,6 +822,7 @@ class GeneratedDietPlan(models.Model):
     plan_type = models.CharField(max_length = 50 , default = "system generated plan")
     medi_applicable = models.CharField(max_length = 20 , default = "")
     year = models.IntegerField(default = get_year())
+    followed = models.BooleanField(default = False)
 
     @property
     def dayWisePlan(self):

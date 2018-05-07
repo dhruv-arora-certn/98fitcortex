@@ -3,7 +3,9 @@ from .views import  UserView , DietPlanView , DishReplaceView , MealReplaceView 
                     CustomerMedicalConditionsView , CreateCustomerView , GuestPDFView , DietPlanRegenerationView , UserDietPlanRegenerationView ,\
                     WaterBulkView  ,SleepWeeklyAggregationView,SleepMonthlyAggregatedView, WaterWeeklyAggregateView,WaterMonthlyAggregateView , \
                     LastDaySleepView, MonthlyActivityView , WeeklyActivityView, ActivityLogView , CustomerSleepLoggingView , DashboardMealTextView , CustomerMedicalConditionsMobileView , CustomerFoodExclusionsMobileView , \
-                    DiseasePDFView  , CustomerReasonsView , RegenerableDietPlanView, CustomerPreferenceView
+                    DiseasePDFView  , CustomerReasonsView , RegenerableDietPlanView, CustomerPreferenceView, CustomerWeeklyDietDetailsViewSet
+
+from rest_framework import routers
 
 urlpatterns = [
     re_path(r'^users/(?P<pk>[0-9]+)/$' , UserView.as_view()),
@@ -33,3 +35,8 @@ urlpatterns = [
     re_path(r'^dashboard/strings/meal/$', DashboardMealTextView.as_view()),
     re_path(r'^food-preference/$', CustomerPreferenceView.as_view())
 ]
+
+
+router = routers.DefaultRouter()
+router.register(r'weekly-diet', CustomerWeeklyDietDetailsViewSet, base_name="weekly-diet")
+urlpatterns += router.urls

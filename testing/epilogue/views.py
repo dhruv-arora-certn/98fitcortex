@@ -23,6 +23,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import exceptions , status
 from rest_framework_bulk import ListBulkCreateAPIView
 from rest_framework import status
+from rest_framework import viewsets
+from rest_framework import mixins
 
 from epilogue.models import *
 from epilogue.serializers import *
@@ -95,7 +97,7 @@ class UserView(RetrieveUpdateAPIView):
     serializer_class = CustomerSerializer
     
     def get_serializer_context(self):
-        data = super().get_serializer_class()
+        data = super().get_serializer_context()
         data.update({
             'kwargs' : self.kwargs
         })
@@ -1077,3 +1079,9 @@ class CustomerPreferenceView(CreateAPIView,ListAPIView):
         request = super().initialize_request(request, *args, **kwargs)
         request.data['customer'] = request.user.id
         return request
+
+class CustomerWeeklyDietDetailsViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    authentication_classes = [CustomerAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class =  WeeklyDietDetailsSerializer
+    queryset = GeneratedDietPlan.objects.all()
