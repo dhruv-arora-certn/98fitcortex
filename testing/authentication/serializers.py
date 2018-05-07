@@ -256,3 +256,5 @@ class ChangePasswordSerializer(rest_framework.serializers.Serializer):
         user.save()
         return user
 
+class EmailVerificationSerializer(rest_framework.serializers.Serializer):
+    email = rest_framework.serializers.EmailField()

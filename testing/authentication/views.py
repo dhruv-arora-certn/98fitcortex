@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.core import signing
 
-from authentication.serializers import RegistrationSerializer , GoogleLoginSerializer , FacebookLoginSerializer, BatraGoogleSerializer, DeviceRegistrationSerializer, ChangePasswordSerializer, ForgotPasswordOTPSerializer
+from authentication.serializers import RegistrationSerializer , GoogleLoginSerializer , FacebookLoginSerializer, BatraGoogleSerializer, DeviceRegistrationSerializer, ChangePasswordSerializer, ForgotPasswordOTPSerializer, EmailVerificationSerializer
 from authentication import utils
 from authentication import signals 
 
@@ -107,6 +107,7 @@ class DeviceRegistrationView(generics.CreateAPIView):
 
 class EmailVerificationView(generics.GenericAPIView):
     authentication_classes = [CustomerAuthentication]
+    serializer_class = EmailVerificationSerializer 
 
     def post(self, request, *args, **kwargs):
         token = request.data.get("token")
@@ -136,6 +137,7 @@ class EmailVerificationView(generics.GenericAPIView):
 
 class EmailVerificationResendView(generics.GenericAPIView):
     authentication_classes = [CustomerAuthentication]
+    serializer_class = EmailVerificationSerializer 
 
     def post(self, request, *args, **kwargs):
         if request.user.logincustomer.email_confirm == 'yes':
