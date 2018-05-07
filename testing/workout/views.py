@@ -171,10 +171,10 @@ class DashboardWorkoutTextView(generics.GenericAPIView):
         week = get_week()
         year = get_year()
         week_workout = user.workouts.filter(week_id = week, year=  year).last()
-        if not week_workout:
-            return Response(
-                status = status.HTTP_404_NOT_FOUND
-            )
+        #if not week_workout:
+        #    return Response(
+        #        status = status.HTTP_404_NOT_FOUND
+        #    )
         string = "5 Minutes Warmup, %d Minutes Cardio"
         week = 1
         cardio_duration = get_cardio_sets_reps_duration(user.fitness_level_to_use_obj() , user.goal , get_weeks_since(request, **{
