@@ -192,6 +192,9 @@ LOGGING = {
         },
         'simple' : {
             'format' : '%(levelname)s %(asctime)s %(module)s %(message)s'
+        },
+        'logzioFormat': {
+            'format': '{"additional_field": "value"}'
         }
     },
     'handlers': {
@@ -232,6 +235,16 @@ LOGGING = {
             'level' : 'DEBUG',
             'class' : 'logging.FileHandler',
             'filename' : 'logs/ep_dp_relation.log'
+        },
+        'logzio':{
+            'class' : 'logzio.handler.LogzioHandler',
+            'level' : 'DEBUG',
+            'formatter' : 'logzioFormat',
+            'token' : 'OZhCQHDtZwULxKlhuPztkvwQoOwTsyWA',
+            'logzio_type' : 'django',
+            'logs_drain_timeout' :5,
+            'url' : 'https://listener.logz.io:8071',
+            'debug' : True
         }
     },
     'loggers': {
@@ -265,7 +278,7 @@ LOGGING = {
             'propagate' :  True
         },
         'django.request': {
-            'handlers' : ['request'],
+            'handlers' : ['logzio'],
             'level' : 'DEBUG',
             'propagate' : False
         },
@@ -314,3 +327,4 @@ CACHES = {
 }
 
 CACHE_WORKOUT=False
+REQUEST_LOGGING_ENABLE_COLORIZE=False
