@@ -30,6 +30,8 @@ DEBUG = bool(os.environ.get("debug", False))
 
 ALLOWED_HOSTS = [str(e) for e in os.environ.get("allowed_hosts").split(",")]
 
+#Check if environment is production
+PRODUCTION = bool(int(os.environ.get('prod' , 0)))
 
 # Application definition
 
@@ -236,16 +238,6 @@ LOGGING = {
             'class' : 'logging.FileHandler',
             'filename' : 'logs/ep_dp_relation.log'
         },
-        'logzio':{
-            'class' : 'logzio.handler.LogzioHandler',
-            'level' : 'DEBUG',
-            'formatter' : 'logzioFormat',
-            'token' : 'OZhCQHDtZwULxKlhuPztkvwQoOwTsyWA',
-            'logzio_type' : 'django',
-            'logs_drain_timeout' :5,
-            'url' : 'https://listener.logz.io:8071',
-            'debug' : True
-        }
     },
     'loggers': {
         'django': {
@@ -278,7 +270,7 @@ LOGGING = {
             'propagate' :  True
         },
         'django.request': {
-            'handlers' : ['logzio'],
+            'handlers' : ['logzio' if PRODUCTION else 'request'],
             'level' : 'DEBUG',
             'propagate' : False
         },
@@ -303,6 +295,17 @@ LOGGING = {
     },
 }
 
+if PRODUCTION:
+    LOGGING['handlers']['logzio'] = {
+            'class' : 'logzio.handler.LogzioHandler',
+            'level' : 'DEBUG',
+            'formatter' : 'logzioFormat',
+            'token' : 'OZhCQHDtZwULxKlhuPztkvwQoOwTsyWA',
+            'logzio_type' : 'django',
+            'logs_drain_timeout' :5,
+            'url' : 'https://listener.logz.io:8071',
+            'debug' : True
+        }
 #AWS SES Details
 EMAIL_BACKEND = 'django_ses.SESBackend'
 
