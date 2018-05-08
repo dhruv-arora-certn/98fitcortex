@@ -25,6 +25,21 @@ class IsOwner(permissions.BasePermission):
             return True
         return False
 
+class IsLoggingOwn(permissions.BasePermission):
+    '''
+    Check if the customer id sent is the same as request.user
+    '''
+    message = "You do not have permission to do this"
+
+    def has_permission(self, request, view):
+        if request.data.get("customer"):
+            print("Has Customer")
+            print(request.data.get("customer"))
+            return request.user.id == request.data['customer']
+        print("Does not have customer")
+        return False
+
+
 class SingleSleepLog(permissions.BasePermission):
     '''
     Permission to log a single record of sleep
