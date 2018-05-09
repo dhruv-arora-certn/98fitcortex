@@ -6,6 +6,7 @@ from django.template.loader import render_to_string
 from django.views import View
 from django.shortcuts import render , get_object_or_404
 from django.http import HttpResponse , JsonResponse
+from django.db import transaction
 
 from dietplan.goals import Goals
 from dietplan.utils import annotate_food
@@ -850,9 +851,13 @@ class MonthlyActivityView(ListAPIView):
 
 class CustomerSleepLoggingView(CreateAPIView):
     authentication_classes = [CustomerAuthentication]
-    permission_classes = [IsAuthenticated, epilogue_permissions.SingleSleepLog]
+    permission_classes = [IsAuthenticated, epilogue_permissions.IsLoggingOwn, epilogue_permissions.SingleSleepLog]
     serializer_class = CustomerSleepLoggingSerializer
     queryset = CustomerSleepLogs.objects
+
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
 
 class DashboardMealTextView(GenericAPIView):
     authentication_classes = [CustomerAuthentication]

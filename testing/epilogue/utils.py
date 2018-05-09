@@ -3,6 +3,7 @@ from datetime import datetime,timedelta,time
 from django.db import models 
 from django.db.models.expressions import RawSQL 
 from django.db.models.functions import Coalesce
+from django.utils.dateparse import parse_datetime
 
 from weasyprint import HTML
 
@@ -228,3 +229,18 @@ def get_meal_string(dietplan, meal):
     Return the meal string for a dietplan
     '''
     return
+
+def can_log_sleep(sleep_logs, new_data):
+    border_date = (parse_datetime(new_data['start']) - dt.timedelta(hours = 5)).date()
+    sleep_log = sleep_logs.annotate(
+    date = RawSQL(
+        "DATE(DATE_SUB(start, INTERVAL 5 HOUR))",
+        []
+        )
+    )
+    sleep_log = sleep_log.filter(
+        date = border_date
+    )
+    if sleep_log.count():
+        return False
+    return True
