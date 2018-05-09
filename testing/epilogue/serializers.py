@@ -3,7 +3,9 @@ from rest_framework import serializers , exceptions
 from epilogue.models import * 
 from epilogue import utils
 
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+
+from django.db.utils import IntegrityError
 
 from passlib.hash import bcrypt
 
@@ -305,7 +307,14 @@ class CustomerSleepLoggingSerializer(serializers.ModelSerializer):
         end = validated_data['end']
         d = end - start
         validated_data['minutes'] = d.total_seconds()//60
-        return super().create(validated_data)
+        try:
+            saved_inst = super().create(validated_data)
+        except IntegrityError as int_err :
+            #Raised if the record for this day already exists
+            raise PermissionDenied("Record for this day already exists")
+        else:
+            return saved_inst
+
 
 class CustomerReasonsSerializer(serializers.ModelSerializer):
     class Meta:
