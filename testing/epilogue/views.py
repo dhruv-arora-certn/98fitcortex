@@ -1055,7 +1055,10 @@ class RegenerableDietPlanView(UserGenericAPIView, regeneration_views.Regenerable
         #Extract the Meals from the dietplan now
 
         meals = self.get_filtered_queryset(obj)
-        serialized = self.serializer_class(meals , many = True)
+        serialized = self.serializer_class(meals , many = True, context = {
+            "request" : request,
+            "user" : request.user
+        })
         return Response(serialized.data)
 
     def get_filtered_queryset(self , obj):

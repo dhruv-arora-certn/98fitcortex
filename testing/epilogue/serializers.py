@@ -81,6 +81,7 @@ class DietPlanSerializer(serializers.ModelSerializer):
     dietplan_id = serializers.SerializerMethodField()
     unit = serializers.SerializerMethodField()
     newcalories = serializers.SerializerMethodField()
+    preference = serializers.SerializerMethodField()
 
     class Meta:
         model = GeneratedDietPlanFoodDetails
@@ -123,6 +124,14 @@ class DietPlanSerializer(serializers.ModelSerializer):
     
     def get_newcalories(self,obj):
         return float(obj.calorie)
+
+    def get_preference(self, obj):
+        user = self.context['user']
+        pref = user.food_preference.filter(food = obj.food_item).last()
+
+        if pref:
+            return pref.preference
+        return 0
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField(required = True)
