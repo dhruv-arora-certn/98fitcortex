@@ -197,6 +197,7 @@ class Objective(models.Model):
             return Goals.MuscleGain
         if self.name.strip() == "Be healthy":
             return Goals.MaintainWeight
+        return Goals.NotSet
 
 @track_data(*DIET_ONLY_FACTORS + WORKOUT_ONLY_FACTORS + COMMON_FACTORS)
 class Customer(models.Model):
@@ -222,11 +223,11 @@ class Customer(models.Model):
     h = models.CharField(db_column = "height",  default = '0.0' , max_length = 6)
     h_type = models.IntegerField(db_column = "height_type" , default = 1)
     ls = models.CharField( max_length = 50 , db_column = "lifestyle" , blank = True)
-    objective = models.ForeignKey(Objective , db_column = "objective", default = 1, on_delete = models.DO_NOTHING )
+    objective = models.ForeignKey(Objective , db_column = "objective", null=True, on_delete = models.DO_NOTHING )
     gen = models.CharField(max_length = 20 , db_column = "gender", blank = True , default = "female")
     body_type = models.CharField(max_length = 50, blank = True)
     food_cat = models.CharField(max_length = 50 , choices=  food_cat_choices, blank = True)
-    level = models.IntegerField(blank = True , default = 1)
+    level = models.IntegerField(blank = True , null = True)
     is_authenticated = True
     is_anonymous = False
     image = models.CharField( max_length = 200 , blank = True , null = True)
@@ -288,7 +289,9 @@ class Customer(models.Model):
 
     @property
     def goal(self):
-        return self.objective.goal
+        if getattr(self,"objective"):
+            return self.objective.goal
+        return Goals.NotSet
 
     @property
     def gender(self):
