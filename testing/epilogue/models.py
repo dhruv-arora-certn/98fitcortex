@@ -1,5 +1,5 @@
 from dietplan.goals import Goals
-from dietplan.gender import Male , Female
+from dietplan.gender import Male , Female, UnsetGender
 
 from epilogue.managers import *
 from epilogue import decorators
@@ -224,7 +224,7 @@ class Customer(models.Model):
     h_type = models.IntegerField(db_column = "height_type" , default = 1)
     ls = models.CharField( max_length = 50 , db_column = "lifestyle" , blank = True)
     objective = models.ForeignKey(Objective , db_column = "objective", null=True, on_delete = models.DO_NOTHING )
-    gen = models.CharField(max_length = 20 , db_column = "gender", blank = True , default = "female")
+    gen = models.CharField(max_length = 20 , db_column = "gender", blank = True, null = True )
     body_type = models.CharField(max_length = 50, blank = True)
     food_cat = models.CharField(max_length = 50 , choices=  food_cat_choices, blank = True)
     level = models.IntegerField(blank = True , null = True)
@@ -295,6 +295,8 @@ class Customer(models.Model):
 
     @property
     def gender(self):
+        if not getattr(self, "gen"):
+            return UnsetGender
         if self.gen.lower().strip() == "male":
             return Male
         if self.gen.lower().strip() == "female":
