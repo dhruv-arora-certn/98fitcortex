@@ -93,6 +93,13 @@ class UserGenericAPIView(GenericAPIView):
             "year" : int(kwargs.get('year'))
         }
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        if not context:
+            context = {}
+        context['user'] = self.request.user
+        return context
+
 class UserView(RetrieveUpdateAPIView):
     queryset = Customer.objects
     serializer_class = CustomerSerializer
@@ -225,7 +232,9 @@ class DishReplaceView(RetrieveAPIView):
             return Response(
                 status = status.HTTP_404_NOT_FOUND
             )
-        data = self.serializer_class(obj).data
+        data = self.serializer_class(obj, context = {
+            "user" : request.user
+        }).data
         return Response(data)
 
 class MealReplaceView(UserGenericAPIView):
@@ -257,7 +266,7 @@ class MealReplaceView(UserGenericAPIView):
 
     def get(self, request , *args , **kwargs):
         objs = self.get_object()
-        data = self.serializer_class(objs , many = True).data
+        data = self.serializer_class(objs , many = True, context = self.get_serializer_context()).data
         return Response(data)
 
 class CustomerFoodExclusionView(ListBulkCreateAPIView , BulkDifferential):
