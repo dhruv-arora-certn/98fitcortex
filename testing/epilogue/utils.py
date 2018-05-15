@@ -14,19 +14,29 @@ from django.utils import timezone
 import json
 import datetime as dt
 
-def get_week(date = datetime.now(tz = timezone.get_current_timezone())):
+def get_week(date = None):
+    if not date:
+        date = datetime.now(tz = timezone.get_current_timezone())
     return date.isocalendar()[1]
 
-def get_day(date = datetime.now(tz = timezone.get_current_timezone())):
+def get_day(date = None):
+    if not date:
+        date = datetime.now(tz = timezone.get_current_timezone())
     return date.isocalendar()[2]
 
-def get_year(date = datetime.now(tz = timezone.get_current_timezone())):
+def get_year(date = None):
+    if not date:
+        date = datetime.now(tz = timezone.get_current_timezone())
     return date.isocalendar()[0]
 
-def get_month(date = datetime.now()):
+def get_month(date = None):
+    if not date:
+        date = datetime.now(tz = timezone.get_current_timezone())
     return date.month
 
-def count_weeks(start , end = datetime.now()):
+def count_weeks(start , end = None):
+    if not end:
+        end = datetime.now(tz = timezone.get_current_timezone())
     start_year , start_week , start_day = start.isocalendar()
     end_year , end_week , end_day = end.isocalendar()
 
