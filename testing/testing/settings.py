@@ -65,7 +65,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'request_logging.middleware.LoggingMiddleware',
-    'workoutplan.exercise_workout_relation.middleware.EDRelationMiddleware'
+    'middlewares.request_time.RequestTimeMiddleware'
 ]
 
 ROOT_URLCONF = 'testing.urls'
