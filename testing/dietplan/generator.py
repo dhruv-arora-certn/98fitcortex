@@ -44,8 +44,8 @@ class Day:
         if self.persist and self.day and self.dietplan:
             self.generated = []
             for m,v in self.calculations._selected.items():
-                for t,e in v.items():
-                    obj = GeneratedDietPlanFoodDetails.objects.create(
+                obj = GeneratedDietPlanFoodDetails.objects.bulk_create([
+                        GeneratedDietPlanFoodDetails(
                         dietplan = self.dietplan ,
                         food_item_id = e.id ,
                         food_name = e.name ,
@@ -55,8 +55,8 @@ class Day:
                         calorie = str(e.calorie)  ,
                         weight = e.weight ,
                         quantity = e.quantity ,
-                        size = e.size)
-                    self.generated.append(obj)
+                        size = e.size) for t,e in v.items()])
+                self.generated.append(obj)
 
 class Pipeline:
     @lego.assemble
