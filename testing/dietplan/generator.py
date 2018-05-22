@@ -40,7 +40,6 @@ class Day:
         newMeal = self.calculations.makeMeal(meal)
 
     def persist_db(self):
-        print("&&&&&& "  ,self.persist , self.day , self.dietplan)
         if self.persist and self.day and self.dietplan:
             self.generated = []
             for m,v in self.calculations._selected.items():
@@ -351,14 +350,14 @@ class Pipeline:
 
     def regenerate(self):
         #Saving the old food details. These will be deleted on successful generation of diet plan
-        self._old = list(GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.dietplan.id).all())
+        self._old = list(GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.dietplan.id).values_list("id" , flat = True))
         # generate() automatically uses the class attributes to pass to each day
         self.generate()
 
-        self._new = list(GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.dietplan.id).exclude(id__in = [e.id for e in self._old]))
+        self._new = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.dietplan.id).exclude(id__in = self._old).count()
 
         #Deleting old assigned meals
         if self._new:
-            [e.delete() for e in self._old]
+            GeneratedDietPlanFoodDetails.objects.filter(id__in = self._old).delete()
 
 
