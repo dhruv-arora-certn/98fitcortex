@@ -332,8 +332,9 @@ class CustomerMedicalConditionsView(ListBulkCreateAPIView , BulkDifferential):
             for e in toDelete:
                 e.delete()
 
-            for e in toAdd:
-                e.save()
+            CustomerMedicalConditions.objects.bulk_create(toAdd)
+            #for e in toAdd:
+            #    e.save()
 
         objs = request.user.customermedicalconditions_set.all()
         data = self.serializer_class(objs , many = True)
