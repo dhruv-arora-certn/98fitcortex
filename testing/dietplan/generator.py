@@ -25,6 +25,7 @@ from random import sample
 
 import ipdb
 import random
+import types
 
 class Day:
     @lego.assemble
@@ -358,57 +359,4 @@ class Pipeline:
             GeneratedDietPlanFoodDetails.objects.filter(id__in = self._old).delete()
 
 
-class DayRegenator:
 
-    def __init__(self, user, day, week, year):
-        self.user = user
-        self.day = day
-        self.week = week
-        self.year = year
-
-        self.exclusion_conditions = self.user.get_exclusions()
-
-    def regenerate(self):
-        '''
-        Regenerate the Day's Plan
-        '''
-        return
-
-    def get_excluded_items(self):
-        '''
-        Get list of items that should be excluded.
-        Day Range : 1 
-        '''
-        return
-
-    def make_day(self):
-        '''
-        Generate the Day object from passed parameters
-        '''
-        return
-
-
-    def add_exclusion_condition(self, condition):
-        '''
-        Add a exclusion condition to the generator
-        '''
-        
-        self.exclusion_conditions &= condition
-
-        return self.exclusion_conditions
-
-    def persist(self):
-        '''
-        Delegate the Day object to persist the plan
-        '''
-        return
-
-
-class VegRegenerator(DayRegenator):
-    '''
-    Regenerate the Day's plan as vegetaria
-    '''
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.add_exclusion_condition(Q(veg=0))
