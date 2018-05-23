@@ -254,3 +254,47 @@ def can_log_sleep(sleep_logs, new_data):
     if sleep_log.count():
         return False
     return True
+
+def hasFoodinMeal(meal, food_type , query):
+    count = query.filter(
+       meal_type = meal,
+       food_type = food_type
+    ).count()
+
+    return bool(count)
+
+def hasM3Combo(day_query):
+    return hasFoodinMeal(
+        meal = 'm3',
+        food_type = 'combination',
+        query = day_query
+    )
+
+def hasM5Combo(day_query):
+    return hasFoodinMeal(
+        meal = 'm5',
+        food_type = 'combination',
+        query = day_query
+    )
+
+def hasDessert(day_query):
+    count = day_query.filter(food_type = "dessert").count()
+    return bool(count)
+
+def getUserCalculationArgs(user):
+    '''
+    Return Dictionary containing user parameters required for dietplan calculations
+    '''
+    return {
+        'height' : user.height,
+        'weight' : user.weight,
+        'activity' : float(user.activity_level_to_use()),
+        'goal' : user.goal,
+        'gender' : user.gender.number,
+        'exclude' : [],
+        'disease' : None,
+        'exclusion_conditions' : user.get_exclusions(),
+        'exclude2' : [],
+        'comboDays' : None,
+        'dessertDays' : None
+    }
