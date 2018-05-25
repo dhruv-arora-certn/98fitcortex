@@ -3,7 +3,7 @@ from .views import  UserView , DietPlanView , DishReplaceView , MealReplaceView 
                     CustomerMedicalConditionsView , CreateCustomerView , GuestPDFView , DietPlanRegenerationView , UserDietPlanRegenerationView ,\
                     WaterBulkView  ,SleepWeeklyAggregationView,SleepMonthlyAggregatedView, WaterWeeklyAggregateView,WaterMonthlyAggregateView , \
                     LastDaySleepView, MonthlyActivityView , WeeklyActivityView, ActivityLogView , CustomerSleepLoggingView , DashboardMealTextView , CustomerMedicalConditionsMobileView , CustomerFoodExclusionsMobileView , \
-                    DiseasePDFView  , CustomerReasonsView , RegenerableDietPlanView, CustomerPreferenceView, CustomerWeeklyDietDetailsViewSet
+                    DiseasePDFView  , CustomerReasonsView , RegenerableDietPlanView, CustomerPreferenceView, CustomerWeeklyDietDetailsViewSet, DayRegenerationView
 
 from rest_framework import routers
 
@@ -33,7 +33,8 @@ urlpatterns = [
     re_path(r'^logging/activity/aggregate/monthly/(?P<month>[0-9]+)/$' ,MonthlyActivityView.as_view()),
     re_path(r'^logging/activity/aggregate/weekly/(?P<week>[0-9]+)/$' ,WeeklyActivityView.as_view()),
     re_path(r'^dashboard/strings/meal/$', DashboardMealTextView.as_view()),
-    re_path(r'^food-preference/$', CustomerPreferenceView.as_view())
+    re_path(r'^food-preference/$', CustomerPreferenceView.as_view()),
+    re_path(r'^day-regenerate/(?P<year>(2017|2018))/(?P<week_id>[0-9]+)/day/(?P<day>[1-7])/$', DayRegenerationView.as_view())
 ]
 
 
