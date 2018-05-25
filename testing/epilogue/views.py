@@ -37,6 +37,7 @@ from epilogue import cache_utils
 from epilogue.replacement import *
 from epilogue.exceptions import MultipleDiseasesException , DiseasesNotDiabetesOrPcod
 from epilogue import permissions as epilogue_permissions
+from epilogue import regenerators
 
 from regeneration import views as regeneration_views
 from regeneration import signals as regeneration_signals
@@ -1201,3 +1202,41 @@ class CustomerWeeklyDietDetailsViewSet(mixins.RetrieveModelMixin, mixins.UpdateM
     permission_classes = [IsAuthenticated]
     serializer_class =  WeeklyDietDetailsSerializer
     queryset = GeneratedDietPlan.objects.all()
+
+class DayRegenerationView(UserGenericAPIView):
+    authentication_classes = [CustomerAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = DietPlanSerializer
+
+    def get_regenerator(self):
+        '''
+        Regenerate a Day's plan based on the URL parameter passed
+        '''
+        mapper = {
+            "veg" : regenerators.VegRegenerator
+        }
+        return mapper.get(self.request.GET.get('type'), regenerators.DayRegenator)
+
+    def get(self, request, *args, **kwargs):
+        day = int(kwargs.get("day"))
+        week = int(kwargs.get("week_id"))
+        year = int(kwargs.get("year"))
+        regenerator = self.get_regenerator()
+        day_ = regenerator(
+           request.user,
+            day,
+            week,
+            year
+        )
+        day_.regenerate()
+
+        objs = GeneratedDietPlanFoodDetails.objects.filter(
+            day = day,
+            dietplan__id = day_.dietplan.id
+        )
+        data = self.serializer_class(objs, many = True, context = {
+            "request" : request,
+            "user" : request.user
+        }).data
+        return Response(data)
+
