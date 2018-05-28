@@ -1199,7 +1199,7 @@ class CustomerPreferenceView(CreateAPIView,ListAPIView):
 
 class CustomerWeeklyDietDetailsViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
     authentication_classes = [CustomerAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated , epilogue_permissions.IsOwner]
     serializer_class =  WeeklyDietDetailsSerializer
     queryset = GeneratedDietPlan.objects.all()
 
