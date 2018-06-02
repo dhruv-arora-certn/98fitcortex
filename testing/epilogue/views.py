@@ -7,6 +7,7 @@ from django.views import View
 from django.shortcuts import render , get_object_or_404
 from django.http import HttpResponse , JsonResponse
 from django.db import transaction
+from django.core.cache import caches
 
 from dietplan.goals import Goals
 from dietplan.utils import annotate_food
@@ -32,6 +33,7 @@ from epilogue.serializers import *
 from epilogue.authentication import CustomerAuthentication
 from epilogue.mixins import *
 from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf , is_valid_week, check_dietplan_dependencies
+from epilogue import cache_utils
 from epilogue.replacement import *
 from epilogue.exceptions import MultipleDiseasesException , DiseasesNotDiabetesOrPcod
 from epilogue import permissions as epilogue_permissions
@@ -671,16 +673,29 @@ class SleepWeeklyAggregationView(GenericAPIView):
     permission_classes = (IsAuthenticated ,)
 
     def serializeWeeklyLogs(self , user,week = None):
-        weekly_logs = user.weekly_sleep(week)[:-1]
-        data = SleepLoggingWeeklySerializer(data = list(weekly_logs) , many = True)
-        data.is_valid()
+        
+        key = cache_utils.get_cache_key(self.request.user, cache_utils.SLEEP_LOGS)
+        if cache.get(key):
+            data = cache.get(key)
+            print("Cache available")
+        else:
+            print("Cache not available")
+            weekly_logs = user.weekly_sleep(week)[:-1]
+            data = SleepLoggingWeeklySerializer(data = list(weekly_logs) , many = True)
+            data.is_valid()
+            cache.set(key, data, cache_utils.get_time_to_midnight())
         return data.data
-        return {}
 
     def serializeWeeklyAggregatedLogs(self,user,week = None):
-        aggregated_logs = user.weekly_sleep_aggregated(week)
-        data = SleepAggregationSerializer(data = aggregated_logs )
-        if data.is_valid():
+
+        key = cache_utils.get_cache_key(self.request.user, cache_utils.SLEEP_AGGREGATE)
+        if cache.get(key):
+            data = cache.get(key)
+        else:
+            aggregated_logs = user.weekly_sleep_aggregated(week)
+            data = SleepAggregationSerializer(data = aggregated_logs )
+            data.is_valid(raise_exception = True)
+            cache.set(key, data, cache_utils.get_time_to_midnight())
             return data.data
         return data.errors
 
@@ -865,9 +880,20 @@ class CustomerSleepLoggingView(CreateAPIView):
     serializer_class = CustomerSleepLoggingSerializer
     queryset = CustomerSleepLogs.objects
 
+    def remove_cache_weekly(self):
+        print("Calling Remove Cache for %d"%self.request.user.id)
+        keys = [
+            cache_utils.get_cache_key(self.request.user, cache_utils.SLEEP_LOGS) ,
+            cache_utils.get_cache_key(self.request.user,cache_utils.SLEEP_AGGREGATE)
+        ]
+        print(keys)
+        return cache.delete_many(keys)
+
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+        self.remove_cache_weekly()
+        res = super().post(request, *args, **kwargs)
+        return res
 
 class DashboardMealTextView(GenericAPIView):
     authentication_classes = [CustomerAuthentication]

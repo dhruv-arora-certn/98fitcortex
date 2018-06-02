@@ -15,12 +15,16 @@ class RequestTimeMiddleware(MiddlewareMixin):
         logger = logging.getLogger("django.request")
         try:
             req_time = time.time() - self.start_time
-            logger.debug("Time to execute request: %f"%req_time, extra = {
+            extra_args = {
                 "time" : req_time,
                 "path" : request.path,
-                "status" : response.status_code
-            })
-            print("in middleware")
+                "status" : response.status_code,
+            }
+            if request.user.is_anonymous:
+                extra_args.update({
+                    "user" : request.user.id
+                })
+            logger.debug("Time to execute request: %f"%req_time, extra = extra_args)
         except Exception as e:
             logging.error("RequestTimeMiddleware Error: %s"%e)
  
