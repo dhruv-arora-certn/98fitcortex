@@ -20,7 +20,7 @@ class RequestTimeMiddleware(MiddlewareMixin):
                 "path" : request.path,
                 "status" : response.status_code,
             }
-            if request.user.is_anonymous:
+            if not request.user.is_anonymous:
                 extra_args.update({
                     "user" : request.user.id
                 })
