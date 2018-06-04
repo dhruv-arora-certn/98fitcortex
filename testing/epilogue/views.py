@@ -47,6 +47,7 @@ from pdfs import base, file_handlers
 
 from weasyprint import HTML
 
+import functools
 
 DATE_FORMAT = '%B {S} - %Y, %A'
 
@@ -101,6 +102,40 @@ class UserGenericAPIView(GenericAPIView):
             context = {}
         context['user'] = self.request.user
         return context
+
+
+class CreateAPICachedView(CreateAPIView):
+    '''
+    Inherit from this class to invalidate weekly cache
+
+    The inheriting class must have the following attribute:
+
+    - cache_modules = [#modules] //list of cache modules relevant to the class
+    '''
+
+    def get_keys(self):
+        '''
+        Return the keys for cache that are relevant to the view
+        '''
+        get_key = functools.partial(
+            cache_utils.get_cache_key, self.request.user
+        )
+        keys = [
+            get_key(e) for e in self.cache_modules
+        ]
+        return keys
+
+    def remove_cache_weekly(self):
+        '''
+        Delete the weekly cache when a data point is added
+        '''
+        keys = self.get_keys()
+        return cache.delete_many(keys)
+
+    def post(self, request, *args, **kwargs):
+        self.remove_cache_weekly()
+        res = super().post(request, *args, **kwargs)
+        return res
 
 class UserView(RetrieveUpdateAPIView):
     queryset = Customer.objects
@@ -662,11 +697,12 @@ class WaterBulkView(ListBulkCreateAPIView):
     authentication_classes = [CustomerAuthentication]
     permission_classes = [IsAuthenticated]
 
-class ActivityLogView(CreateAPIView):
+class ActivityLogView(CreateAPICachedView):
     serializer_class = CustomerActivityLogsSerializer
     queryset = CustomerActivityLogs.objects
     authentication_classes = [CustomerAuthentication]
     permission_classes = [IsAuthenticated]
+    cache_modules = [cache_utils.modules.ACTIVITY_AGGREGATE, cache_utils.modules.ACTIVITY_LOGS]
 
 class SleepWeeklyAggregationView(GenericAPIView):
     authentication_classes = (CustomerAuthentication,)
@@ -674,7 +710,7 @@ class SleepWeeklyAggregationView(GenericAPIView):
 
     def serializeWeeklyLogs(self , user,week = None):
         
-        key = cache_utils.get_cache_key(self.request.user, cache_utils.SLEEP_LOGS)
+        key = cache_utils.get_cache_key(self.request.user, cache_utils.modules.SLEEP_LOGS)
         if cache.get(key):
             data = cache.get(key)
             print("Cache available")
@@ -688,7 +724,7 @@ class SleepWeeklyAggregationView(GenericAPIView):
 
     def serializeWeeklyAggregatedLogs(self,user,week = None):
 
-        key = cache_utils.get_cache_key(self.request.user, cache_utils.SLEEP_AGGREGATE)
+        key = cache_utils.get_cache_key(self.request.user, cache_utils.modules.SLEEP_AGGREGATE)
         if cache.get(key):
             data = cache.get(key)
         else:
@@ -820,18 +856,34 @@ class WeeklyActivityView(ListAPIView):
     lookup_field = "week"
 
     def serializeWeeklyLogs(self , user):
-        logs = user.weekly_activity()
-        data = self.serializer_class(data = list(logs) ,many = True)
-        if data.is_valid():
+        key = cache_utils.get_cache_key(self.request.user, cache_utils.modules.ACTIVITY_LOGS)
+        cached_data = cache.get(key) 
+        if cached_data:
+            print("Cache Available")
+            return cached_data.data
+        else:
+            logs = user.weekly_activity()
+            data = self.serializer_class(data = list(logs) ,many = True)
+            if data.is_valid():
+                cache.set(key, data, cache_utils.get_time_to_midnight())
+            else:
+                return data.errors
             return data.data
-        return data.errors
 
     def serializerAggregatedLogs(self , user):
-        aggregated_logs = user.weekly_activity_aggregate()
-        data = ActivityAggregationSerializer(data = aggregated_logs)
-        if data.is_valid():
+        key = cache_utils.get_cache_key(self.request.user, cache_utils.modules.ACTIVITY_AGGREGATE)
+        cached_data = cache.get(key)
+        if cached_data:
+            print("Cache is available")
+            return cached_data.data
+        else:
+            aggregated_logs = user.weekly_activity_aggregate()
+            data = ActivityAggregationSerializer(data = aggregated_logs)
+            if data.is_valid():
+                cache.set(key, data, cache_utils.get_time_to_midnight())
+            else:
+                return data.errors
             return data.data
-        return data.errors
 
     def get(self , request , *args , **kwargs):
         user = request.user
@@ -874,26 +926,12 @@ class MonthlyActivityView(ListAPIView):
     def get_queryset(self):
         return self.request.user.monthly_activity(month = self.kwargs.get("month"))
 
-class CustomerSleepLoggingView(CreateAPIView):
+class CustomerSleepLoggingView(CreateAPICachedView):
     authentication_classes = [CustomerAuthentication]
     permission_classes = [IsAuthenticated, epilogue_permissions.IsLoggingOwn, epilogue_permissions.SingleSleepLog]
     serializer_class = CustomerSleepLoggingSerializer
     queryset = CustomerSleepLogs.objects
-
-    def remove_cache_weekly(self):
-        print("Calling Remove Cache for %d"%self.request.user.id)
-        keys = [
-            cache_utils.get_cache_key(self.request.user, cache_utils.SLEEP_LOGS) ,
-            cache_utils.get_cache_key(self.request.user,cache_utils.SLEEP_AGGREGATE)
-        ]
-        print(keys)
-        return cache.delete_many(keys)
-
-    @transaction.atomic
-    def post(self, request, *args, **kwargs):
-        self.remove_cache_weekly()
-        res = super().post(request, *args, **kwargs)
-        return res
+    cache_modules = [cache_utils.modules.SLEEP_AGGREGATE, cache_utils.modules.SLEEP_LOGS]
 
 class DashboardMealTextView(GenericAPIView):
     authentication_classes = [CustomerAuthentication]
