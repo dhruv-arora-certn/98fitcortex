@@ -936,8 +936,29 @@ class CustomerSleepLoggingView(CreateAPICachedView):
 class DashboardMealTextView(GenericAPIView):
     authentication_classes = [CustomerAuthentication]
     permission_classes = [IsAuthenticated]
+    
+    def get_object(self):
+        '''
+        Return the object
 
-    def get(self , *args , **kwargs):
+        If cache is available, return from cache, else from get_meal_string_dict
+        '''
+        key = cache_utils.get_cache_key(self.request.user, cache_utils.modules.DIET_DASHBOARD_STRING)
+
+        cached_data = cache.get(key)
+    
+        #if cache is available, return
+        if cached_data:
+            return cached_data
+
+        data = self.get_meal_string_dict()
+        cache.set(key, data, cache_utils.get_time_to_midnight())
+        return data
+
+    def get_meal_string_dict(self):
+        '''
+        Return the meal string dict
+        '''
         day = get_day()
         week = get_week()
         year = get_year()
@@ -959,8 +980,11 @@ class DashboardMealTextView(GenericAPIView):
             ])
             for e in meals
         }
+        return string_dict
 
-        return Response(string_dict)
+    def get(self , *args , **kwargs):
+
+        return Response(self.get_object())
 
 class CustomerMedicalConditionsMobileView(GenericAPIView , BulkDifferential):
     authentication_classes = [CustomerAuthentication]
