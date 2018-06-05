@@ -952,6 +952,9 @@ class DashboardMealTextView(GenericAPIView):
             return cached_data
 
         data = self.get_meal_string_dict()
+        
+        if not data:
+            return Response(status = status.HTTP_404_NOT_FOUND)
         cache.set(key, data, cache_utils.get_time_to_midnight())
         return data
 
@@ -966,7 +969,7 @@ class DashboardMealTextView(GenericAPIView):
         week_diet_plan = self.request.user.dietplans.filter(week_id = week , year = year).last()
 
         if not week_diet_plan:
-            return Response(dict() , status = status.HTTP_404_NOT_FOUND)
+            return None
 
         today_items = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = week_diet_plan.id , day = day)
 
@@ -980,11 +983,11 @@ class DashboardMealTextView(GenericAPIView):
             ])
             for e in meals
         }
-        return string_dict
+        return Response(string_dict)
 
     def get(self , *args , **kwargs):
 
-        return Response(self.get_object())
+        return self.get_object()
 
 class CustomerMedicalConditionsMobileView(GenericAPIView , BulkDifferential):
     authentication_classes = [CustomerAuthentication]

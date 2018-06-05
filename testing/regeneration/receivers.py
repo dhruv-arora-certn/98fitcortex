@@ -28,7 +28,7 @@ def specific_diet_regeneration(sender, *args, **kwargs):
     week = kwargs.pop("week")
     year = kwargs.pop("year")
 
-    cache_utils.invalidate_cache(user, cache_utils.module.DIET_DASHBOARD_STRING)
+    cache_utils.invalidate_cache(user, cache_utils.modules.DIET_DASHBOARD_STRING)
     eligible_window = get_window_tuples(week = week , year = year)
     
     return [
