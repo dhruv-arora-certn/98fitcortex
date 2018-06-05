@@ -936,6 +936,12 @@ class CustomerSleepLoggingView(CreateAPICachedView):
 class DashboardMealTextView(GenericAPIView):
     authentication_classes = [CustomerAuthentication]
     permission_classes = [IsAuthenticated]
+
+    def set_cache(self, data):
+        key = cache_utils.get_cache_key(self.request.user, cache_utils.modules.DIET_DASHBOARD_STRING)
+        return cache.set(
+            key, data, cache_utils.get_time_to_midnight()
+        )
     
     def get_object(self):
         '''
@@ -949,14 +955,14 @@ class DashboardMealTextView(GenericAPIView):
     
         #if cache is available, return
         if cached_data:
-            return cached_data
+            return Response(cached_data)
 
+        #If cache is not available, generate string
         data = self.get_meal_string_dict()
         
         if not data:
             return Response(status = status.HTTP_404_NOT_FOUND)
-        cache.set(key, data, cache_utils.get_time_to_midnight())
-        return data
+        return Response(data)
 
     def get_meal_string_dict(self):
         '''
@@ -974,7 +980,7 @@ class DashboardMealTextView(GenericAPIView):
         today_items = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = week_diet_plan.id , day = day)
 
         if not today_items:
-            return Response(dict())
+            return None
 
         meals = ["m%d"%i for i in range(1,6)]
         string_dict = {
@@ -983,7 +989,8 @@ class DashboardMealTextView(GenericAPIView):
             ])
             for e in meals
         }
-        return Response(string_dict)
+        self.set_cache(string_dict)
+        return string_dict
 
     def get(self , *args , **kwargs):
 
