@@ -359,3 +359,4 @@ class Pipeline:
             GeneratedDietPlanFoodDetails.objects.filter(id__in = self._old).delete()
 
 
+
