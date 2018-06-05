@@ -405,9 +405,9 @@ class Customer(models.Model):
         ).order_by("pk").last()
 
         if record:
-            return record.lifestyle
+            return float(record.lifestyle)
 
-        return self.lifestyle
+        return float(self.lifestyle)
     
     def fitness_level_to_use(self, year = get_year(), week = get_week()):
         '''

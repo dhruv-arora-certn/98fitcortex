@@ -38,6 +38,7 @@ from epilogue.replacement import *
 from epilogue.exceptions import MultipleDiseasesException , DiseasesNotDiabetesOrPcod
 from epilogue import permissions as epilogue_permissions
 from epilogue import regenerators
+from epilogue import disease_utils
 
 from regeneration import views as regeneration_views
 from regeneration import signals as regeneration_signals
@@ -1143,34 +1144,58 @@ class RegenerableDietPlanView(UserGenericAPIView, regeneration_views.Regenerable
     
     def satisfied_dependencies(self,request):
         return check_dietplan_dependencies(request.user)
+    
+    def get_diabetes(self):
+        return disease_utils.get_diabetes(self.request.user, int(self.kwargs.get('day',1))) 
+    
+    def get_pcod(self):
+        return disease_utils.get_pcod(self.request.user, int(self.kwargs.get('day',1)))
+       
 
     def get(self , request , *args , **kwargs):
+
         week,year = self.get_week_year_context().values()
-        
+ 
+        #Check if dependencies are satisfied
         if not self.satisfied_dependencies(request):
-            return Response(
-                {
+            return Response({
                     "message" : "Dependencies not Satisfied"
                 },
                 status = status.HTTP_424_FAILED_DEPENDENCY
             )
+
+        #Check if the user is allowed to view the plan
         if not is_valid_week(year , week):
             raise exceptions.PermissionDenied({
                 "message" : "You cannot access this week's plan"
             })
+
+        #Check and return diabetes plan
+        if request.user.has_diabetes():
+            return Response(self.get_diabetes())
+
+        #Check and return pcos plan
+        if request.user.has_pcod():
+            return Response(self.get_pcod())
+
+        #Run the hooks before the request is processed
         self.before_request_hook(request, *args, **kwargs)
+
+        #Get the dietplan object to be served
         obj = self.get_object()
 
         #Extract the Meals from the dietplan now
-
-        meals = self.get_filtered_queryset(obj)
+        meals = self.get_meals(obj)
         serialized = self.serializer_class(meals , many = True, context = {
             "request" : request,
             "user" : request.user
         })
         return Response(serialized.data)
 
-    def get_filtered_queryset(self , obj):
+    def get_meals(self , obj):
+        '''
+        Return meals from the dietplan for the requested day
+        '''
         assert isinstance(obj , GeneratedDietPlan) , "Instance is Not a GeneratedDietPlan : %s"%type(obj)
         day = self.kwargs.get('day',1)
         meals = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = obj.id , day = day)
