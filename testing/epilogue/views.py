@@ -32,7 +32,7 @@ from epilogue.models import *
 from epilogue.serializers import *
 from epilogue.authentication import CustomerAuthentication
 from epilogue.mixins import *
-from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf , is_valid_week, check_dietplan_dependencies
+from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf , is_valid_week, check_dietplan_dependencies, get_meals_meta
 from epilogue import cache_utils
 from epilogue.replacement import *
 from epilogue.exceptions import MultipleDiseasesException , DiseasesNotDiabetesOrPcod
@@ -1186,11 +1186,15 @@ class RegenerableDietPlanView(UserGenericAPIView, regeneration_views.Regenerable
 
         #Extract the Meals from the dietplan now
         meals = self.get_meals(obj)
+        meta = get_meals_meta(meals)
         serialized = self.serializer_class(meals , many = True, context = {
             "request" : request,
             "user" : request.user
         })
-        return Response(serialized.data)
+        return Response({
+            "data" : serialized.data,
+            "meta" : meta
+        })
 
     def get_meals(self , obj):
         '''
@@ -1263,5 +1267,9 @@ class DayRegenerationView(UserGenericAPIView):
             "request" : request,
             "user" : request.user
         }).data
-        return Response(data)
+        meta = get_meals_meta(objs)
+        return Response({
+            "data" : data,
+            "meta" : meta
+        })
 

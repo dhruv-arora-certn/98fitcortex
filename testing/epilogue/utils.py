@@ -10,9 +10,13 @@ from weasyprint import HTML
 from django.template.loader import render_to_string
 
 from django.utils import timezone
-#from dietplan.calculations import Calculations
+
+from types import SimpleNamespace
+
 import json
 import datetime as dt
+import itertools
+import functools
 
 def get_week(date = None):
     if not date:
@@ -298,3 +302,27 @@ def getUserCalculationArgs(user):
         'comboDays' : None,
         'dessertDays' : None
     }
+
+def accumulate_nutrition(a,b):
+    
+    a.calories += b.calorie
+    a.protein += b.food_item.protein
+    a.carbohydrates += b.food_item.carbohydrates
+    a.fat += b.food_item.fat
+    a.veg &= not(b.food_item.non_veg)
+    return a
+
+def get_meals_meta(meals):
+    initializer = SimpleNamespace(
+        calories = 0,
+        protein = 0,
+        fat = 0,
+        carbohydrates = 0,
+        veg = True,
+        followed = False,
+        dietplan = meals.first().dietplan.id
+    )
+    val = functools.reduce(accumulate_nutrition, meals, initializer)
+
+    return val.__dict__
+
