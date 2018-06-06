@@ -1186,7 +1186,7 @@ class RegenerableDietPlanView(UserGenericAPIView, regeneration_views.Regenerable
 
         #Extract the Meals from the dietplan now
         meals = self.get_meals(obj)
-        meta = get_meals_meta(meals)
+        meta = get_meals_meta(meals, day = kwargs['day'])
         serialized = self.serializer_class(meals , many = True, context = {
             "request" : request,
             "user" : request.user
@@ -1267,7 +1267,7 @@ class DayRegenerationView(UserGenericAPIView):
             "request" : request,
             "user" : request.user
         }).data
-        meta = get_meals_meta(objs)
+        meta = get_meals_meta(objs, day = day)
         return Response({
             "data" : data,
             "meta" : meta

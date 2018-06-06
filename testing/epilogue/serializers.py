@@ -78,14 +78,13 @@ class DietPlanSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     quantity = serializers.SerializerMethodField()
     weight = serializers.SerializerMethodField()
-    dietplan_id = serializers.SerializerMethodField()
     unit = serializers.SerializerMethodField()
     newcalories = serializers.SerializerMethodField()
     preference = serializers.SerializerMethodField()
 
     class Meta:
         model = GeneratedDietPlanFoodDetails
-        fields = "__all__"
+        exclude = ["dietplan","calorie","day"]
 
     def get_factored_attr(self , attr , obj):
         factor = float(obj.calorie)/float(obj.food_item.calarie)

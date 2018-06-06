@@ -312,7 +312,7 @@ def accumulate_nutrition(a,b):
     a.veg &= not(b.food_item.non_veg)
     return a
 
-def get_meals_meta(meals):
+def get_meals_meta(meals, **kwargs):
     initializer = SimpleNamespace(
         calories = 0,
         protein = 0,
@@ -320,7 +320,8 @@ def get_meals_meta(meals):
         carbohydrates = 0,
         veg = True,
         followed = False,
-        dietplan = meals.first().dietplan.id
+        dietplan = meals.first().dietplan.id,
+        **kwargs
     )
     val = functools.reduce(accumulate_nutrition, meals, initializer)
 
