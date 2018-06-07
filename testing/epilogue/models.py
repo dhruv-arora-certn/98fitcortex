@@ -405,9 +405,9 @@ class Customer(models.Model):
         ).order_by("pk").last()
 
         if record:
-            return float(record.lifestyle)
+            return float(record.lifestyle) if record.lifestyle else None
 
-        return float(self.lifestyle)
+        return float(self.lifestyle) if self.lifestyle else None
     
     def fitness_level_to_use(self, year = get_year(), week = get_week()):
         '''
@@ -1251,6 +1251,23 @@ class CustomerFoodItemsPreference(models.Model):
             "customer", "food"
         ]
 
+class CustomerDietPlanFollow(models.Model):
+    customer = models.ForeignKey(Customer, on_delete = models.CASCADE)
+    day = models.IntegerField(default = 0)
+    week = models.IntegerField(default = 0)
+    year = models.IntegerField(default = 0)
+    followed = models.BooleanField(default = False)
+
+    class Meta:
+        indexes = [
+            models.Index(fields = [
+                "customer",
+                "-day",
+                "-week",
+                "-year"
+            ])
+        ]
+        unique_together = ["customer","day","week","year","followed"]
 
 @receiver(signals.post_init , sender = Customer)
 def save_pre_state(sender , *args , **kwargs):

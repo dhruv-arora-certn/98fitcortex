@@ -339,3 +339,8 @@ class WeeklyDietDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = GeneratedDietPlan
         fields = ["followed","id"]
+
+class CustomerDietPlanFollowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomerDietPlanFollow
+        fields = "__all__"

@@ -319,7 +319,6 @@ def get_meals_meta(meals, **kwargs):
         fat = 0,
         carbohydrates = 0,
         veg = True,
-        followed = False,
         dietplan = meals.first().dietplan.id,
         **kwargs
     )
@@ -327,3 +326,19 @@ def get_meals_meta(meals, **kwargs):
 
     return val.__dict__
 
+def check_add_meal_followed(meta, **kwargs):
+    '''
+    Check if the diet plan corresponding to the kwargs has been followed and add information to meta
+    '''
+    from epilogue.models import CustomerDietPlanFollow
+
+    obj = CustomerDietPlanFollow.objects.get(**kwargs)
+    if obj:
+        meta.update({
+            "followed" : obj.followed
+        })
+    else:
+        meta.update({
+            "followed" : False
+        })
+    return meta

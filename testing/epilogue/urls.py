@@ -3,7 +3,7 @@ from .views import  UserView , DietPlanView , DishReplaceView , MealReplaceView 
                     CustomerMedicalConditionsView , CreateCustomerView , GuestPDFView , DietPlanRegenerationView , UserDietPlanRegenerationView ,\
                     WaterBulkView  ,SleepWeeklyAggregationView,SleepMonthlyAggregatedView, WaterWeeklyAggregateView,WaterMonthlyAggregateView , \
                     LastDaySleepView, MonthlyActivityView , WeeklyActivityView, ActivityLogView , CustomerSleepLoggingView , DashboardMealTextView , CustomerMedicalConditionsMobileView , CustomerFoodExclusionsMobileView , \
-                    DiseasePDFView  , CustomerReasonsView , RegenerableDietPlanView, CustomerPreferenceView, CustomerWeeklyDietDetailsViewSet, DayRegenerationView
+                    DiseasePDFView  , CustomerReasonsView , RegenerableDietPlanView, CustomerPreferenceView, DayRegenerationView, CustomerDietPlanFollowView
 
 from rest_framework import routers
 
@@ -34,10 +34,6 @@ urlpatterns = [
     re_path(r'^logging/activity/aggregate/weekly/(?P<week>[0-9]+)/$' ,WeeklyActivityView.as_view()),
     re_path(r'^dashboard/strings/meal/$', DashboardMealTextView.as_view()),
     re_path(r'^food-preference/$', CustomerPreferenceView.as_view()),
-    re_path(r'^day-regenerate/(?P<year>(2017|2018))/(?P<week_id>[0-9]+)/day/(?P<day>[1-7])/$', DayRegenerationView.as_view())
+    re_path(r'^day-regenerate/(?P<year>(2017|2018))/(?P<week_id>[0-9]+)/day/(?P<day>[1-7])/$', DayRegenerationView.as_view()),
+    re_path(r'^diet-follow/(?P<year>(2017|2018))/(?P<week>[0-9]+)/day/(?P<day>[1-7])/$', CustomerDietPlanFollowView.as_view())
 ]
-
-
-router = routers.DefaultRouter()
-router.register(r'weekly-diet', CustomerWeeklyDietDetailsViewSet, base_name="weekly-diet")
-urlpatterns += router.urls

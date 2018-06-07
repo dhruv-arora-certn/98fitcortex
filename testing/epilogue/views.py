@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.template.loader import render_to_string
 from django.views import View
 from django.shortcuts import render , get_object_or_404
-from django.http import HttpResponse , JsonResponse
+from django.http import HttpResponse , JsonResponse, Http404
 from django.db import transaction
 from django.core.cache import caches
 
@@ -18,7 +18,7 @@ from dietplan.meals import M1 , M5 , M3
 from dietplan.generator import Pipeline
 from dietplan.medical_conditions import Osteoporosis , Anemia
 
-from rest_framework.generics import RetrieveUpdateAPIView ,RetrieveAPIView , GenericAPIView , CreateAPIView,ListAPIView,RetrieveAPIView
+from rest_framework.generics import RetrieveUpdateAPIView ,RetrieveAPIView , GenericAPIView , CreateAPIView,ListAPIView,RetrieveAPIView, UpdateAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -32,7 +32,7 @@ from epilogue.models import *
 from epilogue.serializers import *
 from epilogue.authentication import CustomerAuthentication
 from epilogue.mixins import *
-from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf , is_valid_week, check_dietplan_dependencies, get_meals_meta
+from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf , is_valid_week, check_dietplan_dependencies, get_meals_meta, check_add_meal_followed
 from epilogue import cache_utils
 from epilogue.replacement import *
 from epilogue.exceptions import MultipleDiseasesException , DiseasesNotDiabetesOrPcod
@@ -1187,6 +1187,12 @@ class RegenerableDietPlanView(UserGenericAPIView, regeneration_views.Regenerable
         #Extract the Meals from the dietplan now
         meals = self.get_meals(obj)
         meta = get_meals_meta(meals, day = kwargs['day'])
+        meta = check_add_meal_followed(meta, **{
+            "day" : int(self.kwargs['day']),
+            "week" : int(self.kwargs['week_id']),
+            "year" : int(self.kwargs['year']),
+            "customer" : self.request.user
+        })
         serialized = self.serializer_class(meals , many = True, context = {
             "request" : request,
             "user" : request.user
@@ -1268,8 +1274,38 @@ class DayRegenerationView(UserGenericAPIView):
             "user" : request.user
         }).data
         meta = get_meals_meta(objs, day = day)
+        meta = check_add_meal_followed(meta, **{
+            "day" : day,
+            "week" : week,
+            "year" : year,
+            "customer" : self.request.user
+        })
         return Response({
             "data" : data,
             "meta" : meta
         })
 
+class CustomerDietPlanFollowView(mixins.CreateModelMixin, mixins.UpdateModelMixin, GenericAPIView):
+    authentication_classes = [CustomerAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = CustomerDietPlanFollowSerializer
+    multiple_lookup_kwargs = ["day","year","week"]
+
+    def get_object(self):
+        queryset = CustomerDietPlanFollow.objects
+
+        filter = {}
+
+        for field in self.multiple_lookup_kwargs:
+            filter[field] = self.kwargs[field]
+        obj = get_object_or_404(queryset, **filter)
+
+        return obj
+
+    def put(self, request, *args, **kwargs):
+        try:
+            obj = self.get_object()
+        except Http404 as not_found:
+            return self.create(request, *args, **kwargse)
+        else:
+            return self.update(request, *args, **kwargs)
