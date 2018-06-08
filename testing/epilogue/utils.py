@@ -330,15 +330,17 @@ def check_add_meal_followed(meta, **kwargs):
     '''
     Check if the diet plan corresponding to the kwargs has been followed and add information to meta
     '''
-    from epilogue.models import CustomerDietPlanFollow
-
-    obj = CustomerDietPlanFollow.objects.get(**kwargs)
-    if obj:
-        meta.update({
-            "followed" : obj.followed
-        })
-    else:
+    from epilogue.models import CustomerDietPlanFollow as model
+    
+    try:
+        obj = model.objects.get(**kwargs)
+    except  model.DoesNotExist as error:
         meta.update({
             "followed" : False
         })
-    return meta
+    else:
+        meta.update({
+            "followed" : obj.followed
+        })
+    finally:
+        return meta
