@@ -1248,9 +1248,10 @@ class DayRegenerationView(UserGenericAPIView):
         Regenerate a Day's plan based on the URL parameter passed
         '''
         mapper = {
-            "veg" : regenerators.VegRegenerator
+            "veg" : regenerators.VegRegenerator,
+            "day" : regenerators.DayRegenator
         }
-        return mapper.get(self.request.GET.get('type'), regenerators.DayRegenator)
+        return mapper.get(self.request.GET.get('type'), regenerators.BaseDayRegenator)
 
     def get(self, request, *args, **kwargs):
         day = int(kwargs.get("day"))

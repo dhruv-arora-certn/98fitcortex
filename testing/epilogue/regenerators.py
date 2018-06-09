@@ -9,7 +9,7 @@ from django.db.models import Q
 
 import types
 
-class DayRegenator:
+class BaseDayRegenator:
 
     def __init__(self, user, day, week, year):
         self.user = user
@@ -86,7 +86,8 @@ class DayRegenator:
             dietplan__id = self.dietplan.id
         )
         qs = previous_day | next_day
-        return list(qs.values_list("food_name" , flat = True).distinct())
+
+        return qs
 
     def make_day(self):
         '''
@@ -117,7 +118,7 @@ class DayRegenator:
         Generate the calculations object for the day
         '''
         args = self.get_user_calculation_args()
-        args['exclude'] = self.get_excluded_items()
+        args['exclude'] = utils.get_items_from_meals(self.get_excluded_items())
         calc = calculations.Calculations(
            **args 
         )
@@ -162,7 +163,7 @@ class DayRegenator:
     def new(self):
         return self.day_obj.calculations._selected
 
-class VegRegenerator(DayRegenator):
+class VegRegenerator(BaseDayRegenator):
     '''
     Regenerate the Day's plan as vegetaria
     '''
@@ -172,3 +173,22 @@ class VegRegenerator(DayRegenator):
         self.add_exclusion_condition(
             mappers.food_category_exclusion_mapper['veg']
         )
+
+class DayRegenator(BaseDayRegenator):
+    '''
+    Regenerate the day's plan
+    '''
+
+    def get_excluded_items(self):
+        items = super().get_excluded_items()
+
+        today = models.GeneratedDietPlanFoodDetails.objects.filter(
+            day = self.day,
+            dietplan__week_id = self.week,
+            dietplan__year = self.year,
+            dietplan__id = self.dietplan.id
+        )
+
+        return items | today
+
+

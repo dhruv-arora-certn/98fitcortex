@@ -344,3 +344,8 @@ def check_add_meal_followed(meta, **kwargs):
         })
     finally:
         return meta
+
+def get_items_from_meals(queryset):
+    return list(
+        queryset.values_list("food_name" , flat = True).distinct()
+    )
