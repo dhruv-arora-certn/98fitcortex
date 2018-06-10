@@ -1307,6 +1307,6 @@ class CustomerDietPlanFollowView(mixins.CreateModelMixin, mixins.UpdateModelMixi
         try:
             obj = self.get_object()
         except Http404 as not_found:
-            return self.create(request, *args, **kwargse)
+            return self.create(request, *args, **kwargs)
         else:
             return self.update(request, *args, **kwargs)
