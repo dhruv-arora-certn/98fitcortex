@@ -788,7 +788,7 @@ class Customer(models.Model):
 
     def has_pcod(self):
         return bool(
-            self.customermedicalconditions_set.filter(condition_name = "pcod")
+            self.customermedicalconditions_set.filter(condition_name = "pcos")
         ) and bool(
             self.customermedicalconditions_set.count() == 1
         )

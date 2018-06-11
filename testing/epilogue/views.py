@@ -32,7 +32,7 @@ from epilogue.models import *
 from epilogue.serializers import *
 from epilogue.authentication import CustomerAuthentication
 from epilogue.mixins import *
-from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf , is_valid_week, check_dietplan_dependencies, get_meals_meta, check_add_meal_followed
+from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf , is_valid_week, check_dietplan_dependencies, get_meals_meta, check_add_meal_followed, get_diet_plan, get_day_items_from_dietplan, get_meal_string_dict
 from epilogue import cache_utils
 from epilogue.replacement import *
 from epilogue.exceptions import MultipleDiseasesException , DiseasesNotDiabetesOrPcod
@@ -974,23 +974,17 @@ class DashboardMealTextView(GenericAPIView):
         week = get_week()
         year = get_year()
 
-        week_diet_plan = self.request.user.dietplans.filter(week_id = week , year = year).last()
+        week_diet_plan = get_diet_plan(self.request.user)
 
         if not week_diet_plan:
             return None
 
-        today_items = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = week_diet_plan.id , day = day)
+        today_items = get_day_items_from_dietplan(week_diet_plan)
 
         if not today_items:
             return None
 
-        meals = ["m%d"%i for i in range(1,6)]
-        string_dict = {
-            e : ' + '.join([
-                a.food_name for a in today_items.filter(meal_type = e)
-            ])
-            for e in meals
-        }
+        string_dict = get_meal_string_dict(today_items)
         self.set_cache(string_dict)
         return string_dict
 

@@ -305,7 +305,7 @@ def getUserCalculationArgs(user):
 
 def accumulate_nutrition(a,b):
     
-    a.calories += b.calorie
+    a.calories += float(b.calorie)
     a.protein += b.food_item.protein
     a.carbohydrates += b.food_item.carbohydrates
     a.fat += b.food_item.fat
@@ -349,3 +349,40 @@ def get_items_from_meals(queryset):
     return list(
         queryset.values_list("food_name" , flat = True).distinct()
     )
+
+def get_diet_plan(user, week = get_week(), year = get_year()):
+    '''
+    Return the user's dietplan for the week of the year
+    '''
+
+    return user.dietplans.filter(week_id = week, year = year).last()
+
+def get_day_items_from_dietplan(dietplan, day = get_day()):
+    '''
+    Return the day items from dietplan
+    '''
+    from epilogue.models import GeneratedDietPlanFoodDetails
+
+    items = GeneratedDietPlanFoodDetails.objects.filter(
+        dietplan__id = dietplan.id,
+        day = day
+    )
+    return items
+
+@functools.lru_cache()
+def get_meal_times(disease = False):
+    if not disease:
+        return ["m%d"%i for i in range(1,6)]
+
+def get_meal_string_dict(meals):
+    '''
+    Return string dict for meals
+    '''
+    meal_times = get_meal_times()
+    string_dict = {
+        e : ' + '.join([
+            a.food_name for a in meals.filter(meal_type = e)
+        ])
+        for e in meal_times
+    }
+    return string_dict
