@@ -1269,6 +1269,50 @@ class CustomerDietPlanFollow(models.Model):
         ]
         unique_together = ["customer","day","week","year","followed"]
 
+class CustomerDietFavourite(models.Model):
+
+    BREAKFAST = 1
+    MID_DAY_SNACK = 2
+    LUNCH = 3
+    EVENING_SNACK = 4
+    DINNER = 5
+
+    LIKE = 1
+    DISLIKE = -1
+    
+    TYPE_CHOICES = (
+        (0,'item'),
+        (1, 'meal'),
+        (2, 'day')
+    )
+
+    PREFERENCE_CHOICES = (
+        (LIKE, "like"),
+        (DISLIKE, "dislike")
+    )
+
+    MEAL_CHOICES = (
+        (BREAKFAST, "Breakfast"),
+        (MID_DAY_SNACK, "Mid Day Snack"),
+        (LUNCH, "Lunch"),
+        (EVENING_SNACK, "Evening Snack"),
+        (DINNER, "Dinner")
+    )
+
+    customer = models.ForeignKey(Customer, related_name = "favourites")
+    preference = models.IntegerField(choices = PREFERENCE_CHOICES)
+    type = models.IntegerField(choices = TYPE_CHOICES)
+    meal = models.IntegerField(choices = MEAL_CHOICES)
+    
+    day = models.IntegerField()
+    week = models.IntegerField()
+    year = models.IntegerField()
+
+    create = models.DateTimeField(auto_now_add = True)
+
+
+    foods = models.ManyToManyField(Food)
+
 @receiver(signals.post_init , sender = Customer)
 def save_pre_state(sender , *args , **kwargs):
     import logging
