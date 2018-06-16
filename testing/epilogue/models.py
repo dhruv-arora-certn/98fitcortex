@@ -1299,7 +1299,7 @@ class CustomerDietFavourite(models.Model):
         (DINNER, "Dinner")
     )
 
-    customer = models.ForeignKey(Customer, related_name = "favourites")
+    customer = models.ForeignKey(Customer, related_name = "favourites", on_delete = models.CASCADE)
     preference = models.IntegerField(choices = PREFERENCE_CHOICES)
     type = models.IntegerField(choices = TYPE_CHOICES)
     meal = models.IntegerField(choices = MEAL_CHOICES)
@@ -1308,8 +1308,7 @@ class CustomerDietFavourite(models.Model):
     week = models.IntegerField()
     year = models.IntegerField()
 
-    create = models.DateTimeField(auto_now_add = True)
-
+    created = models.DateTimeField(auto_now_add = True)
 
     foods = models.ManyToManyField(Food)
 
