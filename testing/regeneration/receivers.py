@@ -5,7 +5,7 @@ from .utils import get_window_tuples , create_diet_regeneration_node , create_wo
 
 import epilogue.constants
 
-from epilogue import cache_utils
+from epilogue.utils import cache_utils
 
 import logging
 

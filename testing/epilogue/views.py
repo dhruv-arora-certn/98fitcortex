@@ -33,7 +33,8 @@ from epilogue.serializers import *
 from epilogue.authentication import CustomerAuthentication
 from epilogue.mixins import *
 from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf , is_valid_week, check_dietplan_dependencies, get_meals_meta, check_add_meal_followed, get_diet_plan, get_day_items_from_dietplan, get_meal_string_dict
-from epilogue import cache_utils
+from epilogue.utils import cache_utils
+from epilogue.utils import fav_utils
 from epilogue.replacement import *
 from epilogue.exceptions import MultipleDiseasesException , DiseasesNotDiabetesOrPcod
 from epilogue import permissions as epilogue_permissions
@@ -1304,3 +1305,35 @@ class CustomerDietPlanFollowView(mixins.CreateModelMixin, mixins.UpdateModelMixi
             return self.create(request, *args, **kwargs)
         else:
             return self.update(request, *args, **kwargs)
+
+class CustomerDietFavouriteBaseView(GenericAPIView):
+    authentication_classes = [CustomerAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        raise NotImplementedError("This function must be implemented")
+    
+    def favourite_obj(self, obj):
+        raise NotImplementedError("This function must be implemented")
+
+    def post(self, request, *args, **kwargs):
+        obj = self.get_object()
+        fav = self.favourite_obj(obj)
+        serializer = self.serializer_class(fav)
+        
+        serializer.is_valid(raise_exception = True)
+        
+        return Response(serializer.data)
+
+class CustomerItemFavouriteView(CustomerDietFavouriteBaseView):
+    serializer_class = CustomerDietFavouriteSerializer
+
+    def get_object(self):
+        pk = self.kwargs.get("pk")
+        return GeneratedDietPlanFoodDetails.objects.get(pk = pk)
+
+    def favourite_obj(self, obj):
+        data = fav_utils.get_item_favourite_details(obj)
+        data.preference = self.request.data['preference']
+        data.customer = self.request.user
+        return data.__dict__

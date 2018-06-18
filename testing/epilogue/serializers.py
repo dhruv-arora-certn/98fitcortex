@@ -344,3 +344,8 @@ class CustomerDietPlanFollowSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerDietPlanFollow
         fields = "__all__"
+
+class CustomerDietFavouriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomerDietFavourite
+        fields = "__all__"
