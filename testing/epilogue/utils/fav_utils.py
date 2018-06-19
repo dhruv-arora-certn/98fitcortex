@@ -29,9 +29,8 @@ def get_item_favourite_details(item):
     week = item.dietplan.week_id
     year = item.dietplan.year
 
-    meal = item.meal_type
+    meal = get_meal_repr(item.meal_type)
     food = item.food_item
-    type
 
     return dict(
         type = 0,
@@ -39,6 +38,6 @@ def get_item_favourite_details(item):
         week = week,
         year = year,
         meal = meal,
-        foods = [food]
+        foods = [food.pk]
     )
  

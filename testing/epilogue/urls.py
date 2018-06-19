@@ -1,10 +1,11 @@
-from django.urls import re_path
+from django.urls import re_path, path
 from .views import  UserView , DietPlanView , DishReplaceView , MealReplaceView , CustomerFoodExclusionView ,\
                     CustomerMedicalConditionsView , CreateCustomerView , GuestPDFView , DietPlanRegenerationView , UserDietPlanRegenerationView ,\
                     WaterBulkView  ,SleepWeeklyAggregationView,SleepMonthlyAggregatedView, WaterWeeklyAggregateView,WaterMonthlyAggregateView , \
                     LastDaySleepView, MonthlyActivityView , WeeklyActivityView, ActivityLogView , CustomerSleepLoggingView , DashboardMealTextView , CustomerMedicalConditionsMobileView , CustomerFoodExclusionsMobileView , \
                     DiseasePDFView  , CustomerReasonsView , RegenerableDietPlanView, CustomerPreferenceView, DayRegenerationView, CustomerDietPlanFollowView
 
+from . import views
 from rest_framework import routers
 
 urlpatterns = [
@@ -37,3 +38,9 @@ urlpatterns = [
     re_path(r'^day-regenerate/(?P<year>(2017|2018))/(?P<week_id>[0-9]+)/day/(?P<day>[1-7])/$', DayRegenerationView.as_view()),
     re_path(r'^diet-follow/(?P<year>(2017|2018))/(?P<week>[0-9]+)/day/(?P<day>[1-7])/$', CustomerDietPlanFollowView.as_view())
 ]
+
+diet_fav_urlpatterns = [
+    path('favourite/item/<int:pk>', views.CustomerItemFavouriteView.as_view())
+]
+
+urlpatterns += diet_fav_urlpatterns

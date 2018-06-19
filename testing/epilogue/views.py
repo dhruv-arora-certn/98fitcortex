@@ -1319,7 +1319,7 @@ class CustomerDietFavouriteBaseView(GenericAPIView):
     def post(self, request, *args, **kwargs):
         obj = self.get_object()
         fav = self.favourite_obj(obj)
-        serializer = self.serializer_class(fav)
+        serializer = self.serializer_class(data = fav)
         
         serializer.is_valid(raise_exception = True)
         
@@ -1335,5 +1335,5 @@ class CustomerItemFavouriteView(CustomerDietFavouriteBaseView):
     def favourite_obj(self, obj):
         data = fav_utils.get_item_favourite_details(obj)
         data.preference = self.request.data['preference']
-        data.customer = self.request.user
+        data.customer = self.request.user.pk
         return data.__dict__
