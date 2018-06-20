@@ -1271,12 +1271,6 @@ class CustomerDietPlanFollow(models.Model):
 
 class CustomerDietFavourite(models.Model):
 
-    BREAKFAST = 1
-    MID_DAY_SNACK = 2
-    LUNCH = 3
-    EVENING_SNACK = 4
-    DINNER = 5
-
     LIKE = 1
     DISLIKE = -1
     
@@ -1291,6 +1285,27 @@ class CustomerDietFavourite(models.Model):
         (DISLIKE, "dislike")
     )
 
+
+    customer = models.ForeignKey(Customer, related_name = "favourites", on_delete = models.CASCADE)
+    preference = models.IntegerField(choices = PREFERENCE_CHOICES)
+    type = models.IntegerField(choices = TYPE_CHOICES)
+    
+    day = models.IntegerField()
+    week = models.IntegerField()
+    year = models.IntegerField()
+
+    created = models.DateTimeField(auto_now_add = True)
+
+    foods = models.ManyToManyField(Food, through = "DietFavouriteFoods")
+
+class DietFavouriteFoods(models.Model):
+
+    BREAKFAST = 1
+    MID_DAY_SNACK = 2
+    LUNCH = 3
+    EVENING_SNACK = 4
+    DINNER = 5
+
     MEAL_CHOICES = (
         (BREAKFAST, "Breakfast"),
         (MID_DAY_SNACK, "Mid Day Snack"),
@@ -1299,18 +1314,9 @@ class CustomerDietFavourite(models.Model):
         (DINNER, "Dinner")
     )
 
-    customer = models.ForeignKey(Customer, related_name = "favourites", on_delete = models.CASCADE)
-    preference = models.IntegerField(choices = PREFERENCE_CHOICES)
-    type = models.IntegerField(choices = TYPE_CHOICES)
+    food = models.ForeignKey(Food, on_delete = models.CASCADE)
+    group = models.ForeignKey(CustomerDietFavourite, on_delete = models.CASCADE)
     meal = models.IntegerField(choices = MEAL_CHOICES)
-    
-    day = models.IntegerField()
-    week = models.IntegerField()
-    year = models.IntegerField()
-
-    created = models.DateTimeField(auto_now_add = True)
-
-    foods = models.ManyToManyField(Food)
 
 @receiver(signals.post_init , sender = Customer)
 def save_pre_state(sender , *args , **kwargs):
