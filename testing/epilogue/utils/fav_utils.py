@@ -13,8 +13,7 @@ def as_simplenamespace(f):
 def get_meal_repr(meal):
     return int(meal[1])
 
-@as_simplenamespace
-def get_item_favourite_details(item):
+def get_item_favourite_details(item, calendar, preference):
     '''
     Return the details required to favourite an item
     - day
@@ -25,24 +24,18 @@ def get_item_favourite_details(item):
 
     item is an instance of epilogue.GeneratedDietPlanFoodDetails
     '''
-    day = item.day
-    week = item.dietplan.week_id
-    year = item.dietplan.year
-
-    return dict(
-        type = 0,
-        day = day,
-        week = week,
-        year = year,
-        foods = [{
-            "food" : item.food_item.pk,
-            "meal" : get_meal_repr(item.meal_type)
-        } for f in [item]]
-    )
+    return [
+        dict(
+            type = 0,
+            customer_calendar = calendar.pk,
+            food = item.food_item.id,
+            day = item.day,
+            meal = get_meal_repr(item.meal_type),
+            preference = preference
+        )]
  
 
-@as_simplenamespace
-def get_day_favourite_details(data):
+def get_meal_favourite_details(qs, calendar, preference):
     '''
     data: instance of request.data
 
@@ -50,11 +43,15 @@ def get_day_favourite_details(data):
     '''
     
     #Convert the request.data dict to SimpleNamespace
-    data = SimpleNamespace(**data)
-    
-    return dict(
+    items = qs  
+    return [ dict(
+        type = 1,
         day = data.day,
-        week = data.week,
-        year = data.year,
+        week = calendar.week,
+        year = calendar.year,
+        food = data.food_item.pk,
+        meal = get_meal_repr(data.meal_type),
+        preference = preference,
+        customer_calendar = calendar.pk
         
-    )
+    ) for data in qs]

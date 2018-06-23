@@ -62,3 +62,11 @@ class SingleSleepLog(permissions.BasePermission):
         if sleep_log.count():
             return False
         return True
+
+class FavouriteDoesNotExist(permissions.BasePermission):
+    '''
+    Permission to favourite only if item has not been favourite/unfavourited earlier
+    '''
+    
+    def has_object_permission(self, request, view, obj):
+        pass

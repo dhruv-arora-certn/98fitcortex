@@ -1269,34 +1269,20 @@ class CustomerDietPlanFollow(models.Model):
         ]
         unique_together = ["customer","day","week","year","followed"]
 
-class CustomerDietFavourite(models.Model):
-
-    LIKE = 1
-    DISLIKE = -1
-    
-    TYPE_CHOICES = (
-        (0,'item'),
-        (1, 'meal'),
-        (2, 'day')
-    )
-
-    PREFERENCE_CHOICES = (
-        (LIKE, "like"),
-        (DISLIKE, "dislike")
-    )
-
-
-    customer = models.ForeignKey(Customer, related_name = "favourites", on_delete = models.CASCADE)
-    preference = models.IntegerField(choices = PREFERENCE_CHOICES)
-    type = models.IntegerField(choices = TYPE_CHOICES)
-    
-    day = models.IntegerField()
+class CustomerIsoWeek(models.Model):
+    customer = models.ForeignKey(Customer, on_delete = models.CASCADE, related_name = "calendar")
     week = models.IntegerField()
     year = models.IntegerField()
 
-    created = models.DateTimeField(auto_now_add = True)
-
-    foods = models.ManyToManyField(Food, through = "DietFavouriteFoods")
+    class Meta:
+        unique_together = [
+            'customer', 'week' , 'year'
+        ]
+        indexes = [
+            models.Index(fields = [
+                "customer", "-week" , "-year"
+            ])
+        ]
 
 class DietFavouriteFoods(models.Model):
 
@@ -1306,6 +1292,12 @@ class DietFavouriteFoods(models.Model):
     EVENING_SNACK = 4
     DINNER = 5
 
+    TYPE_CHOICES = (
+        (0,'item'),
+        (1, 'meal'),
+        (2, 'day')
+    )
+
     MEAL_CHOICES = (
         (BREAKFAST, "Breakfast"),
         (MID_DAY_SNACK, "Mid Day Snack"),
@@ -1314,9 +1306,34 @@ class DietFavouriteFoods(models.Model):
         (DINNER, "Dinner")
     )
 
-    food = models.ForeignKey(Food, on_delete = models.CASCADE)
-    group = models.ForeignKey(CustomerDietFavourite, on_delete = models.CASCADE)
+    PREFERENCE_CHOICES = [
+        ( 1, "Like"),
+        ( -1, "Dislike"),
+        ( 0, "Neutral")
+    ]
+
+    DAY_CHOICES = [
+        (1, "Monday"),
+        (2, "Tuesday"),
+        (3, "Wednesday"),
+        (4, "Thursday"),
+        (5, "Friday"),
+        (6, "Saturday"),
+        (7 ,"Sunday")
+    ]
+
+    food = models.ForeignKey(Food, on_delete = models.CASCADE,)
+    type = models.IntegerField(choices = TYPE_CHOICES)
     meal = models.IntegerField(choices = MEAL_CHOICES)
+    day = models.IntegerField(choices = DAY_CHOICES, default = 0)
+    customer_calendar = models.ForeignKey(CustomerIsoWeek, on_delete = models.ForeignKey, related_name = "favourites", null = False, default = 0)
+    preference =  models.IntegerField(choices = PREFERENCE_CHOICES, default = 0)
+
+
+    class Meta:
+        unique_together = [
+            "customer_calendar" , "type", "meal", "preference", "food"
+        ]
 
 @receiver(signals.post_init , sender = Customer)
 def save_pre_state(sender , *args , **kwargs):

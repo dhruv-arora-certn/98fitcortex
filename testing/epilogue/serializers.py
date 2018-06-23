@@ -345,25 +345,11 @@ class CustomerDietPlanFollowSerializer(serializers.ModelSerializer):
         model = CustomerDietPlanFollow
         fields = "__all__"
 
-class CustomerDietFavouriteFoodsSerializer(serializers.ModelSerializer):
+class CustomerDietFavouriteSerializer(serializers.ModelSerializer):
+    
+    food = serializers.PrimaryKeyRelatedField( queryset = Food.objects.all())
+    customer_calendar = serializers.PrimaryKeyRelatedField( queryset = CustomerIsoWeek.objects.all())
+
     class Meta:
         model = DietFavouriteFoods
-        fields = ["food" , "meal"]
-
-class CustomerDietFavouriteSerializer(serializers.ModelSerializer):
-
-    foods = CustomerDietFavouriteFoodsSerializer(many = True)
-
-    class Meta:
-        model = CustomerDietFavourite
         fields = "__all__"
-   
-    def create(self, validated_data):
-        foods_data = validated_data.pop('foods')
-        import ipdb; ipdb.set_trace()
-        diet_fav = self.Meta.model.objects.create(**validated_data)
-        DietFavouriteFoods.objects.bulk_create([
-            DietFavouriteFoods(group = diet_fav, food = el['food'], meal = el['meal'])
-            for el in foods_data
-        ])
-        return diet_fav

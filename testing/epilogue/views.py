@@ -1309,17 +1309,23 @@ class CustomerDietPlanFollowView(mixins.CreateModelMixin, mixins.UpdateModelMixi
 class CustomerDietFavouriteBaseView(GenericAPIView):
     authentication_classes = [CustomerAuthentication]
     permission_classes = [IsAuthenticated]
-
+    
     def get_object(self):
         raise NotImplementedError("This function must be implemented")
     
     def favourite_obj(self, obj):
         raise NotImplementedError("This function must be implemented")
 
+    def get_calendar(self):
+        raise NotImplementedError("This function must be implemented")
+    
+    def get_preference(self):
+        return self.request.data['preference']
+
     def post(self, request, *args, **kwargs):
         obj = self.get_object()
         fav = self.favourite_obj(obj)
-        serializer = self.serializer_class(data = fav)
+        serializer = self.serializer_class(data = fav, many = True)
         
         serializer.is_valid(raise_exception = True)
         
@@ -1332,8 +1338,50 @@ class CustomerItemFavouriteView(CustomerDietFavouriteBaseView):
         pk = self.kwargs.get("pk")
         return GeneratedDietPlanFoodDetails.objects.get(pk = pk)
 
+    def get_calendar(self):
+        obj = self.get_object()
+        calendar, created = CustomerIsoWeek.objects.get_or_create(
+            customer = self.request.user,
+            week = int(obj.dietplan.week_id),
+            year = int(obj.dietplan.year)
+        )
+        return calendar
+
     def favourite_obj(self, obj):
-        data = fav_utils.get_item_favourite_details(obj)
-        data.preference = self.request.data['preference']
-        data.customer = self.request.user.pk
-        return data.__dict__
+        preference = self.get_preference()
+        calendar = self.get_calendar()
+        data = fav_utils.get_item_favourite_details(obj, calendar, preference)
+        return data
+
+class CustomerMealFavouriteView(CustomerDietFavouriteBaseView):
+    serializer_class = CustomerDietFavouriteSerializer
+
+    def get_calendar(self):
+        calendar, created = self.request.user.calendar.get_or_create(
+            week = request.data['week'],
+            year = request.data['year']
+        )
+        return calendar
+
+    def get_object(self):
+
+        preference = self.get_preference()
+        calendar = self.get_calendar()
+
+        meal = self.request.data.get("meal")
+        day = self.request.data.get("day")
+
+        return GeneratedDietPlanFoodDetails.objects.filter(
+            dietplan__week_id =  calendar.week,
+            dietplan__year = calendar.year,
+            dietplan__customer = self.request.user,
+            meal = meal,
+            day = day
+        ), calendar, preference
+
+
+    def favourite_obj(self, obj):
+        qs, calendar, preference = self.get_object() 
+
+        data = fav_utils.get_meal_favourite_details( qs, calendar, preference)
+        return data
