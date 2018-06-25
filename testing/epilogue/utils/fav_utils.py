@@ -47,11 +47,25 @@ def get_meal_favourite_details(qs, calendar, preference):
     return [ dict(
         type = 1,
         day = data.day,
-        week = calendar.week,
-        year = calendar.year,
         food = data.food_item.pk,
         meal = get_meal_repr(data.meal_type),
         preference = preference,
         customer_calendar = calendar.pk
         
     ) for data in qs]
+
+
+def get_day_favourite_details(qs, calendar, preference):
+    items = qs
+    default_dict = functools.partial(
+        dict, customer_calendar = calendar.pk, preference = preference
+    )
+    return [
+        default_dict(
+            type = 2,
+            day = data.day,
+            food = data.food_item.pk,
+            meal = get_meal_repr(data.meal_type),
+        )
+        for data in qs
+    ]

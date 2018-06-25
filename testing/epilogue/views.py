@@ -1322,6 +1322,15 @@ class CustomerDietFavouriteBaseView(GenericAPIView):
     def get_preference(self):
         return self.request.data['preference']
 
+    def get_calendar(self):
+        request = self.request
+        calendar, created = request.user.calendar.get_or_create(
+            week = request.data['week'],
+            year = request.data['year']
+        )
+        return calendar
+
+
     def post(self, request, *args, **kwargs):
         obj = self.get_object()
         fav = self.favourite_obj(obj)
@@ -1362,14 +1371,6 @@ class CustomerItemFavouriteView(CustomerDietFavouriteBaseView):
 class CustomerMealFavouriteView(CustomerDietFavouriteBaseView):
     serializer_class = CustomerDietFavouriteSerializer
 
-    def get_calendar(self):
-        request = self.request
-        calendar, created = request.user.calendar.get_or_create(
-            week = request.data['week'],
-            year = request.data['year']
-        )
-        return calendar
-
     def get_object(self):
 
         preference = self.get_preference()
@@ -1396,4 +1397,32 @@ class CustomerMealFavouriteView(CustomerDietFavouriteBaseView):
         qs, calendar, preference = self.get_object() 
 
         data = fav_utils.get_meal_favourite_details( qs, calendar, preference)
+        return data
+
+class CustomerDayFavouriteView(CustomerDietFavouriteBaseView):
+    serializer_class = CustomerDietFavouriteSerializer
+
+    def get_object(self):
+
+        preference = self.get_preference()
+        calendar = self.get_calendar()
+
+        day = self.request.data.get('day')
+
+        qs = GeneratedDietPlanFoodDetails.objects.filter(
+            dietplan__week_id = calendar.week,
+            dietplan__year = calendar.year,
+            dietplan__customer = self.request.user,
+            day = day
+        )
+
+        if not qs.count():
+            raise exceptions.NotFound()
+        
+        return qs, calendar, preference
+
+    def favourite_obj(self, obj):
+        qs, calendar, preference = self.get_object()
+
+        data = fav_utils.get_day_favourite_details(qs, calendar, preference)
         return data
