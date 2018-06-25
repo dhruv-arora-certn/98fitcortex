@@ -46,4 +46,4 @@ def test_fav_day():
 
     val = serializer.save()
 
-    return val
+    return serializer

@@ -40,7 +40,8 @@ urlpatterns = [
 ]
 
 diet_fav_urlpatterns = [
-    path('favourite/item/<int:pk>', views.CustomerItemFavouriteView.as_view())
+    path('favourite/item/<int:pk>', views.CustomerItemFavouriteView.as_view()),
+    path('favourite/meal/', views.CustomerMealFavouriteView.as_view())
 ]
 
 urlpatterns += diet_fav_urlpatterns

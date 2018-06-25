@@ -6,7 +6,7 @@ from django.template.loader import render_to_string
 from django.views import View
 from django.shortcuts import render , get_object_or_404
 from django.http import HttpResponse , JsonResponse, Http404
-from django.db import transaction
+from django.db import transaction, DatabaseError, IntegrityError
 from django.core.cache import caches
 
 from dietplan.goals import Goals
@@ -1328,6 +1328,12 @@ class CustomerDietFavouriteBaseView(GenericAPIView):
         serializer = self.serializer_class(data = fav, many = True)
         
         serializer.is_valid(raise_exception = True)
+        try:
+            instance = serializer.save()
+        except DatabaseError as err:
+            raise exceptions.PermissionDenied(detail = "You cannot do this")
+        except IntegrityError as err:
+            raise exceptions.PermissionDenied(detail = "You cannot do this")
         
         return Response(serializer.data)
 
@@ -1336,7 +1342,7 @@ class CustomerItemFavouriteView(CustomerDietFavouriteBaseView):
 
     def get_object(self):
         pk = self.kwargs.get("pk")
-        return GeneratedDietPlanFoodDetails.objects.get(pk = pk)
+        return get_object_or_404(GeneratedDietPlanFoodDetails, pk = pk)
 
     def get_calendar(self):
         obj = self.get_object()
@@ -1357,7 +1363,8 @@ class CustomerMealFavouriteView(CustomerDietFavouriteBaseView):
     serializer_class = CustomerDietFavouriteSerializer
 
     def get_calendar(self):
-        calendar, created = self.request.user.calendar.get_or_create(
+        request = self.request
+        calendar, created = request.user.calendar.get_or_create(
             week = request.data['week'],
             year = request.data['year']
         )
@@ -1371,13 +1378,18 @@ class CustomerMealFavouriteView(CustomerDietFavouriteBaseView):
         meal = self.request.data.get("meal")
         day = self.request.data.get("day")
 
-        return GeneratedDietPlanFoodDetails.objects.filter(
+        qs = GeneratedDietPlanFoodDetails.objects.filter(
             dietplan__week_id =  calendar.week,
             dietplan__year = calendar.year,
             dietplan__customer = self.request.user,
-            meal = meal,
+            meal_type = meal,
             day = day
-        ), calendar, preference
+        )
+
+        if not qs.count():
+            raise exceptions.NotFound(detail = "Object Not Found")
+
+        return qs , calendar, preference
 
 
     def favourite_obj(self, obj):
