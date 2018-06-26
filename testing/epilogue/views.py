@@ -1307,9 +1307,18 @@ class CustomerDietPlanFollowView(mixins.CreateModelMixin, mixins.UpdateModelMixi
             return self.update(request, *args, **kwargs)
 
 class CustomerDietFavouriteBaseView(GenericAPIView):
+    serializer_class = CustomerDietFavouriteSerializer
     authentication_classes = [CustomerAuthentication]
     permission_classes = [IsAuthenticated]
-    
+
+    def get_from_request(self, *args):
+        data = list(
+            map(lambda x: self.request.data.get(x), args)
+        )
+        if len(data) == 1:
+            return data[0]
+        return data
+
     def get_object(self):
         raise NotImplementedError("This function must be implemented")
     
@@ -1319,9 +1328,6 @@ class CustomerDietFavouriteBaseView(GenericAPIView):
     def get_calendar(self):
         raise NotImplementedError("This function must be implemented")
     
-    def get_preference(self):
-        return self.request.data['preference']
-
     def get_calendar(self):
         request = self.request
         calendar, created = request.user.calendar.get_or_create(
@@ -1330,8 +1336,24 @@ class CustomerDietFavouriteBaseView(GenericAPIView):
         )
         return calendar
 
+    def verify_data(self):
+        serializer = self.verification_serializer(data = self.request.data)
+        serializer.is_valid(raise_exception = True)
+
+    def patch(self, request, *args, **kwargs):
+        self.verify_data()
+        qs = self.get_queryset()
+        
+        preference = request.data['preference']
+        qs.update(preference = preference)
+        
+        serializer = self.serializer_class(list(qs), many = True)
+
+        return Response(serializer.data)
+
 
     def post(self, request, *args, **kwargs):
+        self.verify_data()
         obj = self.get_object()
         fav = self.favourite_obj(obj)
         serializer = self.serializer_class(data = fav, many = True)
@@ -1346,8 +1368,15 @@ class CustomerDietFavouriteBaseView(GenericAPIView):
         
         return Response(serializer.data)
 
+    def delete(self, request, *args, **kwargs):
+        self.verify_data()
+        qs = self.get_queryset()
+        qs = qs.delete()
+
+        return Response(status = 204)
+
 class CustomerItemFavouriteView(CustomerDietFavouriteBaseView):
-    serializer_class = CustomerDietFavouriteSerializer
+    verification_serializer = ItemFavouriteSerializer
 
     def get_object(self):
         pk = self.kwargs.get("pk")
@@ -1363,21 +1392,38 @@ class CustomerItemFavouriteView(CustomerDietFavouriteBaseView):
         return calendar
 
     def favourite_obj(self, obj):
-        preference = self.get_preference()
+        preference = self.get_from_request("preference")
         calendar = self.get_calendar()
         data = fav_utils.get_item_favourite_details(obj, calendar, preference)
         return data
 
-class CustomerMealFavouriteView(CustomerDietFavouriteBaseView):
-    serializer_class = CustomerDietFavouriteSerializer
+    def get_queryset(self):
+        calendar = self.get_calendar()
+        obj = self.get_object()
+        
+        qs = DietFavouriteFoods.objects.filter(
+            customer_calendar = calendar,
+            type = 0,
+            food = obj.food_item,
+            day = obj.day,
+            meal = fav_utils.get_meal_repr(obj.meal_type) 
+        )
+        
+        if not qs.count():
+            raise exceptions.NotFound()
+        
+        return qs
 
+
+class CustomerMealFavouriteView(CustomerDietFavouriteBaseView):
+    verification_serializer = MealFavouriteSerializer
+    
     def get_object(self):
 
-        preference = self.get_preference()
+        preference = self.get_from_request("preference")
         calendar = self.get_calendar()
 
-        meal = self.request.data.get("meal")
-        day = self.request.data.get("day")
+        meal, day = self.get_from_request("meal" , "day")
 
         qs = GeneratedDietPlanFoodDetails.objects.filter(
             dietplan__week_id =  calendar.week,
@@ -1399,15 +1445,31 @@ class CustomerMealFavouriteView(CustomerDietFavouriteBaseView):
         data = fav_utils.get_meal_favourite_details( qs, calendar, preference)
         return data
 
+    def get_queryset(self):
+        calendar = self.get_calendar()
+
+        meal,day = self.get_from_request("meal", "day")
+
+        qs = DietFavouriteFoods.objects.filter(
+            day = day,
+            meal = fav_utils.get_meal_repr(meal),
+            customer_calendar = calendar,
+            type = 1
+        )
+
+        if not qs.count():
+            raise exceptions.NotFound()
+        return qs
+        
 class CustomerDayFavouriteView(CustomerDietFavouriteBaseView):
-    serializer_class = CustomerDietFavouriteSerializer
+    verification_serializer = DayFavouriteSerializer
 
     def get_object(self):
 
-        preference = self.get_preference()
+        preference = self.get_from_request("preference")
         calendar = self.get_calendar()
 
-        day = self.request.data.get('day')
+        day = self.get_from_request("day")
 
         qs = GeneratedDietPlanFoodDetails.objects.filter(
             dietplan__week_id = calendar.week,
@@ -1426,3 +1488,21 @@ class CustomerDayFavouriteView(CustomerDietFavouriteBaseView):
 
         data = fav_utils.get_day_favourite_details(qs, calendar, preference)
         return data
+
+    def get_queryset(self):
+
+        calendar = self.get_calendar()
+        day = self.get_from_request("day")
+
+        qs = DietFavouriteFoods.objects.filter(
+            type = 2,
+            customer_calendar = calendar,
+            day = day
+        )
+
+        if not qs.count():
+            raise exceptions.NotFound()
+
+        return qs
+
+

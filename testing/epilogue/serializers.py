@@ -353,3 +353,19 @@ class CustomerDietFavouriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = DietFavouriteFoods
         fields = "__all__"
+
+class FavouriteBaseSerializer(serializers.Serializer):
+    week = serializers.IntegerField()
+    year = serializers.IntegerField()
+    preference = serializers.IntegerField()
+
+class ItemFavouriteSerializer(serializers.Serializer):
+    preference = serializers.IntegerField()
+
+class MealFavouriteSerializer(FavouriteBaseSerializer):
+    day = serializers.IntegerField()
+    meal = serializers.CharField()
+
+class DayFavouriteSerializer(FavouriteBaseSerializer):
+    day = serializers.IntegerField()
+    
