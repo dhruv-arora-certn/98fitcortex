@@ -312,6 +312,49 @@ def accumulate_nutrition(a,b):
     a.veg &= not(b.food_item.non_veg)
     return a
 
+def add_favourites(user, day, week, year):
+    '''
+    Add Favourites for Day, Meals
+    '''
+
+    data = dict(favourites = dict(
+        day = 0,
+        m1 = 0,
+        m2 = 0,
+        m3 = 0,
+        m4 = 0,
+        m5 = 0
+    ))
+    customer_calendar, created = user.calendar.get_or_create(
+        week = week,
+        year = year
+    )
+
+    day_fav = customer_calendar.favourites.filter(
+        day = day,
+        type = 2
+    )
+
+    if day_fav.count():
+        data['favourites'].update({
+            "day" : day_fav.first().preference
+        })
+    
+    meal_favs = customer_calendar.favourites.filter(
+        day = day,
+        type = 1
+    ).values("meal","preference").distinct()
+
+    vals_map = map(lambda x : x.values(), meal_favs)
+    
+    for i,e in vals_map:
+        data['favourites'].update({
+            'm%d'%i : e
+        })
+
+    return data
+
+
 def get_meals_meta(meals, **kwargs):
     initializer = SimpleNamespace(
         calories = 0,

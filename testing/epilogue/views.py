@@ -32,7 +32,7 @@ from epilogue.models import *
 from epilogue.serializers import *
 from epilogue.authentication import CustomerAuthentication
 from epilogue.mixins import *
-from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf , is_valid_week, check_dietplan_dependencies, get_meals_meta, check_add_meal_followed, get_diet_plan, get_day_items_from_dietplan, get_meal_string_dict
+from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf , is_valid_week, check_dietplan_dependencies, get_meals_meta, check_add_meal_followed, get_diet_plan, get_day_items_from_dietplan, get_meal_string_dict, add_favourites
 from epilogue.utils import cache_utils
 from epilogue.utils import fav_utils
 from epilogue.replacement import *
@@ -273,7 +273,9 @@ class DishReplaceView(RetrieveAPIView):
                 status = status.HTTP_404_NOT_FOUND
             )
         data = self.serializer_class(obj, context = {
-            "user" : request.user
+            "user" : request.user,
+            "week" : obj.dietplan.week_id,
+            "year" : obj.dietplan.year
         }).data
         return Response(data)
 
@@ -1145,7 +1147,13 @@ class RegenerableDietPlanView(UserGenericAPIView, regeneration_views.Regenerable
     
     def get_pcod(self):
         return disease_utils.get_pcod(self.request.user, int(self.kwargs.get('day',1)))
-       
+
+    def get_calendar(self):
+        calendar, created = self.request.user.calendar.get_or_create(
+            week = int(self.kwargs.get('week_id')),
+            year = int(self.kwargs.get('year'))
+        )
+        return calendar
 
     def get(self , request , *args , **kwargs):
 
@@ -1188,9 +1196,16 @@ class RegenerableDietPlanView(UserGenericAPIView, regeneration_views.Regenerable
             "year" : int(self.kwargs['year']),
             "customer" : self.request.user
         })
+        meta.update(**add_favourites(
+            user = request.user,
+            day = int(self.kwargs['day']),
+            week = int(self.kwargs['week_id']),
+            year = int(self.kwargs['year'])
+        ))
         serialized = self.serializer_class(meals , many = True, context = {
             "request" : request,
-            "user" : request.user
+            "user" : request.user,
+            "calendar" : self.get_calendar()
         })
         return Response({
             "data" : serialized.data,
@@ -1474,8 +1489,7 @@ class CustomerDayFavouriteView(CustomerDietFavouriteBaseView):
         qs = GeneratedDietPlanFoodDetails.objects.filter(
             dietplan__week_id = calendar.week,
             dietplan__year = calendar.year,
-            dietplan__customer = self.request.user,
-            day = day
+            dietplan__customer = self.request.user, day = day
         )
 
         if not qs.count():

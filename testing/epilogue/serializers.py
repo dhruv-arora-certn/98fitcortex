@@ -3,7 +3,7 @@ from rest_framework import serializers , exceptions
 from epilogue.models import * 
 from epilogue import utils
 
-from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied, MultipleObjectsReturned
 
 from django.db.utils import IntegrityError
 
@@ -126,11 +126,20 @@ class DietPlanSerializer(serializers.ModelSerializer):
 
     def get_preference(self, obj):
         user = self.context['user']
-        pref = user.food_preference.filter(food = obj.food_item).last()
+        calendar = self.context['calendar']
 
-        if pref:
-            return pref.preference
-        return 0
+        try:
+            pref = calendar.favourites.get(
+                type = 0,
+                food = obj.food_item,
+                meal = utils.fav_utils.get_meal_repr(obj.meal_type)
+            )
+        except DietFavouriteFoods.DoesNotExist as not_found:
+            pref = 0
+        else:
+            pref = pref.preference
+        finally:
+            return pref
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField(required = True)
