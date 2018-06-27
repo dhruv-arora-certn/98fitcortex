@@ -1369,7 +1369,10 @@ class CustomerDietFavouriteBaseView(GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         self.verify_data()
-        obj = self.get_object()
+        try:
+            obj = self.get_object()
+        except Http404 as err:
+            import ipdb; ipdb.set_trace()
         fav = self.favourite_obj(obj)
         serializer = self.serializer_class(data = fav, many = True)
         
@@ -1395,7 +1398,12 @@ class CustomerItemFavouriteView(CustomerDietFavouriteBaseView):
 
     def get_object(self):
         pk = self.kwargs.get("pk")
-        return get_object_or_404(GeneratedDietPlanFoodDetails, pk = pk)
+        try:
+            obj = GeneratedDietPlanFoodDetails.objects.get(pk = pk)
+        except GeneratedDietPlanFoodDetails.DoesNotExist as not_found:
+            raise Http404
+        else:
+            return obj
 
     def get_calendar(self):
         obj = self.get_object()
