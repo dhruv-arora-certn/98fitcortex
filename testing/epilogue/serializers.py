@@ -127,14 +127,15 @@ class DietPlanSerializer(serializers.ModelSerializer):
     def get_preference(self, obj):
         user = self.context['user']
         calendar = self.context['calendar']
-
+        
+        pref = 0
         try:
             pref = calendar.favourites.get(
                 type = 0,
                 food = obj.food_item,
                 meal = utils.fav_utils.get_meal_repr(obj.meal_type)
             )
-        except DietFavouriteFoods.DoesNotExist as not_found:
+        except ObjectDoesNotExist as not_found:
             pref = 0
         else:
             pref = pref.preference
