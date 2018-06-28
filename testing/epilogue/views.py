@@ -32,7 +32,7 @@ from epilogue.models import *
 from epilogue.serializers import *
 from epilogue.authentication import CustomerAuthentication
 from epilogue.mixins import *
-from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf , is_valid_week, check_dietplan_dependencies, get_meals_meta, check_add_meal_followed, get_diet_plan, get_day_items_from_dietplan, get_meal_string_dict, add_favourites
+from epilogue.utils import get_day , get_week , BulkDifferential , diabetes_pdf , is_valid_week, check_dietplan_dependencies, get_meals_meta, check_add_meal_followed, get_diet_plan, get_day_items_from_dietplan, get_meal_string_dict, add_favourites, get_user_calendar
 from epilogue.utils import cache_utils
 from epilogue.utils import fav_utils
 from epilogue.replacement import *
@@ -105,6 +105,13 @@ class UserGenericAPIView(GenericAPIView):
             context = {}
         context['user'] = self.request.user
         return context
+
+    def get_calendar(self, week, year):
+        return get_user_calendar(
+            self.request.user,
+            week,
+            year
+        ) 
 
 
 class CreateAPICachedView(CreateAPIView):
@@ -1282,7 +1289,8 @@ class DayRegenerationView(UserGenericAPIView):
         )
         data = self.serializer_class(objs, many = True, context = {
             "request" : request,
-            "user" : request.user
+            "user" : request.user,
+            "calendar" : self.get_calendar(week, year)
         }).data
         meta = get_meals_meta(objs, day = day)
         meta = check_add_meal_followed(meta, **{

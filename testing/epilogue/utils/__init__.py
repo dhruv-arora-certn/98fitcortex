@@ -429,3 +429,12 @@ def get_meal_string_dict(meals):
         for e in meal_times
     }
     return string_dict
+
+def get_user_calendar(user, week, year):
+    '''
+    Return User's calendar object
+    '''
+    calendar, created = user.calendar.get_or_create(
+        week = week,
+        year = year
+    ) 
