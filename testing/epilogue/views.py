@@ -282,7 +282,8 @@ class DishReplaceView(RetrieveAPIView):
         data = self.serializer_class(obj, context = {
             "user" : request.user,
             "week" : obj.dietplan.week_id,
-            "year" : obj.dietplan.year
+            "year" : obj.dietplan.year,
+            "calendar" : get_user_calendar(request.user,obj.dietplan.week_id, obj.dietplan.year)
         }).data
         return Response(data)
 
@@ -293,6 +294,14 @@ class MealReplaceView(UserGenericAPIView):
         IsAuthenticated, epilogue_permissions.IsOwner
     ]
     queryset = GeneratedDietPlan.objects
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({
+            'calendar' : self.get_calendar(int(self.kwargs.get('week_id')), int(self.kwargs.get('year'))),
+            'user' : self.request.user
+        })
+        return context
 
     def get_queryset(self):
         return GeneratedDietPlan.objects.filter(customer = self.request.user).filter(year = int(self.kwargs.get('year'))).filter(week_id = self.kwargs.get('week_id'))
