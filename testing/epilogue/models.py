@@ -1332,7 +1332,7 @@ class DietFavouriteFoods(models.Model):
 
     class Meta:
         unique_together = [
-            "customer_calendar" , "type", "meal", "preference", "food"
+            "customer_calendar" , "type", "meal", "day", "food"
         ]
 
 @receiver(signals.post_init , sender = Customer)

@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='dietfavouritefoods',
-            unique_together={('customer_calendar', 'type', 'meal', 'preference', 'food')},
+            unique_together={('customer_calendar', 'type', 'meal', 'day', 'food')},
         ),
         migrations.AddIndex(
             model_name='customerisoweek',

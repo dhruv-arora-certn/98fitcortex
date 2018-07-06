@@ -231,7 +231,7 @@ def check_dietplan_dependencies(user):
             [
                 user.height,
                 user.weight,
-                user.activitylevel_logs.count(),
+                user.activity_level_to_use(),
                 user.food_cat
             ]
         ))
