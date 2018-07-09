@@ -269,12 +269,15 @@ class Customer(models.Model):
         '''
         Convert the persisted height to meters
         '''
+        #Take care of the case when height is not set
         if not self.h:
             return 0
-
+        
+        #Take care of the case when height is `0`
         if not int(self.h):
             return 0
-
+        
+        #Take care of the case when height is set
         if self.h_type == 1: #Feets and inches
             feet , inches = str(self.h).split(".")
             inches = 12 * float(feet) + float(inches)
