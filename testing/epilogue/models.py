@@ -274,7 +274,7 @@ class Customer(models.Model):
             return 0
         
         #Take care of the case when height is `0`
-        if not int(self.h):
+        if not float(self.h):
             return 0
         
         #Take care of the case when height is set
