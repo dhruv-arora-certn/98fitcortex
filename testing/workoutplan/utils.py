@@ -89,7 +89,7 @@ class Luggage:
         self.randomize = randomize
         self.packed = set()
         self.batchSize = batchSize
-        self.max_iterations = 50
+        self.max_iterations = 60
         self.logger = logging.getLogger(__name__)
         self.logger.debug("State of Luggage %s"%self.__dict__)
 
@@ -98,7 +98,10 @@ class Luggage:
         selectedWeight = sum(getattr(e , self.key)*self.multiplier for e in self.packed)
         counter = 0
         while selectedWeight < self.weight and counter < self.max_iterations:
-            batch = random.sample(self.items.difference(self.packed) , min(self.batchSize , len(self.items.difference(self.packed))))
+            batch = random.sample(
+                self.items.difference(self.packed) ,
+                min(self.batchSize , len(self.items.difference(self.packed)))
+            )
             self.logger.debug("Selected Weight :%s"%selectedWeight)
             for e in batch:
                 assert isinstance(getattr(e,self.key) , int) , "Not an integer %s - %s"%(getattr(e , self.key) , type(getattr(e , self.key)))
@@ -186,7 +189,7 @@ def get_beginner_cardio_sets_reps_duration(level , goal , user_workout_week, car
             duration = 1500
 
     if goal == Goals.WeightGain or goal == Goals.MuscleGain:
-        sets = 2
+        sets = 3
         duration = 900
 
     if goal == Goals.MaintainWeight:
