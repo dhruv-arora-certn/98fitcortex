@@ -30,7 +30,7 @@ class UpperBody(BodyBase):
 	]
 	@classmethod
 	def chest(self):
-		return self.baseQ & Q(muscle_group_name = "Chest")
+		return self.baseQ & Q(muscle_group_name = "Chest") & Q(exercise_type = "Isolated")
 
 	@classmethod
 	def back(self):
@@ -78,7 +78,6 @@ class LowerBody(BodyBase):
 			(l.quadriceps(),1),
 			(l.hamstrings() ,1),
 			(l.glutes() , 1),
-			(l.calves() ,1),
 			(Q(body_part = "Lower") & Q(exercise_type = "Compound") , 2)
 		]
 	@classmethod

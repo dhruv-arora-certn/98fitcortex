@@ -7,7 +7,7 @@ def isolated():
 class ChestAndBackFilter():
 	filters = [
 				{
-					"filter" : Q(muscle_group_name = "Chest") & isolated(),
+					"filter" : Q(muscle_group_name = "Chest") & Q(exercise_type = "Isolated"),
 					"count" : 3,
 					"stretching_count" : 2
 				},
@@ -18,7 +18,7 @@ class ChestAndBackFilter():
 				}
 			]
 	chest = {
-					"filter" : UpperBody.chest(),
+					"filter" : UpperBody.chest() & Q(exercise_type = "Isolated"),
 					"count" : 5,
 			}
 

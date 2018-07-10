@@ -54,15 +54,15 @@ class Generator():
             days.rt == days.total,
             days.cs == days.total
         ]):
-            rt_days = random.sample(
+            rt_days = sorted(random.sample(
                 day_range , days.rt
-            )
-            cardio_days = random.sample(
+            ))
+            cardio_days = sorted(random.sample(
                 day_range.difference(rt_days) , days.cardio
-            )
-            cs_days = random.sample(
+            ))
+            cs_days = sorted(random.sample(
                 cardio_days , days.cs
-            )
+            ))
             return cardio_days , rt_days , cs_days
 
         cardio_days = set(random.sample(
