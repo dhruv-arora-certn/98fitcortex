@@ -56,8 +56,8 @@ class CustomerSerializer( CustomerUpdateMixin , serializers.ModelSerializer):
                   "gender" , "body_type" , "food_cat" ,"weight_type" ,
                   "height_type" , "work_pref" , "level" , "diseases" ,
                   "injuries" , "reasons", "new_latest_activity", "current_level",
-                  "level_in_use", "create_on", "medi_applicable"]
-        read_only_fields = [ "medi_applicable" ]
+                  "level_in_use", "create_on", "has_marked_medical_condition"]
+        read_only_fields = [ "has_marked_medical_condition" ]
 
     def get_reasons(self, obj):
         return str(obj.reasons.last())

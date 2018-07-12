@@ -790,6 +790,10 @@ class Customer(models.Model):
         return False
 
     def has_diabetes(self):
+        '''
+        Return True if user's medical conditions have `diabetes`
+        and there is only a single record
+        '''
         return bool(
             self.customermedicalconditions_set.filter(condition_name = "diabetes")
         ) and bool (
@@ -797,11 +801,28 @@ class Customer(models.Model):
         )
 
     def has_pcod(self):
+        '''
+        Return True if user's medical conditions have `pcos`
+        and there is only a single record
+        '''
         return bool(
             self.customermedicalconditions_set.filter(condition_name = "pcos")
         ) and bool(
             self.customermedicalconditions_set.count() == 1
         )
+ 
+    @property
+    def has_marked_medical_condition(self):
+        '''
+        Return true if:
+        1. User has medi_applicable True 
+        OR
+        2. User's medical records have a count > 0
+        '''
+        records = bool(self.customermedicalconditions_set.count())
+    
+        return  records or self.medi_applicable or False
+
     def __str__(self):
         return "%s : %s"%(self.first_name , self.email)
 
