@@ -395,6 +395,11 @@ class CustomerMedicalConditionsView(ListBulkCreateAPIView , BulkDifferential):
             #    e.save()
 
         objs = request.user.customermedicalconditions_set.all()
+
+        if not request.user.medi_applicable:
+            request.user.medi_applicable = True
+            request.user.save()
+
         data = self.serializer_class(objs , many = True)
         return Response( data.data , status = status.HTTP_201_CREATED )
 

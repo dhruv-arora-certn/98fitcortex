@@ -232,6 +232,7 @@ class Customer(models.Model):
     is_anonymous = False
     image = models.CharField( max_length = 200 , blank = True , null = True)
     work_pref = models.CharField(blank = True , max_length = 10)
+    medi_applicable = models.BooleanField(default = False)
 
     def get_exclusions(self):
         q = models.Q()
