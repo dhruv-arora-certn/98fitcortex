@@ -972,22 +972,9 @@ class DashboardMealTextView(GenericAPIView):
     def get_object(self):
         '''
         Return the object
-
-        If cache is available, return from cache, else from get_meal_string_dict
         '''
-        key = cache_utils.get_cache_key(self.request.user, cache_utils.modules.DIET_DASHBOARD_STRING)
-
-        cached_data = cache.get(key)
-    
-        #if cache is available, return
-        if cached_data:
-            return Response(cached_data)
-
-        #If cache is not available, generate string
         data = self.get_meal_string_dict()
         
-        if not data:
-            return Response(status = status.HTTP_404_NOT_FOUND)
         return Response(data)
 
     def get_meal_string_dict(self):

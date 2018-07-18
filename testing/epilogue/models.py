@@ -233,6 +233,7 @@ class Customer(models.Model):
     image = models.CharField( max_length = 200 , blank = True , null = True)
     work_pref = models.CharField(blank = True , max_length = 10)
     medi_applicable = models.BooleanField(default = False)
+    injury_applicable = models.BooleanField(default = False)
 
     def get_exclusions(self):
         q = models.Q()
@@ -822,6 +823,18 @@ class Customer(models.Model):
         records = bool(self.customermedicalconditions_set.count())
     
         return  records or self.medi_applicable or False
+
+    @property
+    def has_marked_injury(self):
+        '''
+        Return True if:
+        1. User has injury_applicable True
+        OR
+        2. User's injury records have a count > 0
+        '''
+        records = bool(self.injuries.count())
+
+        return records or self.injury_applicable or False
 
     def __str__(self):
         return "%s : %s"%(self.first_name , self.email)
