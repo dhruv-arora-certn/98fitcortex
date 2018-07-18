@@ -87,6 +87,9 @@ class Pipeline:
         self.dessertDays = self.getDessertDays()
 
     def daysForCombinations(self):
+        '''
+        Return the days for which Combination has to be suggested
+        '''
         l = [e for e in range(1,8)]
         m3 = random.sample( l , 2 )
         #Remove elements from list
@@ -97,7 +100,7 @@ class Pipeline:
         except Exception as e:
             # import ipdb
             # ipdb.set_trace()
-            pass
+            print("Error in combination days")
         m5 = random.sample(l,1)
         return {
             '3' : m3,
@@ -105,7 +108,9 @@ class Pipeline:
         }
 
     def getDessertDays(self):
-
+        '''
+        Return the days on which the Dessert is to be suggested 
+        '''
         if self.goal == Goals.WeightLoss:
             size = 1
         else:
@@ -318,6 +323,9 @@ class Pipeline:
             self.excluded2.append([e.name for e in day.calculations.selected])
 
     def generate(self , day = None):
+        '''
+        Generate the Diet plan
+        '''
         #If it is the present week
         if not day:
             days = range(1,8)
@@ -347,6 +355,9 @@ class Pipeline:
         return sum( getattr(i , property) for i in l)
 
     def regenerate(self):
+        '''
+        Regenerate the Diet plan
+        '''
         #Saving the old food details. These will be deleted on successful generation of diet plan
         self._old = list(GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.dietplan.id).values_list("id" , flat = True))
         # generate() automatically uses the class attributes to pass to each day
