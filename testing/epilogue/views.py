@@ -996,7 +996,6 @@ class DashboardMealTextView(GenericAPIView):
             return None
 
         string_dict = get_meal_string_dict(today_items)
-        self.set_cache(string_dict)
         return string_dict
 
     def get(self , *args , **kwargs):
