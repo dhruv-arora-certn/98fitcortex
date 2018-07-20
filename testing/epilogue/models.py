@@ -392,20 +392,6 @@ class Customer(models.Model):
         return self
 
     @property
-    def latest_activity(self):
-        exercise_plan_count = GeneratedExercisePlan.objects.filter(customer = self).count()
-        relation = ExerciseDietRelation.objects.filter(act_level = self.lifestyle).filter(fit_level = self.level).first()
-        last_activity = ActivityLevelLog.latest_record(customer = self)
-        if relation:
-            if relation.preiodise == '1' and exercise_plan_count > 12:
-                print("Relation =======> " , (relation.preiodise , exercise_plan_count , relation.uppercut))
-                return relation.uppercut    
-            elif last_activity and  float(last_activity.lifestyle) < float(self.lifestyle):
-                print("New Activity ======>" , relation.new_activity)
-                return relation.new_activity
-        return float(self.lifestyle)
-
-    @property
     def new_latest_activity(self):
         if self.activitylevel_logs.count():
             return ActivityLevelLog.latest_record(customer = self).activity
@@ -1034,14 +1020,6 @@ class GeneratedDietPlanFoodDetails(models.Model):
 
     def otherDishesFromMeal(self):
         return GeneratedDietPlanFoodDetails.objects.filter(dietplan = self.dietplan).filter(meal_type = self.meal_type).filter(day = self.day).exclude(id = self.id)
-
-class GeneratedExercisePlan(models.Model):
-    class Meta:
-        db_table = "erp_exercise_plan"
-    
-    customer = models.ForeignKey(Customer , db_column = "erp_customer_id" , on_delete = models.CASCADE , null = True)
-    created_on = models.DateTimeField(default = None)
-    glo_level_id = models.IntegerField(default = 1)
 
 class ActivityLevelLog(models.Model):
     class Meta:
