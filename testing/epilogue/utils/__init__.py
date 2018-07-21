@@ -400,10 +400,14 @@ def get_diet_plan(user, week = get_week(), year = get_year()):
 
     return user.dietplans.filter(week_id = week, year = year).last()
 
-def get_day_items_from_dietplan(dietplan, day = get_day()):
+def get_day_items_from_dietplan(dietplan, day = None):
     '''
     Return the day items from dietplan
     '''
+    
+    if not day:
+        day = get_day()
+
     from epilogue.models import GeneratedDietPlanFoodDetails
 
     items = GeneratedDietPlanFoodDetails.objects.filter(
@@ -438,3 +442,27 @@ def get_user_calendar(user, week, year):
         week = week,
         year = year
     ) 
+
+def parse_height(height:str = None, height_type:int = None) -> float:
+    '''
+    Parses the height string and returns the height in metres.
+    '''
+    #Take care of the case when height is not set 
+    if not height:
+        return 0.0
+
+    #Take care of the case when height is `0`
+    if not float(height):
+        return 0.0
+
+    #Height is set
+    #Height is ft,in
+    if height_type ==  1:
+        feet, inches = str(height).split(".")
+        inches = 12 * float(feet) + float(inches)
+        return inches * 0.0254
+    elif height_type == 2:
+        return int((float(height)))/100
+    
+    return 0.0
+

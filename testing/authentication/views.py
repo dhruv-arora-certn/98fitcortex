@@ -17,83 +17,83 @@ from epilogue.authentication import CustomerAuthentication
 
 
 class RegistrationView(generics.GenericAPIView):
-	serializer_class = RegistrationSerializer
-	queryset = LoginCustomer
+    serializer_class = RegistrationSerializer
+    queryset = LoginCustomer
 
-	def post(self, request , *args, **kwargs):
-		s = self.serializer_class(data = request.data , context = {
-			'request' : request
-		})
-		s.is_valid(raise_exception = True)
-		lc = s.save()
-		return response.Response({
-			"key" : lc.customer.auth_token.key ,
-			"id" : lc.customer.id
-		})
+    def post(self, request , *args, **kwargs):
+        s = self.serializer_class(data = request.data , context = {
+            'request' : request
+        })
+        s.is_valid(raise_exception = True)
+        lc = s.save()
+        return response.Response({
+            "key" : lc.customer.auth_token.key ,
+            "id" : lc.customer.id
+        })
 
 class AccountAssociationView(generics.GenericAPIView):
-	serializer_class = RegistrationSerializer
-	queryset = LoginCustomer
-	authentication_classes = [CustomerAuthentication] 
-	permission_classes = [permissions.IsAuthenticated]
+    serializer_class = RegistrationSerializer
+    queryset = LoginCustomer
+    authentication_classes = [CustomerAuthentication] 
+    permission_classes = [permissions.IsAuthenticated]
 
-	def post(self, request , *args, **kwargs):
-		s = self.serializer_class(
-			data = request.data,
-			context = {
-				'request' : request
-			}
-		)
-		s.is_valid(raise_exception = True)
-		lc = s.save()
-		return response.Response({
-			"key" : request.user.auth_token.key,
-			"id" : request.user.id 
-		})
+    def post(self, request , *args, **kwargs):
+        s = self.serializer_class(
+            data = request.data,
+            context = {
+                'request' : request
+            }
+        )
+        s.is_valid(raise_exception = True)
+        lc = s.save()
+        return response.Response({
+            "key" : request.user.auth_token.key,
+            "id" : request.user.id 
+        })
 
 class GoogleLoginView(generics.GenericAPIView):
-	serializer_class = GoogleLoginSerializer
-	
-	def post(self, request , *args, **kwargs):
-		s = self.serializer_class(data = request.data , context = {
-			'request' : request
-		})
-		s.is_valid(raise_exception = True)
-		lc = s.save()
-		return response.Response({
-			"key" : lc.customer.auth_token.key ,
-			"id" : lc.customer.id
-		})
+    serializer_class = GoogleLoginSerializer
+    
+    def post(self, request , *args, **kwargs):
+        s = self.serializer_class(data = request.data , context = {
+            'request' : request
+        })
+        s.is_valid(raise_exception = True)
+        lc = s.save()
+        return response.Response({
+            "key" : lc.customer.auth_token.key ,
+            "id" : lc.customer.id
+        })
 
 class FacebookLoginView(generics.GenericAPIView):
-	serializer_class = FacebookLoginSerializer
-	
-	def post(self , request , *args , **kwargs):
-		s = self.serializer_class(data = request.data , context = {
-			'request' : request
-		})
-		s.is_valid(raise_exception = True)
-		lc = s.save()
-		return response.Response({
-			"key" : lc.customer.auth_token.key ,
-			"id" : lc.customer.id
-		})
+    serializer_class = FacebookLoginSerializer
+    
+    def post(self , request , *args , **kwargs):
+        s = self.serializer_class(data = request.data , context = {
+            'request' : request
+        })
+        s.is_valid(raise_exception = True)
+        lc = s.save()
+        return response.Response({
+            "key" : lc.customer.auth_token.key ,
+            "id" : lc.customer.id
+        })
 
 class BatraGoogleLoginView(generics.GenericAPIView):
-	serializer_class = BatraGoogleSerializer
+    serializer_class = BatraGoogleSerializer
 
-	def post(self , request , *args , **kwargs):
-		s = self.serializer_class(
-			data = request.data , context = {
-				'request' : request
-			}
-		)
-		s.is_valid(raise_exception = True)
-		lc = s.save()
-		return response.Response({
-			"key" : lc.customer.auth_token.key ,
-			"id" : lc.customer.id
-		})
+    def post(self , request , *args , **kwargs):
+        s = self.serializer_class(
+            data = request.data , context = {
+                'request' : request
+            }
+        )
+        s.is_valid(raise_exception = True)
+        lc = s.save()
+        return response.Response({
+            "key" : lc.customer.auth_token.key ,
+            "id" : lc.customer.id
+        })
 
 class DeviceRegistrationView(generics.CreateAPIView):
     serializer_class = DeviceRegistrationSerializer
