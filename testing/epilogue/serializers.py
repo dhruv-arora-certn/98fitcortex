@@ -206,6 +206,12 @@ class CreateCustomerSerializer(serializers.ModelSerializer):
 
     def get_auth_token(self , obj):
         return obj.auth_token.key
+    
+    def validate_height(self, height):
+        '''
+        Validate the height
+        '''
+        return False
 
     def create(self, validated_data):
         instance = super().create(validated_data)
