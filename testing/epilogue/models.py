@@ -4,6 +4,7 @@ from dietplan.gender import Male , Female, UnsetGender
 from epilogue.managers import *
 from epilogue import decorators
 from epilogue.utils import get_month , get_year , get_week  ,aggregate_avg , aggregate_max , aggregate_min,get_week , countBottles , countGlasses , aggregate_sum , previous_day , get_day , seconds_to_hms, last_days_filter, annotate_sleep_time, count_weeks
+from epilogue import utils
 from epilogue.dummyModels import *
 from .mappers import *
 from epilogue.constants import DIET_ONLY_FACTORS , WORKOUT_ONLY_FACTORS , COMMON_FACTORS
@@ -271,22 +272,7 @@ class Customer(models.Model):
         '''
         Convert the persisted height to meters
         '''
-        #Take care of the case when height is not set
-        if not self.h:
-            return 0
-        
-        #Take care of the case when height is `0`
-        if not float(self.h):
-            return 0
-        
-        #Take care of the case when height is set
-        if self.h_type == 1: #Feets and inches
-            feet , inches = str(self.h).split(".")
-            inches = 12 * float(feet) + float(inches)
-            val =  inches * 0.0254
-        else: #Centimeters
-            val =  int(float(self.h))/100
-        return round(val , 2)
+        return utils.parse_height(height = self.h, height_type = self.h_type)
 
     @property
     def weight(self):
@@ -299,11 +285,8 @@ class Customer(models.Model):
 
         if not self.w_type:
             self.w_type = 1
-        if int(self.w_type) == 2:
-            val = float(self.w)
-        if int(self.w_type) == 1:
-            val = float(self.w) * 0.4536
-        return round(val , 2)
+
+        return utils.parse_weight(weight = self.w, weight_type = self.w_type)
 
     @property
     def goal(self):

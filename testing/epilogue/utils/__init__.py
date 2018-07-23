@@ -460,9 +460,29 @@ def parse_height(height:str = None, height_type:int = None) -> float:
     if height_type ==  1:
         feet, inches = str(height).split(".")
         inches = 12 * float(feet) + float(inches)
-        return inches * 0.0254
+        return round(inches * 0.0254,2)
+
     elif height_type == 2:
-        return int((float(height)))/100
+        return round(int((float(height)))/100,2)
     
     return 0.0
 
+def parse_weight(weight:str = None, weight_type:int = None) -> float:
+    '''
+    Parse Weight string and returns weight in kgs
+    '''
+    if not weight:
+        return 0.0
+
+    if not float(weight):
+        return 0.0
+    
+    #Weight is in kgs
+    if weight_type == 2:
+        return round(float(weight),2)
+    
+    #Weight is in lbs
+    if weight_type == 1:
+        return round(
+            float(weight) * 0.4536, 2
+        )
