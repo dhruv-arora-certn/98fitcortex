@@ -1370,7 +1370,7 @@ class DietFavouriteFoods(models.Model):
     type = models.IntegerField(choices = TYPE_CHOICES)
     meal = models.IntegerField(choices = MEAL_CHOICES)
     day = models.IntegerField(choices = DAY_CHOICES, default = 0)
-    customer_calendar = models.ForeignKey(CustomerIsoWeek, on_delete = models.ForeignKey, related_name = "favourites", null = False, default = 0)
+    customer_calendar = models.ForeignKey(CustomerIsoWeek, on_delete = models.CASCADE, related_name = "favourites", null = False, default = 0)
     preference =  models.IntegerField(choices = PREFERENCE_CHOICES, default = 0)
 
 
