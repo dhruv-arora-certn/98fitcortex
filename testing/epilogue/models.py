@@ -290,6 +290,13 @@ class Customer(models.Model):
 
     @property
     def weight(self):
+        
+        if not self.w:
+            return 0.0
+
+        if not float(self.w):
+            return 0.0
+
         if not self.w_type:
             self.w_type = 1
         if int(self.w_type) == 2:
