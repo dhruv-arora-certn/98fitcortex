@@ -17,6 +17,7 @@ import json
 import datetime as dt
 import itertools
 import functools
+import re
 
 def get_week(date = None):
     if not date:
@@ -486,3 +487,15 @@ def parse_weight(weight:str = None, weight_type:int = None) -> float:
         return round(
             float(weight) * 0.4536, 2
         )
+
+def validate_height(height:str) -> bool:
+    '''
+    Check if the height is a valid string
+    '''
+    regex = r'^\d+(\.\d{1,2})?$'
+
+    if re.match(regex, height):
+        return True
+
+    return False
+
