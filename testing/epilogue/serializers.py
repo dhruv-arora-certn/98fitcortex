@@ -60,6 +60,15 @@ class CustomerSerializer( CustomerUpdateMixin , serializers.ModelSerializer):
                   "has_marked_injury"]
         read_only_fields = [ "has_marked_medical_condition", "has_marked_injury" ]
 
+    def validate_height(self, height):
+        if not utils.validate_height(height):
+            raise exceptions.ValidationError("Incorrect Height")
+
+    def validate_weight(self, weight):
+        if not utils.validate_weight(weight):
+            raise exceptions.ValidationError("Incorrect Weight")
+
+
     def get_reasons(self, obj):
         return str(obj.reasons.last())
 
@@ -212,6 +221,12 @@ class CreateCustomerSerializer(serializers.ModelSerializer):
         Validate the height
         '''
         return utils.validate_height(height)
+
+    def validate_weight(self, weight):
+        '''
+        Validate the weight
+        '''
+        return utils.validate_weight(weight)
 
     def create(self, validated_data):
         instance = super().create(validated_data)

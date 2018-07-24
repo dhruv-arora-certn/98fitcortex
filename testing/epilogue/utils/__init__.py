@@ -488,14 +488,27 @@ def parse_weight(weight:str = None, weight_type:int = None) -> float:
             float(weight) * 0.4536, 2
         )
 
+def _validate_regex(pattern:str, string:str) -> bool:
+    '''
+    Match the given string with regex
+    '''
+    if re.match(pattern, string):
+        return True
+
+    return False
+
 def validate_height(height:str) -> bool:
     '''
     Check if the height is a valid string
     '''
     regex = r'^\d+(\.\d{1,2})?$'
 
-    if re.match(regex, height):
-        return True
+    return _validate_regex(regex, height)
 
-    return False
+def validate_weight(weight:str) -> bool:
+    '''
+    Check if the weight is a valid string
+    '''
+    regex = r'^\d+(\.\d{1,2})?$'
 
+    return _validate_regex(regex, weight)

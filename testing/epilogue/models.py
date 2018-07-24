@@ -255,6 +255,18 @@ class Customer(models.Model):
         ]
 
     @property
+    def state_args_attrs(self):
+        return [
+            self.w,
+            self.w_type,
+            self.h,
+            self.h_type,
+            self.activity_level_to_use(),
+            self.goal,
+            self.gender.number,
+        ]
+
+    @property
     def kwargs_attrs(self):
         kwargs_attrs = {
             'exclusion_conditions' : self.get_exclusions()
@@ -1346,7 +1358,7 @@ def save_pre_state(sender , *args , **kwargs):
     logger = logging.getLogger(__name__)
     logger.debug("Calling Save Pre State")
     inst = kwargs.pop('instance')
-    inst.__before_attrs = inst.args_attrs
+    inst.__before_attrs = inst.state_args_attrs
     inst.__before_kwargs_attrs = inst.kwargs_attrs
 
 @receiver(signals.post_save , sender = Customer)
