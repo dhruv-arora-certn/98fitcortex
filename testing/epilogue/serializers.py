@@ -211,7 +211,7 @@ class CreateCustomerSerializer(serializers.ModelSerializer):
         '''
         Validate the height
         '''
-        return False
+        return utils.validate_height(height)
 
     def create(self, validated_data):
         instance = super().create(validated_data)
