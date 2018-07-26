@@ -1230,7 +1230,6 @@ class CustomerActivityLogs(models.Model):
 class CustomerLevelLog(models.Model):
     class Meta:
         db_table = "erp_customer_level_log"
-        managed = False
     level = models.IntegerField()
     date = models.DateTimeField(auto_now_add = True)
     week = models.IntegerField(default = get_week())
