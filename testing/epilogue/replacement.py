@@ -62,6 +62,7 @@ class PseudoMeal():
             func()
 
     def getMealArgs(self):
+
         args = inspect.signature(self._meal_type)
         args_dict = {}
         for e in args.parameters:
@@ -137,7 +138,12 @@ class ReplacementPipeline():
         self.meal = self.intializeMeal()
 
     def intializeMeal(self):
-        return PseudoMeal(self.dish , self.get_initial_exclude() , selected = self._selected ,replaceMeal = self.replaceMeal , activity_level_to_use = self.activity_level_to_use)
+        return PseudoMeal(self.dish, 
+                          self.get_initial_exclude(), 
+                          selected = self._selected,
+                          replaceMeal = self.replaceMeal, 
+                          activity_level_to_use = self.activity_level_to_use,
+                          )
 
     def get_initial_exclude(self , days = 2):
         items = []
@@ -162,19 +168,31 @@ class ReplacementPipeline():
             return items
 
     def get_suggestions_exclude(self):
+        '''
+        Get Exclusions from the items that have already been suggested
+        as replacements
+        '''
         items = list(self.dish.suggestions.order_by("id").values_list("food__name", flat = True).distinct())
         if self.replaceMeal:
             for e in self.dishes:
-                items.extend(e.suggestions.values_list("food__name" , flat = True)[:3])
+                items.extend(
+                    e.suggestions.values_list("food__name" , flat = True)[:3]
+                )
         print("Suggestions Exclude " ,items)
         return list(set(items))
 
     def get_same_day_exclude(self):
+        '''
+        Get items that have already been suggested in the same day
+        '''
         baseQ = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.dish.dietplan.id).filter(day = self.dish.day)
         items = baseQ.values_list('food_name' , flat = True)
         return items
 
     def getSelected(self):
+        '''
+        Get the items that have been suggested for the current meal
+        '''
         baseQ = GeneratedDietPlanFoodDetails.objects.filter(dietplan__id = self.dish.dietplan.id).filter(day = self.dish.day).filter(meal_type = self.dish.meal_type)
         if self.replaceMeal:
             return {
@@ -187,6 +205,11 @@ class ReplacementPipeline():
         return d
 
     def update_dish(self , dish , item):
+        '''
+        In case of dish replacement, we do not need to replace the record in the database.
+        Mere updating will also do.
+        This function updates a record with details of the new food item
+        '''
         if isinstance(item , Food):
             dish.food_item = item
         else:
@@ -209,16 +232,24 @@ class ReplacementPipeline():
             self.dish = self.update_dish(self.dish , self.toUpdate)
             self.dish.save()
             return self.dish
+
     def save(self):
+        '''
+        Save the changes
+        '''
         self.created = {}
+
+        #if replaceMeal is selected
         if self.replaceMeal:
-            existing_keys = self.dishes_dict.keys()
-            new_keys = self._selected.keys()
-            common_keys = set(existing_keys) & new_keys
-            to_delete = set(existing_keys) - new_keys
-            to_add = set(new_keys) - existing_keys
+            existing_keys = self.dishes_dict.keys() #Existing Items
+            new_keys = self._selected.keys() #Newly selected items
+            common_keys = set(existing_keys) & new_keys #items that have not changed
+            to_delete = set(existing_keys) - new_keys #items that need to be deleted
+            to_add = set(new_keys) - existing_keys #items that need to be saved
 
             #Replace the 3 for loops using map()
+
+            #Add the old item to replacement suggestions
             for i in common_keys:
                 print(i)
                 e = self.dishes_dict[i]
@@ -227,7 +258,8 @@ class ReplacementPipeline():
                 e = self.update_dish(e , new_item)
                 e.save()
                 self.dishes_dict[i] = e
-
+            
+            #Create records for new items
             for i  in to_add:
                 e = self._selected[i]
                 dish = GeneratedDietPlanFoodDetails.objects.create(
@@ -243,28 +275,35 @@ class ReplacementPipeline():
                     size = e.size
                 )
                 self.dishes_dict[i] = dish
-
+            
+            #Delete records for old items
             for i in to_delete:
                 self.dishes_dict[i].delete()
                 del self.dishes_dict[i]
 
             return [e for e in self.dishes_dict.values()]
+
         elif self.dish.meal_type != 'm4':
             return self.saveExtend()
+
         elif self.dish.meal_type == "m4" and self.dish.food_type == "drink":
             return self.saveExtend()
+
         elif self.dish.meal_type == "m4" and self.dish.food_type != "drink":
             dishKey = self.dish.food_type
             newKeySet = set(self._selected.keys()).difference([dishKey , "drink"])
+
             if not newKeySet:
                 newKey = dishKey
             else:
                 newKey = newKeySet.pop()
+
             self.toUpdate = self._selected[newKey]
             self.dish.suggestions.create(food_id = self.dish.food_item.id)
             self.dish = self.update_dish(self.dish , self.toUpdate)
             self.dish.save()
             return self.dish
+
     @property
     def selected(self):
         return list(self._selected.values())

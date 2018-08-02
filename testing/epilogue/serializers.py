@@ -63,11 +63,12 @@ class CustomerSerializer( CustomerUpdateMixin , serializers.ModelSerializer):
     def validate_height(self, height):
         if not utils.validate_height(height):
             raise exceptions.ValidationError("Incorrect Height")
+        return height
 
     def validate_weight(self, weight):
         if not utils.validate_weight(weight):
             raise exceptions.ValidationError("Incorrect Weight")
-
+        return weight
 
     def get_reasons(self, obj):
         return str(obj.reasons.last())

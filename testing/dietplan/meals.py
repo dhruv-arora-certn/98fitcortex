@@ -150,7 +150,8 @@ class Base:
 
     def get_best(self, select_from , calories , name):
         '''
-        GET THE BEST!
+        Get the item that best suits the calories and nutritional value
+        using Knapsack algorithm
         '''
         F,test = knapsack(select_from, calories , self.fieldMapper.get(self.goal) )
         a = [select_from[i] for i in display(F , calories , select_from)]
@@ -255,7 +256,8 @@ class M1(Base):
         
         self.marked = self.queryset
         self.selected = selected
-
+        
+        #buildMapper is required for replacement
         self.buildMapper = {
             'snack' : self.select_snack,
             'drink' : self.select_drink
@@ -268,36 +270,37 @@ class M1(Base):
 
     def allocate_restrictions(self):
         '''
-        Allocate Breakfase necessary restrictions
+        Allocate Breakfast necessary restrictions
         1. Allocate a drink
         2. Allocate Egg 
         '''
-        self.drink = self.select_item(self.get_drink , "drink")
+        self.drink = self.select_item(self.get_drink() , "drink")
         self.remove_drinks()
 
         if  ('egg' , 0) not in self.exclusion_conditions.children and not hasattr(self,"egg"):
             self.egg = Food.m1_objects.filter(name = "Boiled Egg White").first()
             self.select_item(self.egg , "egg" ,remove = False)
 
-    def pop_snack(self):
-        # self.snack_list = list(filter(lambda x : x.snaks , self.marked ))
-        self.snack_list = self.marked.filter(snaks = '1').filter(dairy = 0)
-        heapq.heapify(self.snack_list)
-        return heapq.heappop(self.snack_list)   
-    
-    @property
     def get_drink(self):
+        
+        #Get the list from which drink is to be selected
         self.drink_list = self.marked.filter(drink = '1').filter(size = "Teacup")
+        
+        #If the user does not want dairy, remove all dairy items from drink list
         if ('dairy',0) not in self.exclusion_conditions.children:
             self.drink_list = self.drink_list.filter(dairy = '1')
+
         if not self.drink_list.count():
             return
+        
+        #Get multiple sizes/portions for drinks
         m = Manipulator(items = self.drink_list , categorizers = [DrinkCategoriser])
         self.drink_list = m.categorize().get_final_list()
+
         return min(self.drink_list , key = lambda x : abs(self.calories_goal * 0.15 - x.calorie))
 
     def select_drink(self):
-        self.select_item(self.get_drink , "drink")
+        self.select_item(self.get_drink() , "drink")
 
     def remove_drinks(self):
         # self.marked = list(set(self.marked) - set(self.drink_list))
@@ -324,14 +327,23 @@ class M1(Base):
         Select a snack for breakfast
         '''
         calories = self.calories_goal
+        
+        #if dairy is not excluded by user, only allocated 85% of calories to snack
         if ("dairy",0) not in self.exclusion_conditions:
             calories *= 0.85
+
         food_list = self.marked.filter(snaks = '1').filter(dairy = 0)
+
+        #if egg has been allocated, deduct 36 calories from the snack calories
         if not ("egg",0) in self.exclusion_conditions.children:
             food_list = food_list.exclude(egg = 1   )
             calories -= 36
+        
+        #Get multiple sizes/portions of items
         m = Manipulator(items = food_list , categorizers = [ParanthaCategoriser])
         food_list = m.categorize().get_final_list()
+        
+        #Select the best item
         self.snack = self.select_best_minimum(food_list , calories , name = "snack")
          
     def build(self):
@@ -340,6 +352,8 @@ class M1(Base):
         '''
         self.allocate_restrictions()
         self.select_snack()
+
+        #If breakfast does not have sufficient protein, add more eggs
         if self.protein_ideal - self.protein > 8 and hasattr(self , "egg"):
             self.egg.update_quantity(1.5)
         #self.rethink()
@@ -420,26 +434,26 @@ class M2(Base):
             self.select_item(self.nuts , "nuts")
 
     def select_snacks(self):
+        '''
+        Select a snack
+        '''
         self.option = "snack"
         calories = self.calories_goal
         snack_items = self.marked.filter(snaks = 1)
         try:
             self.snack = self.select_best_minimum(snack_items , calories , name = "snack")
-        except Exception as e:
+        except Exception as e: #Exception generally occurs when the a suitable item is not available
             self.snack = random.choice(snack_items)
             self.select_item(self.snack , "snack")
 
-    def rethink(self):
-        for e in self.selected.values():
-            steps = round(self.calories_remaining * e.weight/(e.calarie*10))
-            new_weight = e.weight + steps * 10
-            e.update_weight(new_weight/e.weight)
-
     def get_probability(self):
-        print("Calling get Probability")
+        '''
+        Return the probability distribution through which fruits and nuts
+        need to be selected
+        '''
         if ('nuts' , 0) in self.exclusion_conditions.children:
-            print("No nuts")
-            return [1,0]
+            return [1,0] # select fruit with probability 1 and nuts with 0
+
         return [0.5,0.5]
 
     def build(self):
@@ -457,7 +471,6 @@ class M2(Base):
                 p = [0.5 , 0.5]
             )[0]
             self.choice()
-        #self.rethink()
         return self
 
 
@@ -505,6 +518,9 @@ class M3(Base , CerealTreeSelector):
         self.buildMapper.update(backwardMapper)
 
     def getQuerysetFromGoal(self):
+        '''
+        Return default queryset for this meal
+        '''
         f = Food.m3_objects
         if self.goal == Goals.WeightLoss:
             f = f.filter(for_loss = 1)
@@ -541,13 +557,18 @@ class M3(Base , CerealTreeSelector):
         
         if not calories:
             calories = percent * self.calories_goal
+
         food_list = self.marked.filter(vegetable = 1).filter(grains_cereals = 0).filter(cuisine = "Generic")
+
         if self.disease and hasattr(self.disease , "vegetable_filter"):
             food_list = food_list.filter(self.disease.vegetable_filter)
+
         if food_list.count() < 3:
             food_list = self.getQuerysetFromGoal().filter(vegetable = 1).filter(grains_cereals = 0).filter(cuisine = "Generic").filter(extra_filter)
+
         m = Manipulator(items = food_list , categorizers = [VegetablePulseCategoriser])
         food_list = m.categorize().get_final_list()
+
         self.vegetable = self.select_best_minimum(food_list , calories , "vegetable")
         
         if isinstance(self.vegetable , Food):
@@ -624,10 +645,12 @@ class M3(Base , CerealTreeSelector):
 
     def makeCombinations(self):
         calories = self.calories_remaining
+
         if self.make_dessert:
             calories *= 0.88
         else:
             calories *= 0.85
+
         food_list = self.marked.filter(cuisine = "Combination")
         m = Manipulator(items = food_list , categorizers = [CombinationCategoriser])
         food_list = m.categorize().get_final_list()
@@ -649,9 +672,12 @@ class M3(Base , CerealTreeSelector):
             selected.update_weight(new_weight/selected.weight)
 
     def build(self):
-        print("Make Combination " , self.make_combination)  
+        '''
+        Build M3
+        '''
         if self.make_dessert:
             self.select_dessert()
+
         elif ('dairy' , 0) not in self.exclusion_conditions.children:
             self.select_yogurt()
         
@@ -661,6 +687,7 @@ class M3(Base , CerealTreeSelector):
             self.makeGeneric()
         
         return self
+
     @property
     def for_random(self):
         return list(filter( lambda x : not bool(x.dessert) , self.selected))
