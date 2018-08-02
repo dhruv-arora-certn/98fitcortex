@@ -33,6 +33,19 @@ class MockCustomerLevel:
         return self.level_obj == levels.Intermediate
 
 def dummy_customer(level = None , goal = None , week = None , location = None , email = None, current_level = 1 , new_latest_activity = None):
+    '''
+    Create a customer like object
+
+    Parameters
+    ----------
+    `level`: {`workoutplan.levels.Beginner`,`workoutplan.levels.Novice`,`workoutplan.levels.Intermediate`}
+    `goal` : {`dietplan.goals.WeightLoss`,`dietplan.goals.WeightGain`,`dietplan.goals.MuscleGain`,`dietplan.goals.MaintainWeight`}
+    `week` : int
+    `location` : {`workoutplan.locations.Home`,`workoutplan.locations.FitnessCentre`}
+    `email` : str
+    `current_level` : int
+    `new_latest_activity` : float
+    '''
     return type(
         "DummyCustomer",
         (MockCustomerLevel,),
@@ -59,6 +72,25 @@ def make_dummy_customer_like(customer , week = None , email = None):
     )
 
 def workout_regenerator(workout , customer):
+    '''
+    Regenerate a Workout
+
+    Parameters
+    ----------
+    `workout`: `workout.models.GeneratedExercisePlan`
+    `customer`: `epilogue.models.Customer`
+
+    Returns
+    -------
+    `workout`: `workout.models.GeneratedExercisePlan`
+    `status`: bool
+              Boolean indicating if the regeneration was successful
+    
+    Notes
+    -----
+    To create a new workout, we use the workout Generator, and a customer like object.
+    This is done, so that the generators should be 
+    '''
     dummy_customer = make_dummy_customer_like(
         customer,
         week = workout.user_week_id

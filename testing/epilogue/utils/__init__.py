@@ -20,26 +20,41 @@ import functools
 import re
 
 def get_week(date = None):
+    '''
+    Get ISO week number of the date
+    '''
     if not date:
         date = datetime.now(tz = timezone.get_current_timezone())
     return date.isocalendar()[1]
 
 def get_day(date = None):
+    '''
+    Get ISO weekday
+    '''
     if not date:
         date = datetime.now(tz = timezone.get_current_timezone())
     return date.isocalendar()[2]
 
 def get_year(date = None):
+    '''
+    Get ISO year
+    '''
     if not date:
         date = datetime.now(tz = timezone.get_current_timezone())
     return date.isocalendar()[0]
 
 def get_month(date = None):
+    '''
+    Get month of the year of the given date
+    '''
     if not date:
         date = datetime.now(tz = timezone.get_current_timezone())
     return date.month
 
 def count_weeks(start , end = None):
+    '''
+    Count number of weeks elapsed between the `start` and `end` date
+    '''
     if not end:
         end = datetime.now(tz = timezone.get_current_timezone())
     start_year , start_week , start_day = start.isocalendar()
@@ -59,6 +74,9 @@ def count_weeks(start , end = None):
     return count
 
 def is_valid_week(year,week):
+    '''
+    Check if the the given `year` and `week` are allowed for user to view
+    '''
     current_year = get_year()
     current_week = get_week()
 
@@ -125,6 +143,7 @@ def relative_to_week(k):
     else :
         k = (k + 52)%52
     return k
+
 class BulkDifferential:
 
     def getToDelete(self , old , new):
@@ -178,6 +197,9 @@ def accumulate_sum(group , keyfunc = None):
     )
 
 def seconds_to_hms(secs):
+    '''
+    Convert `secs` to HH:MM:SS representation
+    '''
     m,s = divmod(secs , 60)
     h,m = divmod(m , 60)
     return "%d:%02d:%02d"%(h, m, s)
@@ -261,6 +283,9 @@ def can_log_sleep(sleep_logs, new_data):
     return True
 
 def hasFoodinMeal(meal, food_type , query):
+    '''
+    Check if a food_type exists in the meal
+    '''
     count = query.filter(
        meal_type = meal,
        food_type = food_type
@@ -269,6 +294,9 @@ def hasFoodinMeal(meal, food_type , query):
     return bool(count)
 
 def hasM3Combo(day_query):
+    '''
+    Check if M3 has combination
+    '''
     return hasFoodinMeal(
         meal = 'm3',
         food_type = 'combination',
@@ -276,6 +304,9 @@ def hasM3Combo(day_query):
     )
 
 def hasM5Combo(day_query):
+    '''
+    Check if M5 has a combination
+    '''
     return hasFoodinMeal(
         meal = 'm5',
         food_type = 'combination',
@@ -283,6 +314,9 @@ def hasM5Combo(day_query):
     )
 
 def hasDessert(day_query):
+    '''
+    Check if the day has dessert in it
+    '''
     count = day_query.filter(food_type = "dessert").count()
     return bool(count)
 
@@ -305,7 +339,9 @@ def getUserCalculationArgs(user):
     }
 
 def accumulate_nutrition(a,b):
-    
+    '''
+    Add nutrition of two items
+    '''
     a.calories += float(b.calorie)
     a.protein += b.food_item.protein
     a.carbohydrates += b.food_item.carbohydrates
@@ -357,6 +393,9 @@ def add_favourites(user, day, week, year):
 
 
 def get_meals_meta(meals, **kwargs):
+    '''
+    Get meta for meals
+    '''
     initializer = SimpleNamespace(
         calories = 0,
         protein = 0,
@@ -390,6 +429,9 @@ def check_add_meal_followed(meta, **kwargs):
         return meta
 
 def get_items_from_meals(queryset):
+    '''
+    Get list of food items in a meal
+    '''
     return list(
         queryset.values_list("food_name" , flat = True).distinct()
     )
@@ -424,7 +466,7 @@ def get_meal_times(disease = False):
 
 def get_meal_string_dict(meals):
     '''
-    Return string dict for meals
+    Get the dictionary containing the string of food items in meals
     '''
     meal_times = get_meal_times()
     string_dict = {

@@ -11,6 +11,14 @@ import logging
 
 @receiver(signals.diet_regeneration)
 def diet_regenerator(sender , *args , **kwargs):
+    '''
+    Mark dietplan for regeneration
+
+    Returns
+    ------
+    regeneration_nodes: list
+        A list of regeneration nodes
+    '''
     user = kwargs.pop('user')
     logger = logging.getLogger(__name__)
     logger.debug("Received Diet Regeneration")
