@@ -173,7 +173,10 @@ REST_FRAMEWORK = {
         'navratri-sms' : '10/day',
         'anon' : '2000/hour',
         'user' : '9000/hour'
-    }
+    },
+    'DEFAULT_RENDERER_CLASSES':[
+        'rest_framework.renderers.JSONRenderer'
+    ]
 }
 
 REST_AUTH_SERIALIZERS = {
