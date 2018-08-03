@@ -1195,6 +1195,9 @@ class WaterContainer(models.Model):
     name = models.CharField(max_length = 20 , choices = choices)
 
 class CustomerWaterLogs(models.Model):
+    '''
+    Model for storing user water logs
+    '''
     saved = models.DateTimeField(auto_now_add = True)
     count = models.IntegerField()
     customer = models.ForeignKey(Customer, related_name = "water_logs" , on_delete = models.CASCADE , null = True)
@@ -1215,6 +1218,9 @@ class CustomerWaterLogs(models.Model):
         pass
 
 class CustomerSleepLogs(models.Model):
+    '''
+    Model for storing user sleep records
+    '''
     class Meta:
         db_table = "user_sleep_logs"
     start = models.DateTimeField(auto_now = False)
@@ -1224,6 +1230,9 @@ class CustomerSleepLogs(models.Model):
     saved = models.DateTimeField(auto_now_add = True)
 
 class CustomerActivityLogs(models.Model):
+    '''
+    Model for storing user activity logs
+    '''
     timestamp = models.DateTimeField(auto_now_add = True, null = True)
     steps = models.IntegerField()
     cals = models.IntegerField()
@@ -1235,6 +1244,9 @@ class CustomerActivityLogs(models.Model):
 
 
 class CustomerLevelLog(models.Model):
+    '''
+    Model for storing user's fitness levels
+    '''
     class Meta:
         db_table = "erp_customer_level_log"
     level = models.IntegerField()
