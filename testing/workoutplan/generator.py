@@ -92,6 +92,9 @@ class Generator():
         return cardio_days , set(rt_days) , set(cs_days)
 
     def get_resistance_distribution(self):
+        '''
+        Get days on which user has to do resistance training
+        '''
 
         rt_days = self.conditional_days.rt
         dist = {}
