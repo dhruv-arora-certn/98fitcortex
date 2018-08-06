@@ -37,10 +37,7 @@ class Warmup(Base):
 
     def decideWarmup(self):
         '''
-        Decide Which Function is to be called For generating the Warmup
-        The function is assigned to the object rather than returned,
-        Self is returned instead
-        This will enable me to perform chaining and allow subsequent functions to use the attribute
+        Build the warmup
         '''
         if self.mainCardio.cardioType== exercise.FloorBasedCardio:
             self.logger.info("Decided Warmup Floor Based")

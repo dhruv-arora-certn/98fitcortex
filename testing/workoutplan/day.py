@@ -66,10 +66,14 @@ class ExerciseDay:
         '''
         Generate Cooldown
         '''
+
+        #Cooldown is built like warmup
         self.cooldown = exercise_type.Warmup(self.user , mainCardio = self.main)
         self.cooldown.build()
+
         self.cooldown.selected['cooldown'] = self.cooldown.selected['warmup']
         del self.cooldown.selected['warmup']
+
         if self.resistance_filter:
             self.cooldown.selected['cooldown'].append(
                 DummyCoolDown(300 , "Slow Walk")

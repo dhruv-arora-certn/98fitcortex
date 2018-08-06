@@ -80,6 +80,22 @@ ConditionalTrainingDays = ct(
 
 
 class Luggage:
+    '''
+    Randomly select objects from `items` so that they have a maximum cumulative weight of `weight`
+
+    Parameters
+    ----------
+    `weight` : `int` 
+            The maximum cumulative property that all the items should have
+    `items` : list
+            List of items from which the selections have to be made
+    `key` :  str
+            The `attribute` on the objects in list which will be used to determine the weight
+    `multiplier` : int
+            The multiplier for the weight of each item
+    `batchSize` : int
+            The minimum amount of items to be selected from each selection
+    '''
 
     def __init__(self , weight , items , key , multiplier = 1 ,randomize = True , batchSize = 5):
         self.weight = weight
@@ -143,6 +159,9 @@ def get_category_decorator(category):
 filter_tuple = collections.namedtuple("filter_" , ["filter" , "count"])
 
 class CardioStretchingFilter(enum.Enum):
+    '''
+    A Container for holding filters for cardio stretching 
+    '''
     QUADS = filter_tuple(
         filter = Q(muscle_group_name = "Quadriceps"),
         count = 1
@@ -162,7 +181,7 @@ class CardioStretchingFilter(enum.Enum):
 
 def get_novice_cardio_sets_reps_duration(level , goal , user_workout_week, cardio = True , rt = False):
     '''
-    Return the sets and reps for cardio exercises of a cardio user
+    Return the sets and reps for cardio exercises of a cardio novice user
     '''
     assert level == levels.Novice , "User should be novice"
     sets = 2
@@ -177,6 +196,9 @@ def get_novice_cardio_sets_reps_duration(level , goal , user_workout_week, cardi
     return sets , reps , duration
 
 def get_beginner_cardio_sets_reps_duration(level , goal , user_workout_week, cardio = True , rt = False):
+    '''
+    Get `sets`,`reps`, and `duration` for cardio for a user whose fitness level is beginner
+    '''
 
     assert level == levels.Beginner , "User should be beginner"
 
@@ -200,6 +222,9 @@ def get_beginner_cardio_sets_reps_duration(level , goal , user_workout_week, car
     return sets , reps  ,duration
 
 def get_intermediate_cardio_sets_reps_duration(level , goal , user_workout_week, cardio = True , rt = False):
+    '''
+    Get `sets`,`reps` and `duration` for cardio for a user whose fitness level is intermediate
+    '''
 
     assert level == levels.Intermediate , "User should be of intermediate level"
 
@@ -222,6 +247,25 @@ def get_intermediate_cardio_sets_reps_duration(level , goal , user_workout_week,
     return sets , None ,duration
 
 def get_cardio_sets_reps_duration( level , goal , user_workout_week, cardio = True , rt = False):
+    '''
+    Get sets, reps and duration for which a cardio workout has to be performed
+
+    Parameters
+    ----------
+    `level` : `workout.levels`
+    `goal`: `epilogue.goals`
+    `user_workout_week` : int
+                Week for which the workout has to be generated
+    `cardio` : bool
+            Indicator whether cardio is being suggested on that day
+    `rt` : bool
+            Indicator whether  resistance training is being suggested on that day
+
+    Returns
+    -------
+    container : `collections.namedtuple`
+        A namedtuple consisting of the sets, reps and duration
+    '''
     if level == levels.Novice:
         val =  get_novice_cardio_sets_reps_duration(level,goal , user_workout_week, cardio , rt)
     elif level == levels.Beginner:
@@ -232,11 +276,20 @@ def get_cardio_sets_reps_duration( level , goal , user_workout_week, cardio = Tr
     return container(*val)
 
 def get_cardio_intensity_filter_for_warmup(user):
+    '''
+    Get the intensity and duration for warmup
+
+    Returns
+    -------
+
+    A list of dictionaries containing the `filter` and `duration` to get the cardio exercises
+    '''
     if user.is_novice():
         return [{
             "filter" : Q(exercise_level = "Low"),
             "duration" : 300
         }]
+
     elif user.is_beginner():
         return [
             {
@@ -248,6 +301,7 @@ def get_cardio_intensity_filter_for_warmup(user):
                 "duration" : 150
             }
         ]
+
     elif user.is_intermediate():
         return [
             {
@@ -266,6 +320,9 @@ def get_cardio_intensity_filter_for_warmup(user):
 
 
 class DummyWarmup:
+    '''
+    Container for holding Dummy warmup exercises
+    '''
     duration = 300
     module_name = "WarmupCoolDownMobilityDrillExercise".lower()
     id = 0
@@ -279,6 +336,9 @@ class DummyWarmup:
         self.machine_name = cardio.machine_name
 
 class DummyCoolDown:
+    '''
+    Container for holding Dummy cooldown exercises
+    '''
     module_name = "WarmupCoolDownMobilityDrillExercise".lower()
     id = 0
 
@@ -288,6 +348,9 @@ class DummyCoolDown:
 
 
 def filter_key_from_q(q_obj , key_to_escape):
+    '''
+    Remove a key from django Q object
+    '''
     new_children = []
     q_obj = copy.copy(q_obj)
     for e in q_obj.children:

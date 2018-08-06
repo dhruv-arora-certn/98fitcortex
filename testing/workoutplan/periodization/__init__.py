@@ -9,12 +9,18 @@ import functools
 
 @functools.lru_cache()
 def get_cardio_periodized(level , user_week_no):
+    '''
+    Get the filters for cardio
 
-	if level == levels.Beginner:
-		return get_beginner_cardio_periodized(user_week_no)
+    Returns
+    -------
+    A list of dictionaries containing `filter` and `ratio` for the intensity of exercises
+    '''
+    if level == levels.Beginner:
+        return get_beginner_cardio_periodized(user_week_no)
 
-	elif level == levels.Intermediate:
-		return get_intermediate_cardio_periodized(user_week_no)
+    elif level == levels.Intermediate:
+        return get_intermediate_cardio_periodized(user_week_no)
 
-	elif level == levels.Novice:
-		return get_novice_cardio_periodized(user_week_no)
+    elif level == levels.Novice:
+        return get_novice_cardio_periodized(user_week_no)

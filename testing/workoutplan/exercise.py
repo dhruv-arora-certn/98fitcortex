@@ -13,6 +13,13 @@ from workoutplan import periodization
 random.seed()
 
 class ExerciseBase:
+    '''
+    Base class for building exercises.
+
+    Notes
+    -----
+    It selects items using `Luggage` for selecting exercises  
+    '''
 
     def __init__(self , user , duration):
         self.logger = logging.getLogger(__name__)
@@ -57,6 +64,8 @@ class FloorBasedCardio(ExerciseBase):
 
     def build(self):
         self.multiplier = self.sets
+
+        #get the filter for selecting exercises
         self.periodised_filters = periodization.get_cardio_periodized(self.user.level_obj , self.user.user_relative_workout_week)
         self.selected = []
 
@@ -90,7 +99,10 @@ class TimeBasedCardio(ExerciseBase):
         self.model = models.CardioTimeBasedExercise
 
     def build(self):
-        self.srd_container = get_cardio_sets_reps_duration(self.user.level_obj , self.user.goal , self.user.user_relative_workout_week)
+        self.srd_container = get_cardio_sets_reps_duration(self.user.level_obj, 
+                self.user.goal, 
+                self.user.user_relative_workout_week,
+                )
         self.selected.append(random.choice(self.get_items()))
 
         def add_sets_reps(x):
@@ -163,6 +175,7 @@ class Stretching(ExerciseBase):
         if settings.CACHE_WORKOUT:
             return cache.get_or_set(self.cache_key , model_list) 
         return model_list 
+
     def build(self):
         items = self.get_items()
         if self.count == 1:
