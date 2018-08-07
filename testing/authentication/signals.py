@@ -61,7 +61,7 @@ def send_welcome_email(sender, **kwargs):
         "name" : login_customer.customer.first_name
     }) 
     e = utils.EmailMessage(
-        subject = "Welcome to 98Fit",
+        subject = "How to lose weight if you love to eat 🍧🍫 | 98Fit",
         message = message,
         recipient = [login_customer.email],
         sender = "Bhavishya Wadhawan<info@98fit.com>",
