@@ -55,16 +55,20 @@ def send_welcome_email(sender, **kwargs):
     secret = utils.sign(
         login_customer.email
     )
-    link = f'<a href="https://www.98fit.com/confirm/{secret}">Click Here</a>'
-    message = f'<p>Welcome to 98Fit</p><p>To verify your email address {link}.</p> <p>Link is only valid for 24 hours'
+    link = f'https://www.98fit.com/confirm/{secret}'
+    message = render_to_string("welcome-email.html",{
+        "link" : link,
+        "name" : login_customer.customer.first_name
+    }) 
     e = utils.EmailMessage(
         subject = "Welcome to 98Fit",
         message = message,
         recipient = [login_customer.email],
-        html = True
+        sender = "Bhavishya Wadhawan<info@98fit.com>",
+        html = True,
     )
     status = e.send()
-    return
+    return e
 
 @receiver(email_verification)
 def send_verification_email(sender, **kwargs):
@@ -78,7 +82,7 @@ def send_verification_email(sender, **kwargs):
         subject = "Welcome to 98Fit",
         message = message,
         recipient = [login_customer.email],
-        html = True
+        html = True,
     )
     status = e.send()
     return
