@@ -297,6 +297,8 @@ class Customer(models.Model):
 
         if not self.w_type:
             self.w_type = 1
+        
+        self.w_type = int(self.w_type)
 
         return utils.parse_weight(weight = self.w, weight_type = self.w_type)
 

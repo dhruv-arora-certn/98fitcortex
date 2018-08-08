@@ -1,1 +1,0 @@
-"select t2.id , t2.name, t1.size , t1.weight ,t2.squared_diff_weight_loss , round(t2.calorie_unit*t1.weight,2) as calorie , round(t2.protein_unit*t1.weight,2) as protein , round(t2.fat_unit*t1.weight,2) as fat from food_type_sizes t1 cross join ( select * from business_diet_list where vegetable = 1 order by squared_diff_weight_loss) as t2 having calorie < 100 order by t2.id"
