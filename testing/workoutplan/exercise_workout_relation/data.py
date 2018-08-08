@@ -72,7 +72,9 @@ def upgrade_activity(fitness, activity, periodization_weeks):
     Given a pair of (fitness,activity) determine if the activity is to be
     upgraded or not.
 
-    @param periodization_weeks : weeks into that particular fitness level. If 
+    Parameters
+    ----------
+    periodization_weeks : weeks into that particular fitness level. If 
     an offset has been provided, it needs to be removed
 
     Return the new activity level of the user.
