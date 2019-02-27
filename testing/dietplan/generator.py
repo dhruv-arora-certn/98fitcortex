@@ -28,7 +28,7 @@ import random
 import types
 
 class Day:
-    @lego.assemble
+    #l@ego.assemble.assemble
     def __init__(self , calculations , day = None , persist = False , dietplan = None , comboDays = None):
         pass
 
@@ -59,7 +59,7 @@ class Day:
                 self.generated.append(obj)
 
 class Pipeline:
-    @lego.assemble
+    #l@ego.assemble.assemble
     def __init__(self , weight , height , activity , goal , gender , user = None ,disease = None , persist = False , week = None , dietplan = None , year = get_year()):
         import logging
         logger = logging.getLogger(name="activity_upgrade")

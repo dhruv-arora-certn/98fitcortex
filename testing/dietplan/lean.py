@@ -3,7 +3,7 @@ from .bodyTypes import *
 import lego
 
 class LeanFactor:
-	@lego.assemble
+	#l@ego.assemble.assemble
 	def __init__(self , bodyType , bmiType):
 		pass
 

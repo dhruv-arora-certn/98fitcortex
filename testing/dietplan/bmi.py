@@ -64,7 +64,7 @@ class BMI:
         extra_active = 30
     
     classifications = [OverWeight , NormalWeight , UnderWeight , Obese]
-    @lego.assemble
+    # #l@ego.assemble.assemble
     def __init__(self , weight, height):
         self.bmi = self.weight/self.height**2
     

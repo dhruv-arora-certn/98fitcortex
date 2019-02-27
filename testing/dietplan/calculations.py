@@ -12,7 +12,7 @@ from knapsack.knapsack_dp import knapsack
 import itertools , threading , lego
 
 class Calculations:
-    @lego.assemble
+    #l@ego.assemble.assemble
     def __init__(self , weight , height , activity , goal , gender,  exclude , disease = None , exclusion_conditions = None , exclude2 = None , comboDays = None , dessertDays = None):
         #calculations
         self.bmi = BMI(weight , height)

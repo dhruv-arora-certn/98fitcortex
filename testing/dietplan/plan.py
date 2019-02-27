@@ -2,7 +2,7 @@ from .models import Food
 import lego
 
 class M1:
-	@lego.assemble
+	#l@ego.assemble.assemble
 	def __init__(self , calories , protein , carbs, fat):
 		pass
 		
