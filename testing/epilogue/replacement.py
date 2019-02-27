@@ -15,7 +15,7 @@ mealMapper = {
 
 class PseudoMeal():
 
-    @lego.assemble
+    #l@ego.assemble.assemble
     def __init__(self , dish , exclude , selected = None ,  replaceMeal = False, activity_level_to_use = None):
         del self.selected
         self._meal_type = mealMapper.get(dish.meal_type)
