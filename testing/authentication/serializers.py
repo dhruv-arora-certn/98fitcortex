@@ -209,7 +209,7 @@ class ForgotPasswordOTPSerializer(rest_framework.serializers.Serializer):
         )
         e = utils.EmailMessage(
             subject = "Forgot Password OTP" ,
-            message = f'Your OTP is {otp} \n -Team 98Fit',
+            message = 'Your OTP is {otp} \n -Team 98Fit',
             recipient = [email]
         )
         e.send()

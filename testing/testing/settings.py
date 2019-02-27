@@ -28,7 +28,7 @@ SECRET_KEY = '$txw&#8w3o6hua4fvmg&k+s8$*liu0afply$g0jnmey))is4ec'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get("debug", False))
 
-ALLOWED_HOSTS = [str(e) for e in os.environ.get("allowed_hosts").split(",")]
+ALLOWED_HOSTS = ["*"]
 
 #Check if environment is production
 PRODUCTION = bool(int(os.environ.get('prod' , 0)))
@@ -95,29 +95,13 @@ WSGI_APPLICATION = 'testing.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('dbname'),
-        'USER' : os.environ.get('dbuser'),
-        'PASSWORD' : os.environ.get('dbpassword'),
-        'HOST' : os.environ.get('dbhost'),
-        'PORT' : os.environ.get('dbport')
+        'NAME': "98fit_live",
+        'USER' : "webapi",
+        'PASSWORD' : "ninetoeightfit",
+        'HOST' : "ninefit.calgs95mbw5o.ap-south-1.rds.amazonaws.com",
+        'PORT' : 3306
     }
 }
-
-if os.environ.get('database2'):
-    vals = {
-        "ENGINE" : 'django.db.backends.mysql',
-        'NAME': os.environ.get('dbname2'),
-        'USER' : os.environ.get('dbuser2'),
-        'PASSWORD' : os.environ.get('dbpassword2'),
-        'HOST' : os.environ.get('dbhost2'),
-        'PORT' : os.environ.get('dbport2')
-    }
-    DATABASES.update({
-        'main' : {
-            **vals  
-        }
-    })
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -143,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = os.environ.get("time_zone")
+TIME_ZONE = "Asia/Kolkata"
 
 USE_I18N = True
 USE_L10N = True
