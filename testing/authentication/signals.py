@@ -55,7 +55,7 @@ def send_welcome_email(sender, **kwargs):
     secret = utils.sign(
         login_customer.email
     )
-    link = https://www.98fit.com/confirm/{secret}'
+    link = 'https://www.98fit.com/confirm/{secret}'
     message = render_to_string("welcome-email.html",{
         "link" : link,
         "name" : login_customer.customer.first_name
@@ -77,7 +77,7 @@ def send_verification_email(sender, **kwargs):
         login_customer.email
     )
     link = '<a href="https://www.98fit.com/confirm/{secret}">Click Here</a>'
-    message = "<p>To verify your email address {link}.</p> <p>Link is only valid for 24 hours'
+    message = "<p>To verify your email address {link}.</p> <p>Link is only valid for 24 hours"
     e = utils.EmailMessage(
         subject = "Welcome to 98Fit",
         message = message,
