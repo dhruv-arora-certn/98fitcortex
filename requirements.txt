@@ -27,7 +27,7 @@ django-request-logging==0.5.5
 django-rest-auth==0.9.1
 django-rest-swagger==2.1.2
 django-ses==0.8.2
-djangorestframework==3.7.3
+djangorestframework==3.11.2
 djangorestframework-bulk==0.2.1
 docutils==0.13.1
 drfdocs==0.0.11
